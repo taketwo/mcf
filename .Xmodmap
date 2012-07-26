@@ -1,0 +1,8 @@
+!! This is to make Caps Lock to act as Escape
+!! ==========================================
+
+!! No Caps Lock
+clear lock
+!! Make Caps Lock an Escape key
+keycode 0x42 = Escape
+
