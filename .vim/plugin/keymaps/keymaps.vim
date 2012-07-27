@@ -6,6 +6,7 @@
 " Enter command mode with semicolon
 
   nnoremap ; :
+  nnoremap : <Esc> " temporally disable : to get rid of the habit
 
 " Move around with Dvorak layout:
 "
