@@ -1,18 +1,18 @@
 " Change leader to a comma because the backslash is too far away
 " That means all \x commands turn into ,x
 
-  let mapleader=","
+  let mapleader=','
 
 " Enter command mode with semicolon
 
   nnoremap ; :
 
-" Move around in Dvorak layout:
+" Move around with Dvorak layout:
 "
 "       c
 "     h t n
 "
-" Note: k, j, and l are now unused, find something for them!
+" Note: j, and l are now unused, find something for them!
 
   nnoremap c k
   nnoremap t j
@@ -28,6 +28,19 @@
   nnoremap s n
   nnoremap S N
 
+" Now that c is used for navigation, utilize k for the same purpose
+
+  nnoremap k c
+
+" Reset search pattern
+
+  nmap <Leader>/ :let @/ = ""<CR>
+
 " Quick switch between windows with N
 
   nnoremap N <C-w><C-w>
+
+  nmap <Leader>n <C-w><C-w>
+
+" Special command to to write a file as sudo (w!!)
+  cmap w!! w !sudo tee % >/dev/null
