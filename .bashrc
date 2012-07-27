@@ -140,3 +140,8 @@ if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
 fi
 
+# Load secret configuration settings
+if [ -f ~/.secrets ]; then
+    . ~/.secrets
+fi
+
