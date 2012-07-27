@@ -91,9 +91,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-# required by autojump
-source /usr/share/autojump/autojump.bash
-
 # disable XON/XOFF so that Ctrl-S combination works in reverse-i-search
 stty -ixon
 
