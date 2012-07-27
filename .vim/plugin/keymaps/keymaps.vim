@@ -18,6 +18,18 @@
   nnoremap t j
   nnoremap n l
 
+" Accelerated up and down
+
+  nnoremap C <PageUp>
+  nnoremap T <PageDown>
+
+" Move lines up/down
+
+  nnoremap <C-t> :m+<CR>==
+  nnoremap <C-c> :m-2<CR>==
+  inoremap <C-t> <Esc>:m+<CR>==gi
+  inoremap <C-c> <Esc>:m-2<CR>==gi
+
 " Go to the beginning and the end of line with _/-
 
   nnoremap - $
@@ -28,9 +40,10 @@
   nnoremap s n
   nnoremap S N
 
-" Now that c is used for navigation, utilize k for the same purpose
+" Now that c/C are used for navigation, utilize k/K for the same purpose
 
   nnoremap k c
+  nnoremap K C
 
 " Reset search pattern
 
@@ -42,5 +55,8 @@
 
   nmap <Leader>n <C-w><C-w>
 
+" ================= NERDTree shorctcuts ======================================
+" Toggle NERDTree
+  nnoremap <C-n> :NERDTreeMirrorToggle<CR>
 " Special command to to write a file as sudo (w!!)
   cmap w!! w !sudo tee % >/dev/null
