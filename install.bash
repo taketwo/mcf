@@ -11,5 +11,6 @@ ln -s .mcf/.fonts ~/.fonts
 ln -s .mcf/.vim ~/.vim
 ln -s .mcf/.vimrc ~/.vimrc
 ln -s .mcf/.bashrc ~/.bashrc
+ln -s .mcf/.gitconfig ~/.gitconfig
 
 echo "Done"
