@@ -89,10 +89,6 @@ set nocompatible
   set wildmenu                      " enable ctrl-n and ctrl-p to scroll thru matches
   set wildignore=*.o,*.obj,*.pyc,*~ " stuff to ignore when tab completing
 
-" ================ Spellchecker =====================
-
-  set spellfile=~/.vim/dict.add
-
 " Misc
   set matchpairs+=<:>     " show matching <> (html mainly) as well
 
