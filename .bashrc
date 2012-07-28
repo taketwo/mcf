@@ -133,7 +133,7 @@ alias .......="cd ../../../../../.."
 alias agu='sudo apt-get update && sudo apt-get upgrade'
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
-alias powertop='sudo powertop'
+alias pt='sudo powertop'
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
