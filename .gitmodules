@@ -44,3 +44,6 @@
 [submodule "vim-indent-guides"]
 	path = .vim/bundle/vim-indent-guides
 	url = https://github.com/nathanaelkane/vim-indent-guides.git
+[submodule "vim-search-complete"]
+	path = .vim/bundle/vim-search-complete
+	url = https://github.com/vim-scripts/SearchComplete.git
