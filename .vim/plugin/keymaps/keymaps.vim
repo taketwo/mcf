@@ -14,10 +14,14 @@
 "     h t n
 "
 " Note: j, and l are now unused, find something for them!
-
-  noremap c k
-  noremap t j
-  noremap n l
+" Mappings for Normal mode
+  nnoremap c k
+  nnoremap t j
+  nnoremap n l
+" Mappings for Visual (but not Select!) mode
+  xnoremap c k
+  xnoremap t j
+  xnoremap n l
 
 " Accelerated up and down
 
