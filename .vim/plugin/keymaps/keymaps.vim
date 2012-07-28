@@ -59,11 +59,17 @@
 
   nmap <Leader>n <C-w><C-w>
 
+" Switch between tabs
+  nnoremap <C-h> gT
+  nnoremap <C-n> gt
+
   nnoremap <Leader>s :setlocal spell! spelllang=en_us<CR>
+  "set pastetoggle=<Leader>pt "not sure about this one yet
+
 " ================= Shortcuts for plugins ====================================
 " ================= NERDTree =================================================
-" Toggle NERDTree
-  noremap <C-n> :NERDTreeMirrorToggle<CR>
+" Toggle NERDTree (temporary mapping)
+  noremap <C-j> :NERDTreeMirrorToggle<CR>
 " ================= Change inside surroundings ===============================
   nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
   nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
