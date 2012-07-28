@@ -35,3 +35,6 @@
 	path = .vim/bundle/vim-git
 	url = https://github.com/tpope/vim-git.git
 	ignore = dirty
+[submodule "vim-change-inside-surroundings"]
+	path = .vim/bundle/vim-change-inside-surroundings
+	url = https://github.com/briandoll/change-inside-surroundings.vim.git

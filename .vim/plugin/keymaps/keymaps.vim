@@ -55,9 +55,12 @@
   nnoremap N <C-w><C-w>
 
   nmap <Leader>n <C-w><C-w>
-
-" ================= NERDTree shorctcuts ======================================
+" ================= Shortcuts for plugins ====================================
+" ================= NERDTree =================================================
 " Toggle NERDTree
-  nnoremap <C-n> :NERDTreeMirrorToggle<CR>
+  noremap <C-n> :NERDTreeMirrorToggle<CR>
+" ================= Change inside surroundings ===============================
+  nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
+  nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
 " Special command to to write a file as sudo (w!!)
   cmap w!! w !sudo tee % >/dev/null
