@@ -47,3 +47,6 @@
 [submodule "vim-search-complete"]
 	path = .vim/bundle/vim-search-complete
 	url = https://github.com/vim-scripts/SearchComplete.git
+[submodule "vim-ctrlp"]
+	path = .vim/bundle/vim-ctrlp
+	url = https://github.com/kien/ctrlp.vim.git
