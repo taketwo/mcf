@@ -50,11 +50,16 @@
 
   nmap <Leader>/ :let @/ = ""<CR>
 
+" Quickly insert a newline by just hitting enter
+  nnoremap <CR> o<Esc>
+
 " Quick switch between windows with N
 
   nnoremap N <C-w><C-w>
 
   nmap <Leader>n <C-w><C-w>
+
+  nnoremap <Leader>s :setlocal spell! spelllang=en_us<CR>
 " ================= Shortcuts for plugins ====================================
 " ================= NERDTree =================================================
 " Toggle NERDTree
