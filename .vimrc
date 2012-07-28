@@ -85,9 +85,16 @@ set nocompatible
 
 " ================ Completion =======================
 
-  set wildmode=list:longest
-  set wildmenu                " enable ctrl-n and ctrl-p to scroll thru matches
-  set wildignore=*.o,*.obj,*~ " stuff to ignore when tab completing
+  set wildmode=list,longest
+  set wildmenu                      " enable ctrl-n and ctrl-p to scroll thru matches
+  set wildignore=*.o,*.obj,*.pyc,*~ " stuff to ignore when tab completing
+
+" ================ Spellchecker =====================
+
+  set spellfile=~/.vim/dict.add
+
+" Misc
+  set matchpairs+=<:>     " show matching <> (html mainly) as well
 
 " Delete trailing white space and Dos-returns and to expand tabs to spaces.
 "nnoremap S :set et<CR>:retab!<CR>:%s/[\r \t]\+$//<CR>
