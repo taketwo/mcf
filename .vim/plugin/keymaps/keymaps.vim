@@ -15,9 +15,9 @@
 "
 " Note: j, and l are now unused, find something for them!
 
-  nnoremap c k
-  nnoremap t j
-  nnoremap n l
+  noremap c k
+  noremap t j
+  noremap n l
 
 " Accelerated up and down
 
