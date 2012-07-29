@@ -52,7 +52,7 @@
 
 " Reset search pattern
 
-  nmap <Leader>/ :let @/ = ""<CR>
+  nnoremap <Leader>/ :let @/ = ""<CR>
 
 " Quickly insert a newline by just hitting enter
   nnoremap <CR> o<Esc>
@@ -72,8 +72,7 @@
 
 " ================= Shortcuts for plugins ====================================
 " ================= NERDTree =================================================
-" Toggle NERDTree (temporary mapping)
-  noremap <C-j> :NERDTreeMirrorToggle<CR>
+  noremap <Leader>n :NERDTreeMirrorToggle<CR>
 " ================= Change inside surroundings ===============================
   nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
   nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
