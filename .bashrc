@@ -118,7 +118,7 @@ extract ()
 }
 
 # utulities to navigate the filesystem
-function mkdircd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
+function mkc () { mkdir -p "$@" && eval cd "\"\$$#\""; }
 alias la='ls -lah'
 alias t1='tree -L 1'
 alias t2='tree -L 2'
@@ -129,11 +129,16 @@ alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 
+# quick out-of-source build preparation
+alias osb='mkc build && ccmake ..'
+
 # misc
 alias agu='sudo apt-get update && sudo apt-get upgrade'
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
 alias pt='sudo powertop'
+
+export PATH=/opt/llvm/bin:$PATH
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
