@@ -79,6 +79,8 @@
   nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
 " ================= Tagbag ===================================================
   nnoremap <Leader>t :TagbarToggle<CR>
+" ================= DelimitMate ==============================================
+  imap <C-l> <Plug>delimitMateS-Tab
 
 " Special command to to write a file as sudo (w!!)
   cmap w!! w !sudo tee % >/dev/null

@@ -56,3 +56,6 @@
 [submodule "vim-autotag"]
 	path = .vim/bundle/vim-autotag
 	url = https://github.com/vim-scripts/AutoTag.git
+[submodule "vim-delimitmate"]
+	path = .vim/bundle/vim-delimitmate
+	url = https://github.com/Raimondi/delimitMate.git
