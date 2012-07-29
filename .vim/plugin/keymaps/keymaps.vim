@@ -77,5 +77,8 @@
 " ================= Change inside surroundings ===============================
   nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
   nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
+" ================= Tagbag ===================================================
+  nnoremap <Leader>t :TagbarToggle<CR>
+
 " Special command to to write a file as sudo (w!!)
   cmap w!! w !sudo tee % >/dev/null

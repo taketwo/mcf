@@ -50,3 +50,9 @@
 [submodule "vim-ctrlp"]
 	path = .vim/bundle/vim-ctrlp
 	url = https://github.com/kien/ctrlp.vim.git
+[submodule "vim-tagbar"]
+	path = .vim/bundle/vim-tagbar
+	url = https://github.com/majutsushi/tagbar.git
+[submodule "vim-autotag"]
+	path = .vim/bundle/vim-autotag
+	url = https://github.com/vim-scripts/AutoTag.git
