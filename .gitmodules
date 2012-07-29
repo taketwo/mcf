@@ -25,9 +25,6 @@
 [submodule "vim-snipmate"]
 	path = .vim/bundle/vim-snipmate
 	url = https://github.com/garbas/vim-snipmate.git
-[submodule "vim-snipmate-snippets"]
-	path = .vim/bundle/vim-snipmate-snippets
-	url = https://github.com/taketwo/snipmate-snippets.git
 [submodule "vim-showmarks"]
 	path = .vim/bundle/vim-showmarks
 	url = https://github.com/VimEz/ShowMarks.git
