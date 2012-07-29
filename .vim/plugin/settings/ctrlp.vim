@@ -15,9 +15,10 @@ let g:ctrlp_by_filename = 1
 " http://www.charlietanksley.net/blog/blog/2011/10/18/vim-navigation-with-lustyexplorer-and-lustyjuggler/
 " Open CtrlP starting from a particular path, making it much more likely to find the correct thing first.
 " Mnemonic 'jump to [something]'
-map <Leader>js :CtrlP src<CR>
-map <Leader>jh :CtrlP include<CR>
-map <Leader>ji :CtrlP impl<CR>
+nnoremap <Leader>js :CtrlP src<CR>
+nnoremap <Leader>jh :CtrlP include<CR>
+nnoremap <Leader>ji :CtrlP impl<CR>
+nnoremap <Leader>jt :CtrlPBufTag<CR>
 " map ,jh :CloseSingleConque<CR>:CtrlP app/helpers<CR>
 " map ,jl :CloseSingleConque<CR>:CtrlP lib<CR>
 " map ,jp :CloseSingleConque<CR>:CtrlP public<CR>
