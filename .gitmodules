@@ -71,3 +71,6 @@
 [submodule "vim-syntastic"]
 	path = .vim/bundle/vim-syntastic
 	url = https://github.com/scrooloose/syntastic.git
+[submodule "vim-supertab"]
+	path = .vim/bundle/vim-supertab
+	url = https://github.com/ervandew/supertab.git

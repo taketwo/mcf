@@ -91,6 +91,11 @@ set nocompatible
   set wildmenu                      " enable ctrl-n and ctrl-p to scroll thru matches
   set wildignore=*.o,*.obj,*.pyc,*~ " stuff to ignore when tab completing
 
+  " Complete options (disable preview scratch window)
+  set completeopt=menu,menuone,longest
+  " Limit popup menu height
+  set pumheight=15
+
 " Misc
   set matchpairs+=<:>     " show matching <> (html mainly) as well
 
