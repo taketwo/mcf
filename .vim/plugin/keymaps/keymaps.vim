@@ -54,14 +54,14 @@
 
   nnoremap <Leader>/ :let @/ = ""<CR>
 
-" Quickly insert a newline by just hitting enter
-  nnoremap <CR> o<Esc>
+" Insert newline below, but stay on the same spot
+  nnoremap <CR> :call append(line('.'), '')<CR>
+" Insert newline above, but stay on the same spot
+  nnoremap <NL> :call append(line('.')-1, '')<CR>
 
 " Quick switch between windows with N
 
   nnoremap N <C-w><C-w>
-
-  nmap <Leader>n <C-w><C-w>
 
 " Switch between tabs
   nnoremap <C-h> gT
