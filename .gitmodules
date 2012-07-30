@@ -22,9 +22,6 @@
 [submodule "vim-tlib"]
 	path = .vim/bundle/vim-tlib
 	url = https://github.com/tomtom/tlib_vim.git
-[submodule "vim-snipmate"]
-	path = .vim/bundle/vim-snipmate
-	url = https://github.com/garbas/vim-snipmate.git
 [submodule "vim-showmarks"]
 	path = .vim/bundle/vim-showmarks
 	url = https://github.com/VimEz/ShowMarks.git
