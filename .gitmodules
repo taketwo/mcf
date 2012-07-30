@@ -62,6 +62,7 @@
 [submodule "vim-greplace"]
 	path = .vim/bundle/vim-greplace
 	url = https://github.com/skwp/greplace.vim.git
+	ignore = dirty
 [submodule "vim-nerdcommenter"]
 	path = .vim/bundle/vim-nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
