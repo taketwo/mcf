@@ -40,10 +40,10 @@
   nnoremap - $
   nnoremap _ ^
 
-" Seek through search results with s/S (instead of used n/N)
+" Seek through search results with l/L (instead of used n/N)
 
-  nnoremap s n
-  nnoremap S N
+  nnoremap l n
+  nnoremap L N
 
 " Now that c/C are used for navigation, utilize k/K for the same purpose
 
