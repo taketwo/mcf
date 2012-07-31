@@ -63,9 +63,13 @@
 
   nnoremap N <C-w><C-w>
 
-" Switch between tabs
-  nnoremap <C-h> gT
-  nnoremap <C-n> gt
+" Change indentation
+  nnoremap <C-h> :<<CR>go
+  nnoremap <C-n> :><CR>
+  vnoremap <C-h> :<<CR>gv
+  vnoremap <C-n> :><CR>gv
+  inoremap <C-h> <C-d>
+  inoremap <C-n> <C-t>
 
   nnoremap <Leader>s :setlocal spell! spelllang=en_us<CR>
   "set pastetoggle=<Leader>pt "not sure about this one yet
