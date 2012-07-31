@@ -56,7 +56,7 @@ set nocompatible
   set smarttab
   set shiftwidth=2
   set softtabstop=2
-  set tabstop=2
+  "set tabstop=2
   set expandtab
 
   filetype plugin on
@@ -98,6 +98,9 @@ set nocompatible
 
 " Misc
   set matchpairs+=<:>     " show matching <> (html mainly) as well
+
+  " %% expands to the full path of the directory that contains the current file
+  cabbr <expr> %% expand('%:p:h')
 
 " Delete trailing white space and Dos-returns and to expand tabs to spaces.
 "nnoremap S :set et<CR>:retab!<CR>:%s/[\r \t]\+$//<CR>
