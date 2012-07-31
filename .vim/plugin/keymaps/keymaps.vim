@@ -122,7 +122,7 @@
 
   " Tagbar
 
-  nnoremap <F10> :TagbarToggle<CR>
+  nnoremap <F3> :TagbarToggle<CR>
 
   " Change inside surroundings
 
