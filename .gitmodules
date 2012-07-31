@@ -72,3 +72,6 @@
 [submodule "vim-supertab"]
 	path = .vim/bundle/vim-supertab
 	url = https://github.com/ervandew/supertab.git
+[submodule "vim-ultisnips"]
+	path = .vim/bundle/vim-ultisnips
+	url = https://github.com/SirVer/ultisnips.git
