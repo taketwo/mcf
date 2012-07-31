@@ -1,1 +1,0 @@
-:UltiSnipsAddFiletypes cuda.c.cpp

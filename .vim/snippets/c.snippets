@@ -1,0 +1,11 @@
+snippet inc "include header" !b
+#include <${1:header}.h>$0
+endsnippet
+
+snippet incs "include standard library header" !b
+#include <${1:iostream}>$0
+endsnippet
+
+snippet incl "include local header" !b
+#include "${1:`!v Filename("$1")`}.h"$0
+endsnippet
