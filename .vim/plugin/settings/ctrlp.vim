@@ -11,7 +11,7 @@ let g:ctrlp_by_filename = 1
 " nnoremap <silent> <D-P> :ClearCtrlPCache<cr>
 "
 
-nnoremap <Leader>. :CtrlP<CR>
+nnoremap <Leader>.. :CtrlP<CR>
 
 " Idea from:
 " http://www.charlietanksley.net/blog/blog/2011/10/18/vim-navigation-with-lustyexplorer-and-lustyjuggler/
@@ -19,6 +19,7 @@ nnoremap <Leader>. :CtrlP<CR>
 nnoremap <Leader>.s :CtrlP src<CR>
 nnoremap <Leader>.h :CtrlP include<CR>
 nnoremap <Leader>.i :CtrlP impl<CR>
+nnoremap <Leader>.b :CtrlPBuffer<CR>
 nnoremap <Leader>.t :CtrlPBufTag<CR>
 nnoremap <Leader>.T :CtrlPBufTagAll<CR>
 
