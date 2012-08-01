@@ -59,8 +59,8 @@
   nnoremap <C-n> :><CR>
   vnoremap <C-h> :<<CR>gv
   vnoremap <C-n> :><CR>gv
-  inoremap <C-h> <C-d>
-  inoremap <C-n> <C-t>
+  "inoremap <C-h> <C-d>
+  "inoremap <C-n> <C-t>
 
 " ============================ Text manipulation =========================== "
 
