@@ -13,4 +13,9 @@ ln -s .mcf/.vimrc ~/.vimrc
 ln -s .mcf/.bashrc ~/.bashrc
 ln -s .mcf/.gitconfig ~/.gitconfig
 
+# Clang installation.
+# 1) Follow instructions at http://clang.llvm.org/get_started.html
+# 2) Configure with options:
+#    ../configure --enable-optimized --disable-assertions --prefix=/opt/llvm
+
 echo "Done"
