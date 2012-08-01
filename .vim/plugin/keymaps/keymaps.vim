@@ -10,7 +10,7 @@
 
   " Experimental
   call arpeggio#load()
-  Arpeggio inoremap ih <Esc>
+  Arpeggio inoremap uh <Esc>
   "Arpeggio nnoremap ,. :CtrlP<CR>
 
 " ============================ Move text around ============================ "
