@@ -9,3 +9,10 @@ endsnippet
 snippet incl "include local header" !b
 #include "${1:`!v Filename("$1")`}.h"$0
 endsnippet
+
+snippet enum "Enumeration" !b
+enum ${1:name}
+{
+  ${2:ITEM},
+};$0
+endsnippet
