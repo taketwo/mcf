@@ -8,7 +8,12 @@
   nnoremap ; :
   nnoremap : <Esc> " temporally disable : to get rid of the habit
 
-" ================= Move around ==============================================
+  " Experimental
+  call arpeggio#load()
+  Arpeggio inoremap ih <Esc>
+  "Arpeggio nnoremap ,. :CtrlP<CR>
+
+" ============================ Move text around ============================ "
 
   " Left, right, up, and down
 
@@ -39,7 +44,7 @@
   nnoremap - $
   nnoremap _ ^
 
-" ================= Push text around =========================================
+" ============================ Push text around ============================ "
 
   " Move lines up/down
 
@@ -57,14 +62,13 @@
   inoremap <C-h> <C-d>
   inoremap <C-n> <C-t>
 
-" ================= Navigate through windows =================================
+" ============================ Window management =========================== "
 
-  " Move between split windows by using the four directions
+  " Move between split windows similarlay to normal motion
 
-  nnoremap <A-h> <C-w>h
-  nnoremap <A-n> <C-w>l
-  nnoremap <A-c> <C-w>k
-  nnoremap <A-t> <C-w>j
+  noremap <C-w><C-n> <C-w>l
+  noremap <C-w><C-c> <C-w>k
+  noremap <C-w><C-t> <C-w>j
 
   " Resize windows with Alt+arrow
 
@@ -72,6 +76,8 @@
   nnoremap [1;3B <C-w>-
   nnoremap [1;3C <C-w>>
   nnoremap [1;3D <C-w><
+
+" ================================== Misc ================================== "
 
   " Copy entire word even if the cursor is halfway inside the word
 
@@ -104,17 +110,12 @@
 " Insert newline above, but stay on the same spot
   nnoremap <NL> :call append(line('.')-1, '')<CR>
 
-" Quick switch between windows with N
-
-  nnoremap N <C-w><C-w>
-
-
 " Enable spell checking
   nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
   "set pastetoggle=<Leader>pt "not sure about this one yet
 
-" ================= Shortcuts for plugins ====================================
+" ========================== Shortcuts for plugins ========================= "
 
   " NERDTree
 
@@ -133,7 +134,7 @@
 
   imap <C-l> <Plug>delimitMateS-Tab
 
-" ================= Special commands =========================================
+" ============================ Special commands ============================ "
 
   " Special command to to write a file as sudo (w!!)
 
