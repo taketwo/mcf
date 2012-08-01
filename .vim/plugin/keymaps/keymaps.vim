@@ -65,25 +65,28 @@
 " ============================ Text manipulation =========================== "
 
   " Surround a word with "quotes"
-  map <Leader>" ysiw"
-  vmap <Leader>" c"<C-R>""<ESC>
+  map <Leader>" <Plug>Ysurroundiw"
+  vnoremap <Leader>" c"<C-R>""<ESC>
 
   " Surround a word with 'single quotes'
-  map ,' ysiw'
-  vmap ,' c'<C-R>"'<ESC>
+  map <Leader>' <Plug>Ysurroundiw'
+  vnoremap <Leader>' c'<C-R>"'<ESC>
 
   " Surround a word with (parens)
-
-  map ,( ysiw(
-  vmap ,( c(<C-R>")<ESC>
+  map <Leader>( <Plug>Ysurroundiw)
+  vnoremap <Leader>( c(<C-R>")<ESC>
 
   " Surround a word with [brackets]
-  map ,[ ysiw[
-  vmap ,[ c[<C-R>"]<ESC>
+  map <Leader>[ <Plug>Ysurroundiw]
+  vnoremap <Leader>[ c[<C-R>"]<ESC>
 
   " Surround a word with {braces}
-  map ,{ ysiw{
-  vmap ,{ c{<C-R>"}<ESC>>
+  map <Leader>{ <Plug>Ysurroundiw}
+  vnoremap <Leader>{ c{<C-R>"}<ESC>
+
+  " Surround a word with <braces>
+  map <Leader>< <Plug>Ysurroundiw>
+  vnoremap <Leader>< c<<C-R>"><ESC>
 
 " ============================ Window management =========================== "
 
