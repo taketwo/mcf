@@ -1,0 +1,8 @@
+snippet sec "Section comment" !b
+`!p
+padding = 78 - len(t[1]) - 8
+snip.rv = '#...: '
+`${1:Section}`!p
+snip.rv = ' :' + padding * '.'`
+$0
+endsnippet
