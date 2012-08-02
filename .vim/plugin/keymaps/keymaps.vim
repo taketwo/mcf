@@ -166,6 +166,10 @@
   imap <C-l> <Plug>delimitMateS-Tab
   Arpeggio imap cr <Plug>delimitMateS-Tab
 
+  " UltiSnip
+  " Temporary hack - enable autocompletion in visual mode
+  Arpeggio xmap wv :call UltiSnips_SaveLastVisualSelection()<CR>gvs
+
 " ============================ Special commands ============================ "
 
   " Special command to to write a file as sudo (w!!)
