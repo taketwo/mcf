@@ -4,3 +4,36 @@ enum
   ${1:ITEM},
 };$0
 endsnippet
+
+snippet class "Class declaration" !b
+class ${1:`!p snip.rv = snip.basename or "Name"`}
+{
+
+public:
+
+  ${1/(\w+).*/$1/}(${2});
+
+  virtual ~${1/(\w+).*/$1/}() { };
+
+private:
+
+  ${0:/* data */}
+
+};
+endsnippet
+
+snippet up "Unique pointer"
+std::unique_ptr<${1:${VISUAL:Type}}>$0
+endsnippet
+
+snippet sp "Shared pointer"
+std::shared_ptr<${1:${VISUAL:Type}}>$0
+endsnippet
+
+snippet tup "Typedef unique pointer" !b
+typedef std::unique_ptr<${1:Type}> ${2:UPtr};$0
+endsnippet
+
+snippet tsp "Typedef shared pointer" !b
+typedef std::shared_ptr<${1:Type}> ${2:Ptr};$0
+endsnippet
