@@ -79,3 +79,7 @@
 [submodule "vim-surround"]
 	path = .vim/bundle/vim-surround
 	url = https://github.com/tpope/vim-surround.git
+[submodule "vim-localvimrc"]
+	path = .vim/bundle/vim-localvimrc
+	url = https://github.com/embear/vim-localvimrc.git
+	ignore = dirty
