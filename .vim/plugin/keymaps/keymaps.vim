@@ -144,6 +144,8 @@
 
   nnoremap <C-s> :w<CR>
 
+  nnoremap <F9> :make<CR>
+
 " ========================== Shortcuts for plugins ========================= "
 
   " NERDTree
