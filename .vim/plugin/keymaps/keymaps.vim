@@ -11,7 +11,8 @@
   " Experimental
   call arpeggio#load()
   Arpeggio inoremap uh <Esc>
-  "Arpeggio nnoremap ,. :CtrlP<CR>
+  Arpeggio inoremap ht <Esc>
+  Arpeggio inoremap nh <Esc>
 
 " ============================ Move text around ============================ "
 
@@ -141,6 +142,7 @@
 
   "set pastetoggle=<Leader>pt "not sure about this one yet
 
+  nnoremap <C-s> :w<CR>
 " ========================== Shortcuts for plugins ========================= "
 
   " NERDTree
@@ -159,6 +161,7 @@
   " DelimitMate
 
   imap <C-l> <Plug>delimitMateS-Tab
+  Arpeggio imap cr <Plug>delimitMateS-Tab
 
 " ============================ Special commands ============================ "
 
