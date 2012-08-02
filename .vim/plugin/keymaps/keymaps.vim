@@ -143,6 +143,7 @@
   "set pastetoggle=<Leader>pt "not sure about this one yet
 
   nnoremap <C-s> :w<CR>
+
 " ========================== Shortcuts for plugins ========================= "
 
   " NERDTree
@@ -168,3 +169,25 @@
   " Special command to to write a file as sudo (w!!)
 
   cmap w!! w !sudo tee % >/dev/null
+
+  " This is certainly a bag place, but for the time being...
+  " Highlight all instances of word under cursor, when idle.
+  nnoremap <Leader>hw :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
+  function! AutoHighlightToggle()
+    let @/ = ''
+    if exists('#auto_highlight')
+      au! auto_highlight
+      augroup! auto_highlight
+        setl updatetime=4000
+        echo 'Highlight current word: off'
+        return 0
+    else
+      augroup auto_highlight
+        au!
+        au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+      augroup end
+      setl updatetime=500
+      echo 'Highlight current word: ON'
+      return 1
+    endif
+  endfunction
