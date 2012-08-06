@@ -187,7 +187,7 @@
 
   " This is certainly a bag place, but for the time being...
   " Highlight all instances of word under cursor, when idle.
-  nnoremap <Leader>hw :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
+  nnoremap <Leader>wh :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
   function! AutoHighlightToggle()
     let @/ = ''
     if exists('#auto_highlight')
