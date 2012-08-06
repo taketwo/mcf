@@ -83,3 +83,7 @@
 	path = .vim/bundle/vim-localvimrc
 	url = https://github.com/embear/vim-localvimrc.git
 	ignore = dirty
+[submodule "vim-minibufexplorer"]
+	path = .vim/bundle/vim-minibufexplorer
+	url = https://github.com/fholgado/minibufexpl.vim.git
+	ignore = dirty

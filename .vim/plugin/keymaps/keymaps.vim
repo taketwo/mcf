@@ -156,6 +156,14 @@
 
   nnoremap <F3> :TagbarToggle<CR>
 
+  " Minibufexplorer
+
+  noremap <F2> :TMiniBufExplorer<CR>
+  noremap <Leader>1 :b1<CR>
+  noremap <Leader>2 :b2<CR>
+  noremap <Leader>n :MBEbn<CR>
+  noremap <Leader>h :MBEbp<CR>
+
   " Change inside surroundings
 
   nnoremap <Leader>ki :ChangeInsideSurrounding<CR>

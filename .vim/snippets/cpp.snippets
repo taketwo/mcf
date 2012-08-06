@@ -37,3 +37,17 @@ endsnippet
 snippet tsp "Typedef shared pointer" !b
 typedef std::shared_ptr<${1:Type}> ${2:Ptr};$0
 endsnippet
+
+snippet for "For loop" !b
+for (${3:size_t} ${2:i} = 0; $2 < ${1:count}; $2++)
+{
+  ${0:/* code */}
+}
+endsnippet
+
+snippet fori "For loop over iterable" !b
+for (const auto& ${1:item} : ${2:items})
+{
+  ${0:/* code */}
+}
+endsnippet

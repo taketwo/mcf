@@ -24,3 +24,18 @@ int main(int argc, const char** argv)
   return 0;
 }
 endsnippet
+
+snippet once "Include header guard" !b
+#ifndef ${1:`!p
+if not snip.c:
+  import string
+  snip.rv = re.sub(r'[^A-Za-z0-9]+','_', snip.fn).upper()
+else:
+  snip.rv = snip.c`}
+#define $1
+
+${0}
+
+#endif /* $1 */
+
+endsnippet
