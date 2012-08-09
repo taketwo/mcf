@@ -11,7 +11,6 @@
   " Experimental
   call arpeggio#load()
   Arpeggio inoremap uh <Esc>
-  Arpeggio inoremap ht <Esc>
   Arpeggio inoremap nh <Esc>
 
 " ============================ Move text around ============================ "
@@ -137,6 +136,9 @@
 " Insert newline above, but stay on the same spot
   nnoremap <NL> :call append(line('.')-1, '')<CR>
 
+" Duplicate current line
+  nnoremap <Leader>d :t.<CR>
+
 " Enable spell checking
   nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
@@ -178,6 +180,14 @@
   " UltiSnip
   " Temporary hack - enable autocompletion in visual mode
   Arpeggio xmap wv :call UltiSnips_SaveLastVisualSelection()<CR>gvs
+
+" ============================== Super combos ============================== "
+
+  " (E)xit input mode, (S)ave, (M)ake
+  Arpeggio inoremap esm <Esc>:w<CR>:make<CR>
+
+  " (Y)ank current line, (S)witch to left window, (P)aste
+  Arpeggio nnoremap ysp yy<C-w><C-h>P
 
 " ============================ Special commands ============================ "
 
