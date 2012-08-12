@@ -147,6 +147,8 @@
   nnoremap <C-s> :w<CR>
 
   nnoremap <F9> :make<CR>
+  autocmd QuickFixCmdPost [^l]* nested cwindow
+  autocmd QuickFixCmdPost    l* nested lwindow
 
 " ========================== Shortcuts for plugins ========================= "
 
