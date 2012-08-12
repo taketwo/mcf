@@ -8,3 +8,10 @@ snip.rv = '" ' + lpad * '=' + ' '
 snip.rv = ' ' + rpad * '=' + ' "'`
 $0
 endsnippet
+
+snippet rosmake "Set makeprg to rosmake the current package" !b
+let makeprg="rosmake\ ${1:`!p
+import os
+snip.rv = os.path.split(os.path.dirname(path))[1]
+`}"
+endsnippet
