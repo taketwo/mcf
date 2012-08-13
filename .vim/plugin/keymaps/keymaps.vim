@@ -150,6 +150,10 @@
   autocmd QuickFixCmdPost [^l]* nested cwindow
   autocmd QuickFixCmdPost    l* nested lwindow
 
+" Jump to next line in location list (useful for Syntactic)
+  nnoremap <Leader>e :lne<CR>
+  nnoremap <Leader>E :lp<CR>
+
 " ========================== Shortcuts for plugins ========================= "
 
   " NERDTree
