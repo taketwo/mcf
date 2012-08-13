@@ -21,3 +21,8 @@ if match.group(2):
   snip.rv = ' << '
 `$2);$0
 endsnippet
+
+snippet ".par(d?)" "Query parameter from server" !wr
+`!p snip.rv = '.param' if match.group(1) else '.getParam'
+`("${1:parameter_name}", ${2:$1}${3:, default})$0
+endsnippet
