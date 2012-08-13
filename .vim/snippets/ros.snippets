@@ -1,0 +1,23 @@
+snippet init "Initialize a node" !b
+ros::init(argc, argv, "${1:`!v Filename("$1")`}");$0
+endsnippet
+
+global !p
+def get_level(c):
+  levels = ["DEBUG", "INFO", "WARN", "ERROR", "FATAL"]
+  for l in levels:
+    if l.lower().startswith(c.lower()):
+      return l
+  return "INFO"
+endglobal
+
+snippet "log(\w?)(s?)" "Log message" br
+ROS_`!p
+snip.rv = get_level(match.group(1) or 'i')
+if match.group(2):
+  snip.rv += '_STREAM'
+`("${1:Message}"`!p
+if match.group(2):
+  snip.rv = ' << '
+`$2);$0
+endsnippet
