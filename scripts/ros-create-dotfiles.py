@@ -15,12 +15,10 @@ def get_includes(pack):
     return ['-I' + f for f in includes]
 
 
-def create_vim(pack, includes):
+def create_vim(pack):
     vim = open('.vim', 'w')
     vim.write('let makeprg="rosmake\ %s"\n' % pack)
     vim.write('au FileType cpp :UltiSnipsAddFiletypes ros.cpp\n')
-    vim.write('au FileType cpp let b:syntastic_cpp_cflags = \' %s\'' %
-              ' '.join(includes))
     vim.close()
 
 
@@ -33,5 +31,5 @@ def create_clang_complete(includes):
 if __name__ == '__main__':
     pack = get_package_name()
     includes = get_includes(pack)
-    create_vim(pack, includes)
+    create_vim(pack)
     create_clang_complete(includes)
