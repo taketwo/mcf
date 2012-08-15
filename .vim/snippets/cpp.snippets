@@ -30,11 +30,11 @@ snippet sp "Shared pointer"
 std::shared_ptr<${1:${VISUAL:Type}}>$0
 endsnippet
 
-snippet tup "Typedef unique pointer" !b
+snippet tdup "Typedef unique pointer" !b
 typedef std::unique_ptr<${1:Type}> ${2:UPtr};$0
 endsnippet
 
-snippet tsp "Typedef shared pointer" !b
+snippet tdsp "Typedef shared pointer" !b
 typedef std::shared_ptr<${1:Type}> ${2:Ptr};$0
 endsnippet
 
@@ -50,4 +50,8 @@ for (const auto& ${1:item} : ${2:items})
 {
   ${0:/* code */}
 }
+endsnippet
+
+snippet car "Const auto reference" !b
+const auto& ${1:variable} = $0
 endsnippet
