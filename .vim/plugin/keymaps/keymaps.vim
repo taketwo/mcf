@@ -164,6 +164,10 @@
 
   nnoremap <F3> :TagbarToggle<CR>
 
+  " Syntastic
+
+  noremap <F6> :w<CR>:SyntasticCheck<CR>
+
   " Minibufexplorer
 
   noremap <F2> :TMiniBufExplorer<CR>
