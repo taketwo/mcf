@@ -1,0 +1,8 @@
+snippet "h([12])" "Header" br
+${1:Header 1}
+`!p
+c = '=' if match.group(1) == '1' else '-'
+snip.rv = c * len(t[1])`
+
+$0
+endsnippet
