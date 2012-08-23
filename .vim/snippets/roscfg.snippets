@@ -1,0 +1,39 @@
+snippet cfg "Cfg template" !b
+#!/usr/bin/env python
+
+PACKAGE = "${1:package_name}"
+import roslib;roslib.load_manifest(PACKAGE)
+
+from dynamic_reconfigure.parameter_generator import *
+
+gen = ParameterGenerator()
+
+$0
+
+exit(gen.generate(PACKAGE, "${2:node_name}", "${3:`!p snip.rv = snip.basename`}"))
+endsnippet
+
+snippet int "Add integer parameter" !b
+gen.add("${1:param_name}", int_t, 0, "${2:Param description}", ${3:default}, ${4:min}, ${5:max})$0
+endsnippet
+
+snippet double "Add double parameter" !b
+gen.add("${1:param_name}", double_t, 0, "${2:Param description}", ${3:default}, ${4:min}, ${5:max})$0
+endsnippet
+
+snippet str "Add string parameter" !b
+gen.add("${1:param_name}", str_t, 0, "${2:Param description}", "${3:default}")$0
+endsnippet
+
+snippet bool "Add boolean parameter" !b
+gen.add("${1:param_name}", bool_t, 0, "${2:Param description}", ${3:default})$0
+endsnippet
+
+snippet enum "Add enum parameter" !b
+${1:name}_enum = gen.enum([$0], "${2:Enum description}")
+gen.add("$1", int_t, 0, "${3:Param description}", ${4:default}, ${5:min}, ${6:max}, edit_method=$1_enum)
+endsnippet
+
+snippet const "Const definition" w
+gen.const("${1:name}", int_t, ${2:value}, "${3:Description}")$0
+endsnippet
