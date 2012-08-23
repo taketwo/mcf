@@ -22,6 +22,7 @@ def create_vim(pack):
     vim = open('.vim', 'w')
     vim.write('let makeprg="rosmake\ %s"\n' % pack)
     vim.write('au FileType cpp :UltiSnipsAddFiletypes ros.cpp\n')
+    vim.write('au BufRead,BufNewFile */manifest.xml :UltiSnipsAddFiletypes rosmanifest\n')
     vim.close()
 
 
