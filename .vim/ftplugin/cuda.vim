@@ -1,4 +1,5 @@
-" Everything is just like c++ (copied from help)
+" Configure tagbar to work with CUDA files.
+" Everything is just like C++ (copied from help).
 let g:tagbar_type_cuda = {
     \ 'ctagstype' : 'c++',
     \ 'kinds'     : [
