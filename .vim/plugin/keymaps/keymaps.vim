@@ -191,6 +191,10 @@
   " Temporary hack - enable autocompletion in visual mode
   Arpeggio xmap wv :call UltiSnips_SaveLastVisualSelection()<CR>gvs
 
+  " Sideways
+  nnoremap <Leader>sh :SidewaysLeft<CR>
+  nnoremap <Leader>sn :SidewaysRight<CR>
+
 " ============================== Super combos ============================== "
 
   " (E)xit input mode, (S)ave, (M)ake
