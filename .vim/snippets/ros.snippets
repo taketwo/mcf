@@ -24,5 +24,13 @@ endsnippet
 
 snippet ".par(d?)" "Query parameter from server" !wr
 `!p snip.rv = '.param' if match.group(1) else '.getParam'
-`("${1:parameter_name}", ${2:$1}${3:, default})$0
+`("${1:parameter_name}", ${2:$1}${3/.+/, /}${3:default}${3/.+//})$0
+endsnippet
+
+snippet sub "Subscriber" !b
+ros::Subscriber ${1}_subscriber = ${2:nh}.subscribe("${3:topic}", ${4:10}, ${5:callback}${5/.+?(C?$)/(?1:allback:)/});$0
+endsnippet
+
+snippet pub "Publisher" !b
+ros::Publisher ${1}_publisher = ${2:nh}.advertise<${3:std_msgs::String}>("${4:topic}", ${5:10});$0
 endsnippet
