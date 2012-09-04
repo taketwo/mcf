@@ -34,3 +34,14 @@ endsnippet
 snippet pub "Publisher" !b
 ros::Publisher ${1}_publisher = ${2:nh}.advertise<${3:std_msgs::String}>("${4:topic}", ${5:10});$0
 endsnippet
+
+snippet dynrec "Dynamic reconfigure template" !b
+#include <dynamic_reconfigure/server.h>
+#include <$1/$2.h>
+void ${4:reconfigureCallback}($1::$2 &config, uint32_t level)
+{
+  $0
+}
+dynamic_reconfigure::Server<${1:package}::${2:FooConfig}> ${3:server};
+$3.setCallback(boost::bind(&$4, _1, _2));
+endsnippet
