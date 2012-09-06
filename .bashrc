@@ -130,7 +130,7 @@ alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 
 # quick out-of-source build preparation
-alias osb='mkc build && ccmake ..'
+alias osb='mkd build && ccmake ..'
 
 # misc
 alias agu='sudo apt-get update && sudo apt-get upgrade'
