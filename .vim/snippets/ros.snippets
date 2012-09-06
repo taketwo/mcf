@@ -35,6 +35,12 @@ snippet pub "Publisher" !b
 ros::Publisher ${1}_publisher = ${2:nh}.advertise<${3:std_msgs::String}>("${4:topic}", ${5:10});$0
 endsnippet
 
+snippet client "Client" !b
+ros::ServiceClient ${1}_client = ${2:nh}.serviceClient<${3:std_srvs::Empty}>("${4:topic}");
+$3 ${5:srv};
+$5.request.${6:/* fill in request parameters */}
+endsnippet
+
 snippet dynrec "Dynamic reconfigure template" !b
 #include <dynamic_reconfigure/server.h>
 #include <$1/$2.h>
