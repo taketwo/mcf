@@ -45,3 +45,7 @@ void ${4:reconfigureCallback}($1::$2 &config, uint32_t level)
 dynamic_reconfigure::Server<${1:package}::${2:FooConfig}> ${3:server};
 $3.setCallback(boost::bind(&$4, _1, _2));
 endsnippet
+
+snippet pn "Private node handle" !b
+ros::NodeHandle ${1:pn}("~")$0
+endsnippet
