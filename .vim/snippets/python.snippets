@@ -4,3 +4,8 @@ if snip.indent:
    snip.rv = 'self' + (", " if len(t[2]) else "")`${2:arg1}):
 	${3:pass}
 endsnippet
+
+snippet main "Main" !b
+if __name__ == '__main__':
+	$0
+endsnippet
