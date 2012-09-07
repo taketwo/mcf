@@ -1,3 +1,9 @@
+global !p
+from os.path import expanduser, join
+import sys; sys.path.append(join(expanduser("~"), ".vim/snippets/helpers"))
+from conversions import *
+endglobal
+
 snippet enuma "Anonymous enumeration" !b
 enum
 {
@@ -6,7 +12,7 @@ enum
 endsnippet
 
 snippet class "Class declaration" !b
-class ${1:`!p snip.rv = snip.basename or "Name"`}
+class ${1:`!p snip.rv = underscore_to_camelcase(snip.basename) or "Name"`}
 {
 
 public:
@@ -17,7 +23,7 @@ public:
 
 private:
 
-  ${0:/* data */}
+  $0
 
 };
 endsnippet
