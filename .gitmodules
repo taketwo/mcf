@@ -93,3 +93,7 @@
 [submodule "vim-sideways"]
 	path = .vim/bundle/vim-sideways
 	url = https://github.com/AndrewRadev/sideways.vim.git
+[submodule "vim-alternate"]
+	path = .vim/bundle/vim-alternate
+	url = https://github.com/dantler/vim-alternate
+	ignore = dirty
