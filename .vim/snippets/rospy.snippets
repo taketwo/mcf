@@ -1,0 +1,17 @@
+snippet rospy "Rospy preamble" !b
+#!/usr/bin/env python
+
+import roslib
+import rospy
+roslib.load_manifest('${1:package_name}')
+
+$0
+endsnippet
+
+snippet init "Initialize node" !b
+rospy.init_node('${1:`!v Filename("$1")`}')$0
+endsnippet
+
+snippet pub "Publisher" !b
+${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type})$0
+endsnippet
