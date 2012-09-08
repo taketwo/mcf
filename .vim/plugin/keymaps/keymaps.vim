@@ -13,7 +13,7 @@
   Arpeggio inoremap uh <Esc>
   Arpeggio inoremap nh <Esc>
 
-" ============================ Move text around ============================ "
+" =============================== Move around ============================== "
 
   " Left, right, up, and down
 
@@ -59,8 +59,6 @@
   nnoremap <C-n> :><CR>
   vnoremap <C-h> :<<CR>gv
   vnoremap <C-n> :><CR>gv
-  "inoremap <C-h> <C-d>
-  "inoremap <C-n> <C-t>
 
 " ============================ Text manipulation =========================== "
 
@@ -96,6 +94,10 @@
   noremap <C-w><C-c> <C-w>k
   noremap <C-w><C-t> <C-w>j
 
+  " Switch to the next buffer with Tab
+
+  nnoremap <Tab> :bn<CR>
+
   " Resize windows with Alt+arrow
 
   nnoremap [1;3A <C-w>+
@@ -117,29 +119,29 @@
 
   nnoremap Y y$
 
-" Seek through search results with l/L (instead of used n/N)
+  " Seek through search results with l/L (instead of used n/N)
 
   nnoremap l n
   nnoremap L N
 
-" Now that c/C are used for navigation, utilize k/K for the same purpose
+  " Now that c/C are used for navigation, utilize k/K for the same purpose
 
   nnoremap k c
   nnoremap K C
 
-" Reset search pattern
+  " Reset search pattern
 
   nnoremap <Leader>/ :let @/ = ""<CR>
 
-" Insert newline below, but stay on the same spot
+  " Insert newline below, but stay on the same spot
   nnoremap <CR> :call append(line('.'), '')<CR>
-" Insert newline above, but stay on the same spot
+  " Insert newline above, but stay on the same spot
   nnoremap <NL> :call append(line('.')-1, '')<CR>
 
-" Duplicate current line
+  " Duplicate current line
   nnoremap <Leader>d :t.<CR>
 
-" Enable spell checking
+  " Enable spell checking
   nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
   "set pastetoggle=<Leader>pt "not sure about this one yet
@@ -150,7 +152,7 @@
   autocmd QuickFixCmdPost [^l]* nested cwindow
   autocmd QuickFixCmdPost    l* nested lwindow
 
-" Jump to next line in location list (useful for Syntactic)
+  " Jump to next line in location list (useful for Syntactic)
   nnoremap <Leader>e :lne<CR>
   nnoremap <Leader>E :lp<CR>
 
@@ -185,13 +187,14 @@
   " DelimitMate
 
   imap <C-l> <Plug>delimitMateS-Tab
-  Arpeggio imap cr <Plug>delimitMateS-Tab
 
   " UltiSnip
+
   " Temporary hack - enable autocompletion in visual mode
   Arpeggio xmap wv :call UltiSnips_SaveLastVisualSelection()<CR>gvs
 
   " Sideways
+
   nnoremap <Leader>sh :SidewaysLeft<CR>
   nnoremap <Leader>sn :SidewaysRight<CR>
 
@@ -209,7 +212,7 @@
 
   cmap w!! w !sudo tee % >/dev/null
 
-  " This is certainly a bag place, but for the time being...
+  " This is certainly a bad place, but for the time being...
   " Highlight all instances of word under cursor, when idle.
   nnoremap <Leader>wh :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
   function! AutoHighlightToggle()
