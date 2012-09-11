@@ -94,10 +94,6 @@
   noremap <C-w><C-c> <C-w>k
   noremap <C-w><C-t> <C-w>j
 
-  " Switch to the next buffer with Tab
-
-  nnoremap <Tab> :bn<CR>
-
   " Resize windows with Alt+arrow
 
   nnoremap [1;3A <C-w>+
@@ -144,7 +140,7 @@
   " Enable spell checking
   nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
-  "set pastetoggle=<Leader>pt "not sure about this one yet
+  set pastetoggle=<Leader>pt
 
   nnoremap <C-s> :w<CR>
 
@@ -155,6 +151,9 @@
   " Jump to next line in location list (useful for Syntactic)
   nnoremap <Leader>e :lne<CR>
   nnoremap <Leader>E :lp<CR>
+
+  " Jump to the next item in Quickfix list with Tab
+  nnoremap <Tab> :cn<CR>
 
 " ========================== Shortcuts for plugins ========================= "
 
