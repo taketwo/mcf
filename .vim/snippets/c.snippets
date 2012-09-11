@@ -1,5 +1,5 @@
 snippet inc "include header" !b
-#include <${1:header}.h>$0
+#include <${1:header}.${2:h}>$0
 endsnippet
 
 snippet incs "include standard library header" !b
@@ -7,7 +7,7 @@ snippet incs "include standard library header" !b
 endsnippet
 
 snippet incl "include local header" !b
-#include "${1:`!v Filename("$1")`}.h"$0
+#include "${1:`!v Filename("$1")`}.${2:h}"$0
 endsnippet
 
 snippet enum "Enumeration" !b
