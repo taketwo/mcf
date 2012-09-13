@@ -12,25 +12,29 @@ $0
 endsnippet
 
 snippet init "Initialize node" !b
-rospy.init_node(NODE)$0
+rospy.init_node(NODE${1:, anonymous=True})$0
 endsnippet
 
 snippet pub "Publisher" !b
 ${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type})$0
 endsnippet
 
-global !p
+snippet sub "Subscriber" !b
+${1:subscriber} = rospy.Subscriber('${2:topic}', ${3:message_type}, ${4:callback})$0
+endsnippet
+
+snippet now "Current time"
+rospy.Time.now()
+endsnippet
+
+snippet "log(\w?)" "Log message" br
+rospy.log`!p
 def get_level(c):
   levels = ["debug", "info", "warn", "err", "fatal"]
   for l in levels:
     if l.startswith(c.lower()):
       return l
   return "info"
-endglobal
-
-snippet "log(\w?)" "Log message" br
-rospy.log`!p
 snip.rv = get_level(match.group(1) or 'i')
 `('${1:Message}'${2/.+/ % (/}${2}${2/.+/)/})$0
 endsnippet
-
