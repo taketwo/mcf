@@ -9,3 +9,19 @@ snippet main "Main" !b
 if __name__ == '__main__':
 	$0
 endsnippet
+
+###########################################################################
+#                            Argparse snippets                            #
+###########################################################################
+
+snippet argparse "Argparse" !b
+parser = argparse.ArgumentParser(description='''
+${1}
+''')
+$0
+args = parser.parse_args()
+endsnippet
+
+snippet arg "Add argument" !b
+parser.add_argument('${1:name}', help='${2:help}')$0
+endsnippet
