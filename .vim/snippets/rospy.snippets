@@ -1,17 +1,36 @@
 snippet rospy "Rospy preamble" !b
 #!/usr/bin/env python
 
+PACKAGE = '${1:package_name}'
+NODE = '${2:`!v Filename("$1")`}'
+
 import roslib
+roslib.load_manifest(PACKAGE)
 import rospy
-roslib.load_manifest('${1:package_name}')
 
 $0
 endsnippet
 
 snippet init "Initialize node" !b
-rospy.init_node('${1:`!v Filename("$1")`}')$0
+rospy.init_node(NODE)$0
 endsnippet
 
 snippet pub "Publisher" !b
 ${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type})$0
 endsnippet
+
+global !p
+def get_level(c):
+  levels = ["debug", "info", "warn", "err", "fatal"]
+  for l in levels:
+    if l.startswith(c.lower()):
+      return l
+  return "info"
+endglobal
+
+snippet "log(\w?)" "Log message" br
+rospy.log`!p
+snip.rv = get_level(match.group(1) or 'i')
+`('${1:Message}'${2/.+/ % (/}${2}${2/.+/)/})$0
+endsnippet
+

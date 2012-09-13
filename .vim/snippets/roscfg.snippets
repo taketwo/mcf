@@ -1,8 +1,11 @@
 snippet cfg "Cfg template" !b
 #!/usr/bin/env python
 
-PACKAGE = "${1:package_name}"
-import roslib;roslib.load_manifest(PACKAGE)
+PACKAGE = '${1:package_name}'
+NODE = '${2:node_name}'
+
+import roslib
+roslib.load_manifest(PACKAGE)
 
 from dynamic_reconfigure.parameter_generator import *
 
@@ -10,7 +13,7 @@ gen = ParameterGenerator()
 
 $0
 
-exit(gen.generate(PACKAGE, "${2:node_name}", "${3:`!p snip.rv = snip.basename`}"))
+exit(gen.generate(PACKAGE, NODE, "${3:`!p snip.rv = snip.basename`}"))
 endsnippet
 
 snippet int "Add integer parameter" !b
