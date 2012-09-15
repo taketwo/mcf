@@ -5,19 +5,19 @@ snippet launch "Launch tag" !b
 endsnippet
 
 snippet include "Include file tag" !b
-<include file="$(find ${1:pkg-name})/${2:path}.launch" />
+<include file="$(find ${1:pkg-name})/${2:path}.launch"/>
 endsnippet
 
 snippet node "Node tag" !b
-<node pkg="${1}" type="${2}" name="${3:$2}"${4: args="${5}"} />
+<node pkg="${1}" type="${2}" name="${3:$2}"${4: args="${5}"}/>
 endsnippet
 
 snippet param "Param tag" !b
-<param name="${1}" value="${2}" type="${3:str|int|double|bool}" />
+<param name="${1}" value="${2}" type="${3:str|int|double|bool}"/>
 endsnippet
 
 snippet rosparam "Rosparam load tag" !b
-<rosparam command="load" file="$(find ${1:pkg-name})/${2:path}.yaml" />
+<rosparam command="load" file="$(find ${1:pkg-name})/${2:path}.yaml"/>
 endsnippet
 
 snippet env "Environment variable substitution" !b
@@ -29,5 +29,5 @@ $(arg ${1:arg-name})
 endsnippet
 
 snippet remap "Remap topics" !b
-<remap from="${1:from_topic}" to="${2:to_topic}" />
+<remap from="${1:from_topic}" to="${2:to_topic}"/>
 endsnippet
