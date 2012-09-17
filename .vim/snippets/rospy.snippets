@@ -38,3 +38,12 @@ def get_level(c):
 snip.rv = get_level(match.group(1) or 'i')
 `('${1:Message}'${2/.+/ % (/}${2}${2/.+/)/})$0
 endsnippet
+
+snippet state "Smach state class" !b
+class ${1:StateName}(smach.State):
+	def __init__(self):
+		smach.State.__init__(self,
+			outcomes=[${2:'outcome1'}])
+	def execute(self, userdata):
+		pass
+endsnippet
