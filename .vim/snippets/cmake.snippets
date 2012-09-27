@@ -28,6 +28,14 @@ add_definitions(-Wno-unknown-pragmas)
 add_definitions(-Wno-deprecated)
 endsnippet
 
+snippet wall "Warnings as errors" !b
+#...: enable all but certain warnings
+add_definitions(-Wall)
+add_definitions(-Wno-unknown-pragmas)
+add_definitions(-Wno-deprecated)
+add_definitions(-fpermissive)
+endsnippet
+
 snippet exe "Add executable target" !b
 add_executable(${1:test}
   ${2:src/test.cpp}

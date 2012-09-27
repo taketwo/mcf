@@ -36,9 +36,13 @@ ros::Publisher ${1}_publisher = ${2:nh}.advertise<${3:std_msgs::String}>("${4:to
 endsnippet
 
 snippet client "Client" !b
-ros::ServiceClient ${1}_client = ${2:nh}.serviceClient<${3:std_srvs::Empty}>("${4:topic}");
+ros::ServiceClient ${1:client} = ${2:nh}.serviceClient<${3:std_srvs::Empty}>("${4:topic}");
 $3 ${5:srv};
 $5.request.${6:/* fill in request parameters */}
+endsnippet
+
+snippet service "Service server" !b
+ros::ServiceServer ${1:service} = ${2:nh}.advertiseService("${3:topic}", ${4:callback}${4/.+?(C?$)/(?1:allback:)/}${4/(^&?).*/(?1:, this:)/})$0
 endsnippet
 
 snippet dynrec "Dynamic reconfigure template" !b
@@ -54,4 +58,12 @@ endsnippet
 
 snippet pn "Private node handle" !b
 ros::NodeHandle ${1:pn}("~")$0
+endsnippet
+
+snippet nh "Node handle" !b
+ros::NodeHandle ${1:nh}$0
+endsnippet
+
+snippet now "Current time"
+ros::Time::now()
 endsnippet

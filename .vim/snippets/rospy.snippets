@@ -43,7 +43,9 @@ snippet state "Smach state class" !b
 class ${1:StateName}(smach.State):
 	def __init__(self):
 		smach.State.__init__(self,
-			outcomes=[${2:'outcome1'}])
+			outcomes=[${2:'outcome1'}],
+			input_keys=[${3:'input'}],
+			output_keys=[${4:'output'}])
 	def execute(self, userdata):
 		pass
 endsnippet
