@@ -16,6 +16,10 @@ snippet param "Param tag" !b
 <param name="${1}" value="${2}" type="${3:str|int|double|bool}"/>
 endsnippet
 
+snippet arg "Arg tag" b
+<arg name="${1}" default="${2}"/>
+endsnippet
+
 snippet rosparam "Rosparam load tag" !b
 <rosparam command="load" file="$(find ${1:pkg-name})/${2:path}.yaml"/>
 endsnippet
@@ -24,7 +28,7 @@ snippet env "Environment variable substitution" !b
 $(env ${1:ENVIRONMENT_VARIABLE})
 endsnippet
 
-snippet arg "Argument substitution" !b
+snippet arg "Argument substitution" i
 $(arg ${1:arg-name})
 endsnippet
 
