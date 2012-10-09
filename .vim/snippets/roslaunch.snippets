@@ -32,6 +32,10 @@ snippet arg "Argument substitution" i
 $(arg ${1:arg-name})
 endsnippet
 
+snippet find "Find package" i
+$(find ${1:pkg-name})$0
+endsnippet
+
 snippet remap "Remap topics" !b
 <remap from="${1:from_topic}" to="${2:to_topic}"/>
 endsnippet

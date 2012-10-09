@@ -23,6 +23,10 @@ snippet sub "Subscriber" !b
 ${1:subscriber} = rospy.Subscriber('${2:topic}', ${3:message_type}, ${4:callback})$0
 endsnippet
 
+snippet client "Service client" !b
+${1:client} = rospy.ServiceProxy('${2:service}', ${3:srv.Type})$0
+endsnippet
+
 snippet now "Current time"
 rospy.Time.now()
 endsnippet
@@ -48,4 +52,8 @@ class ${1:StateName}(smach.State):
 			output_keys=[${4:'output'}])
 	def execute(self, userdata):
 		pass
+endsnippet
+
+snippet par "Query parameter from server" !b
+${1/[\/~]?(.+)/$1/} = rospy.get_param('${1:param_name}'${2/.+/, /}${2}${2/.+//})$0
 endsnippet
