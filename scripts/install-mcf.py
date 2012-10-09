@@ -12,6 +12,8 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
          ('.bashrc', 'Bash configuration file'),
          ('.gitconfig', 'GIT configuration file')]
 
+deb_packages = ['python-pip']
+
 pypi_packages = ['flake8', 'pep8']
 
 
@@ -24,6 +26,12 @@ def link(filename, desc):
     os.symlink(src, dest)
     print '[*]', desc
     print '   ', dest, '->', src
+
+
+def deb(package):
+    print '[*]', package
+    cmd = 'sudo apt-get install %s' % package
+    subprocess.call(cmd.split())
 
 
 def pypi(package):
@@ -43,6 +51,12 @@ if __name__ == '__main__':
     print ''
     for f, d in files:
         link(f, d)
+    print ''
+
+    print 'Installing debian packages...'
+    print ''
+    for p in deb_packages:
+        deb(p)
     print ''
 
     print 'Installing python packages...'
