@@ -12,6 +12,6 @@ let g:syntastic_cpp_config_file = '.clang_complete'
 let g:syntastic_error_symbol = '✘'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'passive_filetypes': ['cpp'] }
+                           \ 'passive_filetypes': ['cpp', 'tex'] }
 let g:syntastic_cpp_check_header = 0
 :highlight SignColumn ctermbg=bg
