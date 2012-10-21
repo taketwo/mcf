@@ -10,7 +10,10 @@
   old = red bold
   new = green bold
 [alias]
-  st = status
+  st = status -sb
   co = checkout
+  pr = pull --rebase
+  in = "!git remote update -p; git log ..@{u}"
+  out = log @{u}..
 [core]
   editor = vim
