@@ -24,7 +24,7 @@
 	url = https://github.com/tomtom/tlib_vim.git
 [submodule "vim-showmarks"]
 	path = .vim/bundle/vim-showmarks
-	url = https://github.com/VimEz/ShowMarks.git
+	url = https://github.com/xsunsmile/showmarks.git
 [submodule "vim-git"]
 	path = .vim/bundle/vim-git
 	url = https://github.com/tpope/vim-git.git
