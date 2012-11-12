@@ -140,7 +140,7 @@
   " Enable spell checking
   nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
-  set pastetoggle=<Leader>pt
+  set pastetoggle=<F4>
 
   nnoremap <C-s> :w<CR>
 
