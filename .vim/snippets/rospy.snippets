@@ -23,8 +23,16 @@ snippet sub "Subscriber" !b
 ${1:subscriber} = rospy.Subscriber('${2:topic}', ${3:message_type}, ${4:callback})$0
 endsnippet
 
-snippet client "Service client" !b
+snippet "scli(ent)?" "Service client" !br
 ${1:client} = rospy.ServiceProxy('${2:service}', ${3:srv.Type})$0
+endsnippet
+
+snippet "s(srv|server)" "Service server" !br
+${1:server} = rospy.Service('${2:service}', ${3:srv.Type}, ${4:callback})$0
+endsnippet
+
+snippet "acli(ent)?" "Action client" !br
+${1:client} = ${2:actionlib.}SimpleActionClient('${3:service}', ${4:msg.MyAction})$0
 endsnippet
 
 snippet now "Current time"
