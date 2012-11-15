@@ -70,7 +70,7 @@
   map <Leader>' <Plug>Ysurroundiw'
   vnoremap <Leader>' c'<C-R>"'<ESC>
 
-  " Surround a word with (parens)
+  " Surround a word with (parenthesis)
   map <Leader>( <Plug>Ysurroundiw)
   vnoremap <Leader>( c(<C-R>")<ESC>
 
@@ -96,7 +96,7 @@
 
 " ============================ Window management =========================== "
 
-  " Move between split windows similarlay to normal motion
+  " Move between split windows similarly to normal motion
 
   noremap <C-w><C-n> <C-w>l
   noremap <C-w><C-c> <C-w>k
@@ -156,7 +156,7 @@
   autocmd QuickFixCmdPost [^l]* nested cwindow
   autocmd QuickFixCmdPost    l* nested lwindow
 
-  " Jump to next line in location list (useful for Syntactic)
+  " Jump to next line in location list (useful for Syntastic)
   nnoremap <Leader>e :lne<CR>
   nnoremap <Leader>E :lp<CR>
 
