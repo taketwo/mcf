@@ -86,6 +86,14 @@
   map <Leader>< <Plug>Ysurroundiw>
   vnoremap <Leader>< c<<C-R>"><ESC>
 
+  " Surround a word with *asterisks*
+  map <Leader>* <Plug>Ysurroundiw*
+  vnoremap <Leader>* c*<C-R>"*<ESC>
+
+  " Surround a word with `backticks`
+  map <Leader>` <Plug>Ysurroundiw`
+  vnoremap <Leader>` c`<C-R>"`<ESC>
+
 " ============================ Window management =========================== "
 
   " Move between split windows similarlay to normal motion
