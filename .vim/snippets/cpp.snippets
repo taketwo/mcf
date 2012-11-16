@@ -70,3 +70,14 @@ endsnippet
 snippet car "Const auto reference" !b
 const auto& ${1:variable} = $0
 endsnippet
+
+snippet try "Try-catch block" !b
+try
+{
+  $0
+}
+catch (${1:std::runtime_error& e})
+{
+  // TODO: handle error
+}
+endsnippet
