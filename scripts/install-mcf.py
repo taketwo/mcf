@@ -12,7 +12,7 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
          ('.bashrc', 'Bash configuration file'),
          ('.gitconfig', 'GIT configuration file')]
 
-deb_packages = ['python-pip', 'exuberant-ctags']
+deb_packages = ['python-pip', 'exuberant-ctags', 'xsel']
 
 pypi_packages = ['flake8', 'pep8']
 
