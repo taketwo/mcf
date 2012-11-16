@@ -152,8 +152,10 @@
 
   set pastetoggle=<F4>
 
+  " Save file with Ctrl+S
   nnoremap <C-s> :w<CR>
 
+  " Run make with F9
   nnoremap <F9> :make<CR>
   autocmd QuickFixCmdPost [^l]* nested cwindow
   autocmd QuickFixCmdPost    l* nested lwindow
@@ -164,6 +166,10 @@
 
   " Jump to the next item in Quickfix list with Tab
   nnoremap <Tab> :cn<CR>
+
+  " Copy short/long filename to clipboard
+  nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
+  nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
 " ========================== Shortcuts for plugins ========================= "
 
