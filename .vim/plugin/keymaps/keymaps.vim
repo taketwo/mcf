@@ -42,7 +42,9 @@
   " Go to the beginning and the end of line with _/-
 
   nnoremap - $
+  vnoremap - $
   nnoremap _ ^
+  vnoremap _ ^
 
 " ============================ Push text around ============================ "
 
