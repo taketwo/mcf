@@ -4,15 +4,18 @@ inoremap <buffer> .. ->
 " Append semicolon to the end of the line
 nnoremap <LocalLeader>; A;<Esc>
 
-nnoremap <LocalLeader>p :call TogglePrivate()<CR>
-function! TogglePrivate()
-  normal! e
-  if getline('.')[col('.')-1] == "_"
-    normal! x
-  else
-    normal! a_
-  endif
-endfunction
+nnoremap <LocalLeader>p :python TogglePrivate()<CR>
+python << EOF
+def TogglePrivate():
+    import vim
+    word = vim.eval('expand("<cword>")')
+    if word[-1] == '_':
+      converted = word[:-1]
+    else:
+      converted = word + '_'
+    vim.command('normal! viws%s' % converted)
+    print '%s → %s' % (word, converted)
+EOF
 
 nnoremap <LocalLeader>c :python ToggleCamelCase()<CR>
 python << EOF
@@ -20,7 +23,7 @@ def ToggleCamelCase():
     from os.path import expanduser, join
     import sys; sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
     import conversions
-    import vim, string
+    import vim
     word = vim.eval('expand("<cword>")')
     if conversions.is_camelcase(word):
         converted = conversions.camelcase_to_snakecase(word)
