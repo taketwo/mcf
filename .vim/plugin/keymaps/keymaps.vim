@@ -115,7 +115,7 @@
 
   " Copy entire word even if the cursor is halfway inside the word
 
-  nnoremap <Leader>cw yiww
+  nnoremap <Leader>yw yiww
 
   " Replace word with what's in the yank buffer
 
