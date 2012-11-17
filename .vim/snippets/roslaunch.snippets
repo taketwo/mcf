@@ -9,7 +9,7 @@ snippet include "Include file tag" !b
 endsnippet
 
 snippet node "Node tag" !b
-<node pkg="${1}" type="${2}" name="${3:$2}"${4: args="${5}"}/>
+<node pkg="${1}" type="${2}" name="${3:${2/(.+)(\..*)/$1/}}"${4: args="${5}"}/>
 endsnippet
 
 snippet param "Param tag" !b
