@@ -132,13 +132,15 @@ alias .......="cd ../../../../../.."
 # quick out-of-source build preparation
 alias osb='mkd build && ccmake ..'
 
-# misc
+# apt-get aliases
 alias agu='sudo apt-get update && sudo apt-get upgrade'
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
+
+# misc
 alias pt='sudo powertop'
 
-export PATH=/opt/llvm/bin:$PATH
+export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
