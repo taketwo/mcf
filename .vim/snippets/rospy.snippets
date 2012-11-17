@@ -63,5 +63,5 @@ class ${1:StateName}(smach.State):
 endsnippet
 
 snippet par "Query parameter from server" !b
-${1/[\/~]?(.+)/$1/} = rospy.get_param('${1:param_name}'${2/.+/, /}${2}${2/.+//})$0
+${1/[\/~]?(.+)/$1/} = rospy.get_param('${1:param_name}'${2/.+/, /}${2:default}${2/.+//})$0
 endsnippet
