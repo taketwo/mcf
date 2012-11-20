@@ -96,6 +96,9 @@
   map <Leader>` <Plug>Ysurroundiw`
   vnoremap <Leader>` c`<C-R>"`<ESC>
 
+  " Delete surrounding
+  nnoremap ds <Plug>Dsurround
+
 " ============================ Window management =========================== "
 
   " Move between split windows similarly to normal motion
@@ -161,7 +164,7 @@
   autocmd QuickFixCmdPost    l* nested lwindow
 
   " Jump to next line in location list (useful for Syntastic)
-  nnoremap <Leader>e :lne<CR>
+  nnoremap <Leader>e :ll<CR>
   nnoremap <Leader>E :lp<CR>
 
   " Jump to the next item in Quickfix list with Tab

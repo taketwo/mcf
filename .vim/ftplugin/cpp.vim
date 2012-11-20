@@ -37,7 +37,7 @@ EOF
 
 " Remove function call: when on a function name,
 " removes the name and the parens around its arguments.
-nmap <LocalLeader>f diwds()
+nnoremap <LocalLeader>f diwds()
 
 " Delete until next closing brace
 nnoremap <LocalLeader>0 dt)
