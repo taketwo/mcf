@@ -152,3 +152,9 @@ if [ -f ~/.secrets ]; then
     . ~/.secrets
 fi
 
+# Setup fancy "powerline-style" prompt
+function _update_ps1()
+{
+  export PS1="$(~/.mcf/scripts/bin/powerline-bash.py $?) "
+}
+export PROMPT_COMMAND="_update_ps1"
