@@ -15,5 +15,14 @@
   pr = pull --rebase
   in = "!git remote update -p; git log ..@{u}"
   out = log @{u}..
+  # Legit aliases
+  switch = !legit switch \"$@\"
+  branches = !legit branches
+  sprout = !legit sprout \"$@\"
+  unpublish = !legit unpublish \"$@\"
+  harvest = !legit harvest \"$@\"
+  sync = !legit sync \"$@\"
+  publish = !legit publish \"$@\"
+  graft = !legit graft \"$@\"
 [core]
   editor = vim
