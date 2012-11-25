@@ -5,10 +5,8 @@
   local = yellow
   remote = green
 [color "diff"]
-  meta = yellow bold
-  frag = magenta bold
+  frag = magenta
   old = red bold
-  new = green bold
 [alias]
   st = status -sb
   co = checkout

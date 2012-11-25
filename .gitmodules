@@ -109,3 +109,6 @@
 [submodule "xmonad-solarized"]
 	path = .xmonad/bundle/xmonad-solarized
 	url = git://github.com/ibotty/solarized-xmonad.git
+[submodule ".vim/bundle/vim-markdown-folding"]
+	path = .vim/bundle/vim-markdown-folding
+	url = git://github.com/nelstrom/vim-markdown-folding.git
