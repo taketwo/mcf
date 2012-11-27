@@ -61,8 +61,7 @@ mcfLayouts =
 
 myManageHook :: [ManageHook]
 myManageHook =
-  [ resource  =? "Do" --> doIgnore
-  , isFullscreen --> doFullFloat
+  [ isFullscreen --> doFullFloat
   , className =? "Unity-2d-panel" --> doIgnore ]
 
 main = xmonad $ gnomeConfig
@@ -88,12 +87,13 @@ main = xmonad $ gnomeConfig
     , ("M-t", sendMessage $ Go D)
     , ("M-h", sendMessage $ Go L)
     , ("M-n", sendMessage $ Go R)
-    , ("M-C-<L>", sendMessage Shrink)
-    , ("M-C-<R>", sendMessage Expand)
-    , ("M-C-c", sendMessage $ Swap U)
-    , ("M-C-t", sendMessage $ Swap D)
-    , ("M-C-h", sendMessage $ Swap L)
-    , ("M-C-n", sendMessage $ Swap R)
-    , ("M-C-m", windows W.swapMaster)
-    , ("M-C-f", withFocused $ windows . W.sink)
+    , ("M-S-<L>", sendMessage Shrink)
+    , ("M-S-<R>", sendMessage Expand)
+    , ("M-S-c", sendMessage $ Swap U)
+    , ("M-S-t", sendMessage $ Swap D)
+    , ("M-S-h", sendMessage $ Swap L)
+    , ("M-S-n", sendMessage $ Swap R)
+    , ("M-S-m", windows W.swapMaster)
+    , ("M-S-w", kill)
+    , ("M-S-f", withFocused $ windows . W.sink)
     ]
