@@ -68,7 +68,7 @@ main = xmonad $ gnomeConfig
   { modMask = mcfModMask
   , focusedBorderColor = mcfFocusedBorderColor
   , normalBorderColor = mcfNormalBorderColor
-  , terminal = "urxvt"
+  , terminal = "gnome-terminal"
   , borderWidth = mcfBorderWidth
   , manageHook = manageHook gnomeConfig <+> composeAll myManageHook
   , logHook = ewmhDesktopsLogHook >> setWMName "LG3D" -- java workaround
@@ -80,7 +80,8 @@ main = xmonad $ gnomeConfig
     , ("M-S-l", spawn "gnome-screensaver-command -l")
     {-, ("<XF86Forward>", nextWS)-}
     {-, ("<XF86Back>", prevWS)-}
-    , ("M1-<Tab>", windows W.focusUp)
+    , ("M-<Tab>", sendMessage NextLayout)
+    , ("M1-<Tab>", windows W.focusDown)
     , ("M-<L>", prevScreen)
     , ("M-<R>", nextScreen)
     , ("M-c", sendMessage $ Go U)
@@ -96,4 +97,5 @@ main = xmonad $ gnomeConfig
     , ("M-S-m", windows W.swapMaster)
     , ("M-S-w", kill)
     , ("M-S-f", withFocused $ windows . W.sink)
+    , ("M-<Return>", spawn "gnome-terminal")
     ]
