@@ -67,3 +67,10 @@ endsnippet
 snippet now "Current time"
 ros::Time::now()
 endsnippet
+
+snippet cb "Callback" !b
+void ${1:callback}(const ${2:std_msg::String}ConstPtr& ${3:msg})
+{
+  $0
+}
+endsnippet
