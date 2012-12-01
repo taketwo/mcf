@@ -14,7 +14,7 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
 
 deb_packages = ['python-pip', 'exuberant-ctags', 'xsel']
 
-pypi_packages = ['flake8', 'pep8']
+pypi_packages = ['flake8', 'pep8', 'legit']
 
 
 def link(filename, desc):
