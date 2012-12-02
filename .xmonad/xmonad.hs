@@ -62,8 +62,10 @@ mcfLayouts =
 myManageHook :: [ManageHook]
 myManageHook =
   [ isFullscreen --> doFullFloat
-  , className =? "Unity-2d-panel" --> doIgnore ]
-
+  , className =? "Unity-2d-panel" --> doIgnore
+  , className =? "Workrave" --> doF (W.shift "9")
+  , className =? "Rhythmbox" --> doF (W.shift "9")
+  ]
 main = xmonad $ gnomeConfig
   { modMask = mcfModMask
   , focusedBorderColor = mcfFocusedBorderColor
@@ -98,4 +100,5 @@ main = xmonad $ gnomeConfig
     , ("M-S-w", kill)
     , ("M-S-f", withFocused $ windows . W.sink)
     , ("M-<Return>", spawn "gnome-terminal")
+    , ("M-<Space>", spawn "kupfer")
     ]
