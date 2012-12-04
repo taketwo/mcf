@@ -165,6 +165,7 @@ def add_git_segment(powerline, cwd):
     return True
 
 def add_svn_segment(powerline, cwd):
+    return
     if not os.path.exists(os.path.join(cwd,'.svn')):
         return
     '''svn info:
