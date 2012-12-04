@@ -1,5 +1,8 @@
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 
+" Number of items to display
+let g:ctrlp_max_height = 12
+
 " Default to filename searches
 let g:ctrlp_by_filename = 1
 
