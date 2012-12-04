@@ -97,7 +97,7 @@
   vnoremap <Leader>` c`<C-R>"`<ESC>
 
   " Delete surrounding
-  nnoremap ds <Plug>Dsurround
+  nmap ds <Plug>Dsurround
 
 " ============================ Window management =========================== "
 
