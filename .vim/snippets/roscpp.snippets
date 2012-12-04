@@ -38,14 +38,27 @@ snippet sub "Subscriber" !b
 ${1/.*?(_?$)/(?1::ros\:\:Subscriber )/}${1:subscriber} = ${2:nh}${1/.*?(_?$)/(?1:_:)/}.subscribe("${3:topic}", ${4:10}, ${5:callback}${5/.+?(C?$)/(?1:allback:)/}${5/(^&?).*/(?1:, this:)/});$0
 endsnippet
 
-snippet client "Client" !b
-ros::ServiceClient ${1:client} = ${2:nh}.serviceClient<${3:std_srvs::Empty}>("${4:topic}");
+snippet "scli(ent)?" "Service client" !br
+${1/.*?(_?$)/(?1::ros\:\:ServiceClient )/}${1:client} = ${2:nh}${1/.*?(_?$)/(?1:_:)/}.serviceClient<${3:std_srvs::Empty}>("${4:topic}");
 $3 ${5:srv};
 $5.request.${6:/* fill in request parameters */}
+if ($1.call($5))
+{
+  $0
+}
 endsnippet
 
-snippet service "Service server" !b
-ros::ServiceServer ${1:service} = ${2:nh}.advertiseService("${3:topic}", ${4:callback}${4/.+?(C?$)/(?1:allback:)/}${4/(^&?).*/(?1:, this:)/})$0
+snippet "s(srv|server)" "Service server" !br
+${1/.*?(_?$)/(?1::ros\:\:ServiceServer )/}${1:service} = ${2:nh}${1/.*?(_?$)/(?1:_:)/}.advertiseService("${3:topic}", ${4:callback}${4/.+?(C?$)/(?1:allback:)/}${4/(^&?).*/(?1:, this:)/})$0
+endsnippet
+
+snippet scall "Service call (without creating client)" !b
+${1:std_srvs::Empty} ${2:srv};
+$2.request.${4:/* fill in request parameters */}
+if (ros::service::call("${3:topic}", $2))
+{
+  $0
+}
 endsnippet
 
 snippet dynrec "Dynamic reconfigure template" !b
@@ -71,10 +84,18 @@ snippet now "Current time"
 ros::Time::now()
 endsnippet
 
-snippet cb "Callback" !b
-void ${1:callback}(const ${2:std_msg::String}ConstPtr& ${3:msg})
+snippet cbm "Callback for messages" !b
+void ${1:callback}(const ${2:std_msgs::String}ConstPtr& ${3:msg})
 {
   $0
+}
+endsnippet
+
+snippet cbs "Callback for services" !b
+bool ${1:callback}(${2:std_srvs::Empty}::Request& ${3:request}, $2::Response& ${4:response})
+{
+  $0
+  return true;
 }
 endsnippet
 
