@@ -63,6 +63,7 @@ myManageHook :: [ManageHook]
 myManageHook =
   [ isFullscreen --> doFullFloat
   , className =? "Unity-2d-panel" --> doIgnore
+  , className =? "Skype" --> doF (W.shift "8")
   , className =? "Workrave" --> doF (W.shift "9")
   , className =? "Rhythmbox" --> doF (W.shift "9")
   ]
@@ -96,8 +97,9 @@ main = xmonad $ gnomeConfig
     , ("M-S-t", sendMessage $ Swap D)
     , ("M-S-h", sendMessage $ Swap L)
     , ("M-S-n", sendMessage $ Swap R)
-    , ("M-S-m", windows W.swapMaster)
+    , ("M-S-<Space>", windows W.swapMaster)
     , ("M-S-w", kill)
+    , ("M1-<F4>", kill)
     , ("M-S-f", withFocused $ windows . W.sink)
     , ("M-<Return>", spawn "gnome-terminal")
     , ("M-<Space>", spawn "kupfer")
