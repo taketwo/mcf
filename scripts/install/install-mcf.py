@@ -10,6 +10,8 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
          ('.vim', 'VIM settings/plugins folder'),
          ('.vimrc', 'VIM configuration file'),
          ('.bashrc', 'Bash configuration file'),
+         ('.mime.types', 'Custom MIME types'),
+         ('.mailcap', 'Custom MIME type-to-program mappings'),
          ('.gitconfig', 'GIT configuration file')]
 
 deb_packages = ['python-pip', 'exuberant-ctags', 'xsel']
