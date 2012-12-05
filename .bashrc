@@ -140,6 +140,7 @@ alias agr='sudo apt-get remove'
 # misc
 alias pt='sudo powertop'
 alias ga='gitk --all'
+alias gg='git gui'
 
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
 
