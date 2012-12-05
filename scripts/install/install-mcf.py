@@ -14,7 +14,10 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
          ('.mailcap', 'Custom MIME type-to-program mappings'),
          ('.gitconfig', 'GIT configuration file')]
 
-deb_packages = ['python-pip', 'exuberant-ctags', 'xsel']
+deb_packages = ['python-pip',
+                'exuberant-ctags',
+                'xsel',
+                'ack-grep']
 
 pypi_packages = ['flake8', 'pep8', 'legit']
 
