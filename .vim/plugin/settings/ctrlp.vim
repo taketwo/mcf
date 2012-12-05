@@ -1,4 +1,8 @@
-let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
+" Show dotfiles
+let g:ctrlp_show_hidden = 1
+
+" Ignore version control folders
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 " Number of items to display
 let g:ctrlp_max_height = 12
