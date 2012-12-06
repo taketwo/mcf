@@ -1,1 +1,2 @@
 application/x-pcd; pcl_viewer %s
+application/pdf; evince %s
