@@ -167,9 +167,6 @@
   nnoremap <Leader>e :ll<CR>
   nnoremap <Leader>E :lp<CR>
 
-  " Jump to the next item in Quickfix list with Tab
-  nnoremap <Tab> :cn<CR>
-
   " Copy short/long filename to clipboard
   nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
   nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
