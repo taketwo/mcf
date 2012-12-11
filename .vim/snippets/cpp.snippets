@@ -81,3 +81,8 @@ catch (${1:std::runtime_error& e})
   // TODO: handle error
 }
 endsnippet
+
+snippet math "Include math header" !b
+${1:#define _USE_MATH_DEFINES
+}#include <cmath>$0
+endsnippet
