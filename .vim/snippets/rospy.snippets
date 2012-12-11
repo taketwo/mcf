@@ -65,3 +65,11 @@ endsnippet
 snippet par "Query parameter from server" !b
 ${1/[\/~]?(.+)/$1/} = rospy.get_param('${1:param_name}'${2/.+/, /}${2:default}${2/.+//})$0
 endsnippet
+
+###########################################################################
+#                             Transformations                             #
+###########################################################################
+
+snippet e2q "Euler to quaternion"
+${1:q} = ${2:tf.transformations.}quaternion_from_euler(${3:0, 0, yaw})$0
+endsnippet

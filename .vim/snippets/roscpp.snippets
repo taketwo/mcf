@@ -117,3 +117,27 @@ private:
 };
 endsnippet
 
+###########################################################################
+#                             Transformations                             #
+###########################################################################
+# http://ros.org/doc/fuerte/api/tf/html/c++/namespacetf.html
+
+snippet y2qm "Yaw to quaternion message"
+${1:geometry_msgs::Quaternion ${2:q} = }tf::createQuaternionMsgFromYaw(${3:yaw})$0
+endsnippet
+
+snippet y2q "Yaw to quaternion"
+${1:tf::Quaternion ${2:q} = }tf::createQuaternionFromYaw(${3:yaw})$0
+endsnippet
+
+snippet q2y "Quaternion to yaw"
+${1:double ${2:yaw} = }tf::getYaw(${3:q})$0
+endsnippet
+
+snippet e2qm "Euler to quaternion message"
+${1:geometry_msgs::Quaternion ${2:q} = }tf::createQuaternionMsgFromRollPitchYaw(${3:roll}, ${4:pitch}, ${5:yaw})$0
+endsnippet
+
+snippet e2q "Euler to quaternion"
+${1:tf::Quaternion ${2:q} = }tf::createQuaternionFromRPY(${3:roll}, ${4:pitch}, ${5:yaw})$0
+endsnippet
