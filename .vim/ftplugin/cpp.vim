@@ -4,6 +4,9 @@ inoremap <buffer> .. ->
 " Append semicolon to the end of the line
 nnoremap <LocalLeader>; A;<Esc>
 
+" Select until the underscore and substitute
+nnoremap <LocalLeader>- vt_s
+
 nnoremap <LocalLeader>p :python TogglePrivate()<CR>
 python << EOF
 def TogglePrivate():
