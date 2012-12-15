@@ -31,6 +31,13 @@ snippet "s(srv|server)" "Service server" !br
 ${1:server} = rospy.Service('${2:service}', ${3:srv.Type}, ${4:callback})$0
 endsnippet
 
+snippet scall "Service call" !b
+try:
+  ${1:response} = ${2:some_srv}(${3:request})
+except rospy.ServiceException as e:
+  print "Service call failed: %s" % str(e)
+endsnippet
+
 snippet "acli(ent)?" "Action client" !br
 ${1:client} = ${2:actionlib.}SimpleActionClient('${3:service}', ${4:msg.MyAction})$0
 endsnippet
