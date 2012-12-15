@@ -117,6 +117,25 @@ extract ()
   fi
 }
 
+# pack known archive types
+pack ()
+{
+  if [ $1 ] ; then
+    case $1 in
+      tbz)      tar cjvf $2.tar.bz2 $2   ;;
+      tgz)      tar czvf $2.tar.gz  $2   ;;
+      tar)      tar cpvf $2.tar  $2      ;;
+      bz2)      bzip $2                  ;;
+      gz)       gzip -c -9 -n $2 > $2.gz ;;
+      zip)      zip -r $2.zip $2         ;;
+      7z)       7z a $2.7z $2            ;;
+      *)        echo "Do not know how to pack in '$1'..." ;;
+    esac
+  else
+    echo "'$1' is not a valid file!"
+  fi
+}
+
 # utulities to navigate the filesystem
 function mkd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
 alias la='ls -lah'
@@ -141,6 +160,8 @@ alias agr='sudo apt-get remove'
 alias pt='sudo powertop'
 alias ga='gitk --all'
 alias gg='git gui'
+alias x='exit'
+alias ff='find . -name $*'
 
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
 
