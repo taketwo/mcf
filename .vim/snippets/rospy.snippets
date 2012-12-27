@@ -15,29 +15,6 @@ snippet init "Initialize node" !b
 rospy.init_node(NODE${1:, anonymous=True})$0
 endsnippet
 
-snippet pub "Publisher" !b
-${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type})$0
-endsnippet
-
-snippet sub "Subscriber" !b
-${1:subscriber} = rospy.Subscriber('${2:topic}', ${3:message_type}, ${4:callback})$0
-endsnippet
-
-snippet "scli(ent)?" "Service client" !br
-${1:client} = rospy.ServiceProxy('${2:service}', ${3:srv.Type})$0
-endsnippet
-
-snippet "s(srv|server)" "Service server" !br
-${1:server} = rospy.Service('${2:service}', ${3:srv.Type}, ${4:callback})$0
-endsnippet
-
-snippet scall "Service call" !b
-try:
-  ${1:response} = ${2:some_srv}(${3:request})
-except rospy.ServiceException as e:
-  print "Service call failed: %s" % str(e)
-endsnippet
-
 snippet "acli(ent)?" "Action client" !br
 ${1:client} = ${2:actionlib.}SimpleActionClient('${3:service}', ${4:msg.MyAction})$0
 endsnippet
@@ -67,6 +44,39 @@ endsnippet
 
 snippet par "Query parameter from server" !b
 ${1/[\/~]?(.+)/$1/} = rospy.get_param('${1:param_name}'${2/.+/, /}${2:default}${2/.+//})$0
+endsnippet
+
+
+###########################################################################
+#                          Publisher/Subscriber                           #
+###########################################################################
+
+snippet pub "Publisher" !b
+${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type})$0
+endsnippet
+
+snippet sub "Subscriber" !b
+${1:subscriber} = rospy.Subscriber('${2:topic}', ${3:message_type}, ${4:callback})$0
+endsnippet
+
+
+###########################################################################
+#                                Services                                 #
+###########################################################################
+
+snippet "scli(ent)?" "Service client" !br
+${1:client} = rospy.ServiceProxy('${2:service}', ${3:srv.Type})$0
+endsnippet
+
+snippet "s(srv|server)" "Service server" !br
+${1:server} = rospy.Service('${2:service}', ${3:srv.Type}, ${4:callback})$0
+endsnippet
+
+snippet scall "Service call" !b
+try:
+  ${1:response} = ${2:some_srv}(${3:request})
+except rospy.ServiceException as e:
+  print "Service call failed: %s" % str(e)
 endsnippet
 
 
