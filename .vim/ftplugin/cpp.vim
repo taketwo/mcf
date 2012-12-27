@@ -38,8 +38,8 @@ def ToggleCamelCase():
     print '%s → %s' % (word, converted)
 EOF
 
-" Remove function call: when on a function name,
-" removes the name and the parens around its arguments.
+" Remove function call
+" When on a function name, removes the name and the parens around its arguments
 nnoremap <LocalLeader>f diwds()
 
 " Delete until next closing brace
