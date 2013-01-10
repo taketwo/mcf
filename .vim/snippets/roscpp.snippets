@@ -37,6 +37,22 @@ dynamic_reconfigure::Server<${1:package}::${2:FooConfig}> ${3:server};
 $3.setCallback(boost::bind(&$4, _1, _2));
 endsnippet
 
+snippet "acli(ent)?" "Action client" !br
+#include <actionlib/client/simple_action_client.h>
+#include <$1/$2.h>
+actionlib::SimpleActionClient<${1:package}::${2:FooAction}> ${3:client}(${4:"topic"}, true);
+endsnippet
+
+snippet acall "Action call" !b
+${1:package::FooGoal} ${2:goal};
+$2.${3:/* fill in goal parameters */}
+${4:client}.sendGoal($2);
+if ($4.waitForResult(ros::Duration(${5:30.0})))
+{
+  actionlib::SimpleClientGoalState state = $4.getState();
+}
+endsnippet
+
 snippet cbm "Callback for messages" !b
 void ${1:callback}(const ${2:std_msgs::String}ConstPtr& ${3:msg})
 {
@@ -152,6 +168,22 @@ endsnippet
 
 snippet e2q "Euler to quaternion"
 ${1:tf::Quaternion ${2:q} = }tf::createQuaternionFromRPY(${3:roll}, ${4:pitch}, ${5:yaw})$0
+endsnippet
+
+snippet tfl "Transform lookup" !b
+#include <tf/transform_listener.h>
+tf::TransformListener $2;
+tf::StampedTransform ${1:transform};
+try
+{
+  ros::Time now = ros::Time::now();
+  ${2:tf_listener_}.waitForTransform("${3:odom}", "${4:base_link}", now, ros::Duration(${5:0.1}));
+  $2.lookupTransform("$3", "$4", now, $1);
+}
+catch (tf::TransformException& e)
+{
+  ROS_ERROR("Unable to lookup the transform: %s", e.what());
+}
 endsnippet
 
 
