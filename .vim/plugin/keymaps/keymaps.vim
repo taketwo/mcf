@@ -155,6 +155,9 @@
 
   set pastetoggle=<F4>
 
+  " Close the current buffer with F11
+  nnoremap <F11> :BW<CR>
+
   " Save file with Ctrl+S
   nnoremap <C-s> :w<CR>
 
