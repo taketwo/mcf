@@ -11,6 +11,7 @@
   st = status -sb
   co = checkout
   pr = pull --rebase
+  lg = log --oneline --decorate
   in = "!git remote update -p; git log ..@{u}"
   out = log @{u}..
   # Legit aliases
@@ -24,3 +25,5 @@
   graft = !legit graft \"$@\"
 [core]
   editor = vim
+[push]
+  default = tracking
