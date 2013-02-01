@@ -17,7 +17,9 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
 deb_packages = ['python-pip',
                 'exuberant-ctags',
                 'xsel',
-                'ack-grep']
+                'ack-grep',
+                'vim',
+                'tree']
 
 pypi_packages = ['flake8', 'pep8', 'legit']
 
