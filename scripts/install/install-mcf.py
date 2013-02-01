@@ -19,7 +19,9 @@ deb_packages = ['python-pip',
                 'xsel',
                 'ack-grep',
                 'vim',
-                'tree']
+                'tree',
+                'gitk',
+                'git-gui']
 
 pypi_packages = ['flake8', 'pep8', 'legit']
 
@@ -72,16 +74,22 @@ if __name__ == '__main__':
         pypi(p)
     print ''
 
-    print 'Configuring gnome terminal for Solarized palette...'
+    print 'Configuring Gnome terminal for Solarized palette...'
     print ''
-    subprocess.call(os.path.join(mcf, 'scripts',
-                                 'install-solarized-colors.bash'))
+    solarized = os.path.join(mcf, 'scripts', 'install',
+                             'install-solarized-colors.bash')
+    subprocess.call(solarized)
+    print 'Note: run the script manually if the palette setup failed:'
+    print '      $', solarized
+    print ''
 
     print 'Setting wallpaper...'
     print ''
-    uri = 'file://' + os.path.join(mcf, 'wallpapers', 'stabilis.jpg')
-    subprocess.call(('gsettings set org.gnome.desktop.background picture-uri' +
-                     ' ' + uri).split())
+    wallpaper = os.path.join(mcf, 'scripts', 'install',
+                             'install-wallpaper.bash')
+    subprocess.call(wallpaper)
+    print 'Note: run the script manually if the wallpaper setup failed:'
+    print '      $', wallpaper
     print ''
     print 'Installation completed.'
     print 'You will need to install clang manually.'
