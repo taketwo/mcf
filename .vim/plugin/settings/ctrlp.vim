@@ -4,6 +4,9 @@ let g:ctrlp_show_hidden = 1
 " Ignore version control folders
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
+" Custom file listing when inside git repository
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
+
 " Number of items to display
 let g:ctrlp_max_height = 12
 
