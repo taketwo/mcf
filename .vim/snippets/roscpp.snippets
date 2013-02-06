@@ -194,3 +194,12 @@ endsnippet
 snippet now "Current time"
 ros::Time::now()
 endsnippet
+
+
+###########################################################################
+#                                Messages                                 #
+###########################################################################
+
+snippet wfm "Wait for message" !b
+auto ${1:msg} = ros::topic::waitForMessage<${2:std_msgs::String}>(${3:"topic"}${4:, ros::Duration(${5:timeout})});
+endsnippet
