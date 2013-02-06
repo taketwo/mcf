@@ -20,9 +20,9 @@ def TogglePrivate():
     print '%s → %s' % (word, converted)
 EOF
 
-nnoremap <LocalLeader>c :python ToggleCamelCase()<CR>
+nnoremap <LocalLeader>c :python ToggleCase()<CR>
 python << EOF
-def ToggleCamelCase():
+def ToggleCase():
     from os.path import expanduser, join
     import sys; sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
     import conversions
@@ -41,6 +41,11 @@ EOF
 " Remove function call
 " When on a function name, removes the name and the parens around its arguments
 nnoremap <LocalLeader>f diwds()
+
+" Surround with function call
+" Adds braces around selected text and puts cursor in front of them to input
+" the function name
+vnoremap <LocalLeader>f c(<C-R>")<ESC>%i
 
 " Delete until next closing brace
 nnoremap <LocalLeader>0 dt)
