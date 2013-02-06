@@ -23,7 +23,7 @@ deb_packages = ['python-pip',
                 'gitk',
                 'git-gui']
 
-pypi_packages = ['flake8', 'pep8', 'legit']
+pypi_packages = ['flake8', 'pep8', 'legit', 'pyflakes']
 
 
 def link(filename, desc):
