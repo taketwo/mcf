@@ -92,6 +92,15 @@ snippet y2q "Yaw to quaternion"
 ${1:q} = ${2:tf.transformations.}quaternion_from_euler(0, 0, ${3:yaw})$0
 endsnippet
 
+snippet tfl "Transform lookup" !b
+import tf
+$1 = tf.TransformListener()
+try:
+	(trans, rot) = ${1:tf_listener}.lookupTransform(${2:'/odom'}, ${3:'/base_link'}, rospy.Time(0))
+except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+	continue
+endsnippet
+
 ###########################################################################
 #                                  Time                                   #
 ###########################################################################
