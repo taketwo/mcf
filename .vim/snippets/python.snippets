@@ -17,11 +17,15 @@ endsnippet
 snippet argparse "Argparse" !b
 parser = argparse.ArgumentParser(description='''
 ${1}
-''')
+''', formatter_class=argparse.RawDescriptionHelpFormatter)
 $0
 args = parser.parse_args()
 endsnippet
 
 snippet arg "Add argument" !b
 parser.add_argument('${1:name}', help='${2:help}')$0
+endsnippet
+
+snippet argb "Add argument (boolean flag)" !b
+parser.add_argument('${1:name}', action='store_true', help='${2:help}')$0
 endsnippet
