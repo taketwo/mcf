@@ -1,3 +1,6 @@
+Custom key mappings
+===================
+
 unmap j
 unmap k
 unmap l
@@ -15,3 +18,8 @@ map H goBack
 map N goForward
 map T nextTab
 map C previousTab
+
+Characters used for link hints
+==============================
+
+uhetonasidpgkbmwv
