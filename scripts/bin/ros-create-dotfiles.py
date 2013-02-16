@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os
+import sys
 import subprocess
 
 
@@ -36,6 +37,9 @@ def create_clang_complete(includes):
 
 if __name__ == '__main__':
     pack = get_package_name()
-    includes = get_includes(pack)
+    try:
+        includes = get_includes(pack)
+    except:
+        sys.exit('Failed to get the includes for the package. Aborting...')
     create_vim(pack)
     create_clang_complete(includes)
