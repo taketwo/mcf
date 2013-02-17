@@ -74,19 +74,17 @@ if __name__ == '__main__':
         pypi(p)
     print ''
 
-    print 'Configuring Gnome terminal for Solarized palette...'
+    print 'Configuring Gnome terminal...'
     print ''
-    solarized = os.path.join(mcf, 'scripts', 'install',
-                             'install-solarized-colors.bash')
-    subprocess.call(solarized)
-    print 'Note: run the script manually if the palette setup failed:'
-    print '      $', solarized
+    terminal = os.path.join(mcf, 'scripts', 'install', 'setup-terminal.bash')
+    subprocess.call(terminal)
+    print 'Note: run the script manually if the terminal setup failed:'
+    print '      $', terminal
     print ''
 
     print 'Setting wallpaper...'
     print ''
-    wallpaper = os.path.join(mcf, 'scripts', 'install',
-                             'install-wallpaper.bash')
+    wallpaper = os.path.join(mcf, 'scripts', 'install', 'setup-wallpaper.bash')
     subprocess.call(wallpaper)
     print 'Note: run the script manually if the wallpaper setup failed:'
     print '      $', wallpaper
