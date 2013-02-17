@@ -136,7 +136,7 @@ pack ()
   fi
 }
 
-# utulities to navigate the filesystem
+# utilities to navigate the filesystem
 function mkd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
 alias la='ls -lah'
 alias t1='tree -L 1'
@@ -155,6 +155,10 @@ alias osb='mkd build && ccmake ..'
 alias agu='sudo apt-get update && sudo apt-get upgrade'
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
+
+# quick background color switch
+alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh && export BACKGROUND=dark'
+alias light='~/.mcf/misc/gnome-terminal-colors-solarized/set_light.sh && export BACKGROUND=light'
 
 # misc
 alias pt='sudo powertop'

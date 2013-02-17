@@ -77,10 +77,17 @@ set nocompatible
   set sidescrolloff=15
 
 " ================ Appearance =======================
-" Use dark Solarized color theme
+" Use Solarized color theme, background the same as
+" in the current terminal
 
   se t_Co=256
-  set background=dark
+
+  if $BACKGROUND == "light"
+    set background=light
+  else
+    set background=dark
+  endif
+
   colorscheme solarized
   " Adjust the color of wrongly spelled words
   hi SpellBad ctermfg=red
