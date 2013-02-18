@@ -1,4 +1,8 @@
 let maplocalleader = '\'
+
+setlocal foldmethod=syntax
+setlocal foldlevel=100
+
 inoremap <buffer> .. ->
 
 " Append semicolon to the end of the line
