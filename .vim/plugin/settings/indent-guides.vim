@@ -6,7 +6,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 " We introduce custom backgrounds for odd and even guides
 " which will vary depending on the background theme
 let g:indent_guides_auto_colors = 0
-if $BACKGROUND == "light"
+if &background == "light"
   autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=bg
   autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=lightgrey
 else

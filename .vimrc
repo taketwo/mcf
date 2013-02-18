@@ -82,11 +82,16 @@ set nocompatible
 
   se t_Co=256
 
-  if $BACKGROUND == "light"
-    set background=light
-  else
-    set background=dark
-  endif
+  function! SetBackground()
+    let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/Default/background_color"'
+    if substitute(system(shellcmd), "\n", "", "") == "#00002B2B3636"
+        set background=dark
+    else
+        set background=light
+    endif
+  endfunction
+
+  call SetBackground()
 
   colorscheme solarized
   " Adjust the color of wrongly spelled words

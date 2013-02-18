@@ -157,8 +157,8 @@ alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
 
 # quick background color switch
-alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh && export BACKGROUND=dark'
-alias light='~/.mcf/misc/gnome-terminal-colors-solarized/set_light.sh && export BACKGROUND=light'
+alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh'
+alias light='~/.mcf/misc/gnome-terminal-colors-solarized/set_light.sh'
 
 # misc
 alias pt='sudo powertop'
