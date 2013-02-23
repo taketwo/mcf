@@ -108,6 +108,9 @@ set nocompatible
   " Limit popup menu height
   set pumheight=15
 
+  " New splits, help, scratch preview all go to the bottom
+  set splitbelow
+
 " Misc
   set matchpairs+=<:>     " show matching <> (html mainly) as well
 
