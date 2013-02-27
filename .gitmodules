@@ -90,6 +90,7 @@
 [submodule "vim-g"]
 	path = .vim/bundle/vim-g
 	url = https://github.com/szw/vim-g.git
+	ignore = dirty
 [submodule "vim-sideways"]
 	path = .vim/bundle/vim-sideways
 	url = https://github.com/AndrewRadev/sideways.vim.git
