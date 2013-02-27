@@ -13,6 +13,9 @@ def get_package_name():
 def get_includes(pack):
     includes = subprocess.check_output(["rospack", "cflags-only-I",
                                         pack]).strip().split(' ')
+    include_dir = os.path.join(os.getcwd(), 'include')
+    if os.path.isdir(include_dir):
+        includes.append(include_dir)
     cfg_dir = os.path.join(os.getcwd(), 'cfg')
     if os.path.isdir(cfg_dir):
         includes.append(os.path.join(cfg_dir, 'cpp'))
