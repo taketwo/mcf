@@ -11,4 +11,7 @@ autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
 
 " Remove function call
 " When on a function name, removes the name and the parens around its arguments
-nnoremap <LocalLeader>f diwds()
+nnoremap <LocalLeader>f diwds(
+
+" (W)rap with (l)en function call
+Arpeggio nnoremap wl viwc(<C-R>")<Esc>h%ilen<Esc>%
