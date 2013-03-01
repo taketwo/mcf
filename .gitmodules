@@ -125,3 +125,6 @@
 [submodule "vim-latex-folding"]
 	path = .vim/bundle/vim-latex-folding
 	url = https://github.com/Eckankar/vim-latex-folding.git
+[submodule "powerline-shell"]
+	path = scripts/bundle/powerline-shell
+	url = git@github.com:taketwo/powerline-shell.git
