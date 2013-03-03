@@ -128,3 +128,6 @@
 [submodule "powerline-shell"]
 	path = scripts/bundle/powerline-shell
 	url = https://github.com/taketwo/powerline-shell.git
+[submodule "vim-indent-object"]
+	path = .vim/bundle/vim-indent-object
+	url = https://github.com/michaeljsmith/vim-indent-object.git
