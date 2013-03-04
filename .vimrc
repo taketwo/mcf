@@ -1,4 +1,4 @@
-" Use Vim settings, rather then Vi settings (much better!).
+" Use Vim settings, rather then Vi settings.
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
@@ -6,6 +6,7 @@ set nocompatible
 " This loads all the plugins in ~/.vim/bundle
 " Use tpope's pathogen plugin to manage all other plugins
 
+  runtime bundle/vim-pathogen/autoload/pathogen.vim
   call pathogen#infect()
   call pathogen#helptags()
 
@@ -21,6 +22,7 @@ set nocompatible
   set autoread                    " Reload files changed outside vim
   set laststatus=2                " Always show the statusline
   set encoding=utf-8              " Necessary to show unicode glyphs
+  set autowrite                   " Automatically save before e.g. :make
 
 " This makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
