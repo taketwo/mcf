@@ -1,11 +1,11 @@
-let g:clang_use_library=1
-let g:clang_library_path="/opt/llvm/lib"
+let g:clang_use_library = 1
+let g:clang_library_path = "/opt/llvm/lib"
 " Disable auto popup, use <Tab> to autocomplete
 let g:clang_complete_auto = 0
 " Show clang errors in the quickfix window
 let g:clang_complete_copen = 1
 " Automatically select the first entry
-let g:clang_auto_select=1
+let g:clang_auto_select = 1
 " Use ultisnips engine for auto-completion
 let g:clang_snippets = 1
 let g:clang_snippets_engine = "ultisnips"
