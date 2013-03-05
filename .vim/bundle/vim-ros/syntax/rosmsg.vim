@@ -23,9 +23,14 @@ syn keyword rosmsgType      time
 syn keyword rosmsgType      duration
 syn keyword rosmsgType      Header
 
+syn match rosmsgArray       "\[\d*\]"
+syn match rosmsgField       "\s\+\a\w*"
+
 syn match rosmsgComment     "\v#.*$"
 
 hi def link rosmsgType      Type
+hi def link rosmsgArray     Statement
+hi def link rosmsgField     Identifier
 hi def link rosmsgComment   Comment
 
 let b:current_syntax = "rosmsg"
