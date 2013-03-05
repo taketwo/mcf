@@ -92,6 +92,10 @@ snippet y2q "Yaw to quaternion"
 ${1:q} = ${2:tf.transformations.}quaternion_from_euler(0, 0, ${3:yaw})$0
 endsnippet
 
+snippet q2e "Quaternion to euler"
+${1:rpy} = ${2:tf.transformations.}euler_from_quaternion(${3:q})$0
+endsnippet
+
 snippet tfl "Transform lookup" !b
 import tf
 $1 = tf.TransformListener()
