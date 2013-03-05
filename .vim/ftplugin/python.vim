@@ -14,4 +14,5 @@ autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
 nnoremap <LocalLeader>f diwds(
 
 " (W)rap with (l)en function call
-Arpeggio nnoremap wl viwc(<C-R>")<Esc>h%ilen<Esc>%
+" Commented out for the time being because it screws up "l" in normal mode
+"Arpeggio nnoremap wl viwc(<C-R>")<Esc>h%ilen<Esc>%
