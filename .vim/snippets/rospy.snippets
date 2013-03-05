@@ -74,9 +74,9 @@ endsnippet
 
 snippet scall "Service call" !b
 try:
-  ${1:response} = ${2:some_srv}(${3:request})
+	${1:response} = ${2:some_srv}(${3:request})
 except rospy.ServiceException as e:
-  print "Service call failed: %s" % str(e)
+	print "Service call failed: %s" % str(e)
 endsnippet
 
 
