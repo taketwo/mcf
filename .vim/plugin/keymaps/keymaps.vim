@@ -159,7 +159,7 @@
   nnoremap <F11> :BW<CR>
 
   " Save file with Ctrl+S
-  nnoremap <C-s> :w<CR>
+  "nnoremap <C-s> :w<CR>
 
   " Run make with F9
   nnoremap <F9> :make<CR>
