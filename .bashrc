@@ -185,3 +185,6 @@ function _update_ps1()
   export PS1="$(~/.mcf/scripts/bundle/powerline-shell/powerline-shell.py $?) "
 }
 export PROMPT_COMMAND="_update_ps1"
+
+# Setup z for quick jumping around
+source ~/.mcf/scripts/bundle/z/z.sh

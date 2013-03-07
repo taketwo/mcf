@@ -137,3 +137,6 @@
 [submodule "vim-ipython"]
 	path = .vim/bundle/vim-ipython
 	url = https://github.com/taketwo/vim-ipython.git
+[submodule "z"]
+	path = scripts/bundle/z
+	url = https://github.com/rupa/z.git
