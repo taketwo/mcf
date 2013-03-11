@@ -122,9 +122,6 @@
 [submodule "misc/gnome-terminal-colors-solarized"]
 	path = misc/gnome-terminal-colors-solarized
 	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git
-[submodule ".vim/bundle/vim-latex-folding"]
-	path = .vim/bundle/vim-latex-folding
-	url = https://github.com/Eckankar/vim-latex-folding.git
 [submodule "scripts/bundle/powerline-shell"]
 	path = scripts/bundle/powerline-shell
 	url = https://github.com/taketwo/powerline-shell.git
