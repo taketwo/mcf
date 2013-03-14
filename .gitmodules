@@ -137,3 +137,6 @@
 [submodule "scripts/bundle/z"]
 	path = scripts/bundle/z
 	url = https://github.com/rupa/z.git
+[submodule ".vim/bundle/vim-ros"]
+	path = .vim/bundle/vim-ros
+	url = https://github.com/taketwo/vim-ros.git
