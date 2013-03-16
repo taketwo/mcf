@@ -14,6 +14,7 @@
   lg = log --oneline --decorate
   in = "!git remote update -p; git log ..@{u}"
   out = log @{u}..
+  remotes = remote -v
   # Legit aliases
   switch = !legit switch \"$@\"
   branches = !legit branches
