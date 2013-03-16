@@ -44,5 +44,5 @@ if __name__ == '__main__':
         includes = get_includes(pack)
     except:
         sys.exit('Failed to get the includes for the package. Aborting...')
-    create_vim(pack)
+    #create_vim(pack)
     create_clang_complete(includes)
