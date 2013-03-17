@@ -1,4 +1,5 @@
 " Change leader to a comma because the backslash is too far away
+"
 " That means all \x commands turn into ,x
 
   let mapleader=','
@@ -163,6 +164,7 @@
 
   " Run make with F9
   nnoremap <F9> :make<CR>
+  inoremap <F9> <C-o>:make<CR>
   autocmd QuickFixCmdPost [^l]* nested cwindow
   autocmd QuickFixCmdPost    l* nested lwindow
 
