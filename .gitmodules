@@ -137,3 +137,6 @@
 [submodule ".vim/bundle/vim-ros"]
 	path = .vim/bundle/vim-ros
 	url = https://github.com/taketwo/vim-ros.git
+[submodule ".vim/bundle/vim-ag"]
+	path = .vim/bundle/vim-ag
+	url = https://github.com/rking/ag.vim.git
