@@ -98,9 +98,6 @@
 	path = .vim/bundle/vim-alternate
 	url = https://github.com/dantler/vim-alternate
 	ignore = dirty
-[submodule ".vim/bundle/vim-ack"]
-	path = .vim/bundle/vim-ack
-	url = https://github.com/mileszs/ack.vim.git
 [submodule ".vim/bundle/vim-bufkill"]
 	path = .vim/bundle/vim-bufkill
 	url = https://github.com/vim-scripts/bufkill.vim.git
