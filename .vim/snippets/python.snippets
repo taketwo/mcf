@@ -18,6 +18,16 @@ snippet np "Import numpy" b
 import numpy as np$0
 endsnippet
 
+snippet ds "Docstring" !b
+"""
+$0
+"""
+endsnippet
+
+snippet comp "(List) comprehension" !i
+${4:item} for ${1:item} in ${2:items}${3/.+/ if /}${3:condition}${3/.+//}$0
+endsnippet
+
 ###########################################################################
 #                            Argparse snippets                            #
 ###########################################################################
