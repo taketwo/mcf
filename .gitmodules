@@ -140,3 +140,6 @@
 [submodule ".vim/bundle/vim-ag"]
 	path = .vim/bundle/vim-ag
 	url = https://github.com/rking/ag.vim.git
+[submodule ".vim/bundle/vim-cdo"]
+	path = .vim/bundle/vim-cdo
+	url = https://github.com/Peeja/vim-cdo.git
