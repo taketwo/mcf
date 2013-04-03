@@ -11,3 +11,5 @@ let g:clang_snippets = 1
 let g:clang_snippets_engine = "ultisnips"
 " Jump to the end after entering all parameters
 let g:clang_trailing_placeholder = 1
+" Avoid remapping <C-O> to <C-T> which will happen by default
+let g:clang_jumpto_back_key = "<C-O>"
