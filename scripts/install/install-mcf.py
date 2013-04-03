@@ -12,6 +12,7 @@ files = [('.Xmodmap', 'Remap CapsLock to Escape'),
          ('.bashrc', 'Bash configuration file'),
          ('.mime.types', 'Custom MIME types'),
          ('.mailcap', 'Custom MIME type-to-program mappings'),
+         ('texmf', 'Latex packages'),
          ('.gitconfig', 'GIT configuration file')]
 
 deb_packages = ['python-pip',

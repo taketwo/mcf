@@ -1,0 +1,268 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outlines.tex - Documentation for the outlines package
+%
+% Charles Pecheur, UCL, 2005 -- 2012
+% charles.pecheur@uclouvain.be
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt]{article}
+
+\usepackage{outlines}
+\usepackage{fancyvrb}
+\DefineShortVerb{\"}
+
+\title{The \texttt{outlines} package}
+\author{Charles Pecheur}
+\date{Version 1.1 -- January 23, 2012}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The \texttt{outlines} package defines the \texttt{outline} environment,
+that allows outline-style indented lists with freely mixed levels up
+to four levels deep.  It replaces the nested "begin"/"end" pairs by
+different item tags "\1" to "\4" for each nesting level.  This is very
+convenient in cases where nested lists are used a lot, such as for to-do
+lists or presentation slides.
+\end{abstract}
+	
+
+\section{Examples}
+
+\subsection{Basics}
+
+{\small\begin{verbatim}
+\begin{outline}
+  \1 This is a first item.
+  \1[!!!] This is a second, with a custom label.
+    \2 A level-2 item.
+      \3 A level 3.
+        \4 Deepest is level 4.
+    \2 Back to level 2.
+\0 A normal paragraph in the middle.
+  \1 A couple more  
+    \2 items.
+\end{outline}
+\end{verbatim}}
+
+\noindent Produces:
+
+{\small
+\begin{outline}
+  \1 This is a first item.  
+  \1[!!!] This is a second, with a custom label.
+    \2 A level-2 item.
+      \3 A level 3.
+        \4 Deepest is level 4.
+    \2 Back to level 2.
+\0 A normal paragraph in the middle.
+  \1 A couple more
+    \2 items.
+\end{outline}
+}
+
+\subsection{Changing List Styles at Each Level}
+
+{\small\begin{verbatim}
+\renewcommand{\outlineii}{enumerate}
+\begin{outline}
+  \1 This is a first item.  
+    \2 A level-2 item in enumerate style.
+    \2 And another.
+\0 A normal paragraph in the middle.
+\renewcommand{\outlineii}{description}
+  \1 More level-1.
+    \2[Descr] Level-2 in description style.
+\end{outline}
+\end{verbatim}}
+
+\noindent Produces:
+
+{\small
+\renewcommand{\outlineii}{enumerate}
+\begin{outline}
+  \1 This is a first item.  
+    \2 A level-2 item in enumerate style.
+    \2 And another.
+\0 A normal paragraph in the middle.
+\renewcommand{\outlineii}{description}
+  \1 More level-1.
+    \2[Descr] Level-2 in description style.
+\end{outline}
+}
+
+\subsection{Changing List Styles for the Whole Outline}
+
+{\small\begin{verbatim}
+\begin{outline}[enumerate]
+\0 All in enumerate style.
+  \1 A level-1 enum.
+    \2 A level-2 enum.
+      \3 A level-3 enum.
+        \4 A level-4 enum.
+\end{outline}
+\end{verbatim}}
+
+\noindent Produces:
+
+{\small
+\begin{outline}[enumerate]
+\0 All in enumerate style.
+  \1 A level-1 enum.
+    \2 A level-2 enum.
+      \3 A level-3 enum.
+        \4 A level-4 enum.
+\end{outline}
+}
+
+\subsection{With Custom List Styles}
+
+\noindent For example, the following list environment provides a variant of "enumerate" that keeps increasing item numbers across different enumerations:
+
+{\small\begin{verbatim}
+\newcounter{cenum}
+\newcounter{cenumsaved}
+\setcounter{cenumsaved}{0}
+\newcommand{\labelcenum}{\arabic{cenum}.}
+\newenvironment{cenumerate}%
+	{\begin{list}{\labelcenum}{\usecounter{cenum}}%
+	 \setcounter{cenum}{\value{cenumsaved}}}%
+	{\setcounter{cenumsaved}{\value{cenum}}%
+	 \end{list}}
+\end{verbatim}}
+
+\newcounter{cenum}
+\newcounter{cenumsaved}
+\setcounter{cenumsaved}{0}
+\newcommand{\labelcenum}{\arabic{cenum}.}
+\newenvironment{cenumerate}%
+	{\begin{list}{\labelcenum}{\usecounter{cenum}}%
+	 \setcounter{cenum}{\value{cenumsaved}}}%
+	{\setcounter{cenumsaved}{\value{cenum}}%
+	 \end{list}}
+
+\noindent This can be used as a list style in an outline as follows:
+
+{\small\begin{verbatim}
+\renewcommand{\outlineii}{cenumerate}
+\begin{outline}
+  \1 This is a first item.  
+    \2 A level-2 item in cenumerate style.
+    \2 And another.
+\0 A normal paragraph in the middle.
+  \1 More level-1.
+    \2 Level-2 with continued numbering.
+\end{outline}
+\end{verbatim}}
+
+\noindent Which produces:
+
+{\small
+\renewcommand{\outlineii}{cenumerate}
+\begin{outline}
+  \1 This is a first item.  
+    \2 A level-2 item in cenumerate style.
+    \2 And another.
+\0 A normal paragraph in the middle.
+  \1 More level-1.
+    \2 Level-2 with continued numbering.
+\end{outline}
+}
+
+\section{Usage}
+
+\begin{outline}
+
+\0 In the preamble:
+
+\1 "\usepackage{outlines}" 
+
+loads this package (no options supported).
+
+\0 In the document:
+
+\1 "\begin{outline}["\emph{style}"]" \emph{body} "\end{outline}" 
+
+produces an \emph{outline} region, with a hierarchy of items up to four levels deep.  The outline is formatted according to \emph{style}, which must be the name of a \LaTeX\ list environment.  The default is "itemize".  All levels use the same style.
+
+\1 "\renewcommand{\outlinei}{"\emph{style}"}" \\
+	"\renewcommand{\outlineii}{"\emph{style}"}" \\
+	"\renewcommand{\outlineiii}{"\emph{style}"}" \\
+	"\renewcommand{\outlineiiii}{"\emph{style}"}"
+
+change the list style to \emph{style} for levels 1, 2, 3 and 4.
+
+\0 Inside \emph{body}:
+
+\1 "\1["\emph{lbl}"]", "\2["\emph{lbl}"]", "\3["\emph{lbl}"]",
+"\4["\emph{lbl}"]"
+
+introduce outline items at the four nesting levels.  They are
+used the same way as "\item["\emph{lbl}"]" in list environments, where
+\emph{lbl} is an optional custom item label.  
+
+\1 "\0"
+
+introduces a normal, non-itemized paragraph.
+
+\end{outline}
+
+\section{Remarks}
+
+\LaTeX\ list environments cannot begin with a nested list.
+In outlines, that means that a level-$n$ item may only follow an item
+of level $n-1$ or higher.  For example, the following produces two
+``"missing \item"'' errors:
+
+\begin{verbatim}
+\begin{outline}
+    \2 Missing level 1,
+        \4 missing level 3.
+\end{outline}
+\end{verbatim}
+
+Do not use outlines inside other outlines or other list environments.
+Nested lists in outlines should work and be consistent with the current
+level of the outline (e.g. a nested list following a level-2 outline
+item will look as a level-3 list). The four-level limit applies overall.
+
+Outside an outline, re-defining outline styles (by changing "\outlinei" etc.) will apply to all posterior outlines; inside an outline, it will apply only according to usual \LaTeX\ list scoping rules: for example, re-defining "\outlineii" at level 1 will apply to posterior level-2 sub-lists within this level-1 sublist only; re-defining "\outlineii" inside a level-2 sub-list will have no effect.  Note that the \emph{style} parameter of the "outline" environment applies to non-redefined styles only.
+
+\section{Implementation Notes}
+
+The package is implemented in \LaTeX\ (no plain \TeX); it should be
+easy to understand and customize even to a non-\TeX-pert.  The main
+programming trick is a set of commands "\ol@toz", \dots, "\ol@toiiii"
+which are dynamically modified to contain the necessary list openings or closings to reach outline levels 0 to 4 from the current level.
+
+Outlines expand to the corresponding hierarchy of nested lists of the
+selected style.  All custom list formatting and user-provided list styles
+should be compatible with "outline" environments, as long as they keep
+the "\item" syntax.
+
+\paragraph{History}
+
+\begin{description}
+
+	\item[v 1.1 (Jan 2012)] Added re-definition of individual list styles.
+	
+	\item[(no version) (Mar 2005)] Initial release.
+	
+\end{description}	
+
+\section{Credits}
+
+This package was developed by Charles Pecheur at Universit\'e catholique de Louvain, Belgium. It may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.3 of this license or (at your option) any later version ("http://www.latex-project.org/lppl.txt"). Charles Pecheur can be contacted at "charles.pecheur@uclouvain.be".
+
+This package is independent from similar packages "outline.sty" and "outliner.sty", available on the CTAN archive.
+
+\end{document}   
