@@ -1,8 +1,6 @@
-!! This is to make Caps Lock to act as Escape
-!! ==========================================
+!! This is to make Caps Lock to act as Control
+!! ===========================================
 
-!! No Caps Lock
-clear lock
-!! Make Caps Lock an Escape key
-keycode 0x42 = Escape
-
+remove Lock = Caps_Lock
+keysym Caps_Lock = Control_L
+add Control = Control_L
