@@ -4,14 +4,14 @@
 
 " Setting up Vundle - the vim plugin bundler.
 " Solution from: https://github.com/fisadev/fisa-vim-config
-let iCanHazVundle = 1
+let just_installed_vundle = 0
 let vundle_readme = expand('~/.vim/bundle/vundle/README.md')
 if !filereadable(vundle_readme)
     echo "Installing Vundle..."
     echo ""
     silent !mkdir -p ~/.vim/bundle
     silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
-    let iCanHazVundle = 0
+    let just_installed_vundle = 1
 endif
 
 " Load plugin settings. Some of them have to be set before
@@ -156,6 +156,11 @@ Bundle "rking/ag.vim.git"
 Bundle "Peeja/vim-cdo.git"
 
 filetype plugin indent on " Filetype plugin indent on is required by Vundle
+
+if just_installed_vundle
+    BundleClean!
+    BundleInstall!
+endif
 
 " Complete plugin setup. Some of the settings could be done only
 " after a plugin has been loaded.
