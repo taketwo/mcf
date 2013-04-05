@@ -4,7 +4,7 @@
 " but it'll all be isolated to one area of the keyboard
 call EasyMotion#InitOptions({
 \   'leader_key'      : '<Leader><Leader>'
-\ , 'keys'            : 'uhetonaspgyf'
+\ , 'keys'            : 'aoeuhtnsgcrbm'
 \ , 'do_shade'        : 1
 \ , 'do_mapping'      : 1
 \ , 'grouping'        : 1
