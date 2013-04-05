@@ -1,9 +1,3 @@
-" Change leader to a comma because the backslash is too far away
-"
-" That means all \x commands turn into ,x
-
-  let mapleader=','
-
 " Enter command mode with semicolon
 
   nnoremap ; :
@@ -14,10 +8,10 @@
   Arpeggio inoremap uh <Esc>
   Arpeggio inoremap nh <Esc>
 
-" =============================== Move around ============================== "
+" Move around {{{
 
   " Left, right, up, and down
-
+  "
   "       c
   "     h t n
 
@@ -47,7 +41,8 @@
   nnoremap _ ^
   vnoremap _ ^
 
-" ============================ Push text around ============================ "
+" }}}
+" Push text around {{{
 
   " Move lines up/down
 
@@ -63,7 +58,8 @@
   vnoremap <C-h> :<<CR>gv
   vnoremap <C-n> :><CR>gv
 
-" ============================ Text manipulation =========================== "
+" }}}
+" Surroundings {{{
 
   " Surround a word with "quotes"
   map <Leader>" <Plug>Ysurroundiw"
@@ -74,20 +70,32 @@
   vnoremap <Leader>' c'<C-R>"'<ESC>
 
   " Surround a word with (parenthesis)
+  " Difference is where the cursor ends up after surrounding
   map <Leader>( <Plug>Ysurroundiw)
-  vnoremap <Leader>( c(<C-R>")<ESC>
+  map <Leader>) <Plug>Ysurroundiw)%
+  vnoremap <Leader>( c(<C-R>")<ESC>%
+  vnoremap <Leader>) c(<C-R>")<ESC>
 
   " Surround a word with [brackets]
+  " Difference is where the cursor ends up after surrounding
   map <Leader>[ <Plug>Ysurroundiw]
-  vnoremap <Leader>[ c[<C-R>"]<ESC>
+  map <Leader>] <Plug>Ysurroundiw]%
+  vnoremap <Leader>[ c[<C-R>"]<ESC>%
+  vnoremap <Leader>] c[<C-R>"]<ESC>
 
   " Surround a word with {braces}
+  " Difference is where the cursor ends up after surrounding
   map <Leader>{ <Plug>Ysurroundiw}
-  vnoremap <Leader>{ c{<C-R>"}<ESC>
+  map <Leader>} <Plug>Ysurroundiw}%
+  vnoremap <Leader>{ c{<C-R>"}<ESC>%
+  vnoremap <Leader>} c{<C-R>"}<ESC>
 
   " Surround a word with <braces>
+  " Difference is where the cursor ends up after surrounding
   map <Leader>< <Plug>Ysurroundiw>
-  vnoremap <Leader>< c<<C-R>"><ESC>
+  map <Leader>> <Plug>Ysurroundiw>%
+  vnoremap <Leader>< c<<C-R>"><ESC>%
+  vnoremap <Leader>> c<<C-R>"><ESC>
 
   " Surround a word with *asterisks*
   map <Leader>* <Plug>Ysurroundiw*
@@ -100,7 +108,11 @@
   " Delete surrounding
   nmap ds <Plug>Dsurround
 
-" ============================ Window management =========================== "
+  " Change surrounding
+  nmap ks <Plug>Csurround
+
+" }}}
+" Window management {{{
 
   " Move between split windows similarly to normal motion
 
@@ -115,7 +127,20 @@
   nnoremap [1;3C <C-w>>
   nnoremap [1;3D <C-w><
 
-" ================================== Misc ================================== "
+" }}}
+" Search {{{
+
+  " Reset search pattern
+
+  nnoremap <Leader>/ :let @/ = ""<CR>
+
+  " Seek through search results with l/L (instead of used n/N)
+
+  nnoremap l n
+  nnoremap L N
+
+" }}}
+" Misc {{{
 
   " Copy entire word even if the cursor is halfway inside the word
 
@@ -129,19 +154,10 @@
 
   nnoremap Y y$
 
-  " Seek through search results with l/L (instead of used n/N)
-
-  nnoremap l n
-  nnoremap L N
-
   " Now that c/C are used for navigation, utilize k/K for the same purpose
 
   nnoremap k c
   nnoremap K C
-
-  " Reset search pattern
-
-  nnoremap <Leader>/ :let @/ = ""<CR>
 
   " Insert newline below, but stay on the same spot
   nnoremap <CR> :call append(line('.'), '')<CR>
@@ -150,6 +166,9 @@
 
   " Duplicate current line
   nnoremap <Leader>d :t.<CR>
+
+  " Semicolon at end of line by typing ;;
+  inoremap ;; <C-o>A;<Esc>
 
   " Enable spell checking
   nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
@@ -225,34 +244,3 @@
 
   " (E)xit input mode, (S)ave, (M)ake
   Arpeggio inoremap esm <Esc>:w<CR>:make<CR>
-
-  " (Y)ank current line, (S)witch to left window, (P)aste
-  Arpeggio nnoremap ysp yy<C-w><C-h>P
-
-" ============================ Special commands ============================ "
-
-  " Special command to to write a file as sudo (w!!)
-
-  cmap w!! w !sudo tee % >/dev/null
-
-  " This is certainly a bad place, but for the time being...
-  " Highlight all instances of word under cursor, when idle.
-  nnoremap <Leader>wh :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
-  function! AutoHighlightToggle()
-    let @/ = ''
-    if exists('#auto_highlight')
-      au! auto_highlight
-      augroup! auto_highlight
-        setl updatetime=4000
-        echo 'Highlight current word: off'
-        return 0
-    else
-      augroup auto_highlight
-        au!
-        au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
-      augroup end
-      setl updatetime=500
-      echo 'Highlight current word: ON'
-      return 1
-    endif
-  endfunction

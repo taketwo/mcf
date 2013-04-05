@@ -1,1 +1,1 @@
-let g:NumberToggleTrigger="<Leader>nt"
+let g:NumberToggleTrigger="<Leader>tn"
