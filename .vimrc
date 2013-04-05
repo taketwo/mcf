@@ -13,6 +13,7 @@
   set encoding=utf-8              " Necessary to show unicode glyphs
   set autowrite                   " Automatically save before e.g. :make
   set hidden
+  set timeoutlen=250              " Time to wait after ESC (default causes an annoying delay)
   syntax on                       " Turn on syntax highlighting
   let mapleader=','               " Change leader to a comma
 
