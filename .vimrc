@@ -1,17 +1,6 @@
-" Use Vim settings, rather then Vi settings.
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+" General config {{{
 
-" =============== Pathogen Initialization ===============
-" This loads all the plugins in ~/.vim/bundle
-" Use tpope's pathogen plugin to manage all other plugins
-
-  runtime bundle/vim-pathogen/autoload/pathogen.vim
-  call pathogen#infect()
-  call pathogen#helptags()
-
-" ================ General Config ====================
-
+  set nocompatible                " Use Vim settings, rather then Vi settings
   set number                      " Line numbers are good
   set backspace=indent,eol,start  " Allow backspace in insert mode
   set history=1000                " Store lots of :cmdline history
@@ -23,21 +12,21 @@ set nocompatible
   set laststatus=2                " Always show the statusline
   set encoding=utf-8              " Necessary to show unicode glyphs
   set autowrite                   " Automatically save before e.g. :make
-
-" This makes vim act like all other editors, buffers can
-" exist in the background without being in a window.
-" http://items.sjbach.com/319/configuring-vim-right
-
   set hidden
+  syntax on                       " Turn on syntax highlighting
+  let mapleader=','               " Change leader to a comma
 
-" Turn on syntax highlighting
-  syntax on
+" }}}
+" Plugin initialization {{{
 
-" ================ Search Settings  =================
+  source ~/.vim/plugins.vim       " Load all the bundles in ~/.vim/plugins.vim
 
-  set incsearch        " Find the next match as we type the search
-  set hlsearch         " Hilight searches by default
-  set viminfo='100,f1  " Save up to 100 marks, enable capital marks
+" }}}
+" Search settings {{{
+
+  set incsearch                   " Find the next match as we type the search
+  set hlsearch                    " Hilight searches by default
+  set viminfo='100,f1             " Save up to 100 marks, enable capital marks
 
   " Make /-style searches case-sensitive only if there is a capital letter in
   " the search expression. *-style searches continue to be consistently
@@ -45,44 +34,44 @@ set nocompatible
   set ignorecase
   set smartcase
 
-" ================ Turn Off Swap Files ==============
+" }}}
+" Swap files {{{
 
   set noswapfile
   set nobackup
   set nowb
 
-" ================ Indentation ======================
+" }}}
+" Indentation {{{
 
   set autoindent
   set smartindent
   set smarttab
   set shiftwidth=2
   set softtabstop=2
-  "set tabstop=2
   set expandtab
 
   filetype plugin on
   filetype indent on
 
-" Display tabs and trailing spaces visually
-  set list listchars=tab:→\ ,trail:·
+" }}}
+" Folding {{{
 
-" ================ Folds ============================
+  set foldmethod=indent   " Fold based on indent
+  set foldnestmax=3       " Deepest fold is 3 levels
+  set nofoldenable        " Don't fold by default
 
-  set foldmethod=indent   " fold based on indent
-  set foldnestmax=3       " deepest fold is 3 levels
-  set nofoldenable        " dont fold by default
+" }}}
+" Scrolling {{{
 
-" ================ Scrolling ========================
-
-  set scrolloff=8         " start scrolling when we're 8 lines away from margins
+  set scrolloff=8         " Start scrolling when we're 8 lines away from margins
   set sidescrolloff=15
 
-" ================ Appearance =======================
-" Use Solarized color theme, background the same as
-" in the current terminal
+" }}}
+" Appearance {{{
 
-  se t_Co=256
+  " Use Solarized color theme, background the same as in the current terminal
+  set t_Co=256
 
   function! SetBackground()
     let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/Default/background_color"'
@@ -96,29 +85,28 @@ set nocompatible
   call SetBackground()
 
   colorscheme solarized
-  " Adjust the color of wrongly spelled words
-  hi SpellBad ctermfg=red
 
-" ================ Completion =======================
+  hi SpellBad ctermfg=red            " Adjust the color of wrongly spelled words
+  hi SignColumn ctermbg=bg           " Adjust the color of SignColumnt
+  set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
+
+" }}}
+" Completion {{{
 
   set wildmode=list,longest
-  set wildmenu                      " enable ctrl-n and ctrl-p to scroll thru matches
-  set wildignore=*.o,*.obj,*.pyc,*~ " stuff to ignore when tab completing
+  set wildmenu                         " Enable ctrl-n and ctrl-p to scroll thru matches
+  set wildignore=*.o,*.obj,*.pyc,*~    " Stuff to ignore when tab completing
 
-  " Complete options (disable preview scratch window)
-  set completeopt=menu,menuone,longest
-  " Limit popup menu height
-  set pumheight=15
+  set completeopt=menu,menuone,longest " Complete options (disable preview scratch window)
+  set pumheight=15                     " Limit popup menu height
 
-  " New splits, help, scratch preview all go to the bottom
-  set splitbelow
+  set splitbelow                       " New splits, help, scratch preview all go to the bottom
 
-" Misc
-  set matchpairs+=<:>     " show matching <> (html mainly) as well
+" }}}
+" Misc {{{
 
+  set matchpairs+=<:>     " Show matching <> (html mainly) as well
   " %% expands to the full path of the directory that contains the current file
   cabbr <expr> %% expand('%:p:h')
 
-" Delete trailing white space and Dos-returns and to expand tabs to spaces.
-"nnoremap S :set et<CR>:retab!<CR>:%s/[\r \t]\+$//<CR>
-
+" }}}
