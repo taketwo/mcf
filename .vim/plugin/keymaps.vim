@@ -159,6 +159,9 @@
   " Close the current buffer with F11
   nnoremap <F11> :BW<CR>
 
+  " Split line(opposite to S-J joining line)
+  nnoremap <silent> <C-J> gEa<CR><Esc>ew
+
   " Save file with Ctrl+S
   "nnoremap <C-s> :w<CR>
 
