@@ -168,6 +168,7 @@ alias x='exit'
 alias ff='find . -name $*'
 
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
+export MCF=~/.mcf
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
