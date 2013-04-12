@@ -1,5 +1,6 @@
 nnoremap <C-a> :python NextCommand()<CR>
 nnoremap <C-x> :python NextCommand(-1)<CR>
+nnoremap <Space> :python NextCommand()<CR>
 python << EOF
 def NextCommand(delta=1):
     import vim
