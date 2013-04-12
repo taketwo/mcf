@@ -7,6 +7,7 @@
   call arpeggio#load()
   Arpeggio inoremap uh <Esc>
   Arpeggio inoremap nh <Esc>
+  inoremap hh <Esc>
 
 " Move around {{{
 
