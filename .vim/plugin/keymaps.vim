@@ -27,8 +27,6 @@
   xnoremap t j
   xnoremap n l
 
-  " Note: j is now unused, find something for it!
-
   " Accelerated up and down (scrolling)
 
   nnoremap C <PageUp>
@@ -138,6 +136,10 @@
 
   nnoremap l n
   nnoremap L N
+
+  " Use j instead of t in normal mode to (j)ump to
+
+  nnoremap j t
 
 " }}}
 " Misc {{{
