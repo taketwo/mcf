@@ -53,6 +53,8 @@
 
   nnoremap <C-h> :<<CR>
   nnoremap <C-n> :><CR>
+  inoremap <C-h> <C-d>
+  inoremap <C-n> <C-t>
   vnoremap <C-h> :<<CR>gv
   vnoremap <C-n> :><CR>gv
 
