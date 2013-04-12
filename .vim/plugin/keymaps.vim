@@ -172,6 +172,9 @@
   " Duplicate current line
   nnoremap <Leader>d :t.<CR>
 
+  " Backspace proxy
+  inoremap <C-d> <BS>
+
   " Semicolon at end of line by typing ;;
   inoremap ;; <C-o>A;<Esc>
 
@@ -183,11 +186,8 @@
   " Close the current buffer with F11
   nnoremap <F11> :BW<CR>
 
-  " Split line(opposite to S-J joining line)
+  " Split line (opposite to S-J joining line)
   nnoremap <silent> <C-J> gEa<CR><Esc>ew
-
-  " Save file with Ctrl+S
-  "nnoremap <C-s> :w<CR>
 
   " Run make with F9
   nnoremap <F9> :make<CR>
