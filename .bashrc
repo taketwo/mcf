@@ -166,6 +166,7 @@ alias ga='gitk --all'
 alias gg='git gui'
 alias x='exit'
 alias ff='find . -name $*'
+alias vundle='vim +BundleInstall +qall'
 
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
 export MCF=~/.mcf
