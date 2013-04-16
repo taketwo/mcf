@@ -15,6 +15,7 @@
   set hidden
   syntax on                       " Turn on syntax highlighting
   let mapleader=','               " Change leader to a comma
+  let maplocalleader='\'          " Change local leader to a backslash
 
 " }}}
 " Plugin initialization {{{
