@@ -1,4 +1,4 @@
 #!/bin/sh
 
-sed 's/\(export ROS_DISTRO=\).*/\1'$1'/' .bashrc_local > .bashrc_local~
-mv .bashrc_local~ .bashrc_local
+sed 's/\(export ROS_DISTRO=\).*/\1'$1'/' $HOME/.bashrc_local > $HOME/.bashrc_local~
+mv $HOME/.bashrc_local~ $HOME/.bashrc_local
