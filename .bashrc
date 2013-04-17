@@ -171,13 +171,14 @@ alias vundle='vim +BundleInstall +qall'
 # toggle touchpad on/off
 function tp ()
 {
-  state=`xinput list-props 15 | grep "Device Enabled" | cut -d':' -f2`
+  id=`xinput list | grep "Synaptics TouchPad" | cut -d'=' -f2 | cut -d'	' -f1`
+  state=`xinput list-props $id | grep "Device Enabled" | cut -d':' -f2`
   if [ $state -eq 1 ]; then
     state=0
   else
     state=1
   fi
-  sudo xinput set-prop 15 "Device Enabled" $state
+  sudo xinput set-prop $id "Device Enabled" $state
 }
 
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
