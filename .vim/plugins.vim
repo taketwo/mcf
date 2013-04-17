@@ -76,6 +76,7 @@ Bundle "Peeja/vim-cdo"
 Bundle "davidhalter/jedi-vim"
 
 " Try these plugins:
+"Bundle "sjl/splice.vim"
 "Bundle "tpope/vim-repeat"
 "Bundle "tpope/vim-unimpaired"
 "Bundle "sjl/gundo.vim"
