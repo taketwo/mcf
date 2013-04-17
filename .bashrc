@@ -168,6 +168,18 @@ alias x='exit'
 alias ff='find . -name $*'
 alias vundle='vim +BundleInstall +qall'
 
+# toggle touchpad on/off
+function tp ()
+{
+  state=`xinput list-props 15 | grep "Device Enabled" | cut -d':' -f2`
+  if [ $state -eq 1 ]; then
+    state=0
+  else
+    state=1
+  fi
+  sudo xinput set-prop 15 "Device Enabled" $state
+}
+
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
 export MCF=~/.mcf
 
