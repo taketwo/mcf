@@ -1,3 +1,7 @@
+: ${ROS_DISTRO:?"variable is not set!"}
+
+source /opt/ros/$ROS_DISTRO/setup.bash
+
 export OGRE_RTT_MODE=Copy
 export OGRE_RTT_MODE=FBO
 
