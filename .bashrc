@@ -94,59 +94,20 @@ fi
 # disable XON/XOFF so that Ctrl-S combination works in reverse-i-search
 stty -ixon
 
-# extract known archive types
-extract ()
+export MCF=~/.mcf
+export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
+
+load ()
 {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xvjf $1    ;;
-      *.tar.gz)    tar xvzf $1    ;;
-      *.bz2)       bunzip2 $1     ;;
-      *.rar)       rar x $1       ;;
-      *.gz)        gunzip $1      ;;
-      *.tar)       tar xvf $1     ;;
-      *.tbz2)      tar xvjf $1    ;;
-      *.tgz)       tar xvzf $1    ;;
-      *.zip)       unzip $1       ;;
-      *.Z)         uncompress $1  ;;
-      *.7z)        7z x $1        ;;
-      *)           echo "Do not know how to extract '$1'..." ;;
-    esac
-  else
-    echo "'$1' is not a valid file!"
+  script=$MCF/bash/$1.bash
+  if [ -f $script ] ; then
+    . $script
   fi
 }
 
-# pack known archive types
-pack ()
-{
-  if [ $1 ] ; then
-    case $1 in
-      tbz)      tar cjvf $2.tar.bz2 $2   ;;
-      tgz)      tar czvf $2.tar.gz  $2   ;;
-      tar)      tar cpvf $2.tar  $2      ;;
-      bz2)      bzip2 $2                 ;;
-      gz)       gzip -c -9 -n $2 > $2.gz ;;
-      zip)      zip -r $2.zip $2         ;;
-      7z)       7z a $2.7z $2            ;;
-      *)        echo "Do not know how to pack in '$1'..." ;;
-    esac
-  else
-    echo "'$1' is not a valid file!"
-  fi
-}
-
-# utilities to navigate the filesystem
-function mkd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
-alias la='ls -lah'
-alias t1='tree -L 1'
-alias t2='tree -L 2'
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ......="cd ../../../../.."
-alias .......="cd ../../../../../.."
+load archives
+load navigation
+load touchpad
 
 # quick out-of-source build preparation
 alias osb='mkd build && ccmake ..'
@@ -167,22 +128,7 @@ alias gg='git gui'
 alias x='exit'
 alias ff='find . -name $*'
 alias vundle='vim +BundleInstall +qall'
-
-# toggle touchpad on/off
-function tp ()
-{
-  id=`xinput list | grep "Synaptics TouchPad" | cut -d'=' -f2 | cut -d'	' -f1`
-  state=`xinput list-props $id | grep "Device Enabled" | cut -d':' -f2`
-  if [ $state -eq 1 ]; then
-    state=0
-  else
-    state=1
-  fi
-  sudo xinput set-prop $id "Device Enabled" $state
-}
-
-export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
-export MCF=~/.mcf
+alias rs='nohup redshift -l 50.4:7.5 -t 6000:4500 &'
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
@@ -202,4 +148,7 @@ function _update_ps1()
 export PROMPT_COMMAND="_update_ps1"
 
 # Setup z for quick jumping around
-source ~/.mcf/scripts/bundle/z/z.sh
+source $MCF/scripts/bundle/z/z.sh
+
+# remove load function
+unset -f load
