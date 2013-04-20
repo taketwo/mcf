@@ -7,9 +7,9 @@ let g:indent_guides_enable_on_vim_startup = 1
 " which will vary depending on the background theme
 let g:indent_guides_auto_colors = 0
 if &background == "light"
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=bg
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=lightgrey
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=bg
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=lightgrey
 else
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=bg
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=black
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=bg
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=black
 endif

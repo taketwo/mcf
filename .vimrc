@@ -18,6 +18,20 @@
   let maplocalleader='\'          " Change local leader to a backslash
 
 " }}}
+" Background color {{{
+
+  " Set background option based on the current background color in terminal.
+  " This should be done before loading plugins as some of them may depend
+  " on the setting (e.g. vim-indent-guides).
+
+  let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/Default/background_color"'
+  if substitute(system(shellcmd), "\n", "", "") == "#00002B2B3636"
+    set background=dark
+  else
+    set background=light
+  endif
+
+" }}}
 " Plugin initialization {{{
 
   source ~/.vim/plugins.vim       " Load all the bundles in ~/.vim/plugins.vim
@@ -71,19 +85,8 @@
 " }}}
 " Appearance {{{
 
-  " Use Solarized color theme, background the same as in the current terminal
+  " Use Solarized color theme
   set t_Co=256
-
-  function! SetBackground()
-    let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/Default/background_color"'
-    if substitute(system(shellcmd), "\n", "", "") == "#00002B2B3636"
-        set background=dark
-    else
-        set background=light
-    endif
-  endfunction
-
-  call SetBackground()
 
   colorscheme solarized
 
