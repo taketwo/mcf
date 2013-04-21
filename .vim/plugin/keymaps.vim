@@ -217,6 +217,7 @@
   " Syntastic
 
   noremap <F6> :w<CR>:SyntasticCheck<CR>
+  noremap <S-F6> :SyntasticToggleMode<CR>
 
   " Minibufexplorer
 
