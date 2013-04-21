@@ -5,9 +5,10 @@
 
   " Experimental
   call arpeggio#load()
-  Arpeggio inoremap uh <Esc>
-  Arpeggio inoremap nh <Esc>
+  "Arpeggio inoremap uh <Esc>
+  "Arpeggio inoremap nh <Esc>
   inoremap hh <Esc>
+  inoremap uu <Esc>
 
 " Move around {{{
 
@@ -222,6 +223,8 @@
   noremap <F2> :TMiniBufExplorer<CR>
   noremap <Leader>n :MBEbn<CR>
   noremap <Leader>h :MBEbp<CR>
+  noremap N :MBEbn<CR>
+  noremap H :MBEbp<CR>
   for i in range(1,9)
     exec "noremap <Leader>".i." :b".i."<CR>"
   endfor
