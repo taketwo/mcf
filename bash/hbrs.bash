@@ -1,2 +1,2 @@
 export ROBOT_ENV='brsu-c025-arena'
-export ROBOT='youbot-hbrs2'
+export ROBOT='youbot-hbrs1'
