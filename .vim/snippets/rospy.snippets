@@ -88,6 +88,10 @@ snippet e2q "Euler to quaternion"
 ${1:q} = ${2:tf.transformations.}quaternion_from_euler(${3:0, 0, yaw})$0
 endsnippet
 
+snippet e2qm "Euler to quaternion message"
+${1:msg} = Quaternion(*${2:tf.transformations.}quaternion_from_euler(${3:0, 0, yaw}))$0
+endsnippet
+
 snippet y2q "Yaw to quaternion"
 ${1:q} = ${2:tf.transformations.}quaternion_from_euler(0, 0, ${3:yaw})$0
 endsnippet
