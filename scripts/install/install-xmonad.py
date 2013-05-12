@@ -11,12 +11,9 @@ files = [('images/custom_xmonad_badge.png',
           'Custom Xmonad badge for the login screen'),
          ('xmonad.desktop',
           '/usr/share/xsessions',
-          'Xmonad desktop entry'),
-         ('xmonad.session',
-          '/usr/share/gnome-session/sessions',
-          'Xmonad GNOME session configuration')]
+          'Xmonad desktop entry')]
 
-deb_packages = ['xmonad', 'kupfer']
+deb_packages = ['xmonad', 'gnome-panel', 'kupfer']
 
 
 def remove(dest):
@@ -87,22 +84,3 @@ if __name__ == '__main__':
     for p in deb_packages:
         deb(p)
     print ''
-
-    #print 'Configuring gnome terminal for Solarized palette...'
-    #print ''
-    #subprocess.call(os.path.join(mcf, 'scripts',
-                                 #'install-solarized-colors.bash'))
-
-    #print 'Setting wallpaper...'
-    #print ''
-    #uri = 'file://' + os.path.join(mcf, 'wallpapers', 'stabilis.jpg')
-    #subprocess.call(('gsettings set org.gnome.desktop.background picture-uri'+
-                     #' ' + uri).split())
-    #print ''
-    #print 'Installation completed.'
-    #print 'You will need to install clang manually.'
-
-# Clang installation.
-# 1) Follow instructions at http://clang.llvm.org/get_started.html
-# 2) Configure with options:
-#    ../configure --enable-optimized --disable-assertions --prefix=/opt/llvm

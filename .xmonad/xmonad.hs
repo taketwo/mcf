@@ -62,7 +62,7 @@ mcfLayouts =
 myManageHook :: [ManageHook]
 myManageHook =
   [ isFullscreen --> doFullFloat
-  , className =? "Unity-2d-panel" --> doIgnore
+  , isDialog --> doFloat
   , className =? "Skype" --> doF (W.shift "8")
   , className =? "Workrave" --> doF (W.shift "9")
   , className =? "Rhythmbox" --> doF (W.shift "9")
@@ -79,8 +79,9 @@ main = xmonad $ gnomeConfig
   }
   `additionalKeysP`
     [ ("M-S-q", spawn "gnome-session-save --gui --logout-dialog") -- display logout-dialog
-    -- Lock Screen
-    , ("M-S-l", spawn "gnome-screensaver-command -l")
+    , ("M1-<F10>", spawn "gnome-screensaver-command -l")
+    , ("M1-<F11>", spawn "pm-hybernate")
+    , ("M1-<F12>", spawn "pm-suspend")
     {-, ("<XF86Forward>", nextWS)-}
     {-, ("<XF86Back>", prevWS)-}
     , ("M-<Tab>", sendMessage NextLayout)
@@ -101,6 +102,9 @@ main = xmonad $ gnomeConfig
     , ("M-S-w", kill)
     , ("M1-<F4>", kill)
     , ("M-S-f", withFocused $ windows . W.sink)
+    -- Application shortcuts
     , ("M-<Return>", spawn "gnome-terminal")
     , ("M-<Space>", spawn "kupfer")
+    , ("M-r", spawn "rhythmbox")
+    , ("M-b", spawn "chromium-browser")
     ]
