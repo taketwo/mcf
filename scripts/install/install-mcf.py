@@ -4,7 +4,7 @@ import os
 import subprocess
 
 
-files = [('.Xmodmap', 'Remap CapsLock to Escape'),
+files = [('.Xmodmap', 'Remap CapsLock to Ctrl'),
          ('.dircolors', 'Dircolors for Solarized palette'),
          ('.fonts', 'Custom fonts'),
          ('.vim', 'VIM settings/plugins folder'),
@@ -24,7 +24,7 @@ deb_packages = ['python-pip',
                 'git-gui',
                 'powertop']
 
-pypi_packages = ['flake8', 'pep8', 'legit', 'pyflakes']
+pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
 
 
 def link(filename, desc):
