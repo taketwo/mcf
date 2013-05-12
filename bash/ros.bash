@@ -1,6 +1,10 @@
 : ${ROS_DISTRO:?"variable is not set!"}
 
-source /opt/ros/$ROS_DISTRO/setup.bash
+ROS_SETUP="/opt/ros/$ROS_DISTRO/setup.bash"
+
+if [ -f $ROS_SETUP ]; then
+  source $ROS_SETUP
+fi
 
 export OGRE_RTT_MODE=Copy
 export OGRE_RTT_MODE=FBO
