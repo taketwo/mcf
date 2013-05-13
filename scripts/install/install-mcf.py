@@ -54,10 +54,9 @@ def pypi(package):
 
 def decrypt(filename):
     home = os.path.expanduser('~')
-    src = os.path.join('.mcf', filename)
     dest = os.path.join(home, filename)
-    print '[*]', src
-    cmd = 'openssl des3 -d < %s > %s' % (src, dest)
+    print '[*]', filename
+    cmd = 'openssl des3 -d -in %s -out %s' % (filename, dest)
     subprocess.call(cmd.split())
 
 if __name__ == '__main__':
