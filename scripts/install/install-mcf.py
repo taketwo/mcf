@@ -26,6 +26,8 @@ deb_packages = ['python-pip',
 
 pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
 
+encrypted = ['.netrc', '.secrets']
+
 
 def link(filename, desc):
     home = os.path.expanduser('~')
@@ -50,6 +52,14 @@ def pypi(package):
     subprocess.call(cmd.split())
 
 
+def decrypt(filename):
+    home = os.path.expanduser('~')
+    src = os.path.join('.mcf', filename)
+    dest = os.path.join(home, filename)
+    print '[*]', src
+    cmd = 'openssl des3 -d < %s > %s' % (src, dest)
+    subprocess.call(cmd.split())
+
 if __name__ == '__main__':
     home = os.path.expanduser('~')
     mcf = os.path.join(home, '.mcf')
@@ -73,6 +83,12 @@ if __name__ == '__main__':
     print ''
     for p in pypi_packages:
         pypi(p)
+    print ''
+
+    print 'Decrypting secret files...'
+    print ''
+    for f in encrypted:
+        decrypt(f)
     print ''
 
     print 'Configuring Gnome terminal...'
