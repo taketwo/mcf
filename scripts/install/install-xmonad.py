@@ -11,9 +11,12 @@ files = [('images/custom_xmonad_badge.png',
           'Custom Xmonad badge for the login screen'),
          ('xmonad.desktop',
           '/usr/share/xsessions',
-          'Xmonad desktop entry')]
+          'Xmonad desktop entry'),
+         ('xmonad.session',
+          '/usr/share/gnome-session/sessions',
+          'Xmonad GNOME session configuration')]
 
-deb_packages = ['xmonad', 'gnome-panel', 'kupfer']
+deb_packages = ['xmonad', 'xmobar', 'trayer', 'kupfer']
 
 
 def remove(dest):
