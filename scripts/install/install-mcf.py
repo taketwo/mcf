@@ -22,7 +22,8 @@ deb_packages = ['python-pip',
                 'tree',
                 'gitk',
                 'git-gui',
-                'powertop']
+                'powertop',
+                'ssh']
 
 pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
 
