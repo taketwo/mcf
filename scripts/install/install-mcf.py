@@ -73,6 +73,12 @@ if __name__ == '__main__':
         link(f, d)
     print ''
 
+    print 'Decrypting secret files...'
+    print ''
+    for f in encrypted:
+        decrypt(f)
+    print ''
+
     print 'Installing debian packages...'
     print ''
     for p in deb_packages:
@@ -83,12 +89,6 @@ if __name__ == '__main__':
     print ''
     for p in pypi_packages:
         pypi(p)
-    print ''
-
-    print 'Decrypting secret files...'
-    print ''
-    for f in encrypted:
-        decrypt(f)
     print ''
 
     print 'Configuring Gnome terminal...'
