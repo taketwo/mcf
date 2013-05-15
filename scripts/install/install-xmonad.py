@@ -9,21 +9,24 @@ import sys
 files = [('images/custom_xmonad_badge.png',
           '/usr/share/unity-greeter',
           'Custom Xmonad badge for the login screen'),
-         ('xmonad.desktop',
+         ('entries/xsessions/xmonad.desktop',
           '/usr/share/xsessions',
-          'Xmonad desktop entry'),
-         ('xmonad.session',
+          'Xmonad xsession configuration'),
+         ('entries/applications/xmonad.desktop',
+          '/usr/share/applications',
+          'Xmonad applications entry'),
+         ('entries/sessions/xmonad.session',
           '/usr/share/gnome-session/sessions',
           'Xmonad GNOME session configuration')]
 
-deb_packages = ['ghc6', 'cabal']
+deb_packages = ['cabal-install', 'libx11-dev', 'libxrandr-dev', 'libxft-dev', 'libxinerama-dev']
 
-cabal_packages = ['cabal-install', 'xmonad', 'xmonad-contrib']
+cabal_packages = ['xmonad', 'xmonad-contrib']
 
 
 def cabal(package):
     print '[*]', package
-    cmd = 'cabal install --force-reinstalls %s' % package
+    cmd = 'cabal install --global --force-reinstalls %s' % package
     subprocess.call(cmd.split())
 
 
@@ -97,6 +100,9 @@ if __name__ == '__main__':
     print ''
 
     print 'Installing cabal packages...'
+    print ''
+    print 'Get the latest list of available cabal packages'
+    subprocess.call(['cabal', 'update'])
     print ''
     for p in cabal_packages:
         cabal(p)
