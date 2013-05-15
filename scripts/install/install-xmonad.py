@@ -16,7 +16,15 @@ files = [('images/custom_xmonad_badge.png',
           '/usr/share/gnome-session/sessions',
           'Xmonad GNOME session configuration')]
 
-deb_packages = ['xmonad', 'xmobar', 'trayer', 'kupfer']
+deb_packages = ['ghc6', 'cabal']
+
+cabal_packages = ['cabal-install', 'xmonad', 'xmonad-contrib']
+
+
+def cabal(package):
+    print '[*]', package
+    cmd = 'cabal install --force-reinstalls %s' % package
+    subprocess.call(cmd.split())
 
 
 def remove(dest):
@@ -87,3 +95,10 @@ if __name__ == '__main__':
     for p in deb_packages:
         deb(p)
     print ''
+
+    print 'Installing cabal packages...'
+    print ''
+    for p in cabal_packages:
+        cabal(p)
+    print ''
+
