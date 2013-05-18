@@ -1,0 +1,148 @@
+## Use XFT? Required to Force UTF8 (see below).
+use_xft yes
+xftfont CPMono_v07 Plain for PowerLine:size=9
+xftalpha 0.1
+text_buffer_size 2048
+
+## Force UTF8? Requires XFT (see above).
+## Displays degree symbol, instead of &Acirc;&deg;, etc.
+override_utf8_locale yes
+
+## Update interval in seconds.
+update_interval 1.5
+
+## This is the number of times Conky will update before quitting.
+## Set to zero to run forever.
+total_run_times 0
+
+## Create own window instead of using desktop (required in nautilus)?
+own_window yes
+own_window_type override
+own_window_transparent no
+
+## Use double buffering? Reduces flicker.
+double_buffer yes
+
+## Draw shades?
+draw_shades no
+
+## Draw outlines?
+draw_outline no
+
+## Draw borders around text?
+draw_borders no
+
+## Draw borders around graphs?
+draw_graph_borders no
+
+## Print text to stdout?
+out_to_ncurses no
+
+## Print text in console?
+out_to_console no
+
+## Text alignment.
+alignment top_right
+
+## Minimum size of text area.
+minimum_size 235 0
+
+## Specify width and height for bars.
+default_bar_size 0 4
+
+## Gap between text and screen borders.
+gap_x 400
+gap_y 28
+
+## Shorten MiB/GiB to M/G in stats.
+short_units yes
+
+## Pad % symbol spacing after numbers.
+pad_percents 0
+
+## Limit the length of names in "Top Processes".
+top_name_width 10
+
+## Subtract file system -/+buffers/cache from used memory?
+## Set to yes, to produce meaningful physical memory stats.
+no_buffers yes
+
+## Set to yes, if you want all text to be in UPPERCASE.
+uppercase no
+
+## Number of cpu samples to average.
+## Set to 1 to disable averaging.
+cpu_avg_samples 4
+
+## Number of net samples to average.
+## Set to 1 to disable averaging.
+net_avg_samples 2
+
+## Add spaces to keep things from moving around?
+## Only affects certain objects.
+use_spacer right
+
+## My colors.
+color0 White
+color1 Ivory
+color2 Ivory2
+color3 Ivory3
+color4 Tan1
+color5 Tan2
+color6 Gray
+color7 AntiqueWhite4
+color8 DarkSlateGray
+color9 Black
+
+TEXT
+
+##################
+##    SYSTEM    ##
+##################
+${voffset 10}${font Arial:bold:size=9.5}${color4}SYSTEM ${color8} ${hr 2}
+${voffset 4}${font OpenLogos:size=10}${color2}u${voffset -4}${font}${color6} ${sysname} ${kernel} ${alignr} ${machine}
+${voffset 2}${font StyleBats:size=10}${color2}A${voffset -1}${font}${color6} Intel I5 ${alignr}${freq_g cpu0} GHz
+${voffset 2}${font StyleBats:size=10}${color2}q${voffset -1}${font}${color6} Uptime ${alignr}${uptime}
+${voffset 2}${font StyleBats:size=10}${color2}o${voffset -1}${font}${color6} File System ${alignr}${fs_type}
+##################
+##  PROCESSORS  ##
+##################
+${voffset 5}${font Arial:bold:size=9.5}${color4}PROCESSORS ${color8}${hr 2}
+${voffset 2}${font StyleBats:size=10}${color2}k${voffset -2}${font}${color6} CPU1  ${cpu cpu1}%${color7}${alignc 35}${cpubar cpu1}
+${voffset 2}${font StyleBats:size=10}${color2}k${voffset -2}${font}${color6} CPU2  ${cpu cpu2}%${color7}${alignc 35}${cpubar cpu2}
+${voffset 2}${font StyleBats:size=10}${color2}k${voffset -2}${font}${color6} CPU3  ${cpu cpu3}%${color7}${alignc 35}${cpubar cpu3}
+${voffset 2}${font StyleBats:size=10}${color2}k${voffset -2}${font}${color6} CPU4  ${cpu cpu4}%${color7}${alignc 35}${cpubar cpu4}
+##################
+##    MEMORY    ##
+##################
+${voffset 5}${font Arial:bold:size=9.5}${color4}MEMORY ${color8}${hr 2}
+${voffset 2}${font StyleBats:size=10}${color2}l${voffset -2}${font}${color6} RAM ${goto 95}${mem}/ ${memmax}${alignr}${memperc}%
+${color7}${membar}
+##################
+##     HDD      ##
+##################
+${voffset 2}${font Arial:bold:size=9.5}${color4}HDD ${color8}${hr 2}
+${voffset 2}${font StyleBats:size=10}${color2}x${voffset -2}${font}${color6} ROOT ${goto 95}${fs_used /} / ${fs_size /}${alignr}${fs_free_perc /}%
+${color7}${fs_bar /}
+${voffset 1}${font StyleBats:size=10}${color2}x${voffset -2}${font}${color6} HOME ${goto 95}${fs_used /home}/ ${fs_size /home}${alignr}${fs_free_perc /home}%
+${color7}${fs_bar /home}
+${voffset 1}${font StyleBats:size=10}${color2}4${voffset -2}${font}${color6} SWAP ${goto 95}${swap} / ${swapmax}${alignr}${swapperc}%
+${color7}${swapbar}
+##################
+# TOP PROCESSES ##
+##################
+${voffset 3}${font Arial:bold:size=9.5}${color4}TOP PROCESSES ${color8}${hr 2}
+${voffset 2}${font StyleBats:size=10}${color1}h${voffset -3}${font}${color6} ${top_mem name 1}${goto 115}${top_mem mem_res 1}${alignr}${top_mem mem 1}%
+${voffset 2}${font StyleBats:size=10}${color1}h${voffset -3}${font}${color6} ${top_mem name 2}${goto 115}${top_mem mem_res 2}${alignr}${top_mem mem 2}%
+${voffset 2}${font StyleBats:size=10}${color1}h${voffset -3}${font}${color6} ${top_mem name 3}${goto 115}${top_mem mem_res 3}${alignr}${top_mem mem 3}%
+${voffset 2}${font StyleBats:size=10}${color1}h${voffset -3}${font}${color6} ${top_mem name 4}${goto 115}${top_mem mem_res 4}${alignr}${top_mem mem 4}%
+##################
+##   NETWORK    ##
+##################
+${voffset 5}${font Arial:bold:size=9.5}${color4}NETWORK ${color8}${hr 2}
+${voffset 2}${font PizzaDude Bullets:size=10}${color2}a${font}${color6} Private IP${alignr}${addr eth0}
+${font PizzaDude Bullets:size=10}${color2}a${font}${color6} Public  IP${alignr}${execi 600 wget -q -O - checkip.dyndns.org | sed -e &#39;s/[^[:digit:]\|.]//g&#39;}
+${voffset 4}${font PizzaDude Bullets:size=10}${color2}T${font}${color6} Down${alignr}${downspeed eth0}
+${font PizzaDude Bullets:size=10}${color2}N${font}${color6} Up${alignr}${upspeed eth0}
+${voffset 4}${font PizzaDude Bullets:size=10}${color2}T${font}${color6} Downloaded${alignr}${totaldown eth0}
+${font PizzaDude Bullets:size=10}${color2}N${font}${color6} Uploaded${alignr}${totalup eth0}

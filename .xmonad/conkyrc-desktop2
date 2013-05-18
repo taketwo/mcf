@@ -1,0 +1,181 @@
+## Use XFT? Required to Force UTF8 (see below).
+use_xft yes
+xftfont CPMono_v07 Plain for PowerLine:size=9
+xftalpha 0.8
+text_buffer_size 2048
+
+## Force UTF8? Requires XFT (see above).
+## Displays degree symbol, instead of &Acirc;&deg;, etc.
+override_utf8_locale yes
+
+## Update interval in seconds.
+update_interval 3.0
+
+## This is the number of times Conky will update before quitting.
+## Set to zero to run forever.
+total_run_times 0
+
+## Create own window instead of using desktop (required in nautilus)?
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+## Use double buffering? Reduces flicker.
+double_buffer yes
+
+## Draw shades?
+draw_shades no
+
+## Draw outlines?
+draw_outline no
+
+## Draw borders around text?
+draw_borders no
+
+## Draw borders around graphs?
+draw_graph_borders yes
+
+## Print text to stdout?
+out_to_ncurses no
+
+## Print text in console?
+out_to_console no
+
+## Text alignment.
+alignment top_right
+
+## Minimum size of text area.
+minimum_size 235 0
+
+## Specify width and height for bars.
+default_bar_size 0 4
+
+## Gap between text and screen borders.
+gap_x 400
+gap_y 28
+
+## Shorten MiB/GiB to M/G in stats.
+short_units yes
+
+## Pad % symbol spacing after numbers.
+pad_percents 0
+
+## Limit the length of names in "Top Processes".
+top_name_width 10
+
+## Subtract file system -/+buffers/cache from used memory?
+## Set to yes, to produce meaningful physical memory stats.
+no_buffers yes
+
+## Set to yes, if you want all text to be in UPPERCASE.
+uppercase no
+
+## Number of cpu samples to average.
+## Set to 1 to disable averaging.
+cpu_avg_samples 4
+
+## Number of net samples to average.
+## Set to 1 to disable averaging.
+net_avg_samples 2
+
+## Add spaces to keep things from moving around?
+## Only affects certain objects.
+use_spacer right
+
+## Default color.
+default_color white
+
+## My colors.
+color0 White
+color1 Ivory
+color2 Ivory2
+color3 Ivory3
+color4 Tan1
+color5 Tan2
+color6 Gray
+color7 AntiqueWhite4
+color8 DarkSlateGray
+color9 Black
+
+TEXT
+
+##################
+##    SYSTEM    ##
+##################
+#${voffset 10}${font Arial:bold:size=9.5}${color4}SYSTEM ${color8} ${hr 2}
+$stippled_hr
+$nodename - $sysname $kernel ($machine)
+$stippled_hr
+
+Kernel: $alignr $kernel
+Uptime: $alignr $uptime
+
+$stippled_hr
+SYSTEM
+$stippled_hr
+
+CPU1: ${alignr} ${cpu cpu1}%
+CPU2: ${alignr} ${cpu cpu2}%
+${cpugraph 20}
+Load: $alignr $loadavg
+Processes: $alignr $processes
+Running: $alignr $running_processes
+
+RAM: $alignr $mem/$memmax
+${membar 3}
+Swap: $alignr $swap / $swapmax
+${swapbar 3}
+
+$stippled_hr
+TOP
+$stippled_hr
+
+
+Name $alignr PID     CPU%   MEM%
+${color #ddaa00} ${top name 1} $alignr ${top pid 1} ${top cpu 1} ${top mem 1}$color
+ ${top name 2} $alignr ${top pid 2} ${top cpu 2} ${top mem 2}
+ ${top name 3} $alignr ${top pid 3} ${top cpu 3} ${top mem 3}
+
+Mem usage$color
+${color #ddaa00} ${top_mem name 1} $alignr ${top_mem pid 1} ${top_mem cpu 1} ${top_mem mem 1}$color
+ ${top_mem name 2} $alignr ${top_mem pid 2} ${top_mem cpu 2} ${top_mem mem 2}
+ ${top_mem name 3} $alignr ${top_mem pid 3} ${top_mem cpu 3} ${top_mem mem 3}
+
+$stippled_hr
+Temp
+$stippled_hr
+
+${color #ddaa00} CPU: ${alignr}${acpitemp}C$color
+
+$stippled_hr
+HDD
+$stippled_hr
+
+I/O:
+
+ Write: $alignr $diskio_write
+${diskiograph_write 20}
+ Read: $alignr $diskio_read
+${diskiograph_read 20}
+
+ROOT: $alignr ${fs_free /} / ${fs_size /}
+${fs_bar 3 /}
+HOME: $alignr ${fs_free /home} / ${fs_size /home}
+${fs_bar 3 /home}
+
+$stippled_hr
+Network
+$stippled_hr
+
+Down:
+${color #ddaa00} Speed: $alignr ${downspeed eth0} k/s$color
+ Tot: $alignr ${totaldown eth0}
+
+${downspeedgraph eth0 20} ${alignr}${upspeedgraph eth0 20}
+
+Up:
+${color #ddaa00} Speed: $alignr ${upspeed eth0} k/s$color
+ Tot: $alignr ${totalup eth0}
+
+${upspeedgraph eth0 20} ${alignr}${upspeedgraph eth0 20}
