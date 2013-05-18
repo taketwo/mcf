@@ -19,7 +19,8 @@ files = [('images/custom_xmonad_badge.png',
           '/usr/share/gnome-session/sessions',
           'Xmonad GNOME session configuration')]
 
-deb_packages = ['cabal-install', 'libx11-dev', 'libxrandr-dev', 'libxft-dev', 'libxinerama-dev']
+deb_packages = ['cabal-install', 'libx11-dev', 'libxrandr-dev', 'libxft-dev',
+                'libxinerama-dev', 'libxpm-dev', 'xdotool']
 
 cabal_packages = ['xmonad', 'xmonad-contrib']
 
