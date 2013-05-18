@@ -101,7 +101,7 @@ import System.IO (Handle, hPutStrLn)
 import Solarized
 
 -- Configuration ----------------------------------------------------------- {{{
-
+myTerminal = "gnome-terminal"
 -- }}}
 -- Workspaces -------------------------------------------------------------- {{{
 
@@ -201,14 +201,13 @@ main = do
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
-  let barTopRight  = "dzen2"
+  let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
                      ++ " -h '12' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
-
   dzenTopLeft  <- spawnPipe barTopLeft
   dzenTopRight <- spawnPipe barTopRight
   xmonad $ gnomeConfig
@@ -219,10 +218,10 @@ main = do
     , terminal           = "gnome-terminal" -- default terminal program
     , workspaces         = myWorkspaces
     , manageHook = manageHook gnomeConfig <+> myManageHook
-    , logHook = logHookTopLeft dzenTopLeft pathIcons <+> logHookTopRight dzenTopRight
+    , logHook = logHookTopLeft dzenTopLeft pathIcons
     , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
     , handleEventHook    = myHandleEventHook
-    , startupHook        = startTimer 1 >>= XS.put . TID
+    --, startupHook        = startTimer 1 >>= XS.put . TID
     }
     `additionalKeysP`
     [ ("M-S-q", spawn "gnome-session-save --gui --logout-dialog") -- display logout-dialog
@@ -255,7 +254,7 @@ main = do
     , ("M-<Return>", spawn "gnome-terminal")
     , ("M-<Space>", spawn "kupfer")
     , ("M-r", spawn "rhythmbox")
-    , ("M-q", restart "xmonad" True)                           --Restart xmonad
+    , ("M-q", spawn "killall conky dzen2" <+> restart "xmonad" True)                           --Restart xmonad
     , ("M-b", spawn "chromium-browser")
     , ("M-`", scratchTerminal)
     ]

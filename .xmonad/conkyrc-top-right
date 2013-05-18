@@ -1,0 +1,10 @@
+background no
+out_to_x no
+out_to_console yes
+update_interval 1
+use_spacer none
+
+TEXT
+${if_existing /sys/class/power_supply/BAT0}\
+Battery: ^fg(\#afd78a)${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}${battery_percent BAT0}${endif}\
+ ^fg():: ^fg(\#ffffff)${time %A %b %d %H:%M:%S} 
