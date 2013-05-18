@@ -265,6 +265,7 @@ main = do
 -- }}}
 -- Status bars ------------------------------------------------------------- {{{
 -- Helper functions -------------------------------------------------------- {{{
+myIconPath = "/home/sergey/.xmonad/icons/"
 wrapTextBox :: String -> String -> String -> String -> String
 wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xbm)^ib(1)^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath ++ "boxright.xbm)^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
 
