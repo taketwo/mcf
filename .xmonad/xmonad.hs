@@ -100,10 +100,6 @@ import System.IO (Handle, hPutStrLn)
 
 import Solarized
 
-{-
-  Xmonad configuration variables.
--}
-
 -- Configuration ----------------------------------------------------------- {{{
 
 -- }}}
@@ -113,7 +109,6 @@ myWorkspaces :: [WorkspaceId]
 myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 -- }}}
-
 -- Appearance -------------------------------------------------------------- {{{
 
 dzenFont             = "-*-CPMono_v07 Plain for Powerline-*-r-normal-*-11-*-*-*-*-*-*-*"
@@ -132,12 +127,11 @@ colorGreen           = "#66ff66"
 colorGreenAlt        = "#558965"
 myNormalBorderColor  = colorBlackAlt
 myFocusedBorderColor = colorGray
-myIconPath           = "/home/sergey/.xmonad/icons/"
-myBinPath            = "~/.xmonad/icons/"
 xRes                 = 166
 yRes                 = 768
 panelHeight          = 16
 panelBoxHeight       = 12
+topLeftBarWidth      = 450
 
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
@@ -147,9 +141,9 @@ defaultLayouts = smartBorders $ avoidStruts $
         { draggerType = BordersDragger }
   ||| windowNavigation mouseResizableTile
         { draggerType = BordersDragger
-        , isMirrored = True }
+        , isMirrored  = True }
   ||| windowNavigation Grid
-  ||| noBorders Full
+  ||| Full
 
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
@@ -159,9 +153,27 @@ mcfLayouts =
   {-$-} defaultLayouts
 
 -- }}}
+-- Scratchpads ------------------------------------------------------------- {{{
 
-myManageHook :: [ManageHook]
-myManageHook =
+myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
+  where
+    spawnTerminal  = "xterm" ++ " -name scratchpad"
+    findTerminal   = resource  =? "scratchpad"
+    manageTerminal = customFloating $ W.RationalRect l t w h
+      where
+        h = 0.3             -- height
+        w = 1.0             -- width
+        t = 1.0 - h         -- bottom edge
+        l = (1.0 - w) / 2.0 -- centered left/right
+
+-- }}}
+-- Manage hook ------------------------------------------------------------- {{{
+
+myManageHook :: ManageHook
+myManageHook = composeAll manageWindows <+> namedScratchpadManageHook myScratchPads
+
+manageWindows :: [ManageHook]
+manageWindows =
   [ isFullscreen --> doFullFloat
   , isDialog --> doFloat
   , className =? "Skype" --> doF (W.shift "8")
@@ -169,24 +181,29 @@ myManageHook =
   , className =? "Rhythmbox" --> doF (W.shift "9")
   ]
 
+-- }}}
+-- Main -------------------------------------------------------------------- {{{
+
 main :: IO ()
 main = do
-  home    <- catch (getEnv "HOME") ( const $ return [])
-  d       <- catch (getEnv "DISPLAY") ( const $ return [])
-  display <- openDisplay d
+  pathHome <- catch (getEnv "HOME") ( const $ return [])
+  d        <- catch (getEnv "DISPLAY") ( const $ return [])
+  display  <- openDisplay d
+  let pathXmonad   = pathHome ++ "/.xmonad"
+  let pathIcons    = pathXmonad ++ "/icons"
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
   let barTopLeft   = "dzen2"
                      ++ " -x '0' -y '0'"
-                     ++ " -h '16' -w '400'"
+                     ++ " -h '12' -w '" ++ show topLeftBarWidth ++ "'"
                      ++ " -ta 'l'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
   let barTopRight  = "dzen2"
-                     ++ " -x '400' -y '0'"
-                     ++ " -h '16' -w '" ++ show (screenWidth - 400) ++ "'"
+                     ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
+                     ++ " -h '12' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
@@ -194,8 +211,6 @@ main = do
 
   dzenTopLeft  <- spawnPipe barTopLeft
   dzenTopRight <- spawnPipe barTopRight
-  {-topRightBar <- spawnPipe mcfXmonadBar-}
-  {-dzenLeftBar <- spawnPipe mcfXmonadBar-}
   xmonad $ gnomeConfig
     { modMask            = mod1Mask         -- changes the mode key to "super"
     , focusedBorderColor = solarizedOrange  -- color of focused border
@@ -203,9 +218,8 @@ main = do
     , borderWidth        = 1                -- width of border around windows
     , terminal           = "gnome-terminal" -- default terminal program
     , workspaces         = myWorkspaces
-    , manageHook = manageHook gnomeConfig <+> composeAll myManageHook
-    {-, logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd-}
-    , logHook = logHookTopLeft dzenTopLeft <+> logHookTopRight dzenTopRight
+    , manageHook = manageHook gnomeConfig <+> myManageHook
+    , logHook = logHookTopLeft dzenTopLeft pathIcons <+> logHookTopRight dzenTopRight
     , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
     , handleEventHook    = myHandleEventHook
     , startupHook        = startTimer 1 >>= XS.put . TID
@@ -220,6 +234,7 @@ main = do
     , ("M-<Tab>", sendMessage NextLayout)
     , ("M-a", sendMessage NextLayout)
     , ("M1-<Tab>", windows W.focusDown)
+    , ("M-o", windows W.focusDown)
     , ("M-<L>", prevScreen)
     , ("M-<R>", nextScreen)
     , ("M-c", sendMessage $ Go U)
@@ -242,46 +257,57 @@ main = do
     , ("M-r", spawn "rhythmbox")
     , ("M-q", restart "xmonad" True)                           --Restart xmonad
     , ("M-b", spawn "chromium-browser")
+    , ("M-`", scratchTerminal)
     ]
+    where
+      scratchTerminal = namedScratchpadAction myScratchPads "terminal"
 
-
+-- }}}
 -- Status bars ------------------------------------------------------------- {{{
+-- Helper functions -------------------------------------------------------- {{{
+wrapTextBox :: String -> String -> String -> String -> String
+wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xbm)^ib(1)^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath ++ "boxright.xbm)^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
+
+xdoMod :: String -> String
+xdoMod key = "/usr/bin/xdotool key alt+" ++ key
+
+wrapClickLayout x = "^ca(1," ++ xdoMod "a" ++ ")" ++ x ++ "^ca()"
+wrapClickWorkspace ws = "^ca(1," ++ xdoMod "w;" ++ xdoMod index ++ ")" ++ "^ca(3," ++ xdoMod "w;" ++ xdoMod index ++ ")" ++ ws ++ "^ca()^ca()"
+  where
+    wsIdxToString Nothing = "1"
+    wsIdxToString (Just n) = show $ mod (n+1) $ length myWorkspaces
+    index = wsIdxToString (elemIndex ws myWorkspaces)
+
+wrapLoggerBox :: String -> String -> String -> Logger -> Logger
+wrapLoggerBox fg bg1 bg2 l = do
+  log <- l
+  let text = do
+      logStr <- log
+      return $ wrapTextBox fg bg1 bg2 logStr
+  return text
+-- }}}
 -- Top left (XMonad status) ------------------------------------------------ {{{
-logHookTopLeft :: Handle -> X ()
-logHookTopLeft h = dynamicLogWithPP $ defaultPP
+logHookTopLeft h icons = dynamicLogWithPP $ defaultPP
   { ppOutput          = hPutStrLn h
   , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) --hide "NSP" from workspace list
-  {-, ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x-}
+  , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep             = " "
   , ppWsSep           = ""
-  , ppCurrent         = wrapTextBox solarizedBase02 solarizedBase1  colorBlack
-  , ppUrgent          = wrapTextBox solarizedRed    solarizedBase02 colorBlack -- . wrapClickWorkspace
-  , ppVisible         = wrapTextBox solarizedBlue   solarizedBase02 colorBlack -- . wrapClickWorkspace
-  , ppHiddenNoWindows = wrapTextBox solarizedBase03 solarizedBase02 colorBlack -- . wrapClickWorkspace
-  , ppHidden          = wrapTextBox solarizedBase1  solarizedBase02 colorBlack -- . wrapClickWorkspace
-  , ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape
+  , ppCurrent         = wrapTextBox solarizedBase02 solarizedBase1  dzenBg
+  , ppUrgent          = wrapTextBox solarizedRed    solarizedBase02 dzenBg . wrapClickWorkspace
+  , ppVisible         = wrapTextBox solarizedBlue   solarizedBase02 dzenBg . wrapClickWorkspace
+  , ppHiddenNoWindows = wrapTextBox solarizedBase03 solarizedBase02 dzenBg . wrapClickWorkspace
+  , ppHidden          = wrapTextBox solarizedBase1  solarizedBase02 dzenBg . wrapClickWorkspace
+  , ppTitle           = (" " ++) . dzenColor solarizedBase1 solarizedBase03 . dzenEscape
+  , ppLayout          = wrapClickLayout . dzenColor solarizedBase01 solarizedBase03 .
+    (\x -> case x of
+    "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
+    "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
+    "Grid"                      -> "^i(" ++ icons ++ "/grid.xbm)"
+    "Full"                      -> "^i(" ++ icons ++ "/full.xbm)"
+    _ -> x
+    )
   }
-
-{-logHookTopLeft h = dynamicLogWithPP $ defaultPP-}
-  {-{ ppOutput            =   hPutStrLn h-}
-  {-, ppCurrent           =   dzenColor "#ebac54" "#1B1D1E" . pad-}
-  {-, ppVisible           =   dzenColor "white" "#1B1D1E" . pad-}
-  {-, ppHidden            =   dzenColor "white" "#1B1D1E" . pad-}
-  {-, ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad-}
-  {-, ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad-}
-  {-, ppWsSep             =   " "-}
-  {-, ppSep               =   "  |  "-}
-  {-, ppLayout            =   dzenColor "#ebac54" "#1B1D1E" .-}
-                            {-(\x -> case x of-}
-                                {-"MouseResizableTile"        ->      "^i(" ++ myIconPath ++ "tall.xbm)"-}
-                                {-"Mirror ResizableTall"      ->      "^i(" ++ myIconPath ++ "mtall.xbm)"-}
-                                {-"Full"                      ->      "^i(" ++ myIconPath ++ "full.xbm)"-}
-                                {-"Simple Float"              ->      "~"-}
-                                {-_                           ->      x-}
-                            {-)-}
-  {-, ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape-}
-  {-}-}
-
 -- }}}
 -- Top right (date and time) ----------------------------------------------- {{{
 
@@ -293,13 +319,8 @@ logHookTopRight h = dynamicLogWithPP $ defaultPP
   , ppExtras          = [ date $ (wrapTextBox colorBlack colorWhiteAlt colorBlack "%A") ++ (wrapTextBox colorWhiteAlt colorGrayAlt colorBlack $ "%Y^fg(" ++ colorGray ++ ").^fg()%m^fg(" ++ colorGray ++ ").^fg()^fg(" ++ colorBlue ++ ")%d^fg() ^fg(" ++ colorGray ++ ")-^fg() %H^fg(" ++ colorGray ++"):^fg()%M^fg(" ++ colorGray ++ "):^fg()^fg(" ++ colorGreen ++ ")%S^fg()") ]
   }
 
--- Wrap Box
-wrapTextBox :: String -> String -> String -> String -> String
-wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xbm)^ib(1)^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath ++ "boxright.xbm)^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
-
 -- }}}
 -- }}}
-
 -- HandleEvent hook -------------------------------------------------------- {{{
 
 -- Wrapper for the Timer id, so it can be stored as custom mutable state
