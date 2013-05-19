@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
 import shutil
 import sys
 
+# The script may be run before finishing MCF installation or as root, in whic
+# PYTHONPATH may not be set up properly.
+from os.path import expanduser, join
+sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
+import install
 
 files = [('images/custom_xmonad_badge.png',
           '/usr/share/unity-greeter',
@@ -20,15 +24,9 @@ files = [('images/custom_xmonad_badge.png',
           'Xmonad GNOME session configuration')]
 
 deb_packages = ['cabal-install', 'libx11-dev', 'libxrandr-dev', 'libxft-dev',
-                'libxinerama-dev', 'libxpm-dev', 'xdotool']
+                'libxinerama-dev', 'libxpm-dev', 'xdotool', 'conky-all']
 
 cabal_packages = ['xmonad', 'xmonad-contrib']
-
-
-def cabal(package):
-    print '[*]', package
-    cmd = 'cabal install --global --force-reinstalls %s' % package
-    subprocess.call(cmd.split())
 
 
 def remove(dest):
@@ -65,12 +63,6 @@ def link(src, dest, desc):
     print '   ', dest, '->', src
 
 
-def deb(package):
-    print '[*]', package
-    cmd = 'sudo apt-get install %s' % package
-    subprocess.call(cmd.split())
-
-
 if __name__ == '__main__':
     if os.getuid() != 0:
         print 'This script needs to be run as root.'
@@ -94,18 +86,12 @@ if __name__ == '__main__':
         link(fs, fd, d)
     print ''
 
-    print 'Installing debian packages...'
-    print ''
-    for p in deb_packages:
-        deb(p)
+    install.deb(deb_packages)
     print ''
 
-    print 'Installing cabal packages...'
-    print ''
-    print 'Get the latest list of available cabal packages'
-    subprocess.call(['cabal', 'update'])
-    print ''
-    for p in cabal_packages:
-        cabal(p)
+    install.cabal(cabal_packages)
     print ''
 
+    print 'Installation ALMOST completed.'
+    print 'You will need to install dzen2 manually:'
+    print '      $', os.path.join(os.path.split(sys.argv[0])[0], 'install-dzen2.py')

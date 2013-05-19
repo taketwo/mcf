@@ -4,6 +4,7 @@ import tempfile
 import shutil
 import subprocess
 
+
 class GitRepository:
 
     def __init__(self, url):
@@ -44,4 +45,17 @@ def deb(package):
     for pk in p:
         print '  [*]', pk
     cmd = 'sudo apt-get install -y %s' % ' '.join(p)
+    subprocess.call(cmd.split())
+
+
+def cabal(package, local=False):
+    p = package if isinstance(package, list) else [package]
+    print 'Installing cabal package%s:' % ('s' if len(p) > 1 else '')
+    for pk in p:
+        print '  [*]', pk
+    if local:
+        cmd = 'cabal install --force-reinstalls %s' % ' '.join(p)
+    else:
+        cmd = 'sudo cabal install --global --force-reinstalls %s' % ' '.join(p)
+    subprocess.call(['cabal', 'update'])
     subprocess.call(cmd.split())
