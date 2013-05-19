@@ -129,6 +129,7 @@ alias x='exit'
 alias ff='find . -name $*'
 alias vundle='vim +BundleInstall +qall'
 alias rs='nohup redshift -l 50.4:7.5 -t 6000:4500 &'
+alias tex-clean='rm *.{aux,log,out}'
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
