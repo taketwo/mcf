@@ -44,7 +44,7 @@ def deb(package):
     print 'Installing debian package%s:' % ('s' if len(p) > 1 else '')
     for pk in p:
         print '  [*]', pk
-    cmd = 'sudo apt-get install -y %s' % ' '.join(p)
+    cmd = 'sudo apt-get install --force-yes -y %s' % ' '.join(p)
     subprocess.call(cmd.split())
 
 
