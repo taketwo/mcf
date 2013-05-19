@@ -96,6 +96,7 @@ stty -ixon
 
 export MCF=~/.mcf
 export PATH=~/.mcf/scripts/bin:/opt/llvm/bin:$PATH
+export EDITOR=vim
 
 load ()
 {
