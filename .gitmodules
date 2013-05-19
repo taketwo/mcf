@@ -10,3 +10,6 @@
 [submodule "scripts/bundle/z"]
 	path = scripts/bundle/z
 	url = https://github.com/rupa/z.git
+[submodule "scripts/bundle/spark"]
+	path = scripts/bundle/spark
+	url = https://github.com/holman/spark.git
