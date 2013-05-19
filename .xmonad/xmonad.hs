@@ -92,6 +92,7 @@ import System.Posix.Types
 import System.Exit
 import System.IO (Handle, hPutStrLn)
 {-import Control.Exception as E-}
+import Control.Monad (liftM2)
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified XMonad.Actions.FlexibleResize as Flex
@@ -170,16 +171,42 @@ myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
 -- Manage hook ------------------------------------------------------------- {{{
 
 myManageHook :: ManageHook
-myManageHook = composeAll manageWindows <+> namedScratchpadManageHook myScratchPads <+> manageDocks
+myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads
 
-manageWindows :: [ManageHook]
-manageWindows =
-  [ isFullscreen --> doFullFloat
-  , isDialog --> doFloat
-  , className =? "Skype" --> doF (W.shift "8")
-  , className =? "Workrave" --> doF (W.shift "9")
-  , className =? "Rhythmbox" --> doF (W.shift "9")
-  ]
+manageWindows = composeAll . concat $
+    [ [isDialog --> doFloat]
+    , [className =? c --> doFloat  | c <- myCFloats]
+    , [title     =? t --> doFloat  | t <- myTFloats]
+    , [resource  =? r --> doFloat  | r <- myRFloats]
+    , [resource  =? i --> doIgnore | i <- myIgnores]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "1" | x <- my1Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "2" | x <- my2Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "3" | x <- my3Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "4" | x <- my4Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "5" | x <- my5Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "6" | x <- my6Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "7" | x <- my7Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "8" | x <- my8Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9" | x <- my9Shifts]
+    ]
+    where
+    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+    myCFloats = []
+    myTFloats = ["Downloads", "Save As..."]
+    myRFloats = []
+    myIgnores = []
+    my1Shifts = ["Chromium-browser"]
+    my2Shifts = []
+    my3Shifts = []
+    my4Shifts = []
+    my5Shifts = []
+    my6Shifts = []
+    my7Shifts = []
+    my8Shifts = ["Skype"
+                , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
+                , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
+                ]
+    my9Shifts = ["Rhythmbox", "Workrave"]
 
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
