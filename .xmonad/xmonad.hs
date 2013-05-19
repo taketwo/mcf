@@ -157,7 +157,7 @@ mcfLayouts =
 
 myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
   where
-    spawnTerminal  = "xterm" ++ " -name scratchpad"
+    spawnTerminal  = myTerminal ++ " --disable-factory --name scratchpad"
     findTerminal   = resource  =? "scratchpad"
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
@@ -170,7 +170,7 @@ myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
 -- Manage hook ------------------------------------------------------------- {{{
 
 myManageHook :: ManageHook
-myManageHook = composeAll manageWindows <+> namedScratchpadManageHook myScratchPads
+myManageHook = composeAll manageWindows <+> namedScratchpadManageHook myScratchPads <+> manageDocks
 
 manageWindows :: [ManageHook]
 manageWindows =
