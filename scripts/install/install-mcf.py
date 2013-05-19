@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+# encoding: utf-8
 
 import os
 import subprocess
+
+import install
 
 
 files = [('.Xmodmap', 'Remap CapsLock to Ctrl'),
@@ -41,12 +44,6 @@ def link(filename, desc):
     print '   ', dest, '->', src
 
 
-def deb(package):
-    print '[*]', package
-    cmd = 'sudo apt-get install %s' % package
-    subprocess.call(cmd.split())
-
-
 def pypi(package):
     print '[*]', package
     cmd = 'sudo pip install --upgrade %s' % package
@@ -79,10 +76,7 @@ if __name__ == '__main__':
         decrypt(f)
     print ''
 
-    print 'Installing debian packages...'
-    print ''
-    for p in deb_packages:
-        deb(p)
+    install.deb(deb_packages)
     print ''
 
     print 'Installing python packages...'
