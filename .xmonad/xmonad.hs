@@ -138,7 +138,8 @@ xRes                 = 166
 yRes                 = 768
 panelHeight          = 16
 panelBoxHeight       = 12
-topLeftBarWidth      = 450
+topLeftBarWidth      = 500
+
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
 
@@ -223,7 +224,7 @@ manageWindows = composeAll . concat $
 {-myStatusBarCleanup = safeSpawn "~/.xmonad/print.sh" ["CLEANUP"]-}
 dzenCommand (S n) = "dzen2"
                     ++ " -x '0' -y '0'"
-                    ++ " -h '12' -w '500'"
+                    ++ " -h '16' -w '500'"
                     ++ " -ta 'l'"
                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
                     ++ " -bg '" ++ dzenBg ++ "'"
@@ -246,14 +247,14 @@ main = do
   {-let barTopLeft   = "~/.xmonad/status-bar-launcher.sh"-}
   let barTopLeft   = "dzen2"
                      ++ " -x '0' -y '0'"
-                     ++ " -h '12' -w '" ++ show topLeftBarWidth ++ "'"
+                     ++ " -h '16' -w '" ++ show topLeftBarWidth ++ "'"
                      ++ " -ta 'l'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
   let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh " ++ show screenWidth ++ " | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
-                     ++ " -h '12' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
+                     ++ " -h '16' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
@@ -351,12 +352,12 @@ pp h s = defaultPP
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep             = " "
   , ppWsSep           = ""
-  , ppCurrent         = wrapTextBox dzenFgDark dzenBg  dzenBg
-  , ppUrgent          = wrapTextBox dzenUrgent dzenFgDark dzenBg . wrapClickWorkspace
-  , ppVisible         = wrapTextBox dzenFgDark dzenFgLight dzenBg . wrapClickWorkspace
-  , ppHiddenNoWindows = wrapTextBox dzenBg     dzenFgDark dzenBg . wrapClickWorkspace
-  , ppHidden          = wrapTextBox dzenFgLight  dzenFgDark dzenBg . wrapClickWorkspace
-  , ppTitle           = (" " ++) . dzenColor dzenFgLight dzenBg . dzenEscape
+  , ppCurrent         = wrapTextBox dzenFgDark dzenFgLight dzenBg
+  , ppUrgent          = wrapTextBox dzenUrgent dzenBg dzenBg . wrapClickWorkspace
+  , ppVisible         = wrapTextBox dzenFgLight  dzenFgDark dzenBg . wrapClickWorkspace
+  , ppHiddenNoWindows = wrapTextBox dzenFgDark dzenBg  dzenBg . wrapClickWorkspace
+  , ppHidden          = wrapTextBox dzenFgLight dzenBg  dzenBg . wrapClickWorkspace
+  , ppTitle           = (" " ++) . dzenColor dzenFgLight dzenBg . dzenEscape . shorten 80
   , ppLayout          = wrapClickLayout . dzenColor dzenFgDark dzenBg .
     (\x -> case x of
     "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
