@@ -133,6 +133,10 @@ alias vundle='vim +BundleInstall +qall'
 alias rs='nohup redshift -l 50.4:7.5 -t 6000:4500 &'
 alias tex-clean='rm *.{aux,log,out}'
 
+# always forget this
+alias files-in-package='dpkg-query -L'
+alias file-from-package='apt-file search'
+
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
