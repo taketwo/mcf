@@ -85,7 +85,6 @@ import Data.Monoid
 import Graphics.X11.ExtraTypes.XF86
 
 import System.Exit
-import System.IO
 import System.Directory
 import System.Environment
 
@@ -115,7 +114,7 @@ myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 -- }}}
 -- Appearance -------------------------------------------------------------- {{{
 
-dzenFont             = "-*-CPMono_v07 Plain for Powerline-*-r-normal-*-11-*-*-*-*-*-*-*"
+dzenFont             = "-*-Liberation Mono-*-r-normal-*-11-*-*-*-*-*-*-*"
 dzenBg               = "#3c3b37"
 dzenFgLight          = "#d7dbd2"
 dzenFgDark           = "#7f7d76"
@@ -136,8 +135,8 @@ myNormalBorderColor  = colorBlackAlt
 myFocusedBorderColor = colorGray
 xRes                 = 166
 yRes                 = 768
-panelHeight          = 16
-panelBoxHeight       = 12
+topBarHeight         = 14
+topBarBoxHeight      = 12
 topLeftBarWidth      = 500
 
 -- }}}
@@ -217,22 +216,6 @@ manageWindows = composeAll . concat $
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
 
-{-myStatusBar :: DynamicStatusBar-}
-{-myStatusBar = spawnPipe . ("~/.xmonad/print.sh " ++ ) . show-}
-{-myStatusBar = spawnPipe . ("gnome-terminal --title " ++ ) . show-}
-{-myStatusBarCleanup :: DynamicStatusBarCleanup-}
-{-myStatusBarCleanup = safeSpawn "~/.xmonad/print.sh" ["CLEANUP"]-}
-dzenCommand (S n) = "dzen2"
-                    ++ " -x '0' -y '0'"
-                    ++ " -h '16' -w '500'"
-                    ++ " -ta 'l'"
-                    ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                    ++ " -bg '" ++ dzenBg ++ "'"
-                    ++ " -fn '" ++ dzenFont ++ "'"
-                    ++ " -xs '" ++ show n ++ "'"
-
-bindPPoutput pp h = pp { ppOutput = hPutStrLn h }
-
 main :: IO ()
 main = do
   pathHome <- catch (getEnv "HOME") ( const $ return [])
@@ -244,22 +227,13 @@ main = do
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
-  {-let barTopLeft   = "~/.xmonad/status-bar-launcher.sh"-}
-  let barTopLeft   = "dzen2"
-                     ++ " -x '0' -y '0'"
-                     ++ " -h '16' -w '" ++ show topLeftBarWidth ++ "'"
-                     ++ " -ta 'l'"
-                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                     ++ " -bg '" ++ dzenBg ++ "'"
-                     ++ " -fn '" ++ dzenFont ++ "'"
   let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh " ++ show screenWidth ++ " | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
-                     ++ " -h '16' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
+                     ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
-  {-dzenTopLeft  <- spawnPipe barTopLeft-}
   dzenTopRight <- spawnPipe barTopRight
   dzens        <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
   xmonad $ gnomeConfig
@@ -271,7 +245,7 @@ main = do
     , workspaces         = myWorkspaces
     , manageHook = manageHook gnomeConfig <+> myManageHook
     {-, logHook = logHookTopLeft dzenTopLeft pathIcons-}
-    , logHook = (mapM_ dynamicLogWithPP $ zipWith pp dzens [1 .. screenCount])
+    , logHook = (mapM_ dynamicLogWithPP $ zipWith (logHookTopLeft pathIcons) dzens [1 .. screenCount])
                 >> updatePointer (Relative 0.5 0.5)
     {-, logHook = updatePointer (Relative 1 1)-}
                 {->> mapM_ (bindPPoutput logHookTopLeft) dzens-}
@@ -324,10 +298,10 @@ main = do
 -- Helper functions -------------------------------------------------------- {{{
 myIconPath = "/home/sergey/.xmonad/icons/"
 wrapTextBox :: String -> String -> String -> String -> String
-wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xbm)^ib(1)^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath ++ "boxright.xbm)^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show panelBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
+wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xbm)^ib(1)^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath ++ "boxright.xbm)^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
 
 xdoMod :: String -> String
-xdoMod key = "/usr/bin/xdotool key alt+" ++ key
+xdoMod key = "/usr/bin/xdotool key super+" ++ key
 
 wrapClickLayout x = "^ca(1," ++ xdoMod "a" ++ ")" ++ x ++ "^ca()"
 wrapClickWorkspace ws = "^ca(1," ++ xdoMod "w;" ++ xdoMod index ++ ")" ++ "^ca(3," ++ xdoMod "w;" ++ xdoMod index ++ ")" ++ ws ++ "^ca()^ca()"
@@ -345,20 +319,29 @@ wrapLoggerBox fg bg1 bg2 l = do
   return text
 -- }}}
 -- Top left (XMonad status) ------------------------------------------------ {{{
-pp h s = defaultPP
-{-logHookTopLeft h = dynamicLogWithPP $ defaultPP-}
-  { ppOutput          = hPutStrLn h
-  , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) --hide "NSP" from workspace list
+
+dzenCommand (S n) = "dzen2"
+                    ++ " -x '0' -y '0'"
+                    ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show topLeftBarWidth ++ "'"
+                    ++ " -ta 'l'"
+                    ++ " -fg '" ++ colorWhiteAlt ++ "'"
+                    ++ " -bg '" ++ dzenBg ++ "'"
+                    ++ " -fn '" ++ dzenFont ++ "'"
+                    ++ " -xs '" ++ show n ++ "'"
+
+logHookTopLeft icons handle s = defaultPP
+  { ppOutput          = hPutStrLn handle
+  , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) -- hide "NSP" from workspace list
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep             = " "
   , ppWsSep           = ""
-  , ppCurrent         = wrapTextBox dzenFgDark dzenFgLight dzenBg
-  , ppUrgent          = wrapTextBox dzenUrgent dzenBg dzenBg . wrapClickWorkspace
-  , ppVisible         = wrapTextBox dzenFgLight  dzenFgDark dzenBg . wrapClickWorkspace
-  , ppHiddenNoWindows = wrapTextBox dzenFgDark dzenBg  dzenBg . wrapClickWorkspace
-  , ppHidden          = wrapTextBox dzenFgLight dzenBg  dzenBg . wrapClickWorkspace
-  , ppTitle           = (" " ++) . dzenColor dzenFgLight dzenBg . dzenEscape . shorten 80
-  , ppLayout          = wrapClickLayout . dzenColor dzenFgDark dzenBg .
+  , ppCurrent         =                      wrapTextBox dzenFgDark  dzenFgLight dzenBg
+  , ppUrgent          = wrapClickWorkspace . wrapTextBox dzenUrgent  dzenBg      dzenBg
+  , ppVisible         = wrapClickWorkspace . wrapTextBox dzenFgLight dzenFgDark  dzenBg
+  , ppHiddenNoWindows = wrapClickWorkspace . wrapTextBox dzenFgDark  dzenBg      dzenBg
+  , ppHidden          = wrapClickWorkspace . wrapTextBox dzenFgLight dzenBg      dzenBg
+  , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten 80
+  , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
     (\x -> case x of
     "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
     "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
@@ -367,8 +350,6 @@ pp h s = defaultPP
     _ -> x
     )
   }
-  where
-    icons = "/home/sergey/.xmonad/icons"
 
 -- }}}
 -- Top right (date and time) ----------------------------------------------- {{{
@@ -379,7 +360,7 @@ logHookTopRight h = dynamicLogWithPP $ defaultPP
   , ppOrder           = \(_:_:_:x) -> x
   , ppSep             = " "
   , ppExtras          = [ date $ (wrapTextBox colorBlack colorWhiteAlt colorBlack "%A") ++ (wrapTextBox colorWhiteAlt colorGrayAlt colorBlack $ "%Y^fg(" ++ colorGray ++ ").^fg()%m^fg(" ++ colorGray ++ ").^fg()^fg(" ++ colorBlue ++ ")%d^fg() ^fg(" ++ colorGray ++ ")-^fg() %H^fg(" ++ colorGray ++"):^fg()%M^fg(" ++ colorGray ++ "):^fg()^fg(" ++ colorGreen ++ ")%S^fg()") ]
-  }
+    }
 
 -- }}}
 -- }}}
