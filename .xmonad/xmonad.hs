@@ -25,6 +25,7 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.IndependentScreens
 import XMonad.StackSet (RationalRect (..), currentTag)
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.DynamicHooks
@@ -49,6 +50,7 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.ShowText
 import XMonad.Actions.GridSelect
 import XMonad.Actions.MouseResize
+import XMonad.Actions.UpdatePointer
 import XMonad
 import XMonad.Core
 import XMonad.Config.Gnome
@@ -136,7 +138,7 @@ xRes                 = 166
 yRes                 = 768
 panelHeight          = 16
 panelBoxHeight       = 12
-topLeftBarWidth      = 2500
+topLeftBarWidth      = 450
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
 
@@ -219,25 +221,36 @@ manageWindows = composeAll . concat $
 {-myStatusBar = spawnPipe . ("gnome-terminal --title " ++ ) . show-}
 {-myStatusBarCleanup :: DynamicStatusBarCleanup-}
 {-myStatusBarCleanup = safeSpawn "~/.xmonad/print.sh" ["CLEANUP"]-}
+dzenCommand (S n) = "dzen2"
+                    ++ " -x '0' -y '0'"
+                    ++ " -h '12' -w '500'"
+                    ++ " -ta 'l'"
+                    ++ " -fg '" ++ colorWhiteAlt ++ "'"
+                    ++ " -bg '" ++ dzenBg ++ "'"
+                    ++ " -fn '" ++ dzenFont ++ "'"
+                    ++ " -xs '" ++ show n ++ "'"
+
+bindPPoutput pp h = pp { ppOutput = hPutStrLn h }
 
 main :: IO ()
 main = do
   pathHome <- catch (getEnv "HOME") ( const $ return [])
   d        <- catch (getEnv "DISPLAY") ( const $ return [])
   display  <- openDisplay d
+  screenCount <- countScreens
   let pathXmonad   = pathHome ++ "/.xmonad"
   let pathIcons    = pathXmonad ++ "/icons"
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
-  let barTopLeft   = "~/.xmonad/status-bar-launcher.sh"
-  {-let barTopLeft   = "dzen2"-}
-                     {-++ " -x '0' -y '0'"-}
-                     {-++ " -h '12' -w '" ++ show topLeftBarWidth ++ "'"-}
-                     {-++ " -ta 'l'"-}
-                     {-++ " -fg '" ++ colorWhiteAlt ++ "'"-}
-                     {-++ " -bg '" ++ dzenBg ++ "'"-}
-                     {-++ " -fn '" ++ dzenFont ++ "'"-}
+  {-let barTopLeft   = "~/.xmonad/status-bar-launcher.sh"-}
+  let barTopLeft   = "dzen2"
+                     ++ " -x '0' -y '0'"
+                     ++ " -h '12' -w '" ++ show topLeftBarWidth ++ "'"
+                     ++ " -ta 'l'"
+                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
+                     ++ " -bg '" ++ dzenBg ++ "'"
+                     ++ " -fn '" ++ dzenFont ++ "'"
   let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh " ++ show screenWidth ++ " | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
                      ++ " -h '12' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
@@ -245,8 +258,9 @@ main = do
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
-  dzenTopLeft  <- spawnPipe barTopLeft
+  {-dzenTopLeft  <- spawnPipe barTopLeft-}
   dzenTopRight <- spawnPipe barTopRight
+  dzens        <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
   xmonad $ gnomeConfig
     { modMask            = mod4Mask         -- changes the mode key to "super"
     , focusedBorderColor = solarizedOrange  -- color of focused border
@@ -255,12 +269,16 @@ main = do
     , terminal           = "gnome-terminal" -- default terminal program
     , workspaces         = myWorkspaces
     , manageHook = manageHook gnomeConfig <+> myManageHook
-    , logHook = logHookTopLeft dzenTopLeft pathIcons
+    {-, logHook = logHookTopLeft dzenTopLeft pathIcons-}
+    , logHook = (mapM_ dynamicLogWithPP $ zipWith pp dzens [1 .. screenCount])
+                >> updatePointer (Relative 0.5 0.5)
+    {-, logHook = updatePointer (Relative 1 1)-}
+                {->> mapM_ (bindPPoutput logHookTopLeft) dzens-}
     , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
     , handleEventHook    = myHandleEventHook
     {-, startupHook = spawn "sh ~/.xmonad/print.sh startup"-}
     {-, startupHook = dynStatusBarStartup myStatusBar myStatusBarCleanup-}
-    , startupHook        = startTimer 0.5 >>= XS.put . TID
+    {-, startupHook        = startTimer 0.5 >>= XS.put . TID-}
     }
     `additionalKeysP`
     [ ("M-<F12>", spawn "gnome-session-quit --logout --no-prompt")
@@ -326,7 +344,8 @@ wrapLoggerBox fg bg1 bg2 l = do
   return text
 -- }}}
 -- Top left (XMonad status) ------------------------------------------------ {{{
-logHookTopLeft h icons = dynamicLogWithPP $ defaultPP
+pp h s = defaultPP
+{-logHookTopLeft h = dynamicLogWithPP $ defaultPP-}
   { ppOutput          = hPutStrLn h
   , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) --hide "NSP" from workspace list
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
@@ -347,6 +366,9 @@ logHookTopLeft h icons = dynamicLogWithPP $ defaultPP
     _ -> x
     )
   }
+  where
+    icons = "/home/sergey/.xmonad/icons"
+
 -- }}}
 -- Top right (date and time) ----------------------------------------------- {{{
 
