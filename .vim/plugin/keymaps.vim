@@ -1,7 +1,9 @@
 " Enter command mode with semicolon
 
   nnoremap ; :
-  nnoremap : <Esc> " temporally disable : to get rid of the habit
+  " Just learned that semicolon means "repeat find character", so use colon
+  " for that
+  nnoremap : ;
 
   " Experimental
   call arpeggio#load()
