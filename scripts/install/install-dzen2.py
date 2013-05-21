@@ -24,7 +24,7 @@ if __name__ == '__main__':
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
 
-    with GitRepository('geier/dzen') as repo:
+    with GitRepository('robm/dzen') as repo:
         # Comment option 1
         replace('/No Xinerama no XPM no XFT/,+2s/^/#/', 'config.mk')
         # Uncomment option 7
