@@ -5,6 +5,21 @@ update_interval 1
 use_spacer none
 
 TEXT
+${if_up ppp0}^i(/home/sergey/.xmonad/icons/net_wired.xbm)${endif} \
 ${if_existing /sys/class/power_supply/BAT0}\
 Battery: ^fg(\#afd78a)${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}${battery_percent BAT0}${endif}\
- ^fg():: ^fg(\#ffffff)${time %A %b %d %H:%M:%S} 
+ ^fg():: ^fg(\#ffffff)\
+${time \
+%A \
+^fg()%Y\
+^fg(\#a9a6af).^fg()\
+%m\
+^fg(\#a9a6af).^fg()\
+^fg(\#44aacc)%d^fg() \
+^fg(\#a9a6af)-^fg() \
+%H\
+^fg(\#a9a6af):^fg()\
+%M\
+^fg(\#a9a6af):^fg()\
+^fg(\#afd78a)%S^fg()\
+} 
