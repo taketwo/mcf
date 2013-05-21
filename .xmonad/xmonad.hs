@@ -28,6 +28,7 @@ import XMonad.Layout.WindowNavigation
 import XMonad.StackSet (RationalRect (..), currentTag)
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.DynamicHooks
+{-import XMonad.Hooks.DynamicBars-}
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.SetWMName
@@ -113,7 +114,10 @@ myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 -- Appearance -------------------------------------------------------------- {{{
 
 dzenFont             = "-*-CPMono_v07 Plain for Powerline-*-r-normal-*-11-*-*-*-*-*-*-*"
-dzenBg               = solarizedBase03
+dzenBg               = "#3c3b37"
+dzenFgLight          = "#d7dbd2"
+dzenFgDark           = "#7f7d76"
+dzenUrgent           = "#19b6ee"
 colorBlack           = "#020202" --Background (Dzen_BG)
 colorBlackAlt        = "#1c1c1c" --Black Xdefaults
 colorGray            = "#444444" --Gray       (Dzen_FG2)
@@ -132,8 +136,7 @@ xRes                 = 166
 yRes                 = 768
 panelHeight          = 16
 panelBoxHeight       = 12
-topLeftBarWidth      = 450
-
+topLeftBarWidth      = 2500
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
 
@@ -211,6 +214,12 @@ manageWindows = composeAll . concat $
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
 
+{-myStatusBar :: DynamicStatusBar-}
+{-myStatusBar = spawnPipe . ("~/.xmonad/print.sh " ++ ) . show-}
+{-myStatusBar = spawnPipe . ("gnome-terminal --title " ++ ) . show-}
+{-myStatusBarCleanup :: DynamicStatusBarCleanup-}
+{-myStatusBarCleanup = safeSpawn "~/.xmonad/print.sh" ["CLEANUP"]-}
+
 main :: IO ()
 main = do
   pathHome <- catch (getEnv "HOME") ( const $ return [])
@@ -221,14 +230,15 @@ main = do
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
-  let barTopLeft   = "dzen2"
-                     ++ " -x '0' -y '0'"
-                     ++ " -h '12' -w '" ++ show topLeftBarWidth ++ "'"
-                     ++ " -ta 'l'"
-                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                     ++ " -bg '" ++ dzenBg ++ "'"
-                     ++ " -fn '" ++ dzenFont ++ "'"
-  let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh | dzen2"
+  let barTopLeft   = "~/.xmonad/status-bar-launcher.sh"
+  {-let barTopLeft   = "dzen2"-}
+                     {-++ " -x '0' -y '0'"-}
+                     {-++ " -h '12' -w '" ++ show topLeftBarWidth ++ "'"-}
+                     {-++ " -ta 'l'"-}
+                     {-++ " -fg '" ++ colorWhiteAlt ++ "'"-}
+                     {-++ " -bg '" ++ dzenBg ++ "'"-}
+                     {-++ " -fn '" ++ dzenFont ++ "'"-}
+  let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh " ++ show screenWidth ++ " | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
                      ++ " -h '12' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
@@ -238,7 +248,7 @@ main = do
   dzenTopLeft  <- spawnPipe barTopLeft
   dzenTopRight <- spawnPipe barTopRight
   xmonad $ gnomeConfig
-    { modMask            = mod1Mask         -- changes the mode key to "super"
+    { modMask            = mod4Mask         -- changes the mode key to "super"
     , focusedBorderColor = solarizedOrange  -- color of focused border
     , normalBorderColor  = solarizedBase03  -- color of inactive border
     , borderWidth        = 1                -- width of border around windows
@@ -248,10 +258,12 @@ main = do
     , logHook = logHookTopLeft dzenTopLeft pathIcons
     , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
     , handleEventHook    = myHandleEventHook
-    --, startupHook        = startTimer 1 >>= XS.put . TID
+    {-, startupHook = spawn "sh ~/.xmonad/print.sh startup"-}
+    {-, startupHook = dynStatusBarStartup myStatusBar myStatusBarCleanup-}
+    , startupHook        = startTimer 0.5 >>= XS.put . TID
     }
     `additionalKeysP`
-    [ ("M-S-q", spawn "gnome-session-save --gui --logout-dialog") -- display logout-dialog
+    [ ("M-<F12>", spawn "gnome-session-quit --logout --no-prompt")
     , ("M1-<F10>", spawn "gnome-screensaver-command -l")
     , ("M1-<F11>", spawn "pm-hybernate")
     , ("M1-<F12>", spawn "pm-suspend")
@@ -320,13 +332,13 @@ logHookTopLeft h icons = dynamicLogWithPP $ defaultPP
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep             = " "
   , ppWsSep           = ""
-  , ppCurrent         = wrapTextBox solarizedBase02 solarizedBase1  dzenBg
-  , ppUrgent          = wrapTextBox solarizedRed    solarizedBase02 dzenBg . wrapClickWorkspace
-  , ppVisible         = wrapTextBox solarizedBlue   solarizedBase02 dzenBg . wrapClickWorkspace
-  , ppHiddenNoWindows = wrapTextBox solarizedBase03 solarizedBase02 dzenBg . wrapClickWorkspace
-  , ppHidden          = wrapTextBox solarizedBase1  solarizedBase02 dzenBg . wrapClickWorkspace
-  , ppTitle           = (" " ++) . dzenColor solarizedBase1 solarizedBase03 . dzenEscape
-  , ppLayout          = wrapClickLayout . dzenColor solarizedBase01 solarizedBase03 .
+  , ppCurrent         = wrapTextBox dzenFgDark dzenBg  dzenBg
+  , ppUrgent          = wrapTextBox dzenUrgent dzenFgDark dzenBg . wrapClickWorkspace
+  , ppVisible         = wrapTextBox dzenFgDark dzenFgLight dzenBg . wrapClickWorkspace
+  , ppHiddenNoWindows = wrapTextBox dzenBg     dzenFgDark dzenBg . wrapClickWorkspace
+  , ppHidden          = wrapTextBox dzenFgLight  dzenFgDark dzenBg . wrapClickWorkspace
+  , ppTitle           = (" " ++) . dzenColor dzenFgLight dzenBg . dzenEscape
+  , ppLayout          = wrapClickLayout . dzenColor dzenFgDark dzenBg .
     (\x -> case x of
     "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
     "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
