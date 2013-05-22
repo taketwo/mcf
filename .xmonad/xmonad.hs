@@ -336,10 +336,10 @@ logHookTopLeft icons handle s = defaultPP
   , ppSep             = " "
   , ppWsSep           = ""
   , ppCurrent         =                      wrapTextBox dzenFgDark  dzenFgLight dzenBg
-  , ppUrgent          = wrapClickWorkspace . wrapTextBox dzenUrgent  dzenBg      dzenBg
-  , ppVisible         = wrapClickWorkspace . wrapTextBox dzenFgLight dzenFgDark  dzenBg
-  , ppHiddenNoWindows = wrapClickWorkspace . wrapTextBox dzenFgDark  dzenBg      dzenBg
-  , ppHidden          = wrapClickWorkspace . wrapTextBox dzenFgLight dzenBg      dzenBg
+  , ppUrgent          =                      wrapTextBox dzenUrgent  dzenBg      dzenBg . wrapClickWorkspace
+  , ppVisible         =                      wrapTextBox dzenFgLight dzenFgDark  dzenBg . wrapClickWorkspace
+  , ppHiddenNoWindows =                      wrapTextBox dzenFgDark  dzenBg      dzenBg . wrapClickWorkspace
+  , ppHidden          =                      wrapTextBox dzenFgLight dzenBg      dzenBg . wrapClickWorkspace
   , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten 80
   , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
     (\x -> case x of
