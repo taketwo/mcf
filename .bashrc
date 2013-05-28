@@ -131,7 +131,7 @@ alias x='exit'
 alias ff='find . -name $*'
 alias vundle='vim +BundleInstall +qall'
 alias rs='nohup redshift -l 50.4:7.5 -t 6000:4500 &'
-alias tex-clean='rm *.{aux,log,out}'
+alias tex-clean='rm -f *.{aux,log,out,bbl,blg}'
 
 # always forget this
 alias files-in-package='dpkg-query -L'
