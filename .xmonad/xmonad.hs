@@ -262,9 +262,9 @@ table =
   , k "<F10>"            __           logout              __                __
   , k "<F11>"            __           reboot              __                __
   , k "<F12>"            __           powerOff            __                __
+  , k "<Esc>"        nextKeyboardLayout    __           __                __
   , [bind "M1-" "<Tab>" nextWindow]
   ]
-
   where
     k key m ms mc msc =
       [ bind "M-"      key m
@@ -302,6 +302,7 @@ table =
     powerOff         = Unbound "Power off the system"   (spawn "gnome-session-quit --power-off")
     reboot           = Unbound "Reboot the system"      (spawn "gnome-session-quit --reboot")
     logout           = Unbound "Logout"                 (spawn "gnome-session-quit --no-prompt")
+    nextKeyboardLayout = Unbound "Switch next keyboard layout" (spawn "keyboard -n")
 
 -- Two varieties of Action: B(ound) is aware of the key that was used to
 -- invoke it, U(nbound) is not aware of the key.
@@ -322,7 +323,7 @@ main = do
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
-  let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | ~/.xmonad/layout.sh " ++ show screenWidth ++ " | dzen2"
+  let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
                      ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"

@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-while read input ; do
-  layout=`setxkbmap -print | grep xkb_symbols | awk '{print $4}' | awk -F"+" '{print $2}'`
-  echo "$layout $input"
-done
+case `keyboard -g` in
+  "us(dvorak)" ) echo "US"
+    ;;
+  "ru" ) echo "RU"
+    ;;
+esac
