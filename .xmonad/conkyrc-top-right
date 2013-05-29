@@ -5,7 +5,7 @@ update_interval 1
 use_spacer none
 
 TEXT
-${if_match ${texeci 45 ~/.xmonad/gmail.sh} > 0}^fg(\#ff7272)${endif}^i(/home/sergey/.xmonad/icons/mail.xbm) \
+${if_match ${texeci 30 ~/.xmonad/gmail.sh} > 0}^fg(\#ff7272)${endif}^i(/home/sergey/.xmonad/icons/mail.xbm) \
 ${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg()${endif} \
 ${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg()${endif} \
 ${if_existing /sys/class/power_supply/BAT0}\
