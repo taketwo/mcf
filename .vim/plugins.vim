@@ -88,9 +88,3 @@ if just_installed_vundle
     BundleClean!
     BundleInstall!
 endif
-
-" Complete plugin setup. Some of the settings could be done only
-" after a plugin has been loaded.
-for f in split(glob('~/.vim/settings/after/*.vim'), '\n')
-    exe 'source' f
-endfor
