@@ -258,6 +258,7 @@ table =
   , k "<Tab>"        nextLayout       resetLayout         __                __
   {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
   , k "`"            scratchTerminal      __              __                __
+  , k "0"            toggleWorkspace      __              __                __
   , k "<F10>"            __           logout              __                __
   , k "<F11>"            __           reboot              __                __
   , k "<F12>"            __           powerOff            __                __
@@ -281,6 +282,7 @@ table =
     openRhythmbox    = Unbound "Open Rhythmbox"            (spawn "rhythmbox")
     openKupfer       = Unbound "Open Kupfer"               (spawn "kupfer")
     closeWindow      = Unbound "Close the focused window"  (kill)
+    toggleWorkspace  = Unbound "Switch to previous workspace" (toggleWS' ["NSP"])
     swapUp           = Unbound "Swap with window above"    (sendMessage $ Swap U)
     swapDown         = Unbound "Swap with window below"    (sendMessage $ Swap D)
     swapLeft         = Unbound "Swap with window to the left"  (sendMessage $ Swap L)
