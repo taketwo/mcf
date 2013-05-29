@@ -1,0 +1,55 @@
+#!/bin/bash
+
+KEYBOARD_LAYOUTS="us(dvorak),ru"
+
+function show_help
+{
+  echo "help"
+}
+
+function get_layout
+{
+  echo `setxkbmap -print | grep xkb_symbols | awk '{print $4}' | awk -F"+" '{print $2}'`
+}
+
+function set_layout
+{
+  setxkbmap -layout $1
+}
+
+function list_layouts
+{
+  echo $KEYBOARD_LAYOUTS
+}
+
+function set_next_layout
+{
+  layout=`get_layout`
+  IFS=',' read -ra LAYOUTS <<< "$KEYBOARD_LAYOUTS"
+  for i in "${!LAYOUTS[@]}"; do
+    if [[ ${LAYOUTS[$i]} == $layout ]]; then
+      j=$((($i + 1) % ${#LAYOUTS[@]}))
+      set_layout ${LAYOUTS[$j]}
+    fi
+  done
+}
+
+while getopts "hgs:ln" opt; do
+  case "$opt" in
+    h)  show_help
+        exit 0
+        ;;
+    g)  get_layout
+        exit 0
+        ;;
+    s)  set_layout $OPTARG
+        exit $?
+        ;;
+    l)  list_layouts
+        exit 0
+        ;;
+    n)  set_next_layout
+        exit $?
+        ;;
+  esac
+done
