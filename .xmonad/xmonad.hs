@@ -249,6 +249,7 @@ table =
   {-, k "u"            gotoScreen0      sendScreen0   takeScreen0      swapScreen0-}
   {-, k "v"            volumeMuteToggle volumeDown    volumeUp                __-}
   {-, k "w"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace-}
+  , k "w"            closeWindow    __ __ __
   , k "x"                __               __              __                __
   , k "y"                __               __              __                __
   , k "z"                __               __              __                __
@@ -279,6 +280,7 @@ table =
     openBrowser      = Unbound "Open web browser"          (spawn "chromium-browser")
     openRhythmbox    = Unbound "Open Rhythmbox"            (spawn "rhythmbox")
     openKupfer       = Unbound "Open Kupfer"               (spawn "kupfer")
+    closeWindow      = Unbound "Close the focused window"  (kill)
     swapUp           = Unbound "Swap with window above"    (sendMessage $ Swap U)
     swapDown         = Unbound "Swap with window below"    (sendMessage $ Swap D)
     swapLeft         = Unbound "Swap with window to the left"  (sendMessage $ Swap L)
