@@ -16,7 +16,7 @@ endif
 
 " Load plugin settings. Some of them have to be set before
 " loading plugins, otherwise they have no effect.
-for f in split(glob('~/.vim/settings/*.vim'), '\n')
+for f in split(glob('~/.vim/settings/before/*.vim'), '\n')
     exe 'source' f
 endfor
 
