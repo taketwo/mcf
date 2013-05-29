@@ -9,24 +9,26 @@ ${exec ~/.xmonad/layout.sh}\
  | \
 ${texeci 30 ~/.xmonad/gmail.sh}\
  | \
-${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg()${endif}\
-${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg()${endif}\
+${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() Studnet${endif}\
+${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2${endif}\
  | \
 ${if_existing /sys/class/power_supply/BAT0}\
-Battery: ^fg(\#afd78a)${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}${battery_percent BAT0}${endif}\
+Battery: \
+${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}\
+${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}\
+${battery_percent BAT0}${endif}\
  | \
-^fg(\#ffffff)\
 ${time \
-%A \
-^fg()%Y\
-^fg(\#a9a6af).^fg()\
+^fg(#ffffff)%A^fg() \
+%Y\
+^fg(#a9a6af).^fg()\
 %m\
-^fg(\#a9a6af).^fg()\
-^fg(\#44aacc)%d^fg() \
-^fg(\#a9a6af)-^fg() \
+^fg(#a9a6af).^fg()\
+^fg(#44aacc)%d^fg() \
+^fg(#a9a6af)-^fg() \
 %H\
-^fg(\#a9a6af):^fg()\
+^fg(#a9a6af):^fg()\
 %M\
-^fg(\#a9a6af):^fg()\
-^fg(\#afd78a)%S^fg()\
+^fg(#a9a6af):^fg()\
+^fg(#afd78a)%S^fg()\
 } 
