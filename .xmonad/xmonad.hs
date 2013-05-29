@@ -51,7 +51,9 @@ import XMonad.Actions.ShowText
 import XMonad.Actions.GridSelect
 import XMonad.Actions.MouseResize
 import XMonad.Actions.UpdatePointer
+import XMonad.Actions.Commands
 import XMonad
+import XMonad.Operations
 import XMonad.Core
 import XMonad.Config.Gnome
 import XMonad.ManageHook
@@ -214,6 +216,95 @@ manageWindows = composeAll . concat $
     my9Shifts = ["Rhythmbox", "Workrave"]
 
 -- }}}
+-- Key bindings ------------------------------------------------------------ {{{
+
+myKeyBindingsTable = concat $ table
+
+--        key                  M-              M-S-           M-C-           M-S-C-
+table =
+  [ k "<Return>"     openTerminal         __              __                __
+  {-, k "a"            gotoScreen1      sendScreen1   takeScreen1      swapScreen1-}
+  {-, k "b"            gotoWorkspace    sendWorkspace takeWorkspace    makeWorkspace-}
+  , k "b"            __    __ openBrowser    __
+  , k "c"            goUp             swapUp        openBrowser        shrinkMaster
+  {-, k "d"            launchWithDmenu      __              __                __-}
+  {-, k "e"            wicdNetwork          __              __                __-}
+  , k "f"            __               tileFloating        __                __
+  {-, k "g"            gotoMenu'        bringMenu'    windowMenu'      xmonadCommands-}
+  , k "h"            goLeft           swapLeft            __           shrinkMaster
+  , k "i"                __               __              __                __
+  , k "j"                __               __              __                __
+  {-, k "k"            focusUrgent'         __              __         clearUrgents'-}
+  {-, k "l"            expandMaster     shrinkMaster  incMaster        decMaster -}
+  {-, k "m"            gotoMaster           __        shiftMaster'            __-}
+  {-, k "n"            nextWindow       prevWindow    nextWindowSwap   prevWindowSwap-}
+  , k "n"            goRight          swapRight           __           expandMaster
+  , k "o"                __               __              __                __
+  {-, k "p"            prevWindow       nextWindow    prevWindowSwap   nextWindowSwap -- reversed version of 'n'-}
+  , k "q"            restartXMonad        __              __                __
+  , k "r"                __               __        openRhythmbox           __
+  {-, k "s"            toggleStruts     cntrlCenter         __         swapScreens-}
+  , k "s"            swapScreens          __              __                __
+  , k "t"            goDown           swapDown            __           expandMaster
+  {-, k "u"            gotoScreen0      sendScreen0   takeScreen0      swapScreen0-}
+  {-, k "v"            volumeMuteToggle volumeDown    volumeUp                __-}
+  {-, k "w"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace-}
+  , k "x"                __               __              __                __
+  , k "y"                __               __              __                __
+  , k "z"                __               __              __                __
+  {-, k "<Backspace>"  closeWindow          __              __         deleteWorkspace-}
+  , k "<Space>"          __               __       openKupfer               __
+  , k "<Tab>"        nextLayout       resetLayout         __                __
+  {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
+  , k "`"            scratchTerminal      __              __                __
+  , k "<F10>"            __           logout              __                __
+  , k "<F11>"            __           reboot              __                __
+  , k "<F12>"            __           powerOff            __                __
+  , [bind "M1-" "<Tab>" nextWindow]
+  ]
+
+  where
+    k key m ms mc msc =
+      [ bind "M-"      key m
+      , bind "M-S-"    key ms
+      , bind "M-C-"    key mc
+      , bind "M-S-C-"  key msc
+      ]
+    bind modifiers key (Unbound comment action) = (modifiers ++ key, action)
+    bind modifiers key (Bound comment action) = (modifiers ++ key, action $ modifiers ++ key)
+    __ = Bound "Available for use"
+         (\key -> spawn $ "xmessage '" ++ key ++ " is not bound.'")
+    openTerminal     = Unbound "Open terminal"             (spawn myTerminal)
+    scratchTerminal  = Unbound "Open scratch terminal"     (namedScratchpadAction myScratchPads "terminal")
+    openBrowser      = Unbound "Open web browser"          (spawn "chromium-browser")
+    openRhythmbox    = Unbound "Open Rhythmbox"            (spawn "rhythmbox")
+    openKupfer       = Unbound "Open Kupfer"               (spawn "kupfer")
+    swapUp           = Unbound "Swap with window above"    (sendMessage $ Swap U)
+    swapDown         = Unbound "Swap with window below"    (sendMessage $ Swap D)
+    swapLeft         = Unbound "Swap with window to the left"  (sendMessage $ Swap L)
+    swapRight        = Unbound "Swap with window to the right" (sendMessage $ Swap R)
+    goUp             = Unbound "Switch to window above"    (sendMessage $ Go U)
+    goDown           = Unbound "Switch to window below"    (sendMessage $ Go D)
+    goLeft           = Unbound "Switch to window to the left"  (sendMessage $ Go L)
+    goRight          = Unbound "Switch to window to the right" (sendMessage $ Go R)
+    shrinkMaster     = Unbound "Shrink master window" (sendMessage Shrink)
+    expandMaster     = Unbound "Expand master window" (sendMessage Expand)
+    nextLayout       = Unbound "Switch to next layout"     (sendMessage NextLayout)
+    nextWindow       = Unbound "Switch to next window" (windows W.focusDown)
+    tileFloating     = Unbound "Push into tile" (withFocused $ windows . W.sink)
+    resetLayout      = Unbound "Switch to default layout"  (sendMessage FirstLayout)
+    restartXMonad    = Unbound "Restart XMonad"                 (spawn "killall conky dzen2" <+> restart "xmonad" True)
+    swapScreens      = Unbound "Swap current and next screen"   (nextScreen)
+    powerOff         = Unbound "Power off the system"   (spawn "gnome-session-quit --power-off")
+    reboot           = Unbound "Reboot the system"      (spawn "gnome-session-quit --reboot")
+    logout           = Unbound "Logout"                 (spawn "gnome-session-quit --no-prompt")
+
+-- Two varieties of Action: B(ound) is aware of the key that was used to
+-- invoke it, U(nbound) is not aware of the key.
+data Action = Unbound String (          X ()) |
+              Bound   String (String -> X ())
+
+-- }}}
 -- Main -------------------------------------------------------------------- {{{
 
 main :: IO ()
@@ -256,42 +347,14 @@ main = do
     {-, startupHook        = startTimer 0.5 >>= XS.put . TID-}
     }
     `additionalKeysP`
-    [ ("M-<F12>", spawn "gnome-session-quit --logout --no-prompt")
-    , ("M1-<F10>", spawn "gnome-screensaver-command -l")
-    , ("M1-<F11>", spawn "pm-hybernate")
-    , ("M1-<F12>", spawn "pm-suspend")
-    {-, ("<XF86Forward>", nextWS)-}
-    {-, ("<XF86Back>", prevWS)-}
-    , ("M-<Tab>", sendMessage NextLayout)
-    , ("M-a", sendMessage NextLayout)
-    , ("M1-<Tab>", windows W.focusDown)
-    , ("M-o", windows W.focusDown)
-    , ("M-<L>", prevScreen)
-    , ("M-<R>", nextScreen)
-    , ("M-c", sendMessage $ Go U)
-    , ("M-t", sendMessage $ Go D)
-    , ("M-h", sendMessage $ Go L)
-    , ("M-n", sendMessage $ Go R)
-    , ("M-S-<L>", sendMessage Shrink)
-    , ("M-S-<R>", sendMessage Expand)
-    , ("M-S-c", sendMessage $ Swap U)
-    , ("M-S-t", sendMessage $ Swap D)
-    , ("M-S-h", sendMessage $ Swap L)
-    , ("M-S-n", sendMessage $ Swap R)
-    , ("M-S-<Space>", windows W.swapMaster)
-    , ("M-S-w", kill)
-    , ("M1-<F4>", kill)
-    , ("M-S-f", withFocused $ windows . W.sink)
-    -- Application shortcuts
-    , ("M-<Return>", spawn "gnome-terminal")
-    , ("M-<Space>", spawn "kupfer")
-    , ("M-r", spawn "rhythmbox")
-    , ("M-q", spawn "killall conky dzen2" <+> restart "xmonad" True)                           --Restart xmonad
-    , ("M-b", spawn "chromium-browser")
-    , ("M-`", scratchTerminal)
-    ]
-    where
-      scratchTerminal = namedScratchpadAction myScratchPads "terminal"
+    myKeyBindingsTable
+    {-[ ("M-<F12>", spawn "gnome-session-quit --logout --no-prompt")-}
+    {-, ("M1-<F10>", spawn "gnome-screensaver-command -l")-}
+    {-, ("M1-<F11>", spawn "pm-hybernate")-}
+    {-, ("M1-<F12>", spawn "pm-suspend")-}
+    {-, ("M-S-<Space>", windows W.swapMaster)-}
+    {-, ("M-S-w", kill)-}
+    {-, ("M1-<F4>", kill)-}
 
 -- }}}
 -- Status bars ------------------------------------------------------------- {{{
