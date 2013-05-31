@@ -5,13 +5,16 @@ update_interval 1
 use_spacer none
 
 TEXT
+${if_running rhythmbox}\
+${exec /usr/bin/rhythmbox-client --print-playing --no-start --no-present}\
+ | \
+${endif}\
 ${exec ~/.xmonad/layout.sh}\
  | \
 ${texeci 30 ~/.xmonad/gmail.sh}\
  | \
-${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() Studnet${endif}\
-${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2${endif}\
- | \
+${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() Studnet | ${endif}\
+${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2 | ${endif}\
 ${if_existing /sys/class/power_supply/BAT0}\
 Battery: \
 ${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}\
