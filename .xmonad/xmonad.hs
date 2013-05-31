@@ -202,13 +202,13 @@ manageWindows = composeAll . concat $
     myTFloats = ["Downloads", "Save As..."]
     myRFloats = []
     myIgnores = []
-    my1Shifts = ["Chromium-browser"]
+    my1Shifts = []
     my2Shifts = []
     my3Shifts = []
     my4Shifts = []
     my5Shifts = []
     my6Shifts = []
-    my7Shifts = []
+    my7Shifts = ["Mendeley Desktop"]
     my8Shifts = ["Skype"
                 , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
                 , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
@@ -348,6 +348,7 @@ main = do
                 {->> mapM_ (bindPPoutput logHookTopLeft) dzens-}
     , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
     , handleEventHook    = myHandleEventHook
+    , startupHook        = setWMName "LG3D"
     {-, startupHook = spawn "sh ~/.xmonad/print.sh startup"-}
     {-, startupHook = dynStatusBarStartup myStatusBar myStatusBarCleanup-}
     {-, startupHook        = startTimer 0.5 >>= XS.put . TID-}
