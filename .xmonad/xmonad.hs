@@ -225,8 +225,8 @@ table =
   [ k "<Return>"     openTerminal         __              __                __
   {-, k "a"            gotoScreen1      sendScreen1   takeScreen1      swapScreen1-}
   {-, k "b"            gotoWorkspace    sendWorkspace takeWorkspace    makeWorkspace-}
-  , k "b"            __    __ openBrowser    __
-  , k "c"            goUp             swapUp        openBrowser        shrinkMaster
+  , k "b"            __               __            openBrowser        __
+  , k "c"            goUp             swapUp        openCalendar       shrinkMaster
   {-, k "d"            launchWithDmenu      __              __                __-}
   {-, k "e"            wicdNetwork          __              __                __-}
   , k "f"            __               tileFloating        __                __
@@ -281,6 +281,7 @@ table =
     openBrowser      = Unbound "Open web browser"          (spawn "chromium-browser")
     openRhythmbox    = Unbound "Open Rhythmbox"            (spawn "rhythmbox")
     openKupfer       = Unbound "Open Kupfer"               (spawn "kupfer")
+    openCalendar     = Unbound "Open Calendar"             (spawn "chromium-browser --app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
     closeWindow      = Unbound "Close the focused window"  (kill)
     toggleWorkspace  = Unbound "Switch to previous workspace" (toggleWS' ["NSP"])
     swapUp           = Unbound "Swap with window above"    (sendMessage $ Swap U)
