@@ -254,7 +254,7 @@ table =
   , k "y"                __               __              __                __
   , k "z"                __               __              __                __
   {-, k "<Backspace>"  closeWindow          __              __         deleteWorkspace-}
-  , k "<Space>"          __               __       openKupfer               __
+  , k "<Space>"      openKupfer           __              __                __
   , k "<Tab>"        nextLayout       resetLayout         __                __
   {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
   , k "`"            scratchTerminal      __              __                __
