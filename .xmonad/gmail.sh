@@ -2,7 +2,7 @@
 
 user="alexandrov88"
 pass=""
-count=`curl -u $user:$pass -s -sslreqd "https://mail.google.com/mail/feed/atom" | grep -c "<entry>"`
+count=`curl -u $user:$pass -s -sslreqd -m 5 "https://mail.google.com/mail/feed/atom" | grep -c "<entry>"`
 
 mail="^i(/home/sergey/.xmonad/icons/mail.xbm)"
 
