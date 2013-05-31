@@ -5,8 +5,8 @@
 
   " Experimental
   call arpeggio#load()
-  inoremap hh <Esc>
-  inoremap uu <Esc>
+  "inoremap hh <Esc>
+  "inoremap uu <Esc>
 
 " Move around {{{
 
