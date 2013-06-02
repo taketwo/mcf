@@ -9,10 +9,10 @@ ${if_running rhythmbox}\
 ${exec /usr/bin/rhythmbox-client --print-playing --no-start --no-present}\
  | \
 ${endif}\
-${exec ~/.xmonad/layout.sh}\
- | \
-${texeci 30 ~/.xmonad/gmail.sh}\
- | \
+${exec ~/.xmonad/layout.sh} \
+## Gmail ##
+${texeci 30 ~/.xmonad/gmail.sh} \
+## Network ##
 ${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() Studnet | ${endif}\
 ${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2 | ${endif}\
 ${if_existing /sys/class/power_supply/BAT0}\
