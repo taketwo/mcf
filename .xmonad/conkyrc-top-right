@@ -10,6 +10,7 @@ ${exec /usr/bin/rhythmbox-client --print-playing --no-start --no-present}\
  | \
 ${endif}\
 ${exec ~/.xmonad/layout.sh} \
+${exec ~/.xmonad/volume.sh}\
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh} \
 ## Network ##
