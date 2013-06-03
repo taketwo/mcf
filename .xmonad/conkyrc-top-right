@@ -16,12 +16,18 @@ ${texeci 30 ~/.xmonad/gmail.sh} \
 ## Network ##
 ${if_up ppp0}^bg(\#268bd2)^fg(\#fdf6e3) ^i(/home/sergey/.xmonad/icons/lock.xbm) Studnet ^fg()^bg() ${endif}\
 ${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2 | ${endif}\
+## Battery ##
 ${if_existing /sys/class/power_supply/BAT0}\
-Battery: \
+${if_existing /sys/class/power_supply/ACAD/online 1}\
+^i(/home/sergey/.xmonad/icons/ac.xbm) \
+${endif}\
+${if_existing /sys/class/power_supply/ACAD/online 0}\
+^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
+${endif}\
 ${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}\
 ${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}\
-${battery_percent BAT0}${endif}\
- | \
+${battery_percent BAT0} \
+${endif}\
 ${time \
 ^fg(#ffffff)%A^fg() \
 %Y\
