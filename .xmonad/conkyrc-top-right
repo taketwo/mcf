@@ -14,7 +14,7 @@ ${exec ~/.xmonad/volume.sh}\
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh} \
 ## Network ##
-${if_up ppp0}^fg(\#44aacc)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() Studnet | ${endif}\
+${if_up ppp0}^bg(\#268bd2)^fg(\#fdf6e3) ^i(/home/sergey/.xmonad/icons/lock.xbm) Studnet ^fg()^bg() ${endif}\
 ${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2 | ${endif}\
 ${if_existing /sys/class/power_supply/BAT0}\
 Battery: \
