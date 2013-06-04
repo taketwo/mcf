@@ -10,19 +10,24 @@ ${exec /usr/bin/rhythmbox-client --print-playing --no-start --no-present}\
  | \
 ${endif}\
 ${exec ~/.xmonad/layout.sh} \
-${exec ~/.xmonad/volume.sh}\
 ## Gmail ##
-${texeci 30 ~/.xmonad/gmail.sh} \
+${texeci 30 ~/.xmonad/gmail.sh}\
 ## Network ##
-${if_up ppp0}^bg(\#268bd2)^fg(\#fdf6e3) ^i(/home/sergey/.xmonad/icons/lock.xbm) Studnet ^fg()^bg() ${endif}\
-${if_up tap0}^fg(\#afd78a)^i(/home/sergey/.xmonad/icons/net_wired.xbm)^fg() WLANFB2 | ${endif}\
+${texeci 10 ~/.xmonad/online.sh}\
+ \
+${if_existing /proc/net/route wlan0}^i(/home/sergey/.xmonad/icons/wifi.xbm) ${endif}\
+${if_existing /proc/net/route eth0}^i(/home/sergey/.xmonad/icons/net_wired.xbm) ${endif}\
+${if_up ppp0}^i(/home/sergey/.xmonad/icons/lock.xbm) Studnet ${endif}\
+${if_up tap0}^i(/home/sergey/.xmonad/icons/lock.xbm) WLANFB2 ${endif}\
+^fg()^bg()\
+## Volume ##
+${exec ~/.xmonad/volume.sh}\
 ## Battery ##
 ${if_existing /sys/class/power_supply/BAT0}\
 ${if_existing /sys/class/power_supply/ACAD/online 1}\
-^i(/home/sergey/.xmonad/icons/ac.xbm) \
-${endif}\
-${if_existing /sys/class/power_supply/ACAD/online 0}\
-^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
+ ^i(/home/sergey/.xmonad/icons/ac.xbm) \
+${else}\
+ ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
 ${endif}\
 ${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}\
 ${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}\
