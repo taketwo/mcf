@@ -111,7 +111,7 @@ myTerminal = "gnome-terminal"
 -- Workspaces -------------------------------------------------------------- {{{
 
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 -- }}}
 -- Appearance -------------------------------------------------------------- {{{
@@ -139,7 +139,8 @@ xRes                 = 166
 yRes                 = 768
 topBarHeight         = 14
 topBarBoxHeight      = 12
-topLeftBarWidth      = 500
+topLeftBarWidth      = 600
+topBarTitleLength    = 80
 
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
@@ -341,17 +342,11 @@ main = do
     , terminal           = "gnome-terminal" -- default terminal program
     , workspaces         = myWorkspaces
     , manageHook = manageHook gnomeConfig <+> myManageHook
-    {-, logHook = logHookTopLeft dzenTopLeft pathIcons-}
     , logHook = (mapM_ dynamicLogWithPP $ zipWith (logHookTopLeft pathIcons) dzens [1 .. screenCount])
                 >> updatePointer (Relative 0.5 0.5)
-    {-, logHook = updatePointer (Relative 1 1)-}
-                {->> mapM_ (bindPPoutput logHookTopLeft) dzens-}
     , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
     , handleEventHook    = myHandleEventHook
     , startupHook        = setWMName "LG3D"
-    {-, startupHook = spawn "sh ~/.xmonad/print.sh startup"-}
-    {-, startupHook = dynStatusBarStartup myStatusBar myStatusBarCleanup-}
-    {-, startupHook        = startTimer 0.5 >>= XS.put . TID-}
     }
     `additionalKeysP`
     myKeyBindingsTable
@@ -410,7 +405,7 @@ logHookTopLeft icons handle s = defaultPP
   , ppVisible         =                      wrapTextBox dzenFgLight dzenFgDark  dzenBg . wrapClickWorkspace
   , ppHiddenNoWindows =                      wrapTextBox dzenFgDark  dzenBg      dzenBg . wrapClickWorkspace
   , ppHidden          =                      wrapTextBox dzenFgLight dzenBg      dzenBg . wrapClickWorkspace
-  , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten 80
+  , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten topBarTitleLength
   , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
     (\x -> case x of
     "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
@@ -420,17 +415,6 @@ logHookTopLeft icons handle s = defaultPP
     _ -> x
     )
   }
-
--- }}}
--- Top right (date and time) ----------------------------------------------- {{{
-
-logHookTopRight :: Handle -> X ()
-logHookTopRight h = dynamicLogWithPP $ defaultPP
-  { ppOutput          = hPutStrLn h
-  , ppOrder           = \(_:_:_:x) -> x
-  , ppSep             = " "
-  , ppExtras          = [ date $ (wrapTextBox colorBlack colorWhiteAlt colorBlack "%A") ++ (wrapTextBox colorWhiteAlt colorGrayAlt colorBlack $ "%Y^fg(" ++ colorGray ++ ").^fg()%m^fg(" ++ colorGray ++ ").^fg()^fg(" ++ colorBlue ++ ")%d^fg() ^fg(" ++ colorGray ++ ")-^fg() %H^fg(" ++ colorGray ++"):^fg()%M^fg(" ++ colorGray ++ "):^fg()^fg(" ++ colorGreen ++ ")%S^fg()") ]
-    }
 
 -- }}}
 -- }}}
