@@ -4,6 +4,11 @@ out_to_console yes
 update_interval 1
 use_spacer none
 
+## Solarized colors
+# solarizedBlue    = "#268bd2"
+# solarizedCyan    = "#2aa198"
+# solarizedGreen   = "#859900"
+
 TEXT
 ${if_running rhythmbox}\
 ${exec /usr/bin/rhythmbox-client --print-playing --no-start --no-present}\
@@ -40,10 +45,7 @@ ${time \
 %m\
 ^fg(#a9a6af).^fg()\
 ^fg(#44aacc)%d^fg() \
-^fg(#a9a6af)-^fg() \
-%H\
-^fg(#a9a6af):^fg()\
-%M\
-^fg(#a9a6af):^fg()\
-^fg(#afd78a)%S^fg()\
-} 
+^bg(#859900)^fg(#ffffff) \
+%H:%M:%S \
+^fg()^bg()\
+}
