@@ -4,9 +4,9 @@
 -- Language
 {-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, TypeSynonymInstances, MultiParamTypeClasses,  ImplicitParams, PatternGuards #-}
 
-import XMonad
+import XMonad hiding ( (|||) )
 import XMonad.Core
-import XMonad.Layout
+import XMonad.Layout hiding ( (|||) )
 import XMonad.Layout.IM
 import XMonad.Layout.Gaps
 import XMonad.Layout.Named
@@ -25,6 +25,7 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.IndependentScreens
 import XMonad.StackSet (RationalRect (..), currentTag)
 import XMonad.Hooks.DynamicLog
@@ -35,10 +36,15 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.FadeInactive
+
 import XMonad.Prompt
+import XMonad.Prompt.Input
+import XMonad.Prompt.RunOrRaise
 import XMonad.Prompt.Shell
-import XMonad.Prompt.XMonad
 import XMonad.Prompt.Man
+import XMonad.Prompt.Window
+import XMonad.Prompt.AppLauncher as AL
+
 import XMonad.Util.Timer
 import XMonad.Util.Cursor
 import XMonad.Util.Loggers
@@ -47,17 +53,19 @@ import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
 import XMonad.Actions.CycleWS
+import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.ShowText
 import XMonad.Actions.GridSelect
 import XMonad.Actions.MouseResize
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.Commands
-import XMonad
+import XMonad.Actions.Search
+import XMonad.Actions.DynamicWorkspaces
+import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 import XMonad.Operations
 import XMonad.Core
 import XMonad.Config.Gnome
 import XMonad.ManageHook
-import XMonad.Actions.CycleWS
 import qualified XMonad.Hooks.EwmhDesktops as ED
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageHelpers
@@ -107,11 +115,12 @@ import Solarized
 
 -- Configuration ----------------------------------------------------------- {{{
 myTerminal = "gnome-terminal"
+myBrowser  = "chromium-browser"
 -- }}}
 -- Workspaces -------------------------------------------------------------- {{{
 
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+myWorkspaces = ["web", "im", "music", "papers"]
 
 -- }}}
 -- Appearance -------------------------------------------------------------- {{{
@@ -187,15 +196,9 @@ manageWindows = composeAll . concat $
     , [title     =? t --> doFloat  | t <- myTFloats]
     , [resource  =? r --> doFloat  | r <- myRFloats]
     , [resource  =? i --> doIgnore | i <- myIgnores]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "1" | x <- my1Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "2" | x <- my2Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "3" | x <- my3Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "4" | x <- my4Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "5" | x <- my5Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "6" | x <- my6Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "7" | x <- my7Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "8" | x <- my8Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9" | x <- my9Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "papers" | x <- myPapersShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "music" | x <- myMusicShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -203,19 +206,12 @@ manageWindows = composeAll . concat $
     myTFloats = ["Downloads", "Save As..."]
     myRFloats = []
     myIgnores = []
-    my1Shifts = []
-    my2Shifts = []
-    my3Shifts = []
-    my4Shifts = []
-    my5Shifts = []
-    my6Shifts = []
-    my7Shifts = ["Mendeley Desktop"]
-    my8Shifts = ["Skype"
-                , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
-                , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
-                ]
-    my9Shifts = ["Rhythmbox", "Workrave"]
-
+    myPapersShifts = ["Mendeley Desktop"]
+    myMusicShifts = ["Rhythmbox", "Workrave"]
+    myIMShifts = ["Skype"
+                 , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
+                 , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
+                 ]
 -- }}}
 -- Key bindings ------------------------------------------------------------ {{{
 
@@ -225,8 +221,8 @@ myKeyBindingsTable = concat $ table
 table =
   [ k "<Return>"     openTerminal         __              __                __
   {-, k "a"            gotoScreen1      sendScreen1   takeScreen1      swapScreen1-}
-  {-, k "b"            gotoWorkspace    sendWorkspace takeWorkspace    makeWorkspace-}
-  , k "b"            __               __            openBrowser        __
+  , k "b"            goToWorkspace    shiftToWorkspace createWorkspace    shiftAndGoToWorkspace
+  {-, k "b"            __               __            openBrowser        __-}
   , k "c"            goUp             swapUp        openCalendar       shrinkMaster
   {-, k "d"            launchWithDmenu      __              __                __-}
   {-, k "e"            wicdNetwork          __              __                __-}
@@ -249,9 +245,9 @@ table =
   , k "t"            goDown           swapDown            __           expandMaster
   {-, k "u"            gotoScreen0      sendScreen0   takeScreen0      swapScreen0-}
   {-, k "v"            volumeMuteToggle volumeDown    volumeUp                __-}
-  {-, k "w"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace-}
-  , k "w"            closeWindow    __ __ __
-  , k "x"                __               __              __                __
+  , k "w"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace
+  {-, k "w"            closeWindow    __ __ __-}
+  , k "x"                prompt               __              __                __
   , k "y"                __               __              __                __
   , k "z"                __               __              __                __
   {-, k "<Backspace>"  closeWindow          __              __         deleteWorkspace-}
@@ -306,11 +302,63 @@ table =
     reboot           = Unbound "Reboot the system"      (spawn "gnome-session-quit --reboot")
     logout           = Unbound "Logout"                 (spawn "gnome-session-quit --no-prompt")
     nextKeyboardLayout = Unbound "Switch next keyboard layout" (spawn "keyboard -n")
+    prompt           = Unbound "Prompt"                 (promptSearchBrowser defaultXPConfig "chromium-browser" multi )
+
+    goToWorkspace         = Unbound "Go to named workspace" (removeEmptyWorkspaceAfterExcept myWorkspaces (selectWorkspace myXPConfigAutoComplete))
+    shiftToWorkspace      = Unbound "Shift to named workspace" (withWorkspace myXPConfigAutoComplete sendX)
+    shiftAndGoToWorkspace = Unbound "Shift and go to named workspace" (withWorkspace myXPConfigAutoComplete takeX)
+    createWorkspace       = Unbound "Create named workspace" (selectWorkspace myXPConfig)
+
+    nextWorkspace    = Unbound "Go to next workspace"     (DO.moveTo Next HiddenNonEmptyWS)
+    prevWorkspace    = Unbound "Go to previous workspace" (prevWS)
+    renameWorkspace' = Unbound "Rename workspace" (renameWorkspace myXPConfig)
+    deleteWorkspace  = Unbound "Remove workspace" (removeWorkspace)
+
+    {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
+    {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
+    {-takeRecentWS     = Unbound   "Take to the most recently visited invisible workspace" (windows takeRecent)-}
+
+
+-- a profound search setup here: http://www.haskell.org/haskellwiki/Xmonad/Config_archive/Brent_Yorgey%27s_darcs_xmonad.hs
 
 -- Two varieties of Action: B(ound) is aware of the key that was used to
 -- invoke it, U(nbound) is not aware of the key.
 data Action = Unbound String (          X ()) |
               Bound   String (String -> X ())
+
+
+myXPConfig :: XPConfig
+myXPConfig = defaultXPConfig
+  { font                = dzenFont
+  , bgColor             = dzenBg
+  , fgColor             = dzenFgLight
+  , bgHLight            = colorBlue
+  , fgHLight            = colorBlack
+  , borderColor         = colorGrayAlt
+  , promptBorderWidth   = 1
+  , height              = topBarHeight
+  , position            = Top
+  , historySize         = 100
+  , historyFilter       = deleteConsecutive
+  , autoComplete        = Nothing
+  }
+
+myXPConfigAutoComplete :: XPConfig
+myXPConfigAutoComplete = myXPConfig
+ -- If only one completion remains, auto-select it after 1
+ -- microsecond. Increasing the delay could help to stop accidentally
+ -- sending keypresses to the newly focused window, but with my
+ -- current usage, 1 microsecond is working just fine.
+  { autoComplete = Just 1 }
+
+gotoX = windows . W.view
+sendX = windows . W.shift
+takeX = sendX ->> gotoX
+
+-- Helpers for performing multiple actions on the same entity
+infixl 1 ->>
+(a ->> b) c = do a c
+                 b c
 
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
@@ -397,14 +445,14 @@ dzenCommand (S n) = "dzen2"
 
 logHookTopLeft icons handle s = defaultPP
   { ppOutput          = hPutStrLn handle
-  , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) -- hide "NSP" from workspace list
+  , ppSort            = fmap (namedScratchpadFilterOutWorkspace.) DO.getSortByOrder
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep             = " "
   , ppWsSep           = ""
   , ppCurrent         =                      wrapTextBox dzenFgDark  dzenFgLight dzenBg
   , ppUrgent          =                      wrapTextBox dzenUrgent  dzenBg      dzenBg . wrapClickWorkspace
   , ppVisible         =                      wrapTextBox dzenFgLight dzenFgDark  dzenBg . wrapClickWorkspace
-  , ppHiddenNoWindows =                      wrapTextBox dzenFgDark  dzenBg      dzenBg . wrapClickWorkspace
+  , ppHiddenNoWindows = const ""
   , ppHidden          =                      wrapTextBox dzenFgLight dzenBg      dzenBg . wrapClickWorkspace
   , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten topBarTitleLength
   , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
