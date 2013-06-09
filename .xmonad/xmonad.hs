@@ -242,7 +242,7 @@ table =
   , k "n"            goRight          swapRight           __           expandMaster
   , k "o"                __               __              __                __
   {-, k "p"            prevWindow       nextWindow    prevWindowSwap   nextWindowSwap -- reversed version of 'n'-}
-  , k "q"            restartXMonad        __              __                __
+  , k "q"            closeWindow          __              __                __
   , k "r"                __               __        openRhythmbox           __
   {-, k "s"            toggleStruts     cntrlCenter         __         swapScreens-}
   , k "s"            swapScreens          __              __                __
@@ -260,6 +260,7 @@ table =
   {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
   , k "`"            scratchTerminal      __              __                __
   , k "0"            toggleWorkspace      __              __                __
+  , k "<F5>"             __           restartXMonad       __                __
   , k "<F10>"            __           logout              __                __
   , k "<F11>"            __           reboot              __                __
   , k "<F12>"            __           powerOff            __                __
