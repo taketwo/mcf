@@ -417,12 +417,7 @@ wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xb
 xdoMod :: String -> String
 xdoMod key = "/usr/bin/xdotool key super+" ++ key
 
-wrapClickLayout x = "^ca(1," ++ xdoMod "a" ++ ")" ++ x ++ "^ca()"
-wrapClickWorkspace ws = "^ca(1," ++ xdoMod "w;" ++ xdoMod index ++ ")" ++ "^ca(3," ++ xdoMod "w;" ++ xdoMod index ++ ")" ++ ws ++ "^ca()^ca()"
-  where
-    wsIdxToString Nothing = "1"
-    wsIdxToString (Just n) = show $ mod (n+1) $ length myWorkspaces
-    index = wsIdxToString (elemIndex ws myWorkspaces)
+wrapClickLayout x = "^ca(1," ++ xdoMod "Tab" ++ ")" ++ x ++ "^ca()"
 
 wrapLoggerBox :: String -> String -> String -> Logger -> Logger
 wrapLoggerBox fg bg1 bg2 l = do
@@ -450,10 +445,10 @@ logHookTopLeft icons handle s = defaultPP
   , ppSep             = " "
   , ppWsSep           = ""
   , ppCurrent         =                      wrapTextBox dzenFgDark  dzenFgLight dzenBg
-  , ppUrgent          =                      wrapTextBox dzenUrgent  dzenBg      dzenBg . wrapClickWorkspace
-  , ppVisible         =                      wrapTextBox dzenFgLight dzenFgDark  dzenBg . wrapClickWorkspace
+  , ppUrgent          =                      wrapTextBox dzenUrgent  dzenBg      dzenBg
+  , ppVisible         =                      wrapTextBox dzenFgLight dzenFgDark  dzenBg
   , ppHiddenNoWindows = const ""
-  , ppHidden          =                      wrapTextBox dzenFgLight dzenBg      dzenBg . wrapClickWorkspace
+  , ppHidden          =                      wrapTextBox dzenFgLight dzenBg      dzenBg
   , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten topBarTitleLength
   , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
     (\x -> case x of
