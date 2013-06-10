@@ -11,7 +11,6 @@ import XMonad.Layout.IM
 import XMonad.Layout.Gaps
 import XMonad.Layout.Named
 import XMonad.Layout.Tabbed
-import XMonad.Layout.OneBig
 import XMonad.Layout.Master
 import XMonad.Layout.Reflect
 import XMonad.Layout.MosaicAlt
@@ -24,6 +23,8 @@ import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
+import XMonad.Layout.Magnifier
+import XMonad.Layout.LimitWindows
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.IndependentScreens
@@ -125,6 +126,7 @@ myWorkspaces = ["web", "im", "music", "papers"]
 -- }}}
 -- Appearance -------------------------------------------------------------- {{{
 
+xpFont               = "xft:Liberation Mono:pixelsize=11"
 dzenFont             = "-*-Liberation Mono-*-r-normal-*-11-*-*-*-*-*-*-*"
 dzenBg               = "#3c3b37"
 dzenFgLight          = "#d7dbd2"
@@ -161,8 +163,18 @@ defaultLayouts = smartBorders $ avoidStruts $
         { draggerType = BordersDragger
         , isMirrored  = True }
   ||| windowNavigation Grid
-  ||| Full
+  ||| tabbedBottom shrinkText myTabConfig
+  ||| myCode
 
+myCode = windowNavigation $ limitWindows 3 $ magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger }
+
+myTabConfig = defaultTheme { activeColor = dzenBg
+                           , activeTextColor = dzenFgLight
+                           , activeBorderColor = solarizedOrange
+                           , inactiveColor = dzenBg
+                           , inactiveTextColor = dzenFgDark
+                           , inactiveBorderColor = dzenBg
+                           , fontName = xpFont}
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
 mcfLayouts =
@@ -329,13 +341,13 @@ data Action = Unbound String (          X ()) |
 
 myXPConfig :: XPConfig
 myXPConfig = defaultXPConfig
-  { font                = dzenFont
+  { font                = xpFont
   , bgColor             = dzenBg
   , fgColor             = dzenFgLight
   , bgHLight            = colorBlue
   , fgHLight            = colorBlack
   , borderColor         = colorGrayAlt
-  , promptBorderWidth   = 1
+  , promptBorderWidth   = 0
   , height              = topBarHeight
   , position            = Top
   , historySize         = 100
@@ -455,7 +467,8 @@ logHookTopLeft icons handle s = defaultPP
     "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
     "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
     "Grid"                      -> "^i(" ++ icons ++ "/grid.xbm)"
-    "Full"                      -> "^i(" ++ icons ++ "/full.xbm)"
+    "Tabbed Bottom Simplest"    -> "^i(" ++ icons ++ "/full.xbm)"
+    "Magnifier NoMaster MouseResizableTile" -> "CODE"
     _ -> x
     )
   }
