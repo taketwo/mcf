@@ -402,7 +402,7 @@ main = do
   xmonad $ gnomeConfig
     { modMask            = mod4Mask         -- changes the mode key to "super"
     , focusedBorderColor = solarizedOrange  -- color of focused border
-    , normalBorderColor  = solarizedBase03  -- color of inactive border
+    , normalBorderColor  = dzenBg           -- color of inactive border
     , borderWidth        = 1                -- width of border around windows
     , terminal           = "gnome-terminal" -- default terminal program
     , workspaces         = myWorkspaces
