@@ -245,7 +245,7 @@ table =
   , k "j"                __               __              __                __
   {-, k "k"            focusUrgent'         __              __         clearUrgents'-}
   {-, k "l"            expandMaster     shrinkMaster  incMaster        decMaster -}
-  {-, k "m"            gotoMaster           __        shiftMaster'            __-}
+  , k "m"            gotoMaster       swapMaster          __                __
   {-, k "n"            nextWindow       prevWindow    nextWindowSwap   prevWindowSwap-}
   , k "n"            goRight          swapRight           __           expandMaster
   , k "o"                __               __              __                __
@@ -262,7 +262,7 @@ table =
   , k "x"                prompt               __              __                __
   , k "y"                __               __              __                __
   , k "z"                __               __              __                __
-  {-, k "<Backspace>"  closeWindow          __              __         deleteWorkspace-}
+  , k "<Backspace>"  closeWindow          __              __         deleteWorkspace
   , k "<Space>"      openKupfer           __              __                __
   , k "<Tab>"        nextLayout       resetLayout         __                __
   {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
@@ -326,6 +326,8 @@ table =
     renameWorkspace' = Unbound "Rename workspace" (renameWorkspace myXPConfig)
     deleteWorkspace  = Unbound "Remove workspace" (removeWorkspace)
 
+    gotoMaster       = Unbound "Move focus to the master window" (windows W.focusMaster)
+    swapMaster       = Unbound "Swap with the master window" (windows W.swapMaster)
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
     {-takeRecentWS     = Unbound   "Take to the most recently visited invisible workspace" (windows takeRecent)-}
@@ -415,7 +417,6 @@ main = do
     {-, ("M1-<F10>", spawn "gnome-screensaver-command -l")-}
     {-, ("M1-<F11>", spawn "pm-hybernate")-}
     {-, ("M1-<F12>", spawn "pm-suspend")-}
-    {-, ("M-S-<Space>", windows W.swapMaster)-}
     {-, ("M-S-w", kill)-}
     {-, ("M1-<F4>", kill)-}
 
