@@ -316,13 +316,13 @@ table =
     nextKeyboardLayout = Unbound "Switch next keyboard layout" (spawn "keyboard -n")
     prompt           = Unbound "Prompt"                 (promptSearchBrowser defaultXPConfig { font = xpFont } "chromium-browser" multi )
 
-    goToWorkspace         = Unbound "Go to named workspace" (removeEmptyWorkspaceAfterExcept myWorkspaces (selectWorkspace myXPConfigAutoComplete))
-    shiftToWorkspace      = Unbound "Shift to named workspace" (withWorkspace myXPConfigAutoComplete sendX)
-    shiftAndGoToWorkspace = Unbound "Shift and go to named workspace" (withWorkspace myXPConfigAutoComplete takeX)
+    goToWorkspace         = Unbound "Go to named workspace" (removeIfEmpty (selectWorkspace myXPConfigAutoComplete))
+    shiftToWorkspace      = Unbound "Shift to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
+    shiftAndGoToWorkspace = Unbound "Shift and go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
     createWorkspace       = Unbound "Create named workspace" (selectWorkspace myXPConfig)
 
-    nextWorkspace    = Unbound "Go to next workspace"     (DO.moveTo Next HiddenNonEmptyWS)
-    prevWorkspace    = Unbound "Go to previous workspace" (prevWS)
+    nextWorkspace    = Unbound "Go to next workspace"     (removeIfEmpty (DO.moveTo Next HiddenNonEmptyWS))
+    prevWorkspace    = Unbound "Go to previous workspace" (removeIfEmpty (DO.moveTo Prev HiddenNonEmptyWS))
     renameWorkspace' = Unbound "Rename workspace" (renameWorkspace myXPConfig)
     deleteWorkspace  = Unbound "Remove workspace" (removeWorkspace)
 
@@ -368,6 +368,8 @@ myXPConfigAutoComplete = myXPConfig
 gotoX = windows . W.view
 sendX = windows . W.shift
 takeX = sendX ->> gotoX
+
+removeIfEmpty = removeEmptyWorkspaceAfterExcept myWorkspaces
 
 -- Helpers for performing multiple actions on the same entity
 infixl 1 ->>
