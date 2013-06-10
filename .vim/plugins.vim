@@ -75,6 +75,8 @@ Bundle "davidhalter/jedi-vim"
 Bundle "terryma/vim-expand-region"
 Bundle "smancill/conky-syntax.vim"
 Bundle "tpope/vim-abolish"
+"Bundle "sjl/gundo.vim"
+Bundle "taketwo/gundo.vim"
 
 " Try these plugins:
 "Bundle "sjl/splice.vim"

@@ -238,6 +238,10 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
     exec "noremap <Leader>".i." :b".i."<CR>"
   endfor
 
+  " Gundo
+
+  nnoremap <F5> :GundoToggle<CR>
+
   " Change inside surroundings
 
   nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
