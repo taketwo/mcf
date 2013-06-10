@@ -14,7 +14,9 @@ ${if_running rhythmbox}\
 ${exec /usr/bin/rhythmbox-client --print-playing --no-start --no-present}\
  | \
 ${endif}\
+^ca(1, xdotool key super+Escape)\
 ${exec ~/.xmonad/layout.sh} \
+^ca()\
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh}\
 ## Network ##
@@ -38,6 +40,8 @@ ${if_match ${battery_percent BAT0} < 50}^fg(\#ffa75d)${endif}\
 ${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}\
 ${battery_percent BAT0} \
 ${endif}\
+## Date and time ##
+^ca(1, xdotool key super+ctrl+c)\
 ${time \
 ^fg(#ffffff)%A^fg() \
 %Y\
@@ -48,4 +52,5 @@ ${time \
 ^bg(#859900)^fg(#ffffff) \
 %H:%M:%S \
 ^fg()^bg()\
+^ca()\
 }
