@@ -314,7 +314,7 @@ table =
     reboot           = Unbound "Reboot the system"      (spawn "gnome-session-quit --reboot")
     logout           = Unbound "Logout"                 (spawn "gnome-session-quit --no-prompt")
     nextKeyboardLayout = Unbound "Switch next keyboard layout" (spawn "keyboard -n")
-    prompt           = Unbound "Prompt"                 (promptSearchBrowser defaultXPConfig "chromium-browser" multi )
+    prompt           = Unbound "Prompt"                 (promptSearchBrowser defaultXPConfig { font = xpFont } "chromium-browser" multi )
 
     goToWorkspace         = Unbound "Go to named workspace" (removeEmptyWorkspaceAfterExcept myWorkspaces (selectWorkspace myXPConfigAutoComplete))
     shiftToWorkspace      = Unbound "Shift to named workspace" (withWorkspace myXPConfigAutoComplete sendX)
