@@ -21,6 +21,7 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.PerWorkspace (onWorkspace)
+import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.Magnifier
@@ -44,6 +45,7 @@ import XMonad.Prompt.RunOrRaise
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Man
 import XMonad.Prompt.Window
+import XMonad.Prompt.Workspace
 import XMonad.Prompt.AppLauncher as AL
 
 import XMonad.Util.Timer
@@ -61,6 +63,7 @@ import XMonad.Actions.MouseResize
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.Commands
 import XMonad.Actions.Search
+import XMonad.Actions.TopicSpace
 import XMonad.Actions.DynamicWorkspaces
 import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 import XMonad.Operations
@@ -115,19 +118,23 @@ import System.IO (Handle, hPutStrLn)
 import Solarized
 
 -- Configuration ----------------------------------------------------------- {{{
+
 myTerminal = "gnome-terminal"
 myBrowser  = "chromium-browser"
+myShell    = "bash"
+myFont     = "Liberation Mono"
+
 -- }}}
 -- Workspaces -------------------------------------------------------------- {{{
 
-myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["web", "im", "music", "papers"]
+{-myWorkspaces :: [WorkspaceId]-}
+{-myWorkspaces = ["web", "im", "music", "papers"]-}
 
 -- }}}
 -- Appearance -------------------------------------------------------------- {{{
 
-xpFont               = "xft:Liberation Mono:pixelsize=11"
-dzenFont             = "-*-Liberation Mono-*-r-normal-*-11-*-*-*-*-*-*-*"
+xpFont               = "xft:" ++ myFont ++ ":pixelsize=11"
+dzenFont             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
 dzenBg               = "#3c3b37"
 dzenFgLight          = "#d7dbd2"
 dzenFgDark           = "#7f7d76"
@@ -174,13 +181,105 @@ myTabConfig = defaultTheme { activeColor = dzenBg
                            , inactiveColor = dzenBg
                            , inactiveTextColor = dzenFgDark
                            , inactiveBorderColor = dzenBg
-                           , fontName = xpFont}
+                           , fontName = xpFont
+                           }
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
-mcfLayouts =
+myLayoutHook =
+-- start all workspaces in my home directory, with the ability
+-- to switch to a new working dir
+  workspaceDir "~" $
   {-onWorkspace "7:Chat" chatLayout-}
   {-$ onWorkspace "9:Pix" gimpLayout-}
   {-$-} defaultLayouts
+
+-- }}}
+-- Topics ------------------------------------------------------------------ {{{
+
+data TopicItem = TI { topicName   :: Topic
+                    , topicDir    :: Dir
+                    , topicAction :: X ()
+                    }
+
+myTopics :: [TopicItem]
+myTopics =
+  [ TI "web"   ""      (spawn myBrowser)
+  , TI "im"    ""      (spawn "skype")
+  , TI "music" ""      (spawn "rhythmbox")
+  , TI "papers" ""     (return())
+  {-, TI "mail" "" (runInTerm "" "ssh en")-}
+  {-, ti "read" "papers"-}
+  {-, ti "write" "writing/blog/stream-comonad"-}
+  {-, TI "org" "notes"-}
+    {-(spawn "emacs --name org ~/notes/journal.org")-}
+  {-, TI "draw" "" (spawn "inkscape")-}
+  , TI "xmonad" ".xmonad" (edit "~/.xmonad/xmonad.hs")
+  , TI "mcf"    ".mcf"    (spawnShell)
+  {-, ti "xm-hack" "src/xmonad/XMonadContrib"-}
+  {-, TI "em-conf" "" (edit "~/.emacs")-}
+  {-, TI "net" "" (spawn "wicd-client -n" >>-}
+                 {-shell)-}
+  {-, ti "conf" ""-}
+  {-, ti "misc" ""-}
+  {-, ti "500" "teaching/500/sf"-}
+  {-, ti "ref" "documents/reference"-}
+  {-, ti "play" ""-}
+  {-, TI "tex-conf" "texmf/tex" (edit "~/texmf/tex/brent.sty")-}
+  {-, ti "mlt" "writing/mlt"-}
+  {-, ti "MR" "writing/Monad.Reader/issues/Issue19"-}
+  {-, ti "mc" "teaching/mathcounts"-}
+  {-, ti "dia" "src/diagrams"-}
+  {-, ti "dia-doc" "src/diagrams/doc"-}
+  {-, ti "dia-core" "src/diagrams/core"-}
+  {-, ti "dia-lib" "src/diagrams/lib"-}
+  {-, ti "dia-cairo" "src/diagrams/cairo"-}
+  {-, ti "dia-contrib" "src/diagrams/contrib"-}
+  {-, ti "sp" "research/species/nsf11"-}
+  {-, ti "fc"  "src/gparam/fc"-}
+  {-, ti "geb" "teaching/geb"-}
+  {-, ti "pweb" "documents/sites/upenn"-}
+  {-, ti "hask" "teaching/haskell"-}
+  {-, ti "anki" "local/lib/anki-1.2.8"-}
+  {-, ti "ghc" "src/ghc-new-tc"-}
+  {-, ti "CG" "documents/CG"-}
+  {-, ti "replib" "src/replib"-}
+  {-, ti "unbound" "src/replib/Unbound"-}
+  {-, TI "video" "video" (spawn "cinelerra")-}
+  {-, TI "aop" "learning/aop" (spawnShell host-}
+                             {->> spawn "emacs ~/learning/aop/aop.lhs")-}
+  {-, ti "tc" "writing/typeclassopedia"-}
+  {-, ti "noah" "documents/noah/schedule"-}
+  ]
+  where
+    -- Make a default topic item that just spawns a shell.
+    ti t d = TI t d spawnShell
+
+edit :: String -> X ()
+edit f = spawn (myTerminal ++ " -e 'vim " ++ f ++ "'")
+
+myTopicNames :: [Topic]
+myTopicNames = map topicName myTopics
+
+myTopicConfig :: TopicConfig
+myTopicConfig = defaultTopicConfig
+  { topicDirs = M.fromList $ map (\(TI n d _) -> (n, d)) myTopics
+  , defaultTopicAction = const (return ())
+  , defaultTopic = "web"
+  , maxTopicHistory = 10
+  , topicActions = M.fromList $ map (\(TI n _ a) -> (n, a)) myTopics
+  }
+
+spawnShell :: X ()
+spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
+
+spawnShellIn :: Dir -> X ()
+spawnShellIn dir = spawn $ myTerminal ++ " --working-directory " ++ dir
+
+goto :: Topic -> X ()
+goto = switchTopic myTopicConfig
+
+promptedGoto :: X ()
+promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 -- }}}
 -- Scratchpads ------------------------------------------------------------- {{{
@@ -241,7 +340,7 @@ table =
   , k "f"            __               tileFloating        __                __
   {-, k "g"            gotoMenu'        bringMenu'    windowMenu'      xmonadCommands-}
   , k "h"            goLeft           swapLeft            __           shrinkMaster
-  , k "i"                __               __              __                __
+  {-, k "i"            promptedGoto'               __              __                __-}
   , k "j"                __               __              __                __
   {-, k "k"            focusUrgent'         __              __         clearUrgents'-}
   {-, k "l"            expandMaster     shrinkMaster  incMaster        decMaster -}
@@ -288,7 +387,7 @@ table =
          (\key -> spawn $ "xmessage '" ++ key ++ " is not bound.'")
     openTerminal     = Unbound "Open terminal"             (spawn myTerminal)
     scratchTerminal  = Unbound "Open scratch terminal"     (namedScratchpadAction myScratchPads "terminal")
-    openBrowser      = Unbound "Open web browser"          (spawn "chromium-browser")
+    openBrowser      = Unbound "Open web browser"          (spawn myBrowser)
     openRhythmbox    = Unbound "Open Rhythmbox"            (spawn "rhythmbox")
     openKupfer       = Unbound "Open Kupfer"               (spawn "kupfer")
     openCalendar     = Unbound "Open Calendar"             (spawn "chromium-browser --app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
@@ -316,7 +415,7 @@ table =
     nextKeyboardLayout = Unbound "Switch next keyboard layout" (spawn "keyboard -n")
     prompt           = Unbound "Prompt"                 (promptSearchBrowser defaultXPConfig { font = xpFont } "chromium-browser" multi )
 
-    goToWorkspace         = Unbound "Go to named workspace" (removeIfEmpty (selectWorkspace myXPConfigAutoComplete))
+    goToWorkspace         = Unbound "Go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete goto))
     shiftToWorkspace      = Unbound "Shift to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
     shiftAndGoToWorkspace = Unbound "Shift and go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
     createWorkspace       = Unbound "Create named workspace" (selectWorkspace myXPConfig)
@@ -328,6 +427,7 @@ table =
 
     gotoMaster       = Unbound "Move focus to the master window" (windows W.focusMaster)
     swapMaster       = Unbound "Swap with the master window" (windows W.swapMaster)
+
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
     {-takeRecentWS     = Unbound   "Take to the most recently visited invisible workspace" (windows takeRecent)-}
@@ -369,7 +469,7 @@ gotoX = windows . W.view
 sendX = windows . W.shift
 takeX = sendX ->> gotoX
 
-removeIfEmpty = removeEmptyWorkspaceAfterExcept myWorkspaces
+removeIfEmpty = removeEmptyWorkspaceAfterExcept myTopicNames
 
 -- Helpers for performing multiple actions on the same entity
 infixl 1 ->>
@@ -398,18 +498,18 @@ main = do
                      ++ " -bg '" ++ dzenBg ++ "'"
                      ++ " -fn '" ++ dzenFont ++ "'"
   dzenTopRight <- spawnPipe barTopRight
-  dzens        <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
+  dzensTopLeft <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
   xmonad $ gnomeConfig
     { modMask            = mod4Mask         -- changes the mode key to "super"
     , focusedBorderColor = solarizedOrange  -- color of focused border
     , normalBorderColor  = dzenBg           -- color of inactive border
     , borderWidth        = 1                -- width of border around windows
     , terminal           = "gnome-terminal" -- default terminal program
-    , workspaces         = myWorkspaces
+    , workspaces         = myTopicNames
     , manageHook = manageHook gnomeConfig <+> myManageHook
-    , logHook = (mapM_ dynamicLogWithPP $ zipWith (logHookTopLeft pathIcons) dzens [1 .. screenCount])
+    , logHook = (mapM_ dynamicLogWithPP $ zipWith (logHookTopLeft pathIcons) dzensTopLeft [1 .. screenCount])
                 >> updatePointer (Relative 0.5 0.5)
-    , layoutHook = mcfLayouts-- $ layoutHook gnomeConfig
+    , layoutHook = myLayoutHook
     , handleEventHook    = myHandleEventHook
     , startupHook        = setWMName "LG3D"
     }
@@ -467,11 +567,11 @@ logHookTopLeft icons handle s = defaultPP
   , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten topBarTitleLength
   , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
     (\x -> case x of
-    "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
-    "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
-    "Grid"                      -> "^i(" ++ icons ++ "/grid.xbm)"
-    "Tabbed Bottom Simplest"    -> "^i(" ++ icons ++ "/full.xbm)"
-    "Magnifier NoMaster MouseResizableTile" -> "CODE"
+    "MouseResizableTile"                    -> "^i(" ++ icons ++ "/tall.xbm)"
+    "Mirror MouseResizableTile"             -> "^i(" ++ icons ++ "/mtall.xbm)"
+    "Grid"                                  -> "^i(" ++ icons ++ "/grid.xbm)"
+    "Tabbed Bottom Simplest"                -> "^i(" ++ icons ++ "/full.xbm)"
+    "Magnifier NoMaster MouseResizableTile" -> "^i(" ++ icons ++ "/code.xbm)"
     _ -> x
     )
   }
