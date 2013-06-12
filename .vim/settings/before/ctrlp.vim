@@ -1,8 +1,12 @@
 " Show dotfiles
 let g:ctrlp_show_hidden = 1
 
-" Ignore version control folders
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+" Ignore version control folders and other stuff
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+    \ 'file': '\v\.(exe|so|dll)$',
+    \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+    \ }
 
 " Custom file listing when inside git repository
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
