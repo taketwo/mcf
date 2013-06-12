@@ -213,7 +213,7 @@ myTopics =
   {-, TI "org" "notes"-}
     {-(spawn "emacs --name org ~/notes/journal.org")-}
   {-, TI "draw" "" (spawn "inkscape")-}
-  , TI "xmonad" ".xmonad" (edit "~/.xmonad/xmonad.hs")
+  , TI "xmonad" ".xmonad" (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , TI "mcf"    ".mcf"    (spawnShell)
   {-, ti "xm-hack" "src/xmonad/XMonadContrib"-}
   {-, TI "em-conf" "" (edit "~/.emacs")-}
