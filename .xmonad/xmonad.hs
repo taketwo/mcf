@@ -24,7 +24,7 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
-import XMonad.Layout.Magnifier
+import XMonad.Layout.Magnifier as Mag
 import XMonad.Layout.LimitWindows
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.LayoutCombinators
@@ -173,7 +173,7 @@ defaultLayouts = smartBorders $ avoidStruts $
   ||| tabbedBottom shrinkText myTabConfig
   ||| myCode
 
-myCode = windowNavigation $ limitWindows 3 $ magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger }
+myCode = windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger }
 
 myTabConfig = defaultTheme { activeColor = dzenBg
                            , activeTextColor = dzenFgLight
@@ -189,7 +189,7 @@ myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
   workspaceDir "~" $
-  {-onWorkspace "7:Chat" chatLayout-}
+  onWorkspace "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3)) $
   {-$ onWorkspace "9:Pix" gimpLayout-}
   {-$-} defaultLayouts
 
@@ -219,7 +219,7 @@ myTopics =
   {-, TI "em-conf" "" (edit "~/.emacs")-}
   {-, TI "net" "" (spawn "wicd-client -n" >>-}
                  {-shell)-}
-  {-, ti "conf" ""-}
+  , ti "figures" ""
   {-, ti "misc" ""-}
   {-, ti "500" "teaching/500/sf"-}
   {-, ti "ref" "documents/reference"-}
@@ -344,7 +344,7 @@ table =
   , k "j"                __               __              __                __
   {-, k "k"            focusUrgent'         __              __         clearUrgents'-}
   {-, k "l"            expandMaster     shrinkMaster  incMaster        decMaster -}
-  , k "m"            gotoMaster       swapMaster          __                __
+  , k "m"            gotoMaster       swapMaster          __           toggleMagnifier
   {-, k "n"            nextWindow       prevWindow    nextWindowSwap   prevWindowSwap-}
   , k "n"            goRight          swapRight           __           expandMaster
   , k "o"                __               __              __                __
@@ -427,6 +427,8 @@ table =
 
     gotoMaster       = Unbound "Move focus to the master window" (windows W.focusMaster)
     swapMaster       = Unbound "Swap with the master window" (windows W.swapMaster)
+
+    toggleMagnifier  = Unbound "Toggle magnifier" (sendMessage Mag.Toggle)
 
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
