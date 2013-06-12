@@ -63,6 +63,7 @@ import XMonad.Actions.MouseResize
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.Commands
 import XMonad.Actions.Search
+import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.DynamicWorkspaces
 import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
@@ -125,12 +126,6 @@ myShell    = "bash"
 myFont     = "Liberation Mono"
 
 -- }}}
--- Workspaces -------------------------------------------------------------- {{{
-
-{-myWorkspaces :: [WorkspaceId]-}
-{-myWorkspaces = ["web", "im", "music", "papers"]-}
-
--- }}}
 -- Appearance -------------------------------------------------------------- {{{
 
 xpFont               = "xft:" ++ myFont ++ ":pixelsize=11"
@@ -160,6 +155,16 @@ topBarBoxHeight      = 12
 topLeftBarWidth      = 600
 topBarTitleLength    = 80
 
+myTabConfig = defaultTheme
+  { activeColor         = dzenBg
+  , activeTextColor     = dzenFgLight
+  , activeBorderColor   = solarizedOrange
+  , inactiveColor       = dzenBg
+  , inactiveTextColor   = dzenFgDark
+  , inactiveBorderColor = dzenBg
+  , fontName            = xpFont
+  }
+
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
 
@@ -175,14 +180,6 @@ defaultLayouts = smartBorders $ avoidStruts $
 
 myCode = windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger }
 
-myTabConfig = defaultTheme { activeColor = dzenBg
-                           , activeTextColor = dzenFgLight
-                           , activeBorderColor = solarizedOrange
-                           , inactiveColor = dzenBg
-                           , inactiveTextColor = dzenFgDark
-                           , inactiveBorderColor = dzenBg
-                           , fontName = xpFont
-                           }
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
 myLayoutHook =
@@ -228,22 +225,6 @@ myTopics =
   {-, ti "mlt" "writing/mlt"-}
   {-, ti "MR" "writing/Monad.Reader/issues/Issue19"-}
   {-, ti "mc" "teaching/mathcounts"-}
-  {-, ti "dia" "src/diagrams"-}
-  {-, ti "dia-doc" "src/diagrams/doc"-}
-  {-, ti "dia-core" "src/diagrams/core"-}
-  {-, ti "dia-lib" "src/diagrams/lib"-}
-  {-, ti "dia-cairo" "src/diagrams/cairo"-}
-  {-, ti "dia-contrib" "src/diagrams/contrib"-}
-  {-, ti "sp" "research/species/nsf11"-}
-  {-, ti "fc"  "src/gparam/fc"-}
-  {-, ti "geb" "teaching/geb"-}
-  {-, ti "pweb" "documents/sites/upenn"-}
-  {-, ti "hask" "teaching/haskell"-}
-  {-, ti "anki" "local/lib/anki-1.2.8"-}
-  {-, ti "ghc" "src/ghc-new-tc"-}
-  {-, ti "CG" "documents/CG"-}
-  {-, ti "replib" "src/replib"-}
-  {-, ti "unbound" "src/replib/Unbound"-}
   {-, TI "video" "video" (spawn "cinelerra")-}
   {-, TI "aop" "learning/aop" (spawnShell host-}
                              {->> spawn "emacs ~/learning/aop/aop.lhs")-}
@@ -296,83 +277,54 @@ myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
         l = (1.0 - w) / 2.0 -- centered left/right
 
 -- }}}
--- Manage hook ------------------------------------------------------------- {{{
-
-myManageHook :: ManageHook
-myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads
-
-manageWindows = composeAll . concat $
-    [ [isDialog --> doFloat]
-    , [className =? c --> doFloat  | c <- myCFloats]
-    , [title     =? t --> doFloat  | t <- myTFloats]
-    , [resource  =? r --> doFloat  | r <- myRFloats]
-    , [resource  =? i --> doIgnore | i <- myIgnores]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "papers" | x <- myPapersShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "music" | x <- myMusicShifts]
-    ]
-    where
-    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
-    myCFloats = []
-    myTFloats = ["Downloads", "Save As..."]
-    myRFloats = []
-    myIgnores = []
-    myPapersShifts = ["Mendeley Desktop"]
-    myMusicShifts = ["Rhythmbox", "Workrave"]
-    myIMShifts = ["Skype"
-                 , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
-                 , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
-                 ]
--- }}}
 -- Key bindings ------------------------------------------------------------ {{{
 
 myKeyBindingsTable = concat $ table
 
 --        key                  M-              M-S-           M-C-           M-S-C-
 table =
-  [ k "<Return>"     openTerminal         __              __                __
+  [ k "<Return>"     launchTerminal         __              __                __
   {-, k "a"            gotoScreen1      sendScreen1   takeScreen1      swapScreen1-}
-  , k "b"            goToWorkspace    shiftToWorkspace createWorkspace    shiftAndGoToWorkspace
+  , k "b"            gotoWorkspace    shiftToWorkspace createWorkspace    shiftAndGoToWorkspace
   {-, k "b"            __               __            openBrowser        __-}
-  , k "c"            goUp             swapUp        openCalendar       shrinkMaster
+  , k "c"            goUp             swapUp        launchCalendar       shrinkMaster
   {-, k "d"            launchWithDmenu      __              __                __-}
   {-, k "e"            wicdNetwork          __              __                __-}
   , k "f"            __               tileFloating        __                __
   {-, k "g"            gotoMenu'        bringMenu'    windowMenu'      xmonadCommands-}
   , k "h"            goLeft           swapLeft            __           shrinkMaster
-  {-, k "i"            promptedGoto'               __              __                __-}
+  , k "i"            __               __              __                __
   , k "j"                __               __              __                __
   {-, k "k"            focusUrgent'         __              __         clearUrgents'-}
   {-, k "l"            expandMaster     shrinkMaster  incMaster        decMaster -}
   , k "m"            gotoMaster       swapMaster          __           toggleMagnifier
-  {-, k "n"            nextWindow       prevWindow    nextWindowSwap   prevWindowSwap-}
   , k "n"            goRight          swapRight           __           expandMaster
   , k "o"                __               __              __                __
-  {-, k "p"            prevWindow       nextWindow    prevWindowSwap   nextWindowSwap -- reversed version of 'n'-}
+  , k "p"                __               __              __                __
   , k "q"            closeWindow          __              __                __
-  , k "r"                __               __        openRhythmbox           __
+  , k "r"                __               __              __           __
   {-, k "s"            toggleStruts     cntrlCenter         __         swapScreens-}
   , k "s"            swapScreens          __              __                __
   , k "t"            goDown           swapDown            __           expandMaster
   {-, k "u"            gotoScreen0      sendScreen0   takeScreen0      swapScreen0-}
   {-, k "v"            volumeMuteToggle volumeDown    volumeUp                __-}
   , k "w"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace
-  {-, k "w"            closeWindow    __ __ __-}
-  , k "x"                prompt               __              __                __
+  , k "x"                __               __              __                __
   , k "y"                __               __              __                __
   , k "z"                __               __              __                __
   , k "<Backspace>"  closeWindow          __              __         deleteWorkspace
-  , k "<Space>"      openKupfer           __              __                __
+  , k "<Space>"      launchKupfer           __              __                __
   , k "<Tab>"        nextLayout       resetLayout         __                __
   {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
   , k "`"            scratchTerminal      __              __                __
-  , k "0"            toggleWorkspace      __              __                __
+  , k "/"            promptSearch     selectSearch             __                __
+  , k "0"            gotoPrevWorkspace      __              __                __
   , k "<F5>"             __           restartXMonad       __                __
   , k "<F10>"            __           logout              __                __
   , k "<F11>"            __           reboot              __                __
   , k "<F12>"            __           powerOff            __                __
   , k "<Esc>"        nextKeyboardLayout    __           __                __
-  , [bind "M1-" "<Tab>" nextWindow]
+  , [bind "M1-" "<Tab>" gotoNextWindow]
   ]
   where
     k key m ms mc msc =
@@ -385,57 +337,56 @@ table =
     bind modifiers key (Bound comment action) = (modifiers ++ key, action $ modifiers ++ key)
     __ = Bound "Available for use"
          (\key -> spawn $ "xmessage '" ++ key ++ " is not bound.'")
-    openTerminal     = Unbound "Open terminal"             (spawn myTerminal)
-    scratchTerminal  = Unbound "Open scratch terminal"     (namedScratchpadAction myScratchPads "terminal")
-    openBrowser      = Unbound "Open web browser"          (spawn myBrowser)
-    openRhythmbox    = Unbound "Open Rhythmbox"            (spawn "rhythmbox")
-    openKupfer       = Unbound "Open Kupfer"               (spawn "kupfer")
-    openCalendar     = Unbound "Open Calendar"             (spawn "chromium-browser --app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
-    closeWindow      = Unbound "Close the focused window"  (kill)
-    toggleWorkspace  = Unbound "Switch to previous workspace" (toggleWS' ["NSP"])
-    swapUp           = Unbound "Swap with window above"    (sendMessage $ Swap U)
-    swapDown         = Unbound "Swap with window below"    (sendMessage $ Swap D)
-    swapLeft         = Unbound "Swap with window to the left"  (sendMessage $ Swap L)
-    swapRight        = Unbound "Swap with window to the right" (sendMessage $ Swap R)
-    goUp             = Unbound "Switch to window above"    (sendMessage $ Go U)
-    goDown           = Unbound "Switch to window below"    (sendMessage $ Go D)
-    goLeft           = Unbound "Switch to window to the left"  (sendMessage $ Go L)
-    goRight          = Unbound "Switch to window to the right" (sendMessage $ Go R)
-    shrinkMaster     = Unbound "Shrink master window" (sendMessage Shrink)
-    expandMaster     = Unbound "Expand master window" (sendMessage Expand)
-    nextLayout       = Unbound "Switch to next layout"     (sendMessage NextLayout)
-    nextWindow       = Unbound "Switch to next window" (windows W.focusDown)
-    tileFloating     = Unbound "Push into tile" (withFocused $ windows . W.sink)
-    resetLayout      = Unbound "Switch to default layout"  (sendMessage FirstLayout)
-    restartXMonad    = Unbound "Restart XMonad"                 (spawn "killall conky dzen2" <+> restart "xmonad" True)
-    swapScreens      = Unbound "Swap current and next screen"   (nextScreen)
-    powerOff         = Unbound "Power off the system"   (spawn "gnome-session-quit --power-off")
-    reboot           = Unbound "Reboot the system"      (spawn "gnome-session-quit --reboot")
-    logout           = Unbound "Logout"                 (spawn "gnome-session-quit --no-prompt")
-    nextKeyboardLayout = Unbound "Switch next keyboard layout" (spawn "keyboard -n")
-    prompt           = Unbound "Prompt"                 (promptSearchBrowser defaultXPConfig { font = xpFont } "chromium-browser" multi )
 
-    goToWorkspace         = Unbound "Go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete goto))
-    shiftToWorkspace      = Unbound "Shift to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
-    shiftAndGoToWorkspace = Unbound "Shift and go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
-    createWorkspace       = Unbound "Create named workspace" (selectWorkspace myXPConfig)
-
-    nextWorkspace    = Unbound "Go to next workspace"     (removeIfEmpty (DO.moveTo Next HiddenNonEmptyWS))
-    prevWorkspace    = Unbound "Go to previous workspace" (removeIfEmpty (DO.moveTo Prev HiddenNonEmptyWS))
-    renameWorkspace' = Unbound "Rename workspace" (renameWorkspace myXPConfig)
-    deleteWorkspace  = Unbound "Remove workspace" (removeWorkspace)
-
-    gotoMaster       = Unbound "Move focus to the master window" (windows W.focusMaster)
-    swapMaster       = Unbound "Swap with the master window" (windows W.swapMaster)
-
-    toggleMagnifier  = Unbound "Toggle magnifier" (sendMessage Mag.Toggle)
+    -- Actions
+    -- Launch program
+    launchTerminal          = Unbound "Launch terminal"                 (spawn myTerminal)
+    launchKupfer            = Unbound "Launch kupfer"                   (spawn "kupfer")
+    launchCalendar          = Unbound "Launch calendar"                 (spawn "chromium-browser --app-id = ejjicmeblgpmajnghnpcppodonldlgfn")
+    -- Window navigation
+    gotoNextWindow          = Unbound "Switch to next window"           (windows W.focusDown)
+    gotoMaster              = Unbound "Move focus to the master window" (windows W.focusMaster)
+    goUp                    = Unbound "Switch to window above"          (sendMessage $ Go U)
+    goDown                  = Unbound "Switch to window below"          (sendMessage $ Go D)
+    goLeft                  = Unbound "Switch to window to the left"    (sendMessage $ Go L)
+    goRight                 = Unbound "Switch to window to the right"   (sendMessage $ Go R)
+    swapMaster              = Unbound "Swap with the master window"     (windows W.swapMaster)
+    swapUp                  = Unbound "Swap with window above"          (sendMessage $ Swap U)
+    swapDown                = Unbound "Swap with window below"          (sendMessage $ Swap D)
+    swapLeft                = Unbound "Swap with window to the left"    (sendMessage $ Swap L)
+    swapRight               = Unbound "Swap with window to the right"   (sendMessage $ Swap R)
+    -- Layout management
+    shrinkMaster            = Unbound "Shrink master window"            (sendMessage Shrink)
+    expandMaster            = Unbound "Expand master window"            (sendMessage Expand)
+    nextLayout              = Unbound "Switch to next layout"           (sendMessage NextLayout)
+    resetLayout             = Unbound "Switch to default layout"        (sendMessage FirstLayout)
+    tileFloating            = Unbound "Push into tile"                  (withFocused $ windows . W.sink)
+    toggleMagnifier         = Unbound "Toggle magnifier"                (sendMessage Mag.Toggle)
+    -- Workspace navigation
+    gotoPrevWorkspace       = Unbound "Switch to previous workspace"    (toggleWS' ["NSP"])
+    gotoWorkspace           = Unbound "Go to named workspace"           (removeIfEmpty (withWorkspace myXPConfigAutoComplete goto))
+    shiftToWorkspace        = Unbound "Shift to named workspace"        (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
+    shiftAndGoToWorkspace   = Unbound "Shift and go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
+    nextWorkspace           = Unbound "Go to next workspace"            (removeIfEmpty (DO.moveTo Next HiddenNonEmptyWS))
+    prevWorkspace           = Unbound "Go to previous workspace"        (removeIfEmpty (DO.moveTo Prev HiddenNonEmptyWS))
+    createWorkspace         = Unbound "Create named workspace"          (selectWorkspace myXPConfig)
+    renameWorkspace'        = Unbound "Rename workspace"                (renameWorkspace myXPConfig)
+    deleteWorkspace         = Unbound "Remove workspace"                (removeWorkspace)
+    -- Misc
+    scratchTerminal         = Unbound "Open scratch terminal"           (namedScratchpadAction myScratchPads "terminal")
+    restartXMonad           = Unbound "Restart XMonad"                  (spawn "killall conky dzen2" <+> restart "xmonad" True)
+    swapScreens             = Unbound "Swap current and next screen"    (nextScreen)
+    powerOff                = Unbound "Power off the system"            (spawn "gnome-session-quit --power-off")
+    reboot                  = Unbound "Reboot the system"               (spawn "gnome-session-quit --reboot")
+    logout                  = Unbound "Logout"                          (spawn "gnome-session-quit --no-prompt")
+    nextKeyboardLayout      = Unbound "Switch next keyboard layout"     (spawn "keyboard -n")
+    promptSearch            = Unbound "Prompt search"                   (submap . mySearchMap $ myPromptSearch)
+    selectSearch            = Unbound "Search X selection"              (submap . mySearchMap $ mySelectSearch)
+    closeWindow             = Unbound "Close the focused window"        (kill)
 
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
     {-takeRecentWS     = Unbound   "Take to the most recently visited invisible workspace" (windows takeRecent)-}
-
-
--- a profound search setup here: http://www.haskell.org/haskellwiki/Xmonad/Config_archive/Brent_Yorgey%27s_darcs_xmonad.hs
 
 -- Two varieties of Action: B(ound) is aware of the key that was used to
 -- invoke it, U(nbound) is not aware of the key.
@@ -479,6 +430,36 @@ infixl 1 ->>
                  b c
 
 -- }}}
+-- Search ------------------------------------------------------------------ {{{
+
+mySearchMap method = M.fromList $
+        [ ((0, xK_g), method google)
+        , ((0, xK_w), method wikipedia)
+        , ((0, xK_s), method scholar)
+        , ((0, xK_m), method maps)
+        , ((0, xK_a), method alpha)
+        , ((0, xK_l), method lucky)
+        -- custom searches
+        , ((0, xK_e), method multitranEnglish)
+        , ((0, xK_d), method multitranDeutsch)
+        ]
+
+multitranEnglish = searchEngine "multitranEnglish" "http://www.multitran.ru/c/m.exe?l1=1&l2=2&s="
+multitranDeutsch = searchEngine "multitranDeutsch" "http://www.multitran.ru/c/m.exe?l1=3&l2=2&s="
+
+-- Prompt search: get input from the user via a prompt, then run the search in
+-- the browser and automatically switch to the web workspace
+myPromptSearch (SearchEngine _ site)
+  = inputPrompt myXPConfig "Search" ?+ \s ->
+      (search myBrowser site s >> viewWeb)
+
+-- Select search: do a search based on the X selection
+mySelectSearch eng = selectSearch eng >> viewWeb
+
+-- Switch to the "web" workspace
+viewWeb = windows (W.view "web")
+
+-- }}}
 -- Main -------------------------------------------------------------------- {{{
 
 main :: IO ()
@@ -517,12 +498,6 @@ main = do
     }
     `additionalKeysP`
     myKeyBindingsTable
-    {-[ ("M-<F12>", spawn "gnome-session-quit --logout --no-prompt")-}
-    {-, ("M1-<F10>", spawn "gnome-screensaver-command -l")-}
-    {-, ("M1-<F11>", spawn "pm-hybernate")-}
-    {-, ("M1-<F12>", spawn "pm-suspend")-}
-    {-, ("M-S-w", kill)-}
-    {-, ("M1-<F4>", kill)-}
 
 -- }}}
 -- Status bars ------------------------------------------------------------- {{{
@@ -582,20 +557,34 @@ logHookTopLeft icons handle s = defaultPP
 -- }}}
 -- HandleEvent hook -------------------------------------------------------- {{{
 
--- Wrapper for the Timer id, so it can be stored as custom mutable state
-data TidState = TID TimerId deriving Typeable
+myHandleEventHook = ED.fullscreenEventHook <+> docksEventHook
 
-instance ExtensionClass TidState where
-  initialValue = TID 0
+-- }}}
+-- Manage hook ------------------------------------------------------------- {{{
 
-myHandleEventHook = ED.fullscreenEventHook <+> docksEventHook <+> clockEventHook <+> handleTimerEvent
-  where
-    clockEventHook e = do                   -- thanks to DarthFennec
-      (TID t) <- XS.get                     -- get the recent Timer id
-      handleTimer t e $ do                  -- run the following if e matches the id
-        startTimer 1 >>= XS.put . TID       -- restart the timer, store the new id
-        ask >>= logHook.config              -- get the loghook and run it
-        return Nothing                      -- return required type
-      return $ All True                     -- return required type
+myManageHook :: ManageHook
+myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads
 
+manageWindows = composeAll . concat $
+    [ [isDialog --> doFloat]
+    , [className =? c --> doFloat  | c <- myCFloats]
+    , [title     =? t --> doFloat  | t <- myTFloats]
+    , [resource  =? r --> doFloat  | r <- myRFloats]
+    , [resource  =? i --> doIgnore | i <- myIgnores]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "papers" | x <- myPapersShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "music" | x <- myMusicShifts]
+    ]
+    where
+    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+    myCFloats = []
+    myTFloats = ["Downloads", "Save As..."]
+    myRFloats = []
+    myIgnores = []
+    myPapersShifts = ["Mendeley Desktop"]
+    myMusicShifts = ["Rhythmbox", "Workrave"]
+    myIMShifts = ["Skype"
+                 , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
+                 , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
+                 ]
 -- }}}
