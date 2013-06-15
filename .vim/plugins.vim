@@ -77,6 +77,7 @@ Bundle "smancill/conky-syntax.vim"
 Bundle "tpope/vim-abolish"
 "Bundle "sjl/gundo.vim"
 Bundle "taketwo/gundo.vim"
+Bundle "nelstrom/vim-visual-star-search"
 
 " Try these plugins:
 "Bundle "sjl/splice.vim"
