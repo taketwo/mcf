@@ -203,7 +203,6 @@ myTopics =
   [ TI "web"   ""      (spawn myBrowser)
   , TI "im"    ""      (spawn "skype")
   , TI "music" ""      (spawn "rhythmbox")
-  , TI "papers" ""     (return())
   {-, TI "mail" "" (runInTerm "" "ssh en")-}
   {-, ti "read" "papers"-}
   {-, ti "write" "writing/blog/stream-comonad"-}
@@ -212,10 +211,12 @@ myTopics =
   {-, TI "draw" "" (spawn "inkscape")-}
   , TI "xmonad" ".xmonad" (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , TI "mcf"    ".mcf"    (spawnShell)
+  , TI "ipy"    ""    (spawnInShell "ipython")
   {-, ti "xm-hack" "src/xmonad/XMonadContrib"-}
   {-, TI "em-conf" "" (edit "~/.emacs")-}
   {-, TI "net" "" (spawn "wicd-client -n" >>-}
                  {-shell)-}
+  , ti "papers" ""
   , ti "figures" ""
   , ti "gimp" ""
   {-, ti "500" "teaching/500/sf"-}
@@ -255,6 +256,9 @@ spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
 spawnShellIn :: Dir -> X ()
 spawnShellIn dir = spawn $ myTerminal ++ " --working-directory " ++ dir
+
+spawnInShell :: String -> X ()
+spawnInShell cmd = spawn $ myTerminal ++ " -e '" ++ cmd ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
