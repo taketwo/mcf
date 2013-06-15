@@ -217,7 +217,7 @@ myTopics =
   {-, TI "net" "" (spawn "wicd-client -n" >>-}
                  {-shell)-}
   , ti "figures" ""
-  {-, ti "misc" ""-}
+  , ti "gimp" ""
   {-, ti "500" "teaching/500/sf"-}
   {-, ti "ref" "documents/reference"-}
   {-, ti "play" ""-}
@@ -571,6 +571,7 @@ manageWindows = composeAll . concat $
     , [title     =? t --> doFloat  | t <- myTFloats]
     , [resource  =? r --> doFloat  | r <- myRFloats]
     , [resource  =? i --> doIgnore | i <- myIgnores]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "papers" | x <- myPapersShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "music" | x <- myMusicShifts]
@@ -581,6 +582,7 @@ manageWindows = composeAll . concat $
     myTFloats = ["Downloads", "Save As..."]
     myRFloats = []
     myIgnores = []
+    myGimpShifts = ["Gimp"]
     myPapersShifts = ["Mendeley Desktop"]
     myMusicShifts = ["Rhythmbox", "Workrave"]
     myIMShifts = ["Skype"
