@@ -13,5 +13,11 @@ autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
 " When on a function name, removes the name and the parens around its arguments
 nnoremap <LocalLeader>f diwds(
 
-" (W)rap with (l)en function call
-nnoremap <buffer> <LocalLeader>wl viwc(<C-R>")<Esc>h%ilen<Esc>%
+" Wrap with function call
+xmap W <Plug>VSurround
+" w - input function name
+let b:surround_119 = "\1Function: \1(\r)"
+" l - len
+let b:surround_108 = "len(\r)"
+" r - range
+let b:surround_114 = "range(\r)"
