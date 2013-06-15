@@ -179,10 +179,6 @@ nnoremap <Leader>d :t.<CR>
 
 inoremap <C-d> <BS>
 
-" Semicolon at end of line by typing ;;
-
-inoremap ;; <C-o>A;<Esc>
-
 " Enable spell checking
 
 nnoremap <F7> :setlocal spell! spelllang=en_us<CR>

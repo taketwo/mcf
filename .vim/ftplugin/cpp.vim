@@ -53,3 +53,6 @@ vnoremap <LocalLeader>f c(<C-R>")<ESC>%i
 
 " Delete until next closing brace
 nnoremap <LocalLeader>0 dt)
+
+nnoremap <silent> <LocalLeader>; :call AppendSemicolon()<CR>
+inoremap <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
