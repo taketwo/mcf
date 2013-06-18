@@ -187,7 +187,7 @@ set pastetoggle=<F4>
 
 " Close the current buffer with F11
 
-nnoremap <F11> :BW<CR>
+nnoremap <F11> :MBEbw<CR>
 
 " Split line (opposite to S-J joining line)
 
