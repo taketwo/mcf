@@ -346,7 +346,7 @@ table =
     -- Launch program
     launchTerminal          = Unbound "Launch terminal"                 (spawn myTerminal)
     launchKupfer            = Unbound "Launch kupfer"                   (spawn "kupfer")
-    launchCalendar          = Unbound "Launch calendar"                 (spawn "chromium-browser --app-id = ejjicmeblgpmajnghnpcppodonldlgfn")
+    launchCalendar          = Unbound "Launch calendar"                 (spawn "chromium-browser --app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
     -- Window navigation
     gotoNextWindow          = Unbound "Switch to next window"           (windows W.focusDown)
     gotoMaster              = Unbound "Move focus to the master window" (windows W.focusMaster)
