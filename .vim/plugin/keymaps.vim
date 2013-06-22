@@ -183,7 +183,9 @@ inoremap <C-d> <BS>
 
 nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
-set pastetoggle=<F4>
+" Pasting
+set pastetoggle=<S-F5>
+noremap <F5> :call PasteFromClipboard()<CR>
 
 " Close the current buffer with F11
 
@@ -236,7 +238,7 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   " Gundo
 
-  nnoremap <F5> :GundoToggle<CR>
+  nnoremap <F4> :GundoToggle<CR>
 
   " Change inside surroundings
 
