@@ -211,7 +211,7 @@ myTopics =
   {-, TI "draw" "" (spawn "inkscape")-}
   , TI "xmonad" ".xmonad" (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , TI "mcf"    ".mcf"    (spawnShell)
-  , TI "ipy"    ""    (spawnInShell "ipython")
+  , TI "ipy"    ""    (spawnInShell "ipython --pylab")
   {-, ti "xm-hack" "src/xmonad/XMonadContrib"-}
   {-, TI "em-conf" "" (edit "~/.emacs")-}
   {-, TI "net" "" (spawn "wicd-client -n" >>-}
