@@ -289,8 +289,7 @@ myKeyBindingsTable = concat $ table
 table =
   [ k "<Return>"     launchTerminal         __              __                __
   {-, k "a"            gotoScreen1      sendScreen1   takeScreen1      swapScreen1-}
-  , k "b"            gotoWorkspace    shiftToWorkspace createWorkspace    shiftAndGoToWorkspace
-  {-, k "b"            __               __            openBrowser        __-}
+  , k "b"            __               __            launchBrowser        __
   , k "c"            goUp             swapUp        launchCalendar       shrinkMaster
   {-, k "d"            launchWithDmenu      __              __                __-}
   {-, k "e"            wicdNetwork          __              __                __-}
@@ -312,8 +311,8 @@ table =
   , k "t"            goDown           swapDown            __           expandMaster
   {-, k "u"            gotoScreen0      sendScreen0   takeScreen0      swapScreen0-}
   {-, k "v"            volumeMuteToggle volumeDown    volumeUp                __-}
-  , k "w"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace
-  , k "x"                __               __              __                __
+  , k "w"            gotoWorkspace    shiftToWorkspace createWorkspace    shiftAndGoToWorkspace
+  , k "x"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace
   , k "y"                __               __              __                __
   , k "z"                __               __              __                __
   , k "<Backspace>"  closeWindow          __              __         deleteWorkspace
@@ -344,6 +343,7 @@ table =
 
     -- Actions
     -- Launch program
+    launchBrowser           = Unbound "Launch browser"                  (spawn myBrowser)
     launchTerminal          = Unbound "Launch terminal"                 (spawn myTerminal)
     launchKupfer            = Unbound "Launch kupfer"                   (spawn "kupfer")
     launchCalendar          = Unbound "Launch calendar"                 (spawn "chromium-browser --app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
