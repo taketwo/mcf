@@ -1,0 +1,23 @@
+#######################################################################
+#                       Point cloud declaration                       #
+#######################################################################
+
+snippet cloud "Point cloud" !b
+pcl::PointCloud<${2:pcl::PointXYZ}> ${1:cloud}$0
+endsnippet
+
+snippet cloudp "Point cloud pointer" !b
+pcl::PointCloud<${2:pcl::PointXYZ}>::Ptr ${1:cloud}(new pcl::PointCloud<$2>)$0
+endsnippet
+
+#######################################################################
+#                                 I/O                                 #
+#######################################################################
+
+snippet load "Load point cloud" !b
+if (pcl::io::loadPCDFile${3/.+/</}${3:pcl::PointXYZ}${3/.+/>/}(${2:filename}, ${1:*cloud}) == -1)
+{
+  PCL_ERROR("Couldn't read file %s\n", $2);
+  return -1;
+}$0
+endsnippet
