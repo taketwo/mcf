@@ -187,7 +187,6 @@ myLayoutHook =
 -- to switch to a new working dir
   workspaceDir "~" $
   onWorkspace "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3)) $
-  {-$ onWorkspace "9:Pix" gimpLayout-}
   {-$-} defaultLayouts
 
 -- }}}
@@ -571,10 +570,11 @@ myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScr
 
 manageWindows = composeAll . concat $
     [ [isDialog --> doFloat]
-    , [className =? c --> doFloat  | c <- myCFloats]
-    , [title     =? t --> doFloat  | t <- myTFloats]
-    , [resource  =? r --> doFloat  | r <- myRFloats]
-    , [resource  =? i --> doIgnore | i <- myIgnores]
+    , [className =? c --> doFloat   | c <- myCFloats]
+    , [className =? u --> doUnfloat | u <- myCUnFloats] -- does not work actually
+    , [title     =? t --> doFloat   | t <- myTFloats]
+    , [resource  =? r --> doFloat   | r <- myRFloats]
+    , [resource  =? i --> doIgnore  | i <- myIgnores]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "papers" | x <- myPapersShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
@@ -582,8 +582,10 @@ manageWindows = composeAll . concat $
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+    doUnfloat = ask >>= doF . W.sink
     myCFloats = []
-    myTFloats = ["Downloads", "Save As..."]
+    myCUnFloats = ["Gimp"]
+    myTFloats = ["Downloads", "Save As...", "Export Image"]
     myRFloats = []
     myIgnores = []
     myGimpShifts = ["Gimp"]
