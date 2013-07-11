@@ -274,9 +274,9 @@ myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
     findTerminal   = resource  =? "scratchpad"
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
-        h = 0.3             -- height
-        w = 1.0             -- width
-        t = 1.0 - h         -- bottom edge
+        h = 0.5             -- height
+        w = 0.5             -- width
+        t = (1.0 - h) / 2.0 -- centered top/bottom
         l = (1.0 - w) / 2.0 -- centered left/right
 
 -- }}}
