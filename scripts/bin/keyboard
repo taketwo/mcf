@@ -4,7 +4,11 @@ KEYBOARD_LAYOUTS="us(dvorak),ru"
 
 function show_help
 {
-  echo "help"
+  echo "-h : show help"
+  echo "-g : get current layout"
+  echo "-s : set layout"
+  echo "-l : list layouts"
+  echo "-n : set next layout in the list"
 }
 
 function get_layout
