@@ -1,7 +1,9 @@
 #!/bin/bash
 
 case `keyboard -g` in
-  "us(dvorak)" ) echo "US"
+  "us(dvorak)" ) echo "DV"
+    ;;
+  "us" ) echo "US"
     ;;
   "ru" ) echo "RU"
     ;;
