@@ -128,11 +128,12 @@ myFont     = "Liberation Mono"
 -- }}}
 -- Appearance -------------------------------------------------------------- {{{
 
-xpFont               = "xft:" ++ myFont ++ ":pixelsize=11"
-dzenFont             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
-dzenBg               = "#3c3b37"
-dzenFgLight          = "#d7dbd2"
-dzenFgDark           = "#7f7d76"
+fontXP               = "xft:" ++ myFont ++ ":pixelsize=11"
+fontDzen             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
+colorBg              = "#3c3b37"
+colorFgLight         = "#d7dbd2"
+colorFgDark          = "#7f7d76"
+colorBorderActive    = solarizedOrange
 dzenUrgent           = "#19b6ee"
 colorBlack           = "#020202" --Background (Dzen_BG)
 colorBlackAlt        = "#1c1c1c" --Black Xdefaults
@@ -140,12 +141,7 @@ colorGray            = "#444444" --Gray       (Dzen_FG2)
 colorGrayAlt         = "#101010" --Gray dark
 colorWhite           = "#a9a6af" --Foreground (Shell_FG)
 colorWhiteAlt        = "#9d9d9d" --White dark (Dzen_FG)
-colorMagenta         = "#8e82a2"
 colorBlue            = "#44aacc"
-colorBlueAlt         = "#3955c4"
-colorRed             = "#e0105f"
-colorGreen           = "#66ff66"
-colorGreenAlt        = "#558965"
 myNormalBorderColor  = colorBlackAlt
 myFocusedBorderColor = colorGray
 xRes                 = 166
@@ -156,13 +152,13 @@ topLeftBarWidth      = 600
 topBarTitleLength    = 80
 
 myTabConfig = defaultTheme
-  { activeColor         = dzenBg
-  , activeTextColor     = dzenFgLight
-  , activeBorderColor   = solarizedOrange
-  , inactiveColor       = dzenBg
-  , inactiveTextColor   = dzenFgDark
-  , inactiveBorderColor = dzenBg
-  , fontName            = xpFont
+  { activeColor         = colorBg
+  , activeTextColor     = colorFgLight
+  , activeBorderColor   = colorBorderActive
+  , inactiveColor       = colorBg
+  , inactiveTextColor   = colorFgDark
+  , inactiveBorderColor = colorBg
+  , fontName            = fontXP
   }
 
 -- }}}
@@ -199,37 +195,16 @@ data TopicItem = TI { topicName   :: Topic
 
 myTopics :: [TopicItem]
 myTopics =
-  [ TI "web"   ""      (spawn myBrowser)
-  , TI "im"    ""      (spawn "skype")
-  , TI "music" ""      (spawn "rhythmbox")
-  {-, TI "mail" "" (runInTerm "" "ssh en")-}
-  {-, ti "read" "papers"-}
-  {-, ti "write" "writing/blog/stream-comonad"-}
-  {-, TI "org" "notes"-}
-    {-(spawn "emacs --name org ~/notes/journal.org")-}
-  {-, TI "draw" "" (spawn "inkscape")-}
-  , TI "xmonad" ".xmonad" (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
-  , TI "mcf"    ".mcf"    (spawnShell)
-  , TI "ipy"    ""    (spawnInShell "ipython --pylab")
-  {-, ti "xm-hack" "src/xmonad/XMonadContrib"-}
-  {-, TI "em-conf" "" (edit "~/.emacs")-}
-  {-, TI "net" "" (spawn "wicd-client -n" >>-}
-                 {-shell)-}
-  , ti "papers" ""
+  [ TI "web"     ""                               (spawn myBrowser)
+  , TI "im"      ""                               (spawn "skype")
+  , TI "music"   ""                               (spawn "rhythmbox")
+  , TI "xmonad"  ".xmonad"                        (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
+  , TI "mcf"     ".mcf"                           (spawnShell)
+  , TI "tocs"    "/media/Workspace/Projects/tocs" (spawnShell)
+  , TI "ipy"     ""                               (spawnInShell "ipython --pylab")
+  , ti "papers"  ""
   , ti "figures" ""
-  , ti "gimp" ""
-  {-, ti "500" "teaching/500/sf"-}
-  {-, ti "ref" "documents/reference"-}
-  {-, ti "play" ""-}
-  {-, TI "tex-conf" "texmf/tex" (edit "~/texmf/tex/brent.sty")-}
-  {-, ti "mlt" "writing/mlt"-}
-  {-, ti "MR" "writing/Monad.Reader/issues/Issue19"-}
-  {-, ti "mc" "teaching/mathcounts"-}
-  {-, TI "video" "video" (spawn "cinelerra")-}
-  {-, TI "aop" "learning/aop" (spawnShell host-}
-                             {->> spawn "emacs ~/learning/aop/aop.lhs")-}
-  {-, ti "tc" "writing/typeclassopedia"-}
-  {-, ti "noah" "documents/noah/schedule"-}
+  , ti "gimp"    ""
   ]
   where
     -- Make a default topic item that just spawns a shell.
@@ -399,9 +374,9 @@ data Action = Unbound String (          X ()) |
 
 myXPConfig :: XPConfig
 myXPConfig = defaultXPConfig
-  { font                = xpFont
-  , bgColor             = dzenBg
-  , fgColor             = dzenFgLight
+  { font                = fontXP
+  , bgColor             = colorBg
+  , fgColor             = colorFgLight
   , bgHLight            = colorBlue
   , fgHLight            = colorBlack
   , borderColor         = colorGrayAlt
@@ -481,16 +456,16 @@ main = do
                      ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
                      ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                     ++ " -bg '" ++ dzenBg ++ "'"
-                     ++ " -fn '" ++ dzenFont ++ "'"
+                     ++ " -bg '" ++ colorBg ++ "'"
+                     ++ " -fn '" ++ fontDzen ++ "'"
   dzenTopRight <- spawnPipe barTopRight
   dzensTopLeft <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
   xmonad $ gnomeConfig
-    { modMask            = mod4Mask         -- changes the mode key to "super"
-    , focusedBorderColor = solarizedOrange  -- color of focused border
-    , normalBorderColor  = dzenBg           -- color of inactive border
-    , borderWidth        = 1                -- width of border around windows
-    , terminal           = "gnome-terminal" -- default terminal program
+    { modMask            = mod4Mask          -- changes the mode key to "super"
+    , focusedBorderColor = colorBorderActive -- color of focused border
+    , normalBorderColor  = colorBg           -- color of inactive border
+    , borderWidth        = 1                 -- width of border around windows
+    , terminal           = myTerminal        -- default terminal program
     , workspaces         = myTopicNames
     , manageHook = manageHook gnomeConfig <+> myManageHook
     , logHook = (mapM_ dynamicLogWithPP $ zipWith (logHookTopLeft pathIcons) dzensTopLeft [1 .. screenCount])
@@ -529,8 +504,8 @@ dzenCommand (S n) = "dzen2"
                     ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show topLeftBarWidth ++ "'"
                     ++ " -ta 'l'"
                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                    ++ " -bg '" ++ dzenBg ++ "'"
-                    ++ " -fn '" ++ dzenFont ++ "'"
+                    ++ " -bg '" ++ colorBg ++ "'"
+                    ++ " -fn '" ++ fontDzen ++ "'"
                     ++ " -xs '" ++ show n ++ "'"
 
 logHookTopLeft icons handle s = defaultPP
@@ -539,13 +514,13 @@ logHookTopLeft icons handle s = defaultPP
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep             = " "
   , ppWsSep           = ""
-  , ppCurrent         =                      wrapTextBox dzenFgDark  dzenFgLight dzenBg
-  , ppUrgent          =                      wrapTextBox dzenUrgent  dzenBg      dzenBg
-  , ppVisible         =                      wrapTextBox dzenFgLight dzenFgDark  dzenBg
+  , ppCurrent         =                      wrapTextBox colorFgDark  colorFgLight colorBg
+  , ppUrgent          =                      wrapTextBox dzenUrgent  colorBg      colorBg
+  , ppVisible         =                      wrapTextBox colorFgLight colorFgDark  colorBg
   , ppHiddenNoWindows = const ""
-  , ppHidden          =                      wrapTextBox dzenFgLight dzenBg      dzenBg
-  , ppTitle           = (" " ++)           . dzenColor   dzenFgLight dzenBg             . dzenEscape . shorten topBarTitleLength
-  , ppLayout          = wrapClickLayout    . dzenColor   dzenFgDark  dzenBg             .
+  , ppHidden          =                      wrapTextBox colorFgLight colorBg      colorBg
+  , ppTitle           = (" " ++)           . dzenColor   colorFgLight colorBg             . dzenEscape . shorten topBarTitleLength
+  , ppLayout          = wrapClickLayout    . dzenColor   colorFgDark  colorBg             .
     (\x -> case x of
     "MouseResizableTile"                    -> "^i(" ++ icons ++ "/tall.xbm)"
     "Mirror MouseResizableTile"             -> "^i(" ++ icons ++ "/mtall.xbm)"
