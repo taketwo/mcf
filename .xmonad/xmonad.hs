@@ -67,6 +67,7 @@ import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.DynamicWorkspaces
 import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
+import qualified XMonad.Actions.FlexibleResize as FR
 import XMonad.Operations
 import XMonad.Core
 import XMonad.Config.Gnome
@@ -267,7 +268,7 @@ table =
   , k "c"            goUp             swapUp        launchCalendar       shrinkMaster
   {-, k "d"            launchWithDmenu      __              __                __-}
   {-, k "e"            wicdNetwork          __              __                __-}
-  , k "f"            __               tileFloating        __                __
+  , k "f"            __               tileFloating        __           resizeFloatingWindow
   {-, k "g"            gotoMenu'        bringMenu'    windowMenu'      xmonadCommands-}
   , k "h"            goLeft           swapLeft            __           shrinkMaster
   , k "i"            __               __              __                __
@@ -339,6 +340,7 @@ table =
     nextLayout              = Unbound "Switch to next layout"           (sendMessage NextLayout)
     resetLayout             = Unbound "Switch to default layout"        (sendMessage FirstLayout)
     tileFloating            = Unbound "Push into tile"                  (withFocused $ windows . W.sink)
+    resizeFloatingWindow    = Unbound "Resize focused floating window"  (withFocused $ FR.mouseResizeWindow)
     toggleMagnifier         = Unbound "Toggle magnifier"                (sendMessage Mag.Toggle)
     -- Workspace navigation
     gotoPrevWorkspace       = Unbound "Switch to previous workspace"    (toggleWS' ["NSP"])
