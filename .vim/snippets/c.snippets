@@ -1,15 +1,3 @@
-snippet inc "include header" !b
-#include <${1:header}.${2:h}>$0
-endsnippet
-
-snippet incs "include standard library header" !b
-#include <${1:iostream}>$0
-endsnippet
-
-snippet incl "include local header" !b
-#include "${1:`!v Filename("$1")`}.${2:h}"$0
-endsnippet
-
 snippet enum "Enumeration" !b
 enum ${1:name}
 {

@@ -100,3 +100,20 @@ endsnippet
 snippet inf "Infinity"
 std::numeric_limits<${1:float}>::infinity()$0
 endsnippet
+
+#######################################################################
+#                              Includes                               #
+#######################################################################
+
+snippet inc "Include header" !b
+#include <${1:header}.${2:`!p snip.rv = 'hpp' if t[1].startswith('boost') else 'h'`}>$0
+endsnippet
+
+snippet incs "Include standard library header" !b
+#include <${1:iostream}>$0
+endsnippet
+
+snippet incl "Include local header" !b
+#include "${1:`!v Filename("$1")`}.${2:h}"$0
+endsnippet
+
