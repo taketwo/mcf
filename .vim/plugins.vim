@@ -63,6 +63,7 @@ Bundle "taketwo/vim-ipython"
 Bundle "rking/ag.vim"
 Bundle "Peeja/vim-cdo"
 Bundle "terryma/vim-expand-region"
+Bundle "terryma/vim-multiple-cursors"
 Bundle "tpope/vim-abolish"
 Bundle "sjl/gundo.vim"
 Bundle "nelstrom/vim-visual-star-search"
@@ -93,7 +94,6 @@ Bundle "lucapette/vim-textobj-underscore"
 "Bundle "sjl/splice.vim"
 "Bundle "tpope/vim-repeat"
 "Bundle "tpope/vim-unimpaired"
-"Bundle "terryma/vim-multiple-cursors"
 
 filetype plugin indent on " Filetype plugin indent on is required by Vundle
 
