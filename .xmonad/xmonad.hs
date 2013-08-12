@@ -453,14 +453,7 @@ main = do
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
-  let barTopRight  = "conky -c ~/.xmonad/conkyrc-top-right | dzen2"
-                     ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
-                     ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
-                     ++ " -ta 'r'"
-                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                     ++ " -bg '" ++ colorBg ++ "'"
-                     ++ " -fn '" ++ fontDzen ++ "'"
-  dzenTopRight <- spawnPipe barTopRight
+  dzenTopRight <- spawnPipe (barTopRight screenWidth screenHeight)
   dzensTopLeft <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
   xmonad $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
@@ -532,6 +525,18 @@ logHookTopLeft icons handle s = defaultPP
     _ -> x
     )
   }
+
+-- }}}
+-- Top right (System status) ----------------------------------------------- {{{
+
+barTopRight :: Int -> Int -> String
+barTopRight screenWidth screenHeight = "conky -c ~/.xmonad/conkyrc-top-right | dzen2"
+                     ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
+                     ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
+                     ++ " -ta 'r'"
+                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
+                     ++ " -bg '" ++ colorBg ++ "'"
+                     ++ " -fn '" ++ fontDzen ++ "'"
 
 -- }}}
 -- }}}
