@@ -196,13 +196,15 @@ data TopicItem = TI { topicName   :: Topic
 
 myTopics :: [TopicItem]
 myTopics =
-  [ TI "web"     ""                               (spawn myBrowser)
-  , TI "im"      ""                               (spawn "skype")
-  , TI "music"   ""                               (spawn "rhythmbox")
-  , TI "xmonad"  ".xmonad"                        (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
-  , TI "mcf"     ".mcf"                           (spawnShell)
-  , TI "tocs"    "/media/Workspace/Projects/tocs" (spawnShell)
-  , TI "ipy"     ""                               (spawnInShell "ipython --pylab")
+  [ TI "web"     ""                                    (spawn myBrowser)
+  , ti "im"      ""
+  , TI "music"   ""                                    (spawn "rhythmbox")
+  , TI "xmonad"  ".xmonad"                             (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
+  , TI "mcf"     ".mcf"                                (spawnShell)
+  , TI "tocs"    "/media/Workspace/Projects/tocs"      (spawnShell)
+  , TI "eval"    "/media/Workspace/Projects/tocs/data" (spawnShell)
+  , TI "blog"    "/media/Workspace/Projects/tocs/blog" (blog)
+  , TI "ipy"     ""                                    (spawnInShell "ipython --pylab")
   , ti "papers"  ""
   , ti "figures" ""
   , ti "gimp"    ""
@@ -210,6 +212,11 @@ myTopics =
   where
     -- Make a default topic item that just spawns a shell.
     ti t d = TI t d spawnShell
+
+blog = do
+  spawn (myBrowser ++ " --new-window file:///media/Workspace/Projects/tocs/blog/tocsweb/build/html/alexandrov/tmp.html")
+  spawnShell
+  spawnShell
 
 edit :: String -> X ()
 edit f = spawn (myTerminal ++ " -e 'vim " ++ f ++ "'")
