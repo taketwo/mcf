@@ -176,6 +176,7 @@ defaultLayouts = smartBorders $ avoidStruts $
   ||| myCode
 
 myCode = windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger }
+myIM = named "im" (smartBorders $ avoidStruts $ withIM (1 % 5) (Title "Contact List") Grid)
 
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
@@ -184,6 +185,7 @@ myLayoutHook =
 -- to switch to a new working dir
   workspaceDir "~" $
   onWorkspace "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3)) $
+  onWorkspace "im" (myIM) $
   {-$-} defaultLayouts
 
 -- }}}
@@ -529,6 +531,7 @@ logHookTopLeft icons handle s = defaultPP
     "Grid"                                  -> "^i(" ++ icons ++ "/grid.xbm)"
     "Tabbed Bottom Simplest"                -> "^i(" ++ icons ++ "/full.xbm)"
     "Magnifier NoMaster MouseResizableTile" -> "^i(" ++ icons ++ "/code.xbm)"
+    "im"                        -> ""
     _ -> x
     )
   }
@@ -583,5 +586,6 @@ manageWindows = composeAll . concat $
     myIMShifts = ["Skype"
                  , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
                  , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
+                 , "Empathy"
                  ]
 -- }}}
