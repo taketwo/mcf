@@ -175,8 +175,9 @@ defaultLayouts = smartBorders $ avoidStruts $
   ||| tabbedBottom shrinkText myTabConfig
   ||| myCode
 
-myCode = windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger }
+myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger })
 myIM = named "im" (smartBorders $ avoidStruts $ withIM (1 % 5) (Title "Contact List") Grid)
+myFigures = named "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3))
 
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
@@ -184,7 +185,7 @@ myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
   workspaceDir "~" $
-  onWorkspace "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3)) $
+  onWorkspace "figures" (myFigures) $
   onWorkspace "im" (myIM) $
   {-$-} defaultLayouts
 
@@ -526,12 +527,13 @@ logHookTopLeft icons handle s = defaultPP
   , ppTitle           = (" " ++)           . dzenColor   colorFgLight colorBg             . dzenEscape . shorten topBarTitleLength
   , ppLayout          = wrapClickLayout    . dzenColor   colorFgDark  colorBg             .
     (\x -> case x of
-    "MouseResizableTile"                    -> "^i(" ++ icons ++ "/tall.xbm)"
-    "Mirror MouseResizableTile"             -> "^i(" ++ icons ++ "/mtall.xbm)"
-    "Grid"                                  -> "^i(" ++ icons ++ "/grid.xbm)"
-    "Tabbed Bottom Simplest"                -> "^i(" ++ icons ++ "/full.xbm)"
-    "Magnifier NoMaster MouseResizableTile" -> "^i(" ++ icons ++ "/code.xbm)"
+    "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
+    "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
+    "Grid"                      -> "^i(" ++ icons ++ "/grid.xbm)"
+    "Tabbed Bottom Simplest"    -> "^i(" ++ icons ++ "/full.xbm)"
+    "code"                      -> "^i(" ++ icons ++ "/code.xbm)"
     "im"                        -> ""
+    "figures"                   -> ""
     _ -> x
     )
   }
@@ -575,7 +577,7 @@ manageWindows = composeAll . concat $
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
     doUnfloat = ask >>= doF . W.sink
-    myCFloats = []
+    myCFloats = ["Exe"]
     myCUnFloats = ["Gimp"]
     myTFloats = ["Downloads", "Save As...", "Export Image"]
     myRFloats = []
