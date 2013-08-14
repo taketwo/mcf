@@ -465,7 +465,7 @@ main = do
   let screenHeight = read (show (heightOfScreen screen)) :: Int
   dzenTopRight <- spawnPipe (barTopRight screenWidth screenHeight)
   dzensTopLeft <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
-  xmonad $ gnomeConfig
+  xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
@@ -520,7 +520,7 @@ logHookTopLeft icons handle s = defaultPP
   , ppSep             = " "
   , ppWsSep           = ""
   , ppCurrent         =                      wrapTextBox colorFgDark  colorFgLight colorBg
-  , ppUrgent          =                      wrapTextBox dzenUrgent  colorBg      colorBg
+  , ppUrgent          =                      wrapTextBox solarizedBase3 solarizedRed colorBg
   , ppVisible         =                      wrapTextBox colorFgLight colorFgDark  colorBg
   , ppHiddenNoWindows = const ""
   , ppHidden          =                      wrapTextBox colorFgLight colorBg      colorBg
