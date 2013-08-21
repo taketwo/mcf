@@ -1,7 +1,3 @@
-" This remaps easymotion to show us only the left
-" hand home row keys as navigation options which 
-" may mean more typing to get to a particular spot
-" but it'll all be isolated to one area of the keyboard
 call EasyMotion#InitOptions({
 \   'leader_key'      : '<Leader><Leader>'
 \ , 'keys'            : 'aoeuhtnsgcrbm'
