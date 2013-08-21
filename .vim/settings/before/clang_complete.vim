@@ -13,6 +13,3 @@ let g:clang_snippets_engine = "ultisnips"
 let g:clang_trailing_placeholder = 1
 " Avoid remapping <C-O> to <C-T> which will happen by default
 let g:clang_jumpto_back_key = "<C-O>"
-" Also look for compilation options in CMake compilation database
-let g:clang_auto_user_options = "path, .clang_complete, compile_commands.json"
-let g:clang_compilation_database = "build"
