@@ -42,6 +42,12 @@ add_executable(${1:test}
 )
 endsnippet
 
+snippet lib "Add library" !b
+add_library(${1:lib}
+  ${2:src/lib.cpp}
+)
+endsnippet
+
 snippet link "Link libraries" !b
 target_link_libraries(${1:test}
   ${2:library}
