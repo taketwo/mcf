@@ -60,7 +60,7 @@ reinterpret_cast<${2:float*}>(${1:${VISUAL:variable}})$0
 endsnippet
 
 snippet for "For loop" !b
-for (${3:size_t} ${2:i} = 0; $2 < ${1:count}; $2++)
+for (${3:size_t} ${2:i} = 0; $2 < ${1:count}; ++$2)
 {
   ${0:/* code */}
 }
@@ -99,6 +99,10 @@ endsnippet
 
 snippet inf "Infinity"
 std::numeric_limits<${1:float}>::infinity()$0
+endsnippet
+
+snippet str "String"
+std::string$0
 endsnippet
 
 #######################################################################
