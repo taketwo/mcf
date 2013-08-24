@@ -259,3 +259,8 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   nnoremap <Leader>sh :SidewaysLeft<CR>
   nnoremap <Leader>sn :SidewaysRight<CR>
+
+  " Yankstack
+
+  nmap <Leader>n <Plug>yankstack_substitute_older_paste
+  nmap <Leader>h <Plug>yankstack_substitute_newer_paste
