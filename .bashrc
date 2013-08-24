@@ -137,6 +137,11 @@ alias trayer-show='trayer --align center --edge top --SetDockType false --SetPar
 alias files-in-package='dpkg-query -L'
 alias file-from-package='apt-file search'
 
+vim-ag()
+{
+  vim -s <(printf "\e;Ag $1\n")
+}
+
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
