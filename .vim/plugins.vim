@@ -69,6 +69,8 @@ Bundle "tpope/vim-abolish"
 Bundle "sjl/gundo.vim"
 Bundle "nelstrom/vim-visual-star-search"
 Bundle "Valloric/ListToggle"
+Bundle "xolox/vim-misc"
+Bundle "xolox/vim-session"
 
 " Languages / frameworks
 Bundle "Rip-Rip/clang_complete"
