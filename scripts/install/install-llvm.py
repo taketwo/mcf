@@ -10,7 +10,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
     Check out llvm/clang, configure, build, and install.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('path', help='checkout path')
+    parser.add_argument('path', help='checkout path (a folder "llvm" will be '
+                                     'created there automatically)')
     args = parser.parse_args()
 
     if not os.path.isdir(args.path):
