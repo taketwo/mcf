@@ -147,6 +147,12 @@ vnoremap j t
 " }}}
 " Misc {{{
 
+" Make Y consistent with C and D
+" (Yes, we have to use nmap instead of nnoremap, otherwise
+"  yankstack won't pick up these mappings.)
+
+nmap Y y$
+
 " Copy entire word even if the cursor is halfway inside the word
 
 nnoremap <Leader>yw yiww
@@ -154,10 +160,6 @@ nnoremap <Leader>yw yiww
 " Replace word with what's in the yank buffer
 
 nnoremap <Leader>rw "_diwhp
-
-" Make Y consistent with C and D
-
-nnoremap Y y$
 
 " Now that c/C are used for navigation, utilize k/K for the same purpose
 
