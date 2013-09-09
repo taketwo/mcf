@@ -20,13 +20,7 @@ ${exec ~/.xmonad/layout.sh} \
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh}\
 ## Network ##
-${texeci 10 ~/.xmonad/online.sh}\
- \
-${if_existing /proc/net/route wlan0}^i(/home/sergey/.xmonad/icons/wifi.xbm) ${endif}\
-${if_existing /proc/net/route eth0}^i(/home/sergey/.xmonad/icons/net_wired.xbm) ${endif}\
-${if_up ppp0}^i(/home/sergey/.xmonad/icons/lock.xbm) Studnet ${endif}\
-${if_up tap0}^i(/home/sergey/.xmonad/icons/lock.xbm) WLANFB2 ${endif}\
-^fg()^bg()\
+${texeci 10 ~/.xmonad/network.sh}\
 ## Volume ##
 ${exec ~/.xmonad/volume.sh}\
 ## Battery ##
