@@ -221,6 +221,10 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   noremap <F12> :NERDTreeMirrorToggle<CR>
 
+  " ListToggle
+
+  nnoremap <F10> :QToggle<CR>
+
   " Tagbar
 
   nnoremap <F3> :TagbarToggle<CR>
