@@ -132,7 +132,7 @@ for c in $kebrum ; do
   Add $c
 done
 
-if [ "$output" != "" ] ; then
+if [ "$output" != " " ] ; then
   Fg $solarizedBase3
   Bg $solarizedYellow
   Flush
