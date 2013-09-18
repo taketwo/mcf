@@ -217,7 +217,7 @@ myTopics =
     ti t d = TI t d spawnShell
 
 blog = do
-  spawn (myBrowser ++ " --new-window file:///media/Workspace/Projects/tocs/blog/tocsweb/build/html/alexandrov/tmp.html")
+  spawn (myBrowser ++ " --new-window file:///media/Workspace/Projects/tocs/blog/repository/blogweb/_build/html/tocs/alexandrov/tmp.html")
   spawnShell
   spawnShell
 
