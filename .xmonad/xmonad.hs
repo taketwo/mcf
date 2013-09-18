@@ -200,7 +200,6 @@ data TopicItem = TI { topicName   :: Topic
 myTopics :: [TopicItem]
 myTopics =
   [ TI "web"     ""                                    (spawn myBrowser)
-  , TI "im"      ""                                    (spawn "empathy")
   , TI "music"   ""                                    (spawn "rhythmbox")
   , TI "xmonad"  ".xmonad"                             (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , TI "mcf"     ".mcf"                                (spawnShell)
@@ -208,6 +207,7 @@ myTopics =
   , TI "eval"    "/media/Workspace/Projects/tocs/data" (spawnShell)
   , TI "blog"    "/media/Workspace/Projects/tocs/blog" (blog)
   , TI "ipy"     ""                                    (spawnInShell "ipython --pylab")
+  , ti "im"      ""
   , ti "papers"  ""
   , ti "figures" ""
   , ti "gimp"    ""
