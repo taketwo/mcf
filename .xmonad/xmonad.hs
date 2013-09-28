@@ -207,6 +207,7 @@ myTopics =
   , TI "eval"    "/media/Workspace/Projects/tocs/data" (spawnShell)
   , TI "blog"    "/media/Workspace/Projects/tocs/blog" (blog)
   , TI "ipy"     ""                                    (spawnInShell "ipython --pylab")
+  , TI "mp3"     ""                                    (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
   , ti "im"      ""
   , ti "papers"  ""
   , ti "figures" ""
@@ -565,7 +566,7 @@ myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScr
 manageWindows = composeAll . concat $
     [ [isDialog --> doFloat]
     , [className =? c --> doFloat   | c <- myCFloats]
-    , [className =? u --> doUnfloat | u <- myCUnFloats] -- does not work actually
+    , [className =? u --> doUnfloat | u <- myCUnFloats] -- does not work for Gimp actually
     , [title     =? t --> doFloat   | t <- myTFloats]
     , [resource  =? r --> doFloat   | r <- myRFloats]
     , [resource  =? i --> doIgnore  | i <- myIgnores]
@@ -578,7 +579,7 @@ manageWindows = composeAll . concat $
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
     doUnfloat = ask >>= doF . W.sink
     myCFloats = ["Exe"]
-    myCUnFloats = ["Gimp"]
+    myCUnFloats = ["Gimp", "Nautilus"]
     myTFloats = ["Downloads", "Save As...", "Export Image"]
     myRFloats = []
     myIgnores = []
@@ -590,4 +591,7 @@ manageWindows = composeAll . concat $
                  , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
                  , "Empathy"
                  ]
+
+-- Hint: use `xprop` to figure out window class name
+
 -- }}}
