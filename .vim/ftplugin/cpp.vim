@@ -54,5 +54,8 @@ vnoremap <LocalLeader>f c(<C-R>")<ESC>%i
 " Delete until next closing brace
 nnoremap <LocalLeader>0 dt)
 
+" Create a block below and put cursor inside it
+inoremap <LocalLeader>] <C-o>o{<CR>}<C-o>O
+
 nnoremap <silent> <LocalLeader>; :call AppendSemicolon()<CR>
 inoremap <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
