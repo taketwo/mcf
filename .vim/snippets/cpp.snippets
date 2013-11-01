@@ -59,6 +59,14 @@ snippet rc "Reinterpret cast"
 reinterpret_cast<${2:float*}>(${1:${VISUAL:variable}})$0
 endsnippet
 
+snippet temp "Template" !b
+template <typename ${1:T}>$0
+endsnippet
+
+snippet tn "Typename" !b
+typename $0
+endsnippet
+
 snippet for "For loop" !b
 for (${3:size_t} ${2:i} = 0; $2 < ${1:count}; ++$2)
 {
@@ -71,6 +79,10 @@ for (const auto& ${1:item} : ${2:items})
 {
   ${0:/* code */}
 }
+endsnippet
+
+snippet ar "Auto reference" !b
+auto& ${1:variable} = $0
 endsnippet
 
 snippet car "Const auto reference" !b
