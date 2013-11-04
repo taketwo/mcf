@@ -72,7 +72,7 @@ Bundle "xolox/vim-misc"
 Bundle "xolox/vim-session"
 
 " Languages / frameworks
-Bundle "Rip-Rip/clang_complete"
+"Bundle "Rip-Rip/clang_complete"
 Bundle "davidhalter/jedi-vim"
 Bundle "tpope/vim-markdown"
 Bundle "nelstrom/vim-markdown-folding"
