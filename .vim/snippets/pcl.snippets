@@ -21,3 +21,12 @@ if (pcl::io::loadPCDFile${3/.+/</}${3:pcl::PointXYZ}${3/.+/>/}(${2:filename}, ${
   return -1;
 }$0
 endsnippet
+
+#######################################################################
+#                          Console arguments                          #
+#######################################################################
+
+snippet arg "Parse argument" !b
+${3:float} $2 = ${4:0.0f};
+pcl::console::parse (argc, argv, "${1:--name}", ${2:variable});$0
+endsnippet
