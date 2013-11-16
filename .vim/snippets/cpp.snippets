@@ -117,10 +117,6 @@ snippet eps "Epsilon"
 std::numeric_limits<${1:float}>::epsilon()$0
 endsnippet
 
-snippet str "String"
-std::string$0
-endsnippet
-
 #######################################################################
 #                              Includes                               #
 #######################################################################
@@ -149,3 +145,18 @@ std::uniform_int_distribution<> ${3:dist}(${1:0}, ${2});
 $3(gen);
 endsnippet
 
+#######################################################################
+#                           Variable types                            #
+#######################################################################
+
+snippet vec "Vector"
+std::vector<${1:float}>$0
+endsnippet
+
+snippet str "String"
+std::string$0
+endsnippet
+
+snippet map "Map"
+std::map<${1:size_t}, ${2:float}>$0
+endsnippet
