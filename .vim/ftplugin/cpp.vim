@@ -5,9 +5,6 @@ setlocal foldlevel=100
 
 inoremap <buffer> .. ->
 
-" Append semicolon to the end of the line
-nnoremap <LocalLeader>; A;<Esc>
-
 " Select until the underscore and substitute
 nnoremap <LocalLeader>- vt_s
 
@@ -57,5 +54,6 @@ nnoremap <LocalLeader>0 dt)
 " Create a block below and put cursor inside it
 inoremap <LocalLeader>] <C-o>o{<CR>}<C-o>O
 
+" Append semicolon to the end of line
 nnoremap <silent> <LocalLeader>; :call AppendSemicolon()<CR>
 inoremap <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>

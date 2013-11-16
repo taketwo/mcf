@@ -21,3 +21,7 @@ let b:surround_119 = "\1Function: \1(\r)"
 let b:surround_108 = "len(\r)"
 " r - range
 let b:surround_114 = "range(\r)"
+
+" Append colon to the end of line
+nnoremap <silent> <LocalLeader>: :call AppendColon()<CR>
+inoremap <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
