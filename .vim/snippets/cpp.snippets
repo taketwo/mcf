@@ -137,3 +137,15 @@ snippet incl "Include local header" !b
 #include "${1:`!v Filename("$1")`}.${2:h}"$0
 endsnippet
 
+#######################################################################
+#                           Random numbers                            #
+#######################################################################
+
+snippet random "Random (uniform int) number generator" !b
+#include <random>
+std::random_device rnd;
+std::mt19937 gen(rnd());
+std::uniform_int_distribution<> ${3:dist}(${1:0}, ${2});
+$3(gen);
+endsnippet
+
