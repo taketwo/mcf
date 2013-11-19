@@ -155,7 +155,9 @@ nmap Y y$
 
 " Copy entire word even if the cursor is halfway inside the word
 
-nnoremap <Leader>yw yiww
+nmap <Leader>yw yiww
+nmap <Leader>y( yi(h%
+nmap <Leader>y" yi"h%
 
 " Replace word with what's in the yank buffer
 
@@ -188,7 +190,7 @@ nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
 " Pasting
 set pastetoggle=<S-F5>
-noremap <F5> :call PasteFromClipboard()<CR>
+inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
 
 " Close the current buffer with F11
 
