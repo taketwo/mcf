@@ -12,8 +12,10 @@ let g:startify_bookmarks = [ '~/.vimrc' ]
 let g:startify_files_number = 10
 let g:startify_session_detection = 1
 let g:startify_session_persistence = 0
+let g:startify_change_to_dir = 0
 let g:startify_skiplist = [
     \ 'COMMIT_EDITMSG',
     \ $VIMRUNTIME .'/doc',
     \ 'bundle/.*/doc',
     \ ]
+let g:ctrlp_reuse_window = 'startify'
