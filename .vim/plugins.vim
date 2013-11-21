@@ -39,7 +39,7 @@ Bundle "skwp/vim-powerline"
 Bundle "skwp/vim-colors-solarized"
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-Bundle "xsunsmile/showmarks"
+Bundle "kshenoy/vim-signature"
 Bundle "briandoll/change-inside-surroundings.vim"
 Bundle "nathanaelkane/vim-indent-guides"
 Bundle "kien/ctrlp.vim"
@@ -96,6 +96,7 @@ Bundle "lucapette/vim-textobj-underscore"
 "Bundle "sjl/splice.vim"
 "Bundle "tpope/vim-repeat"
 "Bundle "tpope/vim-unimpaired"
+"Bundle "xolox/vim-notes"
 
 filetype plugin indent on " Filetype plugin indent on is required by Vundle
 
