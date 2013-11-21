@@ -70,6 +70,7 @@ Bundle "nelstrom/vim-visual-star-search"
 Bundle "Valloric/ListToggle"
 Bundle "xolox/vim-misc"
 Bundle "xolox/vim-session"
+Bundle "mhinz/vim-startify"
 
 " Languages / frameworks
 "Bundle "Rip-Rip/clang_complete"
