@@ -105,6 +105,10 @@ ${1:#define _USE_MATH_DEFINES
 }#include <cmath>$0
 endsnippet
 
+snippet cout "std::cout output" !b
+std::cout << ${1}${2: << std::endl};$0
+endsnippet
+
 snippet nan "NaN"
 std::numeric_limits<${1:float}>::quiet_NaN()$0
 endsnippet
