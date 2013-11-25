@@ -109,6 +109,7 @@ load archives
 load navigation
 load touchpad
 load network
+load man
 
 # quick out-of-source build preparation
 alias osb='mkd build && ccmake ..'
