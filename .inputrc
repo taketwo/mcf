@@ -1,0 +1,17 @@
+set completion-ignore-case on
+set completion-prefix-display-length 2
+
+"\et": history-search-forward
+"\ec": history-search-backward
+
+"\eh": backward-char
+"\en": forward-char
+
+# Ctrl-n and Ctrl-h to iterate through possible Tab-completions
+"\C-n": menu-complete
+"\C-h": menu-complete-backward
+
+"\e-": end-of-line
+"\e_": beginning-of-line
+
+"\el": "\C-e | less\C-m"
