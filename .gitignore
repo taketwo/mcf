@@ -1,5 +1,5 @@
 .vim/bundle
-.vim/sessions
+.vim/session
 .vim/.netrwhist
 *.pyc
 
