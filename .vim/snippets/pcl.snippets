@@ -30,3 +30,21 @@ snippet arg "Parse argument" !b
 ${3:float} $2 = ${4:0.0f};
 pcl::console::parse (argc, argv, "${1:--name}", ${2:variable});$0
 endsnippet
+
+#######################################################################
+#                             Boost graph                             #
+#######################################################################
+
+snippet fore "Iterate over graph edges" !b
+for (const auto& ${2:edge} : as_range (boost::edges (${1:graph})))
+{
+  $0
+}
+endsnippet
+
+snippet forv "Iterate over graph vertices" !b
+for (const auto& ${2:vertex} : as_range (boost::vertices (${1:graph})))
+{
+  $0
+}
+endsnippet
