@@ -151,6 +151,7 @@ vim-ag()
 {
   vim -s <(printf "\e;Ag $1\n")
 }
+alias e='vim'
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
