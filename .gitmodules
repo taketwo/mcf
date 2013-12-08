@@ -13,3 +13,6 @@
 [submodule "scripts/bundle/spark"]
 	path = scripts/bundle/spark
 	url = https://github.com/holman/spark.git
+[submodule "misc/font-cosmic-sans-neue"]
+	path = misc/font-cosmic-sans-neue
+	url = https://github.com/belluzj/cosmic-sans-neue.git
