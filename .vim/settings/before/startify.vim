@@ -8,7 +8,7 @@ let g:startify_list_order = [
     \ ['   Directory:'],
     \ 'dir',
     \ ]
-let g:startify_bookmarks = [ '~/.vimrc' ]
+let g:startify_bookmarks = [ '~/.bashrc', '~/.vim/plugins.vim' ]
 let g:startify_files_number = 10
 let g:startify_session_detection = 1
 let g:startify_session_persistence = 0
