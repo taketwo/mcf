@@ -16,3 +16,6 @@
 [submodule "misc/font-cosmic-sans-neue"]
 	path = misc/font-cosmic-sans-neue
 	url = https://github.com/belluzj/cosmic-sans-neue.git
+[submodule "scripts/bundle/ghi"]
+	path = scripts/bundle/ghi
+	url = https://github.com/stephencelis/ghi.git
