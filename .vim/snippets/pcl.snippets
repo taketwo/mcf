@@ -32,6 +32,25 @@ pcl::console::parse (argc, argv, "${1:--name}", ${2:variable});$0
 endsnippet
 
 #######################################################################
+#                           Console output                            #
+#######################################################################
+
+global !p
+def get_level(c):
+  levels = ["debug", "info", "warn", "error", "highlight", "value"]
+  for l in levels:
+    if l.lower().startswith(c.lower()):
+      return l
+  return "info"
+endglobal
+
+snippet "print(\w?)" "Print message" br
+pcl::console::print_`!p
+snip.rv = get_level(match.group(1) or 'i')
+` ("${1:Message}"${2/.+/, /}${2}${2/.+//});$0
+endsnippet
+
+#######################################################################
 #                             Boost graph                             #
 #######################################################################
 
