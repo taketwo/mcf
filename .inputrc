@@ -1,17 +1,82 @@
+# When completing case will not be taken into consideration
 set completion-ignore-case on
+
+# The first part that has been completed will be replaced by "...",
+# and it is simple to see what you need to type to finish the
+# completion
 set completion-prefix-display-length 2
 
+#######################################################################
+#                         Commands for moving                         #
+#######################################################################
+
+# Alt-_ (same as Alt-Shift--)
+# Jump to the beginning of line
+"\e_": beginning-of-line
+
+# Alt--
+# Jump to the end of line
+"\e-": end-of-line
+
+# Alt-n
+# Move cursor one character forwards
+"\en": forward-char
+
+# Alt-h
+# Move cursor one character backwards
+"\eh": backward-char
+
+# Alt-f
+# Move cursor one word forward
+"\ef": forward-word
+
+# Alt-b
+# Move cursor one word backwards
+"\eb": backward-word
+
+#######################################################################
+#                Commands for manipulating the history                #
+#######################################################################
+
+# Alt-t
+# Search forward through the history for the string of characters
+# between the start of the current line and the current cursor position
 "\et": history-search-forward
+
+# Alt-c
+# Same as previous, but backwards
 "\ec": history-search-backward
 
-"\eh": backward-char
-"\en": forward-char
+# Alt-.
+# Insert the last argument to the previous command
+"\e.": yank-last-arg
+
+#######################################################################
+#                     Commands for changing text                      #
+#######################################################################
+
+# Ctrl-d
+# Delete the character under the cursor, unless the cursor is at the
+# end of the line
+"\C-d": forward-backward-delete-char
+
+# Ctrl-D
+"\C-D": kill-whole-line
+
+# Ctrl-w
+# This makes it so when you have your cursor (|) positioned here
+# foo/bar/test.txt| and hit C-w, it just deletes up to the first /
+# character
+"\C-w": unix-filename-rubout
 
 # Ctrl-n and Ctrl-h to iterate through possible Tab-completions
 "\C-n": menu-complete
 "\C-h": menu-complete-backward
 
-"\e-": end-of-line
-"\e_": beginning-of-line
+#######################################################################
+#                           Super commands                            #
+#######################################################################
 
+# Alt-l
+# Appends pipe to `less` to the end of the current command and runs it
 "\el": "\C-e | less\C-m"
