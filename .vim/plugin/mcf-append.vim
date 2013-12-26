@@ -1,11 +1,10 @@
 " Append a string to the end of the current line without moving the cursor.
 " (Has no effect if the line already ends with the same string.)
-" Stolen from skwp/dotfiles
+" Inspired by skwp/dotfiles and http://superuser.com/a/691230/210066
 function! AppendString(string)
-    if getline('.') !~ a:string.'$'
-        let original_cursor_position = getpos('.')
-        exec("s/$/".a:string."/")
-        call setpos('.', original_cursor_position)
+    let line = getline('.')
+    if line !~ a:string . '$'
+        call setline('.', line . a:string)
     endif
 endfunction
 
