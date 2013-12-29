@@ -14,7 +14,7 @@ if __name__ == '__main__':
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
 
-    deb(['automake', 'pkg-config', 'libpcre3-dev', 'liblzma-dev'])
+    deb(['automake', 'pkg-config', 'libpcre3-dev', 'liblzma-dev', 'zlib1g-dev'])
 
     with GitRepository('ggreer/the_silver_searcher') as repo:
         subprocess.call(['./build.sh'])

@@ -5,7 +5,7 @@ import os
 import argparse
 import subprocess
 
-from install import GitRepository, make_install
+from install import GitRepository, make_install, deb
 
 
 def replace(e, f):
@@ -23,6 +23,8 @@ if __name__ == '__main__':
      - remove temp folder
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
+
+    deb(['libxft-dev', 'libxinerama-dev', 'libxpm-dev'])
 
     with GitRepository('robm/dzen') as repo:
         # Comment option 1
