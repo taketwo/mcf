@@ -22,7 +22,8 @@ files = [('.Xmodmap', 'Remap CapsLock to Ctrl'),
          ('.mime.types', 'Custom MIME types'),
          ('.mailcap', 'Custom MIME type-to-program mappings'),
          ('texmf', 'Latex packages'),
-         ('.gitconfig', 'GIT configuration file')]
+         ('.gitconfig', 'GIT configuration file'),
+         ('.tmux.conf', 'Tmux configuration file')]
 
 deb_packages = ['python-pip',
                 'exuberant-ctags',
