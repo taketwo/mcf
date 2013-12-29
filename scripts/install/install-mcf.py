@@ -4,6 +4,8 @@
 import os
 import subprocess
 
+from os.path import expanduser, join
+import sys; sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
 import install
 
 
