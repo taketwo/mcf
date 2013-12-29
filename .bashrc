@@ -143,6 +143,12 @@ gdb-last-command ()
   gdb $bin -ex "run $arg"
 }
 
+# set terminal window title
+title ()
+{
+  echo -ne "\033]0;$1\007"
+}
+
 # always forget this
 alias files-in-package='dpkg-query -L'
 alias file-from-package='apt-file search'
