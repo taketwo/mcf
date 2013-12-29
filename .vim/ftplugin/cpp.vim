@@ -21,6 +21,8 @@ def TogglePrivate():
     print '%s → %s' % (word, converted)
 EOF
 
+nnoremap <LocalLeader>a viwbvi&<Esc>
+
 nnoremap <LocalLeader>c :python ToggleCase()<CR>
 python << EOF
 def ToggleCase():
