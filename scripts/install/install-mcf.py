@@ -56,7 +56,7 @@ def decrypt(filename):
     home = os.path.expanduser('~')
     dest = os.path.join(home, filename)
     print '[*]', filename
-    cmd = 'openssl des3 -d -in %s -out %s' % (filename, dest)
+    cmd = 'openssl aes-256-cbc -d -a -in %s -out %s' % (filename, dest)
     subprocess.call(cmd.split())
 
 if __name__ == '__main__':
