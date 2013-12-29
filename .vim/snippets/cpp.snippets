@@ -164,3 +164,10 @@ endsnippet
 snippet map "Map" !
 std::map<${1:size_t}, ${2:float}>$0
 endsnippet
+
+snippet inmap "Check if element is in map" !b
+if (${1:map}.count (${2:element}) == 0)
+{
+  $0
+}
+endsnippet
