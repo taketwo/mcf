@@ -257,7 +257,7 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
   where
-    spawnTerminal  = myTerminal ++ " --disable-factory --name scratchpad"
+    spawnTerminal  = myTerminal ++ " --disable-factory --name scratchpad --zoom 0.8"
     findTerminal   = resource  =? "scratchpad"
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
