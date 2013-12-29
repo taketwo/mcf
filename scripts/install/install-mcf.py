@@ -33,7 +33,10 @@ deb_packages = ['python-pip',
                 'gitk',
                 'git-gui',
                 'powertop',
-                'ssh']
+                'htop',
+                'openvpn',
+                'ssh',
+                'redshift']
 
 pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
 
