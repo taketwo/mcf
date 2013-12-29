@@ -39,8 +39,6 @@ pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
-chmod600 = ['.kebrum']
-
 
 def link(filename, desc):
     home = expanduser('~')
@@ -65,10 +63,7 @@ def decrypt(filename):
     print '[*]', filename
     cmd = 'openssl aes-256-cbc -d -a -in %s -out %s' % (filename, dest)
     subprocess.call(cmd.split())
-
-
-def chmod(filename, mode):
-    os.chmod(filename, mode)
+    os.chmod(dest, 0600)
 
 
 if __name__ == '__main__':
@@ -88,12 +83,6 @@ if __name__ == '__main__':
     print ''
     for f in encrypted:
         decrypt(f)
-    print ''
-
-    print 'Changing ownership for secret files...'
-    print ''
-    for f in chmod600:
-        chmod(f, 0600)
     print ''
 
     install.deb(deb_packages)
