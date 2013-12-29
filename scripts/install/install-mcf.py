@@ -115,8 +115,8 @@ if __name__ == '__main__':
 
     print 'Configuring powerline-shell...'
     print ''
-    powerline = join(mcf, 'scripts', 'bundle', 'powerline-shell', 'install.py')
-    subprocess.call(powerline)
+    os.chdir(join(mcf, 'scripts', 'bundle', 'powerline-shell'))
+    subprocess.call('./install.py')
     print ''
 
     print 'Installation completed.'
