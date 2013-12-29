@@ -105,6 +105,17 @@ ${1:#define _USE_MATH_DEFINES
 }#include <cmath>$0
 endsnippet
 
+snippet fio "File IO" !b
+#include <iostream>
+#include <fstream>
+std::ofstream file("filename.txt");
+if (file.is_open())
+{
+  file << "Test";
+  file.close();
+}
+endsnippet
+
 snippet cout "std::cout output" !b
 std::cout << ${1}${2: << std::endl};$0
 endsnippet
