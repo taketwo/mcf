@@ -2,10 +2,12 @@
 # encoding: utf-8
 
 import os
+import sys
 import subprocess
 
 from os.path import expanduser, join
-import sys; sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
+sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
+
 import install
 
 
@@ -40,9 +42,9 @@ chmod600 = ['.kebrum']
 
 
 def link(filename, desc):
-    home = os.path.expanduser('~')
-    src = os.path.join('.mcf', filename)
-    dest = os.path.join(home, filename)
+    home = expanduser('~')
+    src = join('.mcf', filename)
+    dest = join(home, filename)
     if os.path.lexists(dest):
         os.unlink(dest)
     os.symlink(src, dest)
@@ -57,8 +59,8 @@ def pypi(package):
 
 
 def decrypt(filename):
-    home = os.path.expanduser('~')
-    dest = os.path.join(home, filename)
+    home = expanduser('~')
+    dest = join(home, filename)
     print '[*]', filename
     cmd = 'openssl aes-256-cbc -d -a -in %s -out %s' % (filename, dest)
     subprocess.call(cmd.split())
@@ -69,8 +71,8 @@ def chmod(filename, mode):
 
 
 if __name__ == '__main__':
-    home = os.path.expanduser('~')
-    mcf = os.path.join(home, '.mcf')
+    home = expanduser('~')
+    mcf = join(home, '.mcf')
 
     print 'MCF install script.'
     print ''
@@ -104,7 +106,7 @@ if __name__ == '__main__':
 
     print 'Configuring Gnome terminal...'
     print ''
-    terminal = os.path.join(mcf, 'scripts', 'install', 'setup-terminal.bash')
+    terminal = join(mcf, 'scripts', 'install', 'setup-terminal.bash')
     subprocess.call(terminal)
     print 'Note: run the script manually if the terminal setup failed:'
     print '      $', terminal
@@ -112,7 +114,7 @@ if __name__ == '__main__':
 
     print 'Setting wallpaper...'
     print ''
-    wallpaper = os.path.join(mcf, 'scripts', 'install', 'setup-wallpaper.bash')
+    wallpaper = join(mcf, 'scripts', 'install', 'setup-wallpaper.bash')
     subprocess.call(wallpaper)
     print 'Note: run the script manually if the wallpaper setup failed:'
     print '      $', wallpaper
