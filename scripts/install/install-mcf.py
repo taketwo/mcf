@@ -119,6 +119,13 @@ if __name__ == '__main__':
     print 'Note: run the script manually if the wallpaper setup failed:'
     print '      $', wallpaper
     print ''
+
+    print 'Configuring powerline-shell...'
+    print ''
+    powerline = join(mcf, 'scripts', 'bundle', 'powerline-shell', 'install.py')
+    subprocess.call(powerline)
+    print ''
+
     print 'Installation completed.'
     print 'You will need to install clang manually.'
 
