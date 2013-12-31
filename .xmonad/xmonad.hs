@@ -110,6 +110,7 @@ import System.Posix.Types
 import System.Exit
 import System.IO (Handle, hPutStrLn)
 {-import Control.Exception as E-}
+import Control.Exception
 import Control.Monad (liftM2)
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -453,10 +454,13 @@ viewWeb = windows (W.view "web")
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
 
+catchIO2 :: IO a -> (IOException -> IO a) -> IO a
+catchIO2 = catch
+
 main :: IO ()
 main = do
-  pathHome <- catch (getEnv "HOME") ( const $ return [])
-  d        <- catch (getEnv "DISPLAY") ( const $ return [])
+  pathHome <- catchIO2 (getEnv "HOME") (\_ -> return [])
+  d        <- catchIO2 (getEnv "DISPLAY") (\_ -> return [])
   display  <- openDisplay d
   screenCount <- countScreens
   let pathXmonad   = pathHome ++ "/.xmonad"
