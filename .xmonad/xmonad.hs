@@ -119,6 +119,8 @@ import qualified XMonad.Util.ExtensibleState as XS
 import System.IO (Handle, hPutStrLn)
 
 import Solarized
+import MCF.Paths
+import MCF.Icons
 
 -- Configuration ----------------------------------------------------------- {{{
 
@@ -459,12 +461,9 @@ catchIO2 = catch
 
 main :: IO ()
 main = do
-  pathHome <- catchIO2 (getEnv "HOME") (\_ -> return [])
   d        <- catchIO2 (getEnv "DISPLAY") (\_ -> return [])
   display  <- openDisplay d
   screenCount <- countScreens
-  let pathXmonad   = pathHome ++ "/.xmonad"
-  let pathIcons    = pathXmonad ++ "/icons"
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
@@ -478,7 +477,7 @@ main = do
     , terminal           = myTerminal        -- default terminal program
     , workspaces         = myTopicNames
     , manageHook = manageHook gnomeConfig <+> myManageHook
-    , logHook = (mapM_ dynamicLogWithPP $ zipWith (logHookTopLeft pathIcons) dzensTopLeft [1 .. screenCount])
+    , logHook = (mapM_ dynamicLogWithPP $ zipWith logHookTopLeft dzensTopLeft [1 .. screenCount])
                 >> updatePointer (Relative 0.5 0.5)
     , layoutHook = myLayoutHook
     , handleEventHook    = myHandleEventHook
@@ -490,9 +489,8 @@ main = do
 -- }}}
 -- Status bars ------------------------------------------------------------- {{{
 -- Helper functions -------------------------------------------------------- {{{
-myIconPath = "/home/sergey/.xmonad/icons/"
 wrapTextBox :: String -> String -> String -> String -> String
-wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath  ++ "boxleft.xbm)^ib(1)^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")^i(" ++ myIconPath ++ "boxright.xbm)^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
+wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")" ++ getIcon "boxleft" ++ "^ib(1)^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")" ++ getIcon "boxright" ++ "^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
 
 xdoMod :: String -> String
 xdoMod key = "/usr/bin/xdotool key super+" ++ key
@@ -518,7 +516,7 @@ dzenCommand (S n) = "dzen2"
                     ++ " -fn '" ++ fontDzen ++ "'"
                     ++ " -xs '" ++ show n ++ "'"
 
-logHookTopLeft icons handle s = defaultPP
+logHookTopLeft handle s = defaultPP
   { ppOutput          = hPutStrLn handle
   , ppSort            = fmap (namedScratchpadFilterOutWorkspace.) DO.getSortByOrder
   , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
@@ -532,11 +530,11 @@ logHookTopLeft icons handle s = defaultPP
   , ppTitle           = (" " ++)           . dzenColor   colorFgLight colorBg             . dzenEscape . shorten topBarTitleLength
   , ppLayout          = wrapClickLayout    . dzenColor   colorFgDark  colorBg             .
     (\x -> case x of
-    "MouseResizableTile"        -> "^i(" ++ icons ++ "/tall.xbm)"
-    "Mirror MouseResizableTile" -> "^i(" ++ icons ++ "/mtall.xbm)"
-    "Grid"                      -> "^i(" ++ icons ++ "/grid.xbm)"
-    "Tabbed Bottom Simplest"    -> "^i(" ++ icons ++ "/full.xbm)"
-    "code"                      -> "^i(" ++ icons ++ "/code.xbm)"
+    "MouseResizableTile"        -> getIcon "tall"
+    "Mirror MouseResizableTile" -> getIcon "mtall"
+    "Grid"                      -> getIcon "grid"
+    "Tabbed Bottom Simplest"    -> getIcon "full"
+    "code"                      -> getIcon "code"
     "im"                        -> ""
     "figures"                   -> ""
     _ -> x
