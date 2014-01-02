@@ -2,6 +2,7 @@
 
   set nocompatible                " Use Vim settings, rather then Vi settings
   set number                      " Line numbers are good
+  set relativenumber              " Relative line numbers are good
   set backspace=indent,eol,start  " Allow backspace in insert mode
   set history=1000                " Store lots of :cmdline history
   set showcmd                     " Show incomplete cmds down the bottom

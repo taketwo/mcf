@@ -27,7 +27,6 @@ call vundle#rc()
 
 Bundle "gmarik/vundle"
 
-Bundle "jeffkreeftmeijer/vim-numbertoggle"
 Bundle "godlygeek/tabular"
 Bundle "AndrewRadev/splitjoin.vim"
 Bundle "maxbrunsfeld/vim-yankstack"
