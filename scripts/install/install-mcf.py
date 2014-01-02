@@ -36,6 +36,7 @@ deb_packages = ['python-pip',
                 'htop',
                 'openvpn',
                 'ssh',
+                'curl',
                 'redshift']
 
 pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
