@@ -5,7 +5,6 @@
 {-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, TypeSynonymInstances, MultiParamTypeClasses,  ImplicitParams, PatternGuards #-}
 
 import XMonad hiding ( (|||) )
-import XMonad.Core
 import XMonad.Layout hiding ( (|||) )
 import XMonad.Layout.IM
 import XMonad.Layout.Gaps
@@ -102,15 +101,16 @@ import Graphics.X11.ExtraTypes.XF86
 
 import System.Exit
 import System.Directory
-import System.Environment
+import System.Environment (getEnv)
 
 import System.Posix.IO
 import System.Posix.Process
 import System.Posix.Types
 import System.Exit
 import System.IO (Handle, hPutStrLn)
+import System.IO.Unsafe (unsafePerformIO)
 {-import Control.Exception as E-}
-import Control.Exception
+import qualified Control.Exception as Exception
 import Control.Monad (liftM2)
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -456,19 +456,15 @@ viewWeb = windows (W.view "web")
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
 
-catchIO2 :: IO a -> (IOException -> IO a) -> IO a
-catchIO2 = catch
-
 main :: IO ()
 main = do
-  d        <- catchIO2 (getEnv "DISPLAY") (\_ -> return [])
-  display  <- openDisplay d
-  screenCount <- countScreens
+  screenCount     <- countScreens
+  display         <- openDisplay $ unsafePerformIO $ getEnv "DISPLAY"
   let screen       = defaultScreenOfDisplay display
   let screenWidth  = read (show (widthOfScreen screen))  :: Int
   let screenHeight = read (show (heightOfScreen screen)) :: Int
   dzenTopRight <- spawnPipe (barTopRight screenWidth screenHeight)
-  dzensTopLeft <- mapM (spawnPipe . dzenCommand) [1 .. screenCount]
+  dzensTopLeft <- mapM (spawnPipe . barTopLeft) [1 .. screenCount]
   xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
@@ -507,14 +503,14 @@ wrapLoggerBox fg bg1 bg2 l = do
 -- }}}
 -- Top left (XMonad status) ------------------------------------------------ {{{
 
-dzenCommand (S n) = "dzen2"
-                    ++ " -x '0' -y '0'"
-                    ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show topLeftBarWidth ++ "'"
-                    ++ " -ta 'l'"
-                    ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                    ++ " -bg '" ++ colorBg ++ "'"
-                    ++ " -fn '" ++ fontDzen ++ "'"
-                    ++ " -xs '" ++ show n ++ "'"
+barTopLeft (S n) = "dzen2"
+                   ++ " -x '0' -y '0'"
+                   ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show topLeftBarWidth ++ "'"
+                   ++ " -ta 'l'"
+                   ++ " -fg '" ++ colorWhiteAlt ++ "'"
+                   ++ " -bg '" ++ colorBg ++ "'"
+                   ++ " -fn '" ++ fontDzen ++ "'"
+                   ++ " -xs '" ++ show n ++ "'"
 
 logHookTopLeft handle s = defaultPP
   { ppOutput          = hPutStrLn handle
