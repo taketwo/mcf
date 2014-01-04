@@ -3,6 +3,6 @@ Encoding=UTF-8
 Name=XMonad/GNOME
 Comment=Lightweight tiling window manager
 Exec=gnome-session --session=xmonad
-TryExec=xmonad
+TryExec=/usr/bin/gnome-session
 Icon=custom_xmonad_badge.png
-Type=Application
+Type=XSession
