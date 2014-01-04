@@ -277,7 +277,7 @@ myKeyBindingsTable = concat $ table
 --        key                  M-              M-S-           M-C-           M-S-C-
 table =
   [ k "<Return>"     launchTerminal         __              __                __
-  {-, k "a"            gotoScreen1      sendScreen1   takeScreen1      swapScreen1-}
+  , k "a"            __                     __              __                __
   , k "b"            __               __            launchBrowser        __
   , k "c"            goUp             swapUp        launchCalendar       shrinkMaster
   {-, k "d"            launchWithDmenu      __              __                __-}
@@ -317,6 +317,12 @@ table =
   , k "<F12>"            __           powerOff            __                __
   , k "<Esc>"        nextKeyboardLayout    __           __                __
   , [bind "M1-" "<Tab>" gotoNextWindow]
+  -- Multimedia keys
+  , [bind "" "<XF86AudioMute>"        audioMute]
+  , [bind "" "<XF86AudioLowerVolume>" audioLowerVolume]
+  , [bind "" "<XF86AudioRaiseVolume>" audioRaiseVolume]
+  , [bind "" "<XF86AudioPlay>"        audioPlay]
+  , [bind "" "<XF86AudioStop>"        audioStop]
   ]
   where
     k key m ms mc msc =
@@ -377,6 +383,12 @@ table =
     promptSearch            = Unbound "Prompt search"                   (submap . mySearchMap $ myPromptSearch)
     selectSearch            = Unbound "Search X selection"              (submap . mySearchMap $ mySelectSearch)
     closeWindow             = Unbound "Close the focused window"        (kill)
+    -- Audio control
+    audioMute               = Unbound "Mute audio"                      (spawn "amixer -D pulse set Master toggle")
+    audioLowerVolume        = Unbound "Lower audio volume"              (spawn "amixer set Master 5%-")
+    audioRaiseVolume        = Unbound "Raise audio volume"              (spawn "amixer set Master 5%+")
+    audioPlay               = Unbound "Play/pause audio playback"       (spawn "rhythmbox-client --play-pause")
+    audioStop               = Unbound "Stop audio playback"             (spawn "rhythmbox-client --pause")
 
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
@@ -481,7 +493,6 @@ main = do
     }
     `additionalKeysP`
     myKeyBindingsTable
-
 -- }}}
 -- Status bars ------------------------------------------------------------- {{{
 -- Helper functions -------------------------------------------------------- {{{
