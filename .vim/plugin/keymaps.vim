@@ -1,7 +1,6 @@
 " Enter command mode with semicolon
 
   nnoremap ; :
-  nnoremap : ;
 
   " Experimental
   call arpeggio#load()
@@ -138,11 +137,6 @@ nnoremap <Leader>/ :let @/ = ""<CR>
 
 nnoremap l n
 nnoremap L N
-
-" Use j instead of t in normal/visual mode to (j)ump to
-
-nnoremap j t
-vnoremap j t
 
 " }}}
 " Misc {{{

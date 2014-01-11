@@ -69,6 +69,7 @@ Bundle "nelstrom/vim-visual-star-search"
 Bundle "Valloric/ListToggle"
 Bundle "xolox/vim-misc"
 Bundle "mhinz/vim-startify"
+Bundle "rhysd/clever-f.vim"
 
 " Languages / frameworks
 "Bundle "Rip-Rip/clang_complete"
