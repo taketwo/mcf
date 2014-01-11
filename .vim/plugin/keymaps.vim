@@ -190,9 +190,9 @@ inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
 
 nnoremap <F11> :MBEbw<CR>
 
-" Split line (opposite to S-J joining line)
+" Join line (because J is seized by 'clever-f')
 
-nnoremap <silent> <C-J> gEa<CR><Esc>ew
+nnoremap <C-J> J
 
 " Run make with F9
 
