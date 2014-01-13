@@ -16,7 +16,7 @@ class GitRepository:
             a short form 'USER/REPOSITORY' (e.g. 'taketwo/vim-ros') and will be
             automaticall expanded.
         """
-        if re.search(r'^\w+/\w+$', url):
+        if re.search(r'^[\w_-]+/[\w_-]+$', url):
             self.url = 'https://github.com/%s.git' % url
         else:
             self.url = url
