@@ -1,3 +1,13 @@
+if executable('ag')
+    " Use ag in CtrlP for listing files, lightning fast and respects .gitignore
+    let g:ctrlp_user_command = 'ag %s --files-with-matches -g "" --ignore "\.git$\|\.hg$\|\.svn$"'
+    " ag is fast enough that CtrlP doesn't need to cache
+    let g:ctrlp_use_caching = 0
+else
+    " Custom file listing when inside git repository
+    let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
+endif
+
 " Show dotfiles
 let g:ctrlp_show_hidden = 1
 
@@ -8,11 +18,8 @@ let g:ctrlp_custom_ignore = {
     \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
     \ }
 
-" Custom file listing when inside git repository
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
-
 " Number of items to display
-let g:ctrlp_max_height = 12
+let g:ctrlp_max_height = 15
 
 " Default to filename searches
 let g:ctrlp_by_filename = 1
