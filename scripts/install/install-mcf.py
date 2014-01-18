@@ -32,6 +32,7 @@ deb_packages = ['python-pip',
                 'tree',
                 'gitk',
                 'git-gui',
+                'legit',
                 'powertop',
                 'htop',
                 'openvpn',
@@ -41,7 +42,7 @@ deb_packages = ['python-pip',
                 'tmux',
                 'redshift']
 
-pypi_packages = ['pyflakes', 'pep8', 'flake8', 'legit']
+pypi_packages = ['pyflakes', 'pep8', 'flake8']
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
