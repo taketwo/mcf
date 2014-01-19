@@ -123,6 +123,10 @@ alias agr='sudo apt-get remove'
 alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh'
 alias light='~/.mcf/misc/gnome-terminal-colors-solarized/set_light.sh'
 
+# copy and paste to clipboard
+alias cbc='xsel --clipboard --input'
+alias cbp='xsel --clipboard --output'
+
 # misc
 alias pt='sudo powertop'
 alias ga='gitk --all'
