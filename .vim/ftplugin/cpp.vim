@@ -21,6 +21,23 @@ def TogglePrivate():
     print '%s → %s' % (word, converted)
 EOF
 
+nnoremap <LocalLeader>. :python TogglePointer()<CR>
+python << EOF
+def TogglePointer():
+    import vim
+    vim.command("let pos = getpos('.')")
+    vim.command('normal! el')
+    row, col = vim.current.window.cursor
+    line = vim.current.buffer[row - 1]
+    vim.command("call setpos('.', pos)")
+    if line[col] == '.':
+        vim.current.buffer[row - 1] = line[:col] + '->' + line[col + 1:]
+        print '. → ->'
+    elif line[col:col + 2] == '->':
+        vim.current.buffer[row - 1] = line[:col] + '.' + line[col + 2:]
+        print '-> → .'
+EOF
+
 nnoremap <LocalLeader>a viwbvi&<Esc>
 
 nnoremap <LocalLeader>c :python ToggleCase()<CR>
