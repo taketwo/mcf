@@ -6,6 +6,10 @@ set completion-ignore-case on
 # completion
 set completion-prefix-display-length 2
 
+# Turn off re-reading and re-binding terminal's special characters,
+# which allows to use C-w shortcut
+set bind-tty-special-chars off
+
 #######################################################################
 #                         Commands for moving                         #
 #######################################################################
