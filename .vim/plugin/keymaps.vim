@@ -261,6 +261,8 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   nnoremap <Leader>sh :SidewaysLeft<CR>
   nnoremap <Leader>sn :SidewaysRight<CR>
+  nnoremap <Leader>sH :SidewaysJumpLeft<CR>
+  nnoremap <Leader>sN :SidewaysJumpRight<CR>
 
   " Yankstack
 
