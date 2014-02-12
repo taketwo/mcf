@@ -70,6 +70,7 @@ Bundle "Valloric/ListToggle"
 Bundle "xolox/vim-misc"
 Bundle "mhinz/vim-startify"
 Bundle "rhysd/clever-f.vim"
+Bundle "taketwo/vim-exchange"
 
 " Languages / frameworks
 "Bundle "Rip-Rip/clang_complete"
