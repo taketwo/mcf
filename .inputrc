@@ -85,6 +85,10 @@ set bind-tty-special-chars off
 # Appends pipe to `less` to the end of the current command and runs it
 "\el": "\C-e | less\C-m"
 
+# Alt-s
+# Prepends sudo to the current command and runs it
+"\es": "\C-asudo \C-m"
+
 # Alt-Space
 # Print the contents of the current directory
 "\e ": "ls -lah\C-m"
