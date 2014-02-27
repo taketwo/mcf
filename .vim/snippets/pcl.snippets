@@ -67,3 +67,16 @@ for (const auto& ${2:vertex} : as_range (boost::vertices (${1:graph})))
   $0
 }
 endsnippet
+
+snippet est "Edge source and target" !b
+${3:auto} src = boost::source (${1:edge}, ${2:graph});
+$3 tgt = boost::target ($1, $2);$0
+endsnippet
+
+snippet nv "Number of vertices" b
+boost::num_vertices (${1:graph})$0
+endsnippet
+
+snippet ne "Number of edges" b
+boost::num_edges (${1:graph})$0
+endsnippet
