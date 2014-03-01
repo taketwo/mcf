@@ -2,6 +2,10 @@ snippet opt "Optional tab-stop" i
 \${${1/(\d+).*/$1/}/.+/${2:, }/}\${${1:1}}\${${1/(\d+).*/$1/}/.+/${3}/}
 endsnippet
 
+snippet $ "Tab-stop" i
+\$${2/.+/{/}${1:1}${2/.+/:/}${2:default}${2/.+/}/}$0
+endsnippet
+
 snippet help "Import global helper scripts" !b
 global !p
 from os.path import expanduser, join
