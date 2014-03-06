@@ -70,14 +70,14 @@ endsnippet
 snippet for "For loop" !b
 for (${3:size_t} ${2:i} = 0; $2 < ${1:count}; ++$2)
 {
-  ${0:/* code */}
+  ${VISUAL}$0
 }
 endsnippet
 
 snippet fori "For loop over iterable" !b
 for (const auto& ${1:item} : ${2:items})
 {
-  ${0:/* code */}
+  ${VISUAL}$0
 }
 endsnippet
 
@@ -92,17 +92,12 @@ endsnippet
 snippet try "Try-catch block" !b
 try
 {
-  $0
+  ${VISUAL}$0
 }
 catch (${1:std::runtime_error& e})
 {
   // TODO: handle error
 }
-endsnippet
-
-snippet math "Include math header" !b
-${1:#define _USE_MATH_DEFINES
-}#include <cmath>$0
 endsnippet
 
 snippet fio "File IO" !b
@@ -145,8 +140,14 @@ snippet incs "Include standard library header" !b
 endsnippet
 
 snippet incl "Include local header" !b
-#include "${1:`!v Filename("$1")`}.${2:h}"$0
+#include "${1:`!p snip.rv = snip.basename`}.${2:h}"$0
 endsnippet
+
+snippet math "Include math header" !b
+${1:#define _USE_MATH_DEFINES
+}#include <cmath>$0
+endsnippet
+
 
 #######################################################################
 #                           Random numbers                            #
