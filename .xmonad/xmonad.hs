@@ -573,7 +573,7 @@ myManageHook :: ManageHook
 myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads
 
 manageWindows = composeAll . concat $
-    [ [isDialog --> doFloat]
+    [ [isDialog --> doCenterFloat]
     , [className =? c --> doFloat   | c <- myCFloats]
     , [className =? u --> doUnfloat | u <- myCUnFloats] -- does not work for Gimp actually
     , [title     =? t --> doFloat   | t <- myTFloats]
