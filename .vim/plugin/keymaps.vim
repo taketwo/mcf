@@ -2,11 +2,6 @@
 
   nnoremap ; :
 
-  " Experimental
-  call arpeggio#load()
-  "inoremap hh <Esc>
-  "inoremap uu <Esc>
-
 " Move around {{{
 
 " Left, right, up, and down
@@ -251,11 +246,6 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
   " DelimitMate
 
   imap <C-l> <Plug>delimitMateS-Tab
-
-  " UltiSnip
-
-  " Temporary hack - enable autocompletion in visual mode
-  Arpeggio xmap wv :call UltiSnips_SaveLastVisualSelection()<CR>gvs
 
   " Sideways
 
