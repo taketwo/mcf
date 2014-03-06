@@ -93,6 +93,9 @@ Bundle "kana/vim-textobj-user"
 Bundle "kana/vim-textobj-function"
 Bundle "lucapette/vim-textobj-underscore"
 
+" Snippets
+Bundle 'honza/vim-snippets'
+
 " Try these plugins:
 "Bundle "sjl/splice.vim"
 "Bundle "tpope/vim-repeat"
