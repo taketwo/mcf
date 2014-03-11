@@ -65,6 +65,13 @@ for (const auto& ${2:edge} : as_range (boost::edges (${1:graph})))
 }
 endsnippet
 
+snippet foroe "Iterate over out edges of a vertex" !b
+for (const auto& ${3:edge} : as_range (boost::out_edges (${1:vertex}, ${2:graph})))
+{
+  $0
+}
+endsnippet
+
 snippet forv "Iterate over graph vertices" !b
 for (const auto& ${2:vertex} : as_range (boost::vertices (${1:graph})))
 {
@@ -84,3 +91,12 @@ endsnippet
 snippet ne "Number of edges" b
 boost::num_edges (${1:graph})$0
 endsnippet
+
+snippet get "Boost get" w
+boost::get (boost::${1:edge_weight}, ${2:graph}${3/.+/, /}${3:edge}${3/.+//})$0
+endsnippet
+
+snippet put "Boost put" w
+boost::put (boost::${1:edge_weight}, ${2:graph}, ${3:edge}, ${4:value})$0
+endsnippet
+
