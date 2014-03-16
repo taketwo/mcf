@@ -84,19 +84,19 @@ ${3:auto} src = boost::source (${1:edge}, ${2:graph});
 $3 tgt = boost::target ($1, $2);$0
 endsnippet
 
-snippet nv "Number of vertices" b
+snippet nv "Number of vertices" w
 boost::num_vertices (${1:graph})$0
 endsnippet
 
-snippet ne "Number of edges" b
+snippet ne "Number of edges" w
 boost::num_edges (${1:graph})$0
 endsnippet
 
 snippet get "Boost get" w
-boost::get (boost::${1:edge_weight}, ${2:graph}${3/.+/, /}${3:edge}${3/.+//})$0
+boost::get (boost::${1:edge_weight}, ${2:graph}${3/.+/, /}${3:${1/([^_]+).*/$1/}}${3/.+//})$0
 endsnippet
 
 snippet put "Boost put" w
-boost::put (boost::${1:edge_weight}, ${2:graph}, ${3:edge}, ${4:value})$0
+boost::put (boost::${1:edge_weight}, ${2:graph}, ${3:${1/([^_]+).*/$1/}}, ${4:value})$0
 endsnippet
 
