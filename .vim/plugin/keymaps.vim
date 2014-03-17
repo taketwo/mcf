@@ -137,10 +137,8 @@ nnoremap L N
 " Misc {{{
 
 " Make Y consistent with C and D
-" (Yes, we have to use nmap instead of nnoremap, otherwise
-"  yankstack won't pick up these mappings.)
 
-nmap Y y$
+nnoremap Y y$
 
 " Copy entire word even if the cursor is halfway inside the word
 
@@ -254,7 +252,6 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
   nnoremap <Leader>sH :SidewaysJumpLeft<CR>
   nnoremap <Leader>sN :SidewaysJumpRight<CR>
 
-  " Yankstack
-
-  nmap <Leader>n <Plug>yankstack_substitute_older_paste
-  nmap <Leader>h <Plug>yankstack_substitute_newer_paste
+" Some keys that are still free
+"
+" C-f, C-b : scroll up/down by default

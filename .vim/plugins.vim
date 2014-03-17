@@ -29,7 +29,6 @@ Bundle "gmarik/vundle"
 
 Bundle "godlygeek/tabular"
 Bundle "AndrewRadev/splitjoin.vim"
-Bundle "maxbrunsfeld/vim-yankstack"
 Bundle "henrik/vim-indexed-search"
 Bundle "scrooloose/nerdtree"
 Bundle "jistr/vim-nerdtree-tabs"
