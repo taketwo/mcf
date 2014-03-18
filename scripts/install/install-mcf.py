@@ -23,7 +23,8 @@ files = [('.Xmodmap', 'Remap CapsLock to Ctrl'),
          ('.mailcap', 'Custom MIME type-to-program mappings'),
          ('texmf', 'Latex packages'),
          ('.gitconfig', 'GIT configuration file'),
-         ('.tmux.conf', 'Tmux configuration file')]
+         ('.tmux.conf', 'Tmux configuration file'),
+         (('fish', '.config/fish'), 'Fish configuration folder')]
 
 deb_packages = ['python-pip',
                 'exuberant-ctags',
@@ -40,17 +41,19 @@ deb_packages = ['python-pip',
                 'curl',
                 'trayer',
                 'tmux',
-                'redshift']
+                'redshift',
+                'fish']
 
 pypi_packages = ['pyflakes', 'pep8', 'flake8']
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
 
-def link(filename, desc):
+def link(paths, desc):
     home = expanduser('~')
-    src = join('.mcf', filename)
-    dest = join(home, filename)
+    paths = paths if isinstance(paths, tuple) else (paths, paths)
+    src = join(home, '.mcf', paths[0])
+    dest = join(home, paths[1])
     if os.path.lexists(dest):
         os.unlink(dest)
     os.symlink(src, dest)
