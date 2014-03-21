@@ -72,6 +72,13 @@ for (const auto& ${3:edge} : as_range (boost::out_edges (${1:vertex}, ${2:graph}
 }
 endsnippet
 
+snippet forav "Iterate over adjacent vertices of a vertex" !b
+for (const auto& ${3:neighbor} : as_range (boost::adjacent_vertices (${1:vertex}, ${2:graph})))
+{
+  $0
+}
+endsnippet
+
 snippet forv "Iterate over graph vertices" !b
 for (const auto& ${2:vertex} : as_range (boost::vertices (${1:graph})))
 {
