@@ -203,7 +203,7 @@ data TopicItem = TI { topicName   :: Topic
 myTopics :: [TopicItem]
 myTopics =
   [ TI "web"     ""                                    (spawn myBrowser)
-  , TI "music"   ""                                    (spawn "rhythmbox")
+  , TI "music"   ""
   , TI "xmonad"  ".xmonad"                             (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , TI "mcf"     ".mcf"                                (spawnShell)
   , TI "tocs"    "/media/Workspace/Projects/tocs"      (spawnShell)
