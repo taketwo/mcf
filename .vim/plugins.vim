@@ -77,6 +77,7 @@ Bundle "tpope/vim-markdown"
 Bundle "nelstrom/vim-markdown-folding"
 Bundle "smancill/conky-syntax.vim"
 Bundle "taketwo/vim-ros"
+Bundle "dag/vim-fish"
 
 " Git related
 Bundle "gregsexton/gitv"
