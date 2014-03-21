@@ -1,6 +1,7 @@
 nnoremap <C-a> :python NextCommand()<CR>
 nnoremap <C-x> :python NextCommand(-1)<CR>
 nnoremap <Space> :python NextCommand()<CR>
+
 python << EOF
 def NextCommand(delta=1):
     import vim
@@ -12,3 +13,13 @@ def NextCommand(delta=1):
     except:
         return
 EOF
+
+" Change command by pressing "P", "R", etc.
+for cmd in ['pick', 'reword', 'edit', 'squash', 'fixup']
+    execute 'nnoremap '.toupper(cmd[0]).' :call <SID>ChangeCommand("'.cmd.'")<CR>'
+    execute 'vnoremap '.toupper(cmd[0]).' :call <SID>ChangeCommand("'.cmd.'")<CR>'
+endfor
+
+function! s:ChangeCommand(command)
+    execute 's/^\w\+ /'.a:command.' /'
+endfunction
