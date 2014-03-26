@@ -323,6 +323,11 @@ table =
   , [bind "" "<XF86AudioRaiseVolume>" audioRaiseVolume]
   , [bind "" "<XF86AudioPlay>"        audioPlay]
   , [bind "" "<XF86AudioStop>"        audioStop]
+  , [bind "" "<XF86Launch5>"          audioRate1]
+  , [bind "" "<XF86Launch6>"          audioRate2]
+  , [bind "" "<XF86Launch7>"          audioRate3]
+  , [bind "" "<XF86Launch8>"          audioRate4]
+  , [bind "" "<XF86Launch9>"          audioRate5]
   ]
   where
     k key m ms mc msc =
@@ -389,6 +394,11 @@ table =
     audioRaiseVolume        = Unbound "Raise audio volume"              (spawn "amixer set Master 5%+")
     audioPlay               = Unbound "Play/pause audio playback"       (spawn "rhythmbox-client --play-pause")
     audioStop               = Unbound "Stop audio playback"             (spawn "rhythmbox-client --pause")
+    audioRate1              = Unbound "Rate current song with 1 star"   (spawn "rhythmbox-client --set-rating 1")
+    audioRate2              = Unbound "Rate current song with 2 star"   (spawn "rhythmbox-client --set-rating 2")
+    audioRate3              = Unbound "Rate current song with 3 star"   (spawn "rhythmbox-client --set-rating 3")
+    audioRate4              = Unbound "Rate current song with 4 star"   (spawn "rhythmbox-client --set-rating 4")
+    audioRate5              = Unbound "Rate current song with 5 star"   (spawn "rhythmbox-client --set-rating 5")
 
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
