@@ -1,16 +1,16 @@
 " Vim plugin configuration
 " Run this from command line to install/update plugins:
-" vim --noplugin -u vim/vundles.vim -N "+set hidden" "+syntax on" +BundleClean! +BundleInstall +qall
+" vim --noplugin -u vim/vundles.vim -N "+set hidden" "+syntax on" +PluginClean! +PluginInstall +qall
 
 " Setting up Vundle - the vim plugin bundler.
 " Solution from: https://github.com/fisadev/fisa-vim-config
 let just_installed_vundle = 0
-let vundle_readme = expand('~/.vim/bundle/vundle/README.md')
+let vundle_readme = expand('~/.vim/bundle/Vundle/README.md')
 if !filereadable(vundle_readme)
     echo "Installing Vundle..."
     echo ""
     silent !mkdir -p ~/.vim/bundle
-    silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
+    silent !git clone https://github.com/gmarik/Vundle ~/.vim/bundle/Vundle
     let just_installed_vundle = 1
 endif
 
@@ -22,88 +22,88 @@ endfor
 
 filetype off " Filetype off is required by vundle
 
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle/
 call vundle#rc()
 
-Bundle "gmarik/vundle"
+Plugin 'gmarik/Vundle'
 
-Bundle "godlygeek/tabular"
-Bundle "AndrewRadev/splitjoin.vim"
-Bundle "henrik/vim-indexed-search"
-Bundle "scrooloose/nerdtree"
-Bundle "jistr/vim-nerdtree-tabs"
-Bundle "skwp/vim-easymotion"
-Bundle "skwp/vim-colors-solarized"
-Bundle "bling/vim-airline"
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle "kshenoy/vim-signature"
-Bundle "briandoll/change-inside-surroundings.vim"
-Bundle "nathanaelkane/vim-indent-guides"
-Bundle "kien/ctrlp.vim"
-Bundle "majutsushi/tagbar"
-Bundle "vim-scripts/AutoTag"
-Bundle "Raimondi/delimitMate"
-Bundle "scrooloose/nerdcommenter"
-Bundle "scrooloose/syntastic"
-Bundle "ervandew/supertab"
-Bundle "SirVer/ultisnips"
-Bundle "tpope/vim-surround"
-Bundle "embear/vim-localvimrc"
-Bundle "fholgado/minibufexpl.vim"
-Bundle "szw/vim-g"
-Bundle "AndrewRadev/sideways.vim"
-Bundle "dantler/vim-alternate"
-Bundle "tpope/vim-speeddating"
-Bundle "tpope/vim-eunuch"
-Bundle "tpope/vim-dispatch"
-Bundle "taketwo/vim-ipython"
-Bundle "rking/ag.vim"
-Bundle "Peeja/vim-cdo"
-Bundle "terryma/vim-expand-region"
-Bundle "tpope/vim-abolish"
-Bundle "sjl/gundo.vim"
-Bundle "nelstrom/vim-visual-star-search"
-Bundle "Valloric/ListToggle"
-Bundle "xolox/vim-misc"
-Bundle "mhinz/vim-startify"
-Bundle "rhysd/clever-f.vim"
-Bundle "taketwo/vim-exchange"
+Plugin 'godlygeek/tabular'
+Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'henrik/vim-indexed-search'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'skwp/vim-easymotion'
+Plugin 'skwp/vim-colors-solarized'
+Plugin 'bling/vim-airline'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'kshenoy/vim-signature'
+Plugin 'briandoll/change-inside-surroundings.vim'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'kien/ctrlp.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/AutoTag'
+Plugin 'Raimondi/delimitMate'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'ervandew/supertab'
+Plugin 'SirVer/ultisnips'
+Plugin 'tpope/vim-surround'
+Plugin 'embear/vim-localvimrc'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'szw/vim-g'
+Plugin 'AndrewRadev/sideways.vim'
+Plugin 'dantler/vim-alternate'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-dispatch'
+Plugin 'taketwo/vim-ipython'
+Plugin 'rking/ag.vim'
+Plugin 'Peeja/vim-cdo'
+Plugin 'terryma/vim-expand-region'
+Plugin 'tpope/vim-abolish'
+Plugin 'sjl/gundo.vim'
+Plugin 'nelstrom/vim-visual-star-search'
+Plugin 'Valloric/ListToggle'
+Plugin 'xolox/vim-misc'
+Plugin 'mhinz/vim-startify'
+Plugin 'rhysd/clever-f.vim'
+Plugin 'taketwo/vim-exchange'
 
 " Languages / frameworks
-"Bundle "Rip-Rip/clang_complete"
-Bundle "davidhalter/jedi-vim"
-Bundle "tpope/vim-markdown"
-Bundle "nelstrom/vim-markdown-folding"
-Bundle "smancill/conky-syntax.vim"
-Bundle "taketwo/vim-ros"
-Bundle "dag/vim-fish"
+"Plugin 'Rip-Rip/clang_complete'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'tpope/vim-markdown'
+Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'smancill/conky-syntax.vim'
+Plugin 'taketwo/vim-ros'
+Plugin 'dag/vim-fish'
 
 " Git related
-Bundle "gregsexton/gitv"
-Bundle "tpope/vim-fugitive"
-Bundle "tpope/vim-git"
+Plugin 'gregsexton/gitv'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-git'
 
 " Text objects
-Bundle "michaeljsmith/vim-indent-object"
-Bundle "coderifous/textobj-word-column.vim"
-Bundle "kana/vim-textobj-entire"
-Bundle "kana/vim-textobj-user"
-Bundle "kana/vim-textobj-function"
-Bundle "lucapette/vim-textobj-underscore"
+Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'coderifous/textobj-word-column.vim'
+Plugin 'kana/vim-textobj-entire'
+Plugin 'kana/vim-textobj-user'
+Plugin 'kana/vim-textobj-function'
+Plugin 'lucapette/vim-textobj-underscore'
 
 " Snippets
-Bundle 'honza/vim-snippets'
+Plugin 'honza/vim-snippets'
 
 " Try these plugins:
-"Bundle "sjl/splice.vim"
-"Bundle "tpope/vim-repeat"
-"Bundle "tpope/vim-unimpaired"
-"Bundle "xolox/vim-notes"
+"Plugin 'sjl/splice.vim'
+"Plugin 'tpope/vim-repeat'
+"Plugin 'tpope/vim-unimpaired'
+"Plugin 'xolox/vim-notes'
 
 filetype plugin indent on " Filetype plugin indent on is required by Vundle
 
 if just_installed_vundle
-    BundleClean!
-    BundleInstall!
+    PluginClean!
+    PluginInstall!
 endif
