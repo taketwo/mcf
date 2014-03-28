@@ -202,19 +202,20 @@ data TopicItem = TI { topicName   :: Topic
 
 myTopics :: [TopicItem]
 myTopics =
-  [ TI "web"     ""                                    (spawn myBrowser)
-  , ti "music"   ""
-  , ti "papers"  ""
-  , ti "im"      ""
-  , TI "mcf"     ".mcf"                                (spawnShell)
-  , TI "tocs"    "/media/Workspace/Projects/tocs"      (spawnShell)
-  , TI "eval"    "/media/Workspace/Projects/tocs/data" (spawnShell)
-  , TI "blog"    "/media/Workspace/Projects/tocs/blog" (blog)
-  , TI "ipy"     ""                                    (spawnInShell "ipython --pylab")
-  , TI "mp3"     ""                                    (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
-  , TI "xmonad"  ".xmonad"                             (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
-  , ti "figures" ""
-  , ti "gimp"    ""
+  [ TI "web"      ""                                    (spawn myBrowser)
+  , ti "music"    ""
+  , TI "papers"   "Downloads/papers"                    (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
+  , TI "mendeley" ""                                    (spawn "mendeleydesktop")
+  , ti "im"       ""
+  , TI "mcf"      ".mcf"                                (spawnShell)
+  , TI "tocs"     "/media/Workspace/Projects/tocs"      (spawnShell)
+  , TI "eval"     "/media/Workspace/Projects/tocs/data" (spawnShell)
+  , TI "blog"     "/media/Workspace/Projects/tocs/blog" (blog)
+  , TI "ipy"      ""                                    (spawnInShell "ipython --pylab")
+  , TI "mp3"      ""                                    (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
+  , TI "xmonad"   ".xmonad"                             (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
+  , ti "figures"  ""
+  , ti "gimp"     ""
   ]
   where
     -- Make a default topic item that just spawns a shell.
@@ -590,7 +591,7 @@ manageWindows = composeAll . concat $
     , [resource  =? r --> doFloat   | r <- myRFloats]
     , [resource  =? i --> doIgnore  | i <- myIgnores]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "papers" | x <- myPapersShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "music" | x <- myMusicShifts]
     ]
@@ -603,7 +604,7 @@ manageWindows = composeAll . concat $
     myRFloats = []
     myIgnores = []
     myGimpShifts = ["Gimp"]
-    myPapersShifts = ["Mendeley Desktop"]
+    myMendeleyShifts = ["Mendeley Desktop"]
     myMusicShifts = ["Rhythmbox", "Workrave"]
     myIMShifts = ["Skype"
                  , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
