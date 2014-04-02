@@ -14,7 +14,7 @@ snippet "Ev(z|[o1]|r)" "Eigen::Vector::Zero/Ones/Random" r
 Eigen::Vector${1:Xf}::`!p
 m = {'z': 'Zero', 'o': 'Ones', '1': 'Ones', 'r': 'Random'}
 snip.rv += m[match.group(1)]
-` (${2:N}, ${3:M})$0
+` (${2:N})$0
 endsnippet
 
 snippet "Em(i|z|[o1]|r)" "Eigen::Matrix::Identity/Zero/Ones/Random" r
