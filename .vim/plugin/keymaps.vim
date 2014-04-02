@@ -189,8 +189,8 @@ nnoremap <C-J> J
 
 " Run make with F9
 
-nnoremap <F9> :Make<CR>
-inoremap <F9> <C-o>:Make<CR>
+nnoremap <F9> :MakeTarget<CR>
+inoremap <F9> <C-o>:MakeTarget<CR>
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
 
