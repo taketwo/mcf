@@ -202,18 +202,19 @@ data TopicItem = TI { topicName   :: Topic
 
 myTopics :: [TopicItem]
 myTopics =
-  [ TI "web"      ""                                    (spawn myBrowser)
+  [ TI "web"      ""                                         (spawn myBrowser)
   , ti "music"    ""
-  , TI "papers"   "Downloads/papers"                    (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
-  , TI "mendeley" ""                                    (spawn "mendeleydesktop")
+  , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
+  , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , ti "im"       ""
-  , TI "mcf"      ".mcf"                                (spawnShell)
-  , TI "tocs"     "/media/Workspace/Projects/tocs"      (spawnShell)
-  , TI "eval"     "/media/Workspace/Projects/tocs/data" (spawnShell)
-  , TI "blog"     "/media/Workspace/Projects/tocs/blog" (blog)
-  , TI "ipy"      ""                                    (spawnInShell "ipython --pylab")
-  , TI "mp3"      ""                                    (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
-  , TI "xmonad"   ".xmonad"                             (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
+  , TI "mcf"      ".mcf"                                     (spawnShell)
+  , TI "tocs"     "/media/Workspace/Projects/tocs"           (spawnShell)
+  , TI "eval"     "/media/Workspace/Projects/tocs/data"      (spawnShell)
+  , TI "blog"     "/media/Workspace/Projects/tocs/blog"      (blog)
+  , TI "pcl"      "/media/Workspace/Libraries/pcl-canonical" (spawnShell)
+  , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
+  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
+  , TI "xmonad"   ".xmonad"                                  (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , ti "figures"  ""
   , ti "gimp"     ""
   ]
