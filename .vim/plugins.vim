@@ -23,7 +23,7 @@ endfor
 filetype off " Filetype off is required by vundle
 
 set rtp+=~/.vim/bundle/Vundle/
-call vundle#rc()
+call vundle#begin()
 
 Plugin 'gmarik/Vundle'
 
@@ -101,6 +101,7 @@ Plugin 'honza/vim-snippets'
 "Plugin 'tpope/vim-unimpaired'
 "Plugin 'xolox/vim-notes'
 
+call vundle#end()
 filetype plugin indent on " Filetype plugin indent on is required by Vundle
 
 if just_installed_vundle
