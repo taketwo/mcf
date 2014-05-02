@@ -95,9 +95,13 @@ vnoremap <C-n> :><CR>gv
   map <Leader>* <Plug>Ysurroundiw*
   vnoremap <Leader>* c*<C-R>"*<ESC>
 
-  " Surround a word with `backticks`
+  " Surround a word with `backticks` (useful for Markdown)
   map <Leader>` <Plug>Ysurroundiw`
   vnoremap <Leader>` c`<C-R>"`<ESC>
+
+  " Surround a word with $dollars$ (useful for typesetting math in LaTeX)
+  map <Leader>$ <Plug>Ysurroundiw$
+  vnoremap <Leader>$ c$<C-R>"$<ESC>
 
   " Delete surrounding
   nmap ds <Plug>Dsurround
