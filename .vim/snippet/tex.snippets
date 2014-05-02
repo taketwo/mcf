@@ -1,4 +1,3 @@
-
 snippet cite "Cite" i
 \cite{${1:${VISUAL}}}$0
 endsnippet
@@ -24,9 +23,9 @@ endsnippet
 #######################################################################
 
 snippet "Cha(p(ter)?)?" "Chapter with fold markers" !br
-\chapter { ${1:Chapter name}
+\chapter{${1:Chapter name}
 %==========================================================================={{{
-\label{cha:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}} }
+\label{cha:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}}
 
 $0
 
@@ -34,9 +33,9 @@ $0
 endsnippet
 
 snippet "Sec(t(ion)?)?" "Section with fold markers" !br
-\section { ${1:Section name}
+\section{${1:Section name}
 %---------------------------------------------------------------------------{{{
-\label{sec:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}} }
+\label{sec:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}}
 
 $0
 
@@ -44,9 +43,9 @@ $0
 endsnippet
 
 snippet "Sub(s(ec(tion)?)?)?" "Subsection with fold markers" !br
-\subsection { ${1:Subsection name}
+\subsection{${1:Subsection name}
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {{{
-\label{sub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}} }
+\label{sub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}}
 
 $0
 
@@ -88,3 +87,22 @@ endsnippet
 snippet it "Item" !b
 \item $0
 endsnippet
+
+#######################################################################
+#                               Figures                               #
+#######################################################################
+
+snippet fig "Figure environment" b
+\begin{figure}${1:[htpb]}
+	\centerline
+	{
+		\includegraphics[width=${2:1.0}\textwidth]{${3:filename}}
+	}
+	\caption
+	{
+		$0
+	}
+	\label{fig:${4:$3}}
+\end{figure}
+endsnippet
+
