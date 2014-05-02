@@ -44,7 +44,7 @@ deb_packages = ['python-pip',
                 'redshift',
                 'fish']
 
-pypi_packages = ['pyflakes', 'pep8', 'flake8']
+pypi_packages = ['pyflakes', 'pep8', 'flake8', 'unidecode', 'beautifulsoup4']
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
