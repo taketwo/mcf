@@ -11,7 +11,7 @@ use_spacer none
 
 TEXT
 ${if_running rhythmbox}\
-${texeci 5 ~/.xmonad/rhythmbox.sh}\
+${texeci 15 ~/.xmonad/rhythmbox.sh}\
  | \
 ${endif}\
 ^ca(1, xdotool key super+Escape)\
