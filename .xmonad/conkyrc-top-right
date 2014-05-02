@@ -35,7 +35,7 @@ ${if_match ${battery_percent BAT0} < 10}^fg(\#ff7272)${endif}\
 ${battery_percent BAT0} \
 ${endif}\
 ## Date and time ##
-^ca(1, xdotool key super+ctrl+c)\
+^ca(1, xdotool key super+ctrl+c) \
 ${time \
 ^fg(#ffffff)%A^fg() \
 %Y\
