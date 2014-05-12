@@ -14,7 +14,7 @@ class GitRepository:
         url: str
             URL of the repository to clone. Github repositories can be given in
             a short form 'USER/REPOSITORY' (e.g. 'taketwo/vim-ros') and will be
-            automaticall expanded.
+            automatically expanded.
         """
         if re.search(r'^[\w_-]+/[\w_-]+$', url):
             self.url = 'https://github.com/%s.git' % url
@@ -41,18 +41,33 @@ def make_install():
 
 def deb(package):
     p = package if isinstance(package, list) else [package]
-    print 'Installing debian package%s:' % ('s' if len(p) > 1 else '')
+    print('Installing debian package%s:' % ('s' if len(p) > 1 else ''))
     for pk in p:
-        print '  [*]', pk
+        print('  [*]', pk)
     cmd = 'sudo apt-get install --force-yes -y %s' % ' '.join(p)
+    subprocess.call(cmd.split())
+
+
+def pacman(package):
+    p = package if isinstance(package, list) else [package]
+    print('Installing pacman package%s:' % ('s' if len(p) > 1 else ''))
+    for pk in p:
+        print('  [*]', pk)
+    cmd = 'sudo pacman --noconfirm -S %s' % ' '.join(p)
+    subprocess.call(cmd.split())
+
+
+def pip(package):
+    print('[*]', package)
+    cmd = 'sudo pip install --upgrade %s' % package
     subprocess.call(cmd.split())
 
 
 def cabal(package, local=False):
     p = package if isinstance(package, list) else [package]
-    print 'Installing cabal package%s:' % ('s' if len(p) > 1 else '')
+    print('Installing cabal package%s:' % ('s' if len(p) > 1 else ''))
     for pk in p:
-        print '  [*]', pk
+        print('  [*]', pk)
     if local:
         cmd = 'cabal install --force-reinstalls %s' % ' '.join(p)
     else:
