@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 import os
@@ -44,7 +44,7 @@ deb_packages = ['python-pip',
                 'redshift',
                 'fish']
 
-pypi_packages = ['pyflakes', 'pep8', 'flake8', 'unidecode', 'beautifulsoup4']
+pip_packages = ['pyflakes', 'pep8', 'flake8', 'unidecode', 'beautifulsoup4']
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
@@ -57,20 +57,14 @@ def link(paths, desc):
     if os.path.lexists(dest):
         os.unlink(dest)
     os.symlink(src, dest)
-    print '[*]', desc
-    print '   ', dest, '->', src
-
-
-def pypi(package):
-    print '[*]', package
-    cmd = 'sudo pip install --upgrade %s' % package
-    subprocess.call(cmd.split())
+    print('[*]', desc)
+    print('   ', dest, '->', src)
 
 
 def decrypt(filename):
     home = expanduser('~')
     dest = join(home, filename)
-    print '[*]', filename
+    print('[*]', filename)
     cmd = 'openssl aes-256-cbc -d -a -in %s -out %s' % (filename, dest)
     subprocess.call(cmd.split())
     os.chmod(dest, 0600)
@@ -80,56 +74,50 @@ if __name__ == '__main__':
     home = expanduser('~')
     mcf = join(home, '.mcf')
 
-    print 'MCF install script.'
-    print ''
+    print('MCF install script.')
+    print('')
 
-    print 'Creating symlinks...'
-    print ''
+    print('Creating symlinks...')
+    print('')
     for f, d in files:
         link(f, d)
-    print ''
+    print('')
 
-    print 'Decrypting secret files...'
-    print ''
+    print('Decrypting secret files...')
+    print('')
     for f in encrypted:
         decrypt(f)
-    print ''
+    print('')
 
     install.deb(deb_packages)
-    print ''
+    print('')
 
-    print 'Installing python packages...'
-    print ''
-    for p in pypi_packages:
-        pypi(p)
-    print ''
+    print('Installing python packages...')
+    print('')
+    for p in pip_packages:
+        install.pip(p)
+    print('')
 
-    print 'Configuring Gnome terminal...'
-    print ''
+    print('Configuring Gnome terminal...')
+    print('')
     terminal = join(mcf, 'scripts', 'install', 'setup-terminal.bash')
     subprocess.call(terminal)
-    print 'Note: run the script manually if the terminal setup failed:'
-    print '      $', terminal
-    print ''
+    print('Note: run the script manually if the terminal setup failed:')
+    print('      $', terminal)
+    print('')
 
-    print 'Setting wallpaper...'
-    print ''
+    print('Setting wallpaper...')
+    print('')
     wallpaper = join(mcf, 'scripts', 'install', 'setup-wallpaper.bash')
     subprocess.call(wallpaper)
-    print 'Note: run the script manually if the wallpaper setup failed:'
-    print '      $', wallpaper
-    print ''
+    print('Note: run the script manually if the wallpaper setup failed:')
+    print('      $', wallpaper)
+    print('')
 
-    print 'Configuring powerline-shell...'
-    print ''
+    print('Configuring powerline-shell...')
+    print('')
     os.chdir(join(mcf, 'scripts', 'bundle', 'powerline-shell'))
-    subprocess.call('./install.py')
-    print ''
+    subprocess.call(['python2', 'install.py'])
+    print('')
 
-    print 'Installation completed.'
-    print 'You will need to install clang manually.'
-
-# Clang installation.
-# 1) Follow instructions at http://clang.llvm.org/get_started.html
-# 2) Configure with options:
-#    ../configure --enable-optimized --disable-assertions --prefix=/opt/llvm
+    print('Installation completed.')
