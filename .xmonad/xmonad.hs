@@ -119,19 +119,13 @@ import qualified XMonad.Util.ExtensibleState as XS
 import System.IO (Handle, hPutStrLn)
 
 import Solarized
+import MCF.Apps
 import MCF.Paths
 import MCF.Icons
 
--- Configuration ----------------------------------------------------------- {{{
-
-myTerminal = "gnome-terminal"
-myBrowser  = "chromium-browser"
-myShell    = "bash"
-myFont     = "Liberation Mono"
-
--- }}}
 -- Appearance -------------------------------------------------------------- {{{
 
+myFont               = "Liberation Mono"
 fontXP               = "xft:" ++ myFont ++ ":pixelsize=11"
 fontDzen             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
 colorBg              = "#3c3b37"
@@ -202,7 +196,7 @@ data TopicItem = TI { topicName   :: Topic
 
 myTopics :: [TopicItem]
 myTopics =
-  [ TI "web"      ""                                         (spawn myBrowser)
+  [ TI "web"      ""                                         (spawn appBrowser)
   , ti "music"    ""
   , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
@@ -214,7 +208,7 @@ myTopics =
   , TI "pcl"      "/media/Workspace/Libraries/pcl-canonical" (spawnShell)
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
-  , TI "xmonad"   ".xmonad"                                  (edit "/home/sergey/.mcf/.xmonad/xmonad.hs")
+  , TI "xmonad"   ".xmonad"                                  (appEdit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , ti "figures"  ""
   , ti "gimp"     ""
   ]
@@ -223,12 +217,9 @@ myTopics =
     ti t d = TI t d spawnShell
 
 blog = do
-  spawn (myBrowser ++ " --new-window file:///media/Workspace/Projects/tocs/blog/repository/blogweb/_build/html/tocs/alexandrov/tmp.html")
+  appBrowse "--new-window file:///media/Workspace/Projects/tocs/blog/repository/blogweb/_build/html/tocs/alexandrov/tmp.html"
   spawnShell
   spawnShell
-
-edit :: String -> X ()
-edit f = spawn (myTerminal ++ " -e 'vim " ++ f ++ "'")
 
 myTopicNames :: [Topic]
 myTopicNames = map topicName myTopics
@@ -246,10 +237,10 @@ spawnShell :: X ()
 spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
 spawnShellIn :: Dir -> X ()
-spawnShellIn dir = spawn $ myTerminal ++ " --working-directory " ++ dir
+spawnShellIn dir = spawn $ appTerminal ++ " --working-directory " ++ dir
 
 spawnInShell :: String -> X ()
-spawnInShell cmd = spawn $ myTerminal ++ " -e '" ++ cmd ++ "'"
+spawnInShell cmd = spawn $ appTerminal ++ " -e '" ++ cmd ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
@@ -262,7 +253,7 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
   where
-    spawnTerminal  = myTerminal ++ " --disable-factory --name scratchpad --zoom 0.8"
+    spawnTerminal  = appTerminal ++ " --disable-factory --name scratchpad --zoom 0.8"
     findTerminal   = resource  =? "scratchpad"
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
@@ -345,10 +336,10 @@ table =
 
     -- Actions
     -- Launch program
-    launchBrowser           = Unbound "Launch browser"                  (spawn myBrowser)
-    launchTerminal          = Unbound "Launch terminal"                 (spawn myTerminal)
+    launchBrowser           = Unbound "Launch browser"                  (spawn appBrowser)
+    launchTerminal          = Unbound "Launch terminal"                 (spawn appTerminal)
     launchKupfer            = Unbound "Launch kupfer"                   (spawn "kupfer")
-    launchCalendar          = Unbound "Launch calendar"                 (spawn "chromium-browser --app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
+    launchCalendar          = Unbound "Launch calendar"                 (appBrowse "--app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
     -- Window navigation
     gotoNextWindow          = Unbound "Switch to next window"           (windows W.focusDown)
     gotoMaster              = Unbound "Move focus to the master window" (windows W.focusMaster)
@@ -469,7 +460,7 @@ multitranDeutsch = searchEngine "multitranDeutsch" "http://www.multitran.ru/c/m.
 -- the browser and automatically switch to the web workspace
 myPromptSearch (SearchEngine _ site)
   = inputPrompt myXPConfig "Search" ?+ \s ->
-      (search myBrowser site s >> viewWeb)
+      (search appBrowser site s >> viewWeb)
 
 -- Select search: do a search based on the X selection
 mySelectSearch eng = selectSearch eng >> viewWeb
@@ -494,7 +485,7 @@ main = do
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
     , borderWidth        = 1                 -- width of border around windows
-    , terminal           = myTerminal        -- default terminal program
+    , terminal           = appTerminal        -- default terminal program
     , workspaces         = myTopicNames
     , manageHook = manageHook gnomeConfig <+> myManageHook
     , logHook = (mapM_ dynamicLogWithPP $ zipWith logHookTopLeft dzensTopLeft [1 .. screenCount])
