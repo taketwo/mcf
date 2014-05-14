@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 import os
 import re
-import urllib2
+from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
 
@@ -13,7 +13,10 @@ def _parse_li(li):
 
 
 if __name__ == '__main__':
-    page = urllib2.urlopen('http://www.xfm.co.uk/london/playlist/')
+    try:
+        page = urlopen('http://www.xfm.co.uk/london/playlist/')
+    except:
+        os.exit('[xfm: failed to fetch]')
     soup = BeautifulSoup(page)
     live = True
     li = soup.body.find('li', attrs={'class': 'first nowplaying odd'})
@@ -21,6 +24,6 @@ if __name__ == '__main__':
         li = soup.body.find('li', attrs={'class': 'first odd'})
         live = False
         if li is None:
-            os.exit('[failed]')
+            os.exit('[xfm: failed to parse]')
 
-    print ' - '.join(_parse_li(li))
+    print(' - '.join(_parse_li(li)))
