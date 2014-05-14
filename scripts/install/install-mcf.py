@@ -26,7 +26,7 @@ files = [('.Xmodmap', 'Remap CapsLock to Ctrl'),
          ('.tmux.conf', 'Tmux configuration file'),
          (('fish', '.config/fish'), 'Fish configuration folder')]
 
-deb_packages = ['python-pip',
+apt_packages = ['python-pip',
                 'exuberant-ctags',
                 'xsel',
                 'vim',
@@ -38,13 +38,34 @@ deb_packages = ['python-pip',
                 'htop',
                 'openvpn',
                 'ssh',
-                'curl',
                 'trayer',
                 'tmux',
                 'redshift',
-                'fish']
+                'fish',
+                'python-keyring',                          # keyring-password
+                'xdotool',                                 # vim paste
+               ]
 
-pip_packages = ['pyflakes', 'pep8', 'flake8', 'unidecode', 'beautifulsoup4']
+pacman_packages = ['python-pip',
+                   'python-keyring',                       # keyring-password
+                   'xorg-setxkbmap',                       # keyboard
+                   'xdotool',                              # vim paste
+                   'git',                                  # gitk
+                   'xsel',                                 # vim clipboard
+                   'gvim',                                 # vim with python
+                   'ctags',                                # exuberant ctags
+                   'tree',
+                   'powertop',
+                   'htop',
+                   'openvpn',
+                   'tmux',
+                   'redshift',
+                  ]
+
+pip_packages = ['pyflakes',
+                'pep8',
+                'flake8',
+               ]
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
@@ -89,13 +110,10 @@ if __name__ == '__main__':
         decrypt(f)
     print('')
 
-    install.deb(deb_packages)
+    install.apt(apt_packages)
     print('')
 
-    print('Installing python packages...')
-    print('')
-    for p in pip_packages:
-        install.pip(p)
+    install.pip(pip_packages)
     print('')
 
     print('Configuring Gnome terminal...')

@@ -1,7 +1,8 @@
 import os
 import re
-import tempfile
 import shutil
+import platform
+import tempfile
 import subprocess
 
 
@@ -39,28 +40,61 @@ def make_install():
     subprocess.call(['sudo', 'make', 'install'])
 
 
-def deb(package):
+def install_package(manager, package, args=''):
+    """
+    Install package(s).
+
+    Arguments
+    ---------
+    manager: str
+        Name of a package manager to use (apt, pacman, cabal, aura).
+    package: str | list
+        Package name or list of package names.
+    args:
+        Additional options to pass to the package manager.
+    """
+    CMD = {'apt': 'sudo apt-get install --force-yes -y',
+           'pacman': 'sudo pacman --noconfirm -S',
+           'aura': 'sudo aura --noconfirm -A',
+           'pip': 'sudo pip install --upgrade'}
+    if not manager in CMD.keys():
+        raise Exception('Unsupported manager')
     p = package if isinstance(package, list) else [package]
-    print('Installing debian package%s:' % ('s' if len(p) > 1 else ''))
+    print('Installing %s package%s...' % (manager, 's' if len(p) > 1 else ''))
+    print('')
     for pk in p:
-        print('  [*]', pk)
-    cmd = 'sudo apt-get install --force-yes -y %s' % ' '.join(p)
+        print('[*]', pk)
+    cmd = CMD[manager] + ' ' + ' '.join(p) + ' ' + args
     subprocess.call(cmd.split())
+    print('')
+
+
+def apt(package):
+    """
+    Shortcut to install debian packages using apt-get.
+    """
+    install_package('apt', package)
 
 
 def pacman(package):
-    p = package if isinstance(package, list) else [package]
-    print('Installing pacman package%s:' % ('s' if len(p) > 1 else ''))
-    for pk in p:
-        print('  [*]', pk)
-    cmd = 'sudo pacman --noconfirm -S %s' % ' '.join(p)
-    subprocess.call(cmd.split())
+    """
+    Shortcut to install pacman packages.
+    """
+    install_package('pacman', package)
+
+
+def aura(package):
+    """
+    Shortuct to install AUR packages using aura.
+    """
+    install_package('aura', package)
 
 
 def pip(package):
-    print('[*]', package)
-    cmd = 'sudo pip install --upgrade %s' % package
-    subprocess.call(cmd.split())
+    """
+    Shortcut to install PyPI packages using pip.
+    """
+    install_package('pip', package)
 
 
 def cabal(package, local=False):
@@ -74,3 +108,54 @@ def cabal(package, local=False):
         cmd = 'sudo cabal install --global --force-reinstalls %s' % ' '.join(p)
     subprocess.call(['cabal', 'update'])
     subprocess.call(cmd.split())
+
+
+def remove(dest):
+    """
+    Universal remove (handles symlinks, files, and folders).
+    """
+    try:
+        os.unlink(dest)
+        return True
+    except OSError:
+        pass
+    try:
+        os.remove(dest)
+        return True
+    except OSError:
+        pass
+    try:
+        shutil.rmtree(dest)
+        return True
+    except OSError:
+        pass
+
+
+def link(src, dest, desc, verbose=True):
+    """
+    Create symlink.
+    """
+    if os.path.lexists(dest):
+        remove(dest)
+    os.symlink(src, dest)
+    if verbose:
+        print('[*]', desc)
+        print('   ', dest, '->', src)
+
+
+def install_dependencies(dependencies):
+    """
+    Install dependencies taking into account the current linux distribution.
+
+    Arguments
+    ---------
+    dependencies : dict
+        Keys are package manager names, and values are lists of packages. Only
+        the managers relevant to the current linux distribution will be used.
+    """
+    if platform.linux_distribution()[0] == 'arch':
+        pacman(dependencies['pacman'])
+        aura(dependencies['aura'])
+    else:
+        apt(dependencies['apt'])
+    pip(dependencies['pip'])
