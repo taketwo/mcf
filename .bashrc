@@ -120,7 +120,9 @@ alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
 
 # pacman aliases
+alias pu='sudo pacman -Syu'
 alias pi='sudo pacman -S'
+alias pr='sudo pacman -Rc'
 
 # aura aliases
 alias ai='sudo aura -A'
@@ -172,6 +174,7 @@ decrypt ()
 # always forget this
 alias files-in-package='dpkg-query -L'
 alias file-from-package='apt-file search'
+#alias file-from-package='pkgfile'
 
 vim-ag()
 {
