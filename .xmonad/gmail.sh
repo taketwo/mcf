@@ -1,7 +1,7 @@
 #!/bin/bash
 
 user="alexandrov88"
-pass=`keyring-password liamg`
+pass=`$MCF/scripts/bin/keyring-password liamg`
 count=`curl -u $user:$pass -s -sslreqd -m 5 "https://mail.google.com/mail/feed/atom" | grep -c "<entry>"`
 
 solarizedRed="#dc322f"
