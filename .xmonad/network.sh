@@ -12,9 +12,9 @@ nm_connections ()
       yes ) nm=("${nm[@]}" "${c[2]}")
             ;;
       no  ) case "${c[1]}" in
-              eth*  ) ethernet=1
+              eth* ) ethernet=1
                       ;;
-              wlan* ) wireless=1
+              wl*  ) wireless=1
                       ;;
             esac
             ;;
