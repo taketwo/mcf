@@ -20,7 +20,6 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.PerWorkspace (onWorkspace)
-import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.Magnifier as Mag
@@ -181,7 +180,6 @@ myFigures = named "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/
 myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
-  workspaceDir "~" $
   onWorkspace "figures" (myFigures) $
   onWorkspace "im" (myIM) $
   {-$-} defaultLayouts
