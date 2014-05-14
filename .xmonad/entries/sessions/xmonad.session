@@ -3,5 +3,5 @@ Name=Xmonad
 RequiredComponents=gnome-settings-daemon;xmonad
 RequiredProviders=windowmanager;notifications;
 DefaultProvider-windowmanager=xmonad
-DefaultProvider-notifications=notifications-daemon
+DefaultProvider-notifications=notification-daemon
 FallbackSession=gnome-fallback
