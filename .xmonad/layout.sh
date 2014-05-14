@@ -1,6 +1,6 @@
 #!/bin/bash
 
-case `keyboard -g` in
+case `$MCF/scripts/bin/keyboard -g` in
   "us(dvorak)" ) echo "DV"
     ;;
   "us" ) echo "US"
