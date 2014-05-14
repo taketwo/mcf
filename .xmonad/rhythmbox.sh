@@ -1,16 +1,17 @@
 #!/bin/bash
 
-rhythmbox=`/usr/bin/rhythmbox-client --print-playing --no-start --no-present`
-
-case $rhythmbox in
-  " - XFM London" )
-    xfm=`python ~/.xmonad/xfm.py`
-    echo -n " $xfm";;
-  " - " )
-    echo -n " [paused]";;
-  *)
-    echo -n " $rhythmbox";;
-esac
+if hash rhythmbox-client 2>/dev/null; then
+  rhythmbox=`/usr/bin/rhythmbox-client --print-playing --no-start --no-present`
+  case $rhythmbox in
+    " - XFM London" )
+      xfm=`python ~/.xmonad/xfm.py`
+      echo -n " $xfm";;
+    " - " )
+      echo -n " [paused]";;
+    *)
+      echo -n " $rhythmbox";;
+  esac
+fi
 
 # Just for reference, this piece of bash code fetches artist and song
 # names from Xfm. Almost correctly.
