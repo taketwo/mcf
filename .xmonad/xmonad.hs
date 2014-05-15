@@ -249,10 +249,12 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 -- }}}
 -- Scratchpads ------------------------------------------------------------- {{{
 
-myScratchPads = [ NS "terminal" spawnTerminal  findTerminal  manageTerminal ]
+myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
   where
-    spawnTerminal  = appTerminal ++ " --disable-factory --name scratchpad --zoom 0.8"
-    findTerminal   = resource  =? "scratchpad"
+    spawnTerminal  = appTerminal ++ " --role=scratchpad"
+    findTerminal   = (role =? "scratchpad")
+      where
+        role = stringProperty "WM_WINDOW_ROLE"
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
         h = 0.5             -- height
