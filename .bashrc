@@ -182,6 +182,8 @@ vim-ag()
 }
 alias e='vim'
 
+export PATH=$PATH:$MCF/scripts/bin
+
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
