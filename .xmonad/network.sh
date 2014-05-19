@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $MCF/.xmonad/panel.bash
+
 nm_connections ()
 {
   wireless=0
@@ -24,6 +26,7 @@ nm_connections ()
 
 openvpn_connections ()
 {
+  return
   openvpn=()
   kebrum=()
   connections=`service openvpn status | sed -n "s/ \* VPN '\(.*\)' is running/\1/p"`
@@ -56,40 +59,6 @@ is_online ()
     return
   fi
 }
-
-Start ()
-{
-  eval "output=' '"
-}
-
-Fg ()
-{
-  eval "output='^fg($1)$output^fg()'"
-}
-
-Bg ()
-{
-  eval "output='^bg($1)$output^bg()'"
-}
-
-Icon ()
-{
-  eval "output='$output^i(/home/sergey/.xmonad/icons/${1}.xbm) '"
-}
-
-Add ()
-{
-  eval "output='$output$1 '"
-}
-
-Flush ()
-{
-  echo -n "$output"
-}
-
-solarizedBlue="#268bd2"
-solarizedYellow="#b58900"
-solarizedBase3="#fdf6e3"
 
 nm_connections
 openvpn_connections
