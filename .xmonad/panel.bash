@@ -14,12 +14,16 @@ Start ()
 
 Fg ()
 {
-  eval "output='^fg($1)$output^fg()'"
+  if [ "$output" != " " ] ; then
+    eval "output='^fg($1)$output^fg()'"
+  fi
 }
 
 Bg ()
 {
-  eval "output='^bg($1)$output^bg()'"
+  if [ "$output" != " " ] ; then
+    eval "output='^bg($1)$output^bg()'"
+  fi
 }
 
 Icon ()
@@ -34,5 +38,7 @@ Add ()
 
 Flush ()
 {
-  echo -n "$output"
+  if [ "$output" != " " ] ; then
+    echo -n "$output"
+  fi
 }

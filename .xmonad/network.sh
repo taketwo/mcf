@@ -101,8 +101,6 @@ for c in $kebrum ; do
   Add $c
 done
 
-if [ "$output" != " " ] ; then
-  Fg $solarizedBase3
-  Bg $solarizedYellow
-  Flush
-fi
+Fg $solarizedBase3
+Bg $solarizedYellow
+Flush
