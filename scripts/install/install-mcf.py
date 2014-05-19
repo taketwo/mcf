@@ -11,8 +11,7 @@ sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
 import install
 
 
-files = [('.Xmodmap', 'Remap CapsLock to Ctrl'),
-         ('.dircolors', 'Dircolors for Solarized palette'),
+files = [('.dircolors', 'Dircolors for Solarized palette'),
          ('.fonts', 'Custom fonts'),
          ('.vim', 'VIM settings/plugins folder'),
          ('.vimrc', 'VIM configuration file'),
