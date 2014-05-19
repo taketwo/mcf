@@ -49,6 +49,7 @@ apt_packages = ['python-pip',
 pacman_packages = ['python-pip',
                    'python-keyring',                       # keyring-password
                    'xorg-setxkbmap',                       # keyboard
+                   'xorg-xprop',                           # xprop
                    'xdotool',                              # vim paste
                    'git',                                  # gitk
                    'xsel',                                 # vim clipboard
