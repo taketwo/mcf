@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import os
 import re
+import sys
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
