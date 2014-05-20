@@ -89,7 +89,7 @@ def decrypt(filename):
     print('[*]', filename)
     cmd = 'openssl aes-256-cbc -d -a -in %s -out %s' % (filename, dest)
     subprocess.call(cmd.split())
-    os.chmod(dest, 0600)
+    os.chmod(dest, 0O600)
 
 
 if __name__ == '__main__':
