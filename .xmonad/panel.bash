@@ -1,5 +1,3 @@
-#!/bin/bash
-
 solarizedGreen="#859900"
 solarizedRed="#dc322f"
 solarizedBlue="#268bd2"
