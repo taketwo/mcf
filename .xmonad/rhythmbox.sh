@@ -1,17 +1,28 @@
 #!/bin/bash
 
+source $MCF/.xmonad/panel.bash
+
+Start
+
 if hash rhythmbox-client 2>/dev/null; then
   rhythmbox=`/usr/bin/rhythmbox-client --print-playing --no-start --no-present`
   case $rhythmbox in
     " - XFM London" )
       xfm=`python ~/.xmonad/xfm.py`
-      echo -n " $xfm";;
+      Add "$xfm"
+      ;;
     " - " )
-      echo -n " [paused]";;
+      Add "[paused]"
+      ;;
     *)
-      echo -n " $rhythmbox";;
+      Add "$rhythmbox"
+      ;;
   esac
 fi
+
+Fg $solarizedBase3
+
+Flush
 
 # Just for reference, this piece of bash code fetches artist and song
 # names from Xfm. Almost correctly.
