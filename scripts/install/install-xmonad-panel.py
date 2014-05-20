@@ -16,8 +16,10 @@ DEPENDENCIES = {'apt': ['libxft-dev',
                         'libxpm-dev',
                         'curl',
                         'conky-all'],
-                'pacman': ['curl',
-                           'alsa-utils'],
+                'pacman': ['curl',                     # gmail.sh
+                           'alsa-utils',               # volume.sh
+                           'ttf-liberation'            # font used in the panel
+                          ],
                 'aura': ['conky-cli',
                          'dzen2-xft-xpm-xinerama-git'],
                 'pip': ['unidecode',

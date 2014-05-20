@@ -47,7 +47,7 @@ def install_package(manager, package, args=''):
     Arguments
     ---------
     manager: str
-        Name of a package manager to use (apt, pacman, cabal, aura).
+        Name of a package manager to use (apt, pacman, pip, aura).
     package: str | list
         Package name or list of package names.
     args:

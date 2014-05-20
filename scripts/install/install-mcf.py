@@ -63,6 +63,8 @@ pacman_packages = ['python-pip',
                    'redshift',
                   ]
 
+aura_packages = ['trayer-srg']
+
 pip_packages = ['pyflakes',
                 'pep8',
                 'flake8',
