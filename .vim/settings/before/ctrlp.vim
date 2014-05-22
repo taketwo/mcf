@@ -8,8 +8,21 @@ else
     let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
 endif
 
+if has('python')
+    let g:ctrlp_match_func = {'match': 'pymatcher#PyMatch'}
+endif
+
 " Show dotfiles
 let g:ctrlp_show_hidden = 1
+
+" Set no file limit
+let g:ctrlp_max_files = 0
+
+" Do not clear filenames cache
+let g:ctrlp_clear_cache_on_exit = 0
+
+" Set delay to prevent extra search
+let g:ctrlp_lazy_update = 100
 
 " Ignore version control folders and other stuff
 let g:ctrlp_custom_ignore = {
