@@ -31,12 +31,14 @@ Icon ()
 
 Add ()
 {
-  eval "output='$output$1 '"
+  # Escape single quote with triple hat
+  eval "output='$output${1//\'/^^^} '"
 }
 
 Flush ()
 {
   if [ "$output" != " " ] ; then
-    echo -n "$output"
+    # Undo triple hat escape
+    echo -n "${output//^^^/\'}"
   fi
 }
