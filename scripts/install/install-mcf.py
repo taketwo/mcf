@@ -27,12 +27,14 @@ files = [('.dircolors', 'Dircolors for Solarized palette'),
          (('fish', '.config/fish'), 'Fish configuration folder')]
 
 apt_packages = ['python-pip',
-                'exuberant-ctags',
-                'xsel',
-                'vim',
-                'tree',
+                'python-keyring',                          # keyring-password
+                'xdotool',                                 # vim paste
                 'gitk',
                 'git-gui',
+                'xsel',                                    # vim clipboard
+                'vim',
+                'exuberant-ctags',
+                'tree',
                 'legit',
                 'powertop',
                 'htop',
@@ -42,8 +44,6 @@ apt_packages = ['python-pip',
                 'tmux',
                 'redshift',
                 'fish',
-                'python-keyring',                          # keyring-password
-                'xdotool',                                 # vim paste
                ]
 
 pacman_packages = ['python-pip',
