@@ -308,7 +308,6 @@ table =
   , k "<F10>"            __           logout              __                __
   , k "<F11>"            __           reboot              __                __
   , k "<F12>"            __           powerOff            __                __
-  , k "<Esc>"        nextKeyboardLayout    __           __                __
   , [bind "M1-" "<Tab>" gotoNextWindow]
   -- Multimedia keys
   , [bind "" "<XF86AudioMute>"        audioMute]
@@ -377,7 +376,6 @@ table =
     powerOff                = Unbound "Power off the system"            (spawn "gnome-session-quit --power-off")
     reboot                  = Unbound "Reboot the system"               (spawn "gnome-session-quit --reboot")
     logout                  = Unbound "Logout"                          (spawn "gnome-session-quit --no-prompt")
-    nextKeyboardLayout      = Unbound "Switch next keyboard layout"     (spawn "keyboard -n")
     promptSearch            = Unbound "Prompt search"                   (submap . mySearchMap $ myPromptSearch)
     selectSearch            = Unbound "Search X selection"              (submap . mySearchMap $ mySelectSearch)
     closeWindow             = Unbound "Close the focused window"        (kill)
