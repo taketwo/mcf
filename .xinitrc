@@ -12,4 +12,8 @@ if hash redshift 2>/dev/null; then
   redshift -l 50.4:7.5 -t 6000:4500 &
 fi
 
+if hash workrave 2>/dev/null; then
+  workrave &
+fi
+
 exec cinnamon-session --session=xmonad
