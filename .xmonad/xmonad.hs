@@ -145,7 +145,7 @@ xRes                 = 166
 yRes                 = 768
 topBarHeight         = 14
 topBarBoxHeight      = 12
-topLeftBarWidth      = 600
+topLeftBarWidth      = 800
 topBarTitleLength    = 80
 
 myTabConfig = defaultTheme
