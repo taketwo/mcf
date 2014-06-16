@@ -16,4 +16,6 @@ if hash workrave 2>/dev/null; then
   workrave &
 fi
 
+nitrogen --restore
+
 exec cinnamon-session --session=xmonad
