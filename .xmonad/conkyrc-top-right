@@ -32,7 +32,7 @@ ${if_existing /sys/class/power_supply/ACAD/online 1}\
 ${else}\
  ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
 ${endif}\
-${battery_percent BAT0} \
+${if_match ${battery_percent BAT0} < 100}${battery_percent BAT0}${endif}\
 ^fg()^bg()\
 ${endif}\
 ## Battery 1 ##
@@ -43,7 +43,7 @@ ${if_existing /sys/class/power_supply/ACAD/online 1}\
 ${else}\
  ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
 ${endif}\
-${battery_percent BAT1} \
+${if_match ${battery_percent BAT1} < 100}${battery_percent BAT1}${endif}\
 ^fg()^bg()\
 ${endif}\
 ## Date and time ##
