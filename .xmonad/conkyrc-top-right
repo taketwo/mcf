@@ -27,10 +27,19 @@ ${exec ~/.xmonad/volume.sh}\
 ## Battery 0 ##
 ${if_existing /sys/class/power_supply/BAT0}\
 ${if_match ${battery_percent BAT0} < 15}^fg(\#ffffff)^bg(\#dc322f)${endif}\
+${if_existing /sys/class/power_supply/AC/online}\
+${if_existing /sys/class/power_supply/AC/online 1}\
+ ^i(/home/sergey/.xmonad/icons/ac.xbm) \
+${else}\
+ ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
+${endif}\
+${endif}\
+${if_existing /sys/class/power_supply/ACAD/online}\
 ${if_existing /sys/class/power_supply/ACAD/online 1}\
  ^i(/home/sergey/.xmonad/icons/ac.xbm) \
 ${else}\
  ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
+${endif}\
 ${endif}\
 ${if_match ${battery_percent BAT0} < 100}${battery_percent BAT0}${endif}\
 ^fg()^bg()\
