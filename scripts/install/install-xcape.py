@@ -5,7 +5,7 @@ import os
 import argparse
 import subprocess
 
-from install import GitRepository, make_install, deb
+from install import GitRepository, make_install, apt
 
 
 def replace(e, f):
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
 
-    deb(['libx11-dev', 'libxtst-dev', 'libxi-dev'])
+    apt(['libx11-dev', 'libxtst-dev', 'libxi-dev'])
 
     with GitRepository('alols/xcape') as repo:
         # Change installation path to /usr/local

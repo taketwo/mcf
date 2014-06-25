@@ -4,7 +4,7 @@
 import argparse
 import subprocess
 
-from install import GitRepository, deb
+from install import GitRepository, apt
 
 
 def replace(e, f):
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
 
-    deb(['fontforge', 'ttfautohint', 'woff-tools'])
+    apt(['fontforge', 'ttfautohint', 'woff-tools'])
 
     with GitRepository('belluzj/fantasque-sans') as repo:
         # Completely remove line with ttf2eot command

@@ -6,7 +6,7 @@ import sys
 import argparse
 import subprocess
 
-from install import GitRepository, make_install, deb
+from install import GitRepository, make_install, apt
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
 
-    deb(['automake', 'pkg-config', 'libpcre3-dev', 'liblzma-dev', 'zlib1g-dev'])
+    apt(['automake', 'pkg-config', 'libpcre3-dev', 'liblzma-dev', 'zlib1g-dev'])
 
     with GitRepository('ggreer/the_silver_searcher') as repo:
         subprocess.call(['./build.sh'])
