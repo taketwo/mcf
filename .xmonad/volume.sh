@@ -14,7 +14,9 @@ if [[ $volume = 0 ]]; then
   Fg $solarizedBlue
 else
   Icon "volume"
-  Add $volume
+  if [[ $volume < 100 ]]; then
+    Add $volume
+  fi
 fi
 
 Flush
