@@ -41,7 +41,7 @@ ${else}\
  ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
 ${endif}\
 ${endif}\
-${if_match ${battery_percent BAT0} < 100}${battery_percent BAT0}${endif}\
+${if_match ${battery_percent BAT0} < 100}${battery_percent BAT0} ${endif}\
 ^fg()^bg()\
 ${endif}\
 ## Battery 1 ##
@@ -61,7 +61,7 @@ ${else}\
  ^i(/home/sergey/.xmonad/icons/battery_full.xbm) \
 ${endif}\
 ${endif}\
-${if_match ${battery_percent BAT1} < 100}${battery_percent BAT1}${endif}\
+${if_match ${battery_percent BAT1} < 100}${battery_percent BAT1} ${endif}\
 ^fg()^bg()\
 ${endif}\
 ## Date and time ##
