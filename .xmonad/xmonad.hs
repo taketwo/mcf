@@ -205,7 +205,7 @@ myTopics =
   , TI "blog"     "/media/Workspace/Projects/tocs/blog"      (blog)
   , TI "pcl"      "/media/Workspace/Libraries/pcl-canonical" (spawnShell)
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
-  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus /media/Files/Downloads")
+  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus /media/Files/Downloads/Torrents")
   , TI "xmonad"   ".xmonad"                                  (appEdit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , ti "figures"  ""
   , ti "gimp"     ""
