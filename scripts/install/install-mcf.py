@@ -63,7 +63,8 @@ pacman_packages = ['python-pip',
                    'redshift',
                   ]
 
-aura_packages = ['trayer-srg']
+aura_packages = ['trayer-srg'
+                 'legit-git']
 
 pip_packages = ['pyflakes',
                 'pep8',
