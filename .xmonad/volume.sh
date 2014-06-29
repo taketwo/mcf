@@ -9,12 +9,12 @@ volume=`amixer get Master | awk -F'[]%[]' 'BEGIN { nlines = 0 } /%/ { if (nlines
 
 Start
 
-if [[ $volume = 0 ]]; then
+if (( $volume == 0 )); then
   Icon "mute"
   Fg $solarizedBlue
 else
   Icon "volume"
-  if [[ $volume < 100 ]]; then
+  if (( volume < 100 )); then
     Add $volume
   fi
 fi
