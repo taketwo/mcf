@@ -2,8 +2,11 @@
 # encoding: utf-8
 
 import re
-import sys
-from urllib.request import urlopen
+import os
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 from bs4 import BeautifulSoup
 
 
