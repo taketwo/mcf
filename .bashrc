@@ -119,13 +119,10 @@ alias agu='sudo apt-get update && sudo apt-get upgrade'
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
 
-# pacman aliases
-alias pu='sudo pacman -Syu'
-alias pi='sudo pacman -S'
-alias pr='sudo pacman -Rc'
-
-# aura aliases
-alias ai='sudo aura -A'
+# yaourt aliases
+alias yu='sudo yaourt -Syua'
+alias yi='sudo yaourt -Sa'
+alias yr='sudo yaourt -Rc'
 
 # quick background color switch
 alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh'
