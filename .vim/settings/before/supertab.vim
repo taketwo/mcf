@@ -14,7 +14,9 @@ let g:SuperTabLongestHighlight = 1
 " Auto close the preview window
 let g:SuperTabClosePreviewOnPopupClose = 1
 " If omnifunc is defined, chain keyword completion to it
-autocmd FileType *
-  \ if &omnifunc != '' |
-  \   call SuperTabChain(&omnifunc, "<c-p>") |
-  \ endif
+if exists("SuperTabChain")
+  autocmd FileType *
+    \ if &omnifunc != '' |
+    \   call SuperTabChain(&omnifunc, "<c-p>") |
+    \ endif
+endif
