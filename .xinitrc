@@ -5,7 +5,7 @@ unclutter -grab &
 xsetroot -cursor_name left_ptr
 
 if hash xcape 2>/dev/null; then
-  xcape -e 'Alt_L=Escape;Alt_R=Return;Control_L=Escape;Super_L=Super_L|0'
+  xcape -e 'Alt_L=Escape;Alt_R=Return;Super_L=Super_L|0;Shift_L=Shift_L|Tab'
 fi
 
 if hash redshift 2>/dev/null; then
