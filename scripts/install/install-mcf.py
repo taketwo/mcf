@@ -69,6 +69,7 @@ aura_packages = ['trayer-srg'
 pip_packages = ['pyflakes',
                 'pep8',
                 'flake8',
+                'frosted'
                ]
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
