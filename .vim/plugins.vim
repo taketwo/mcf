@@ -72,7 +72,7 @@ Plugin 'taketwo/vim-exchange'
 
 " Languages / frameworks
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'davidhalter/jedi-vim'
+"Plugin 'davidhalter/jedi-vim'
 Plugin 'tpope/vim-markdown'
 Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'smancill/conky-syntax.vim'
