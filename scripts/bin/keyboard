@@ -34,8 +34,10 @@ function set_next_layout
     if [[ ${LAYOUTS[$i]} == $layout ]]; then
       j=$((($i + 1) % ${#LAYOUTS[@]}))
       set_layout ${LAYOUTS[$j]}
+      exit
     fi
   done
+  set_layout ${LAYOUTS[0]}
 }
 
 while getopts "hgs:ln" opt; do
