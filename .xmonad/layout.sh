@@ -1,10 +1,18 @@
 #!/bin/bash
 
+source $MCF/.xmonad/panel.bash
+
+Start
+
 case `$MCF/scripts/bin/keyboard -g` in
-  "us(dvorak)" ) echo "DV"
+  "us(dvorak)" ) Add "DV"
     ;;
-  "us" ) echo "US"
+  "us" ) Add "US"
     ;;
-  "ru" ) echo "RU"
+  "ru" ) Add "RU"
     ;;
 esac
+
+Click 1 "keyboard -n"
+Click 3 "keyboard -s us"
+Flush
