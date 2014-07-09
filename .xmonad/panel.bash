@@ -24,6 +24,13 @@ Bg ()
   fi
 }
 
+Click ()
+{
+  if [ "$output" != " " ] ; then
+    eval "output='^ca($1, $2)$output^ca()'"
+  fi
+}
+
 Icon ()
 {
   eval "output='$output^i(/home/sergey/.xmonad/icons/${1}.xbm) '"
