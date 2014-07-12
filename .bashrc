@@ -120,9 +120,9 @@ alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
 
 # yaourt aliases
-alias yu='sudo yaourt -Syua'
-alias yi='sudo yaourt -Sa'
-alias yr='sudo yaourt -Rc'
+alias yu='yaourt -Syua'
+alias yi='yaourt -Sa'
+alias yr='yaourt -Rc'
 
 # quick background color switch
 alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh'
