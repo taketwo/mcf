@@ -4,6 +4,7 @@ call EasyMotion#InitOptions({
 \ , 'do_shade'        : 1
 \ , 'do_mapping'      : 1
 \ , 'grouping'        : 1
+\ , 'hl_group_target' : 'Type'
 \ })
 
 nmap <Leader><ESC> <Leader><Leader>w
