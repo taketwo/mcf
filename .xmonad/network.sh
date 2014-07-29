@@ -1,25 +1,33 @@
 #!/bin/bash
 
 source $MCF/.xmonad/panel.bash
+source $MCF/scripts/library/version-compare.bash
 
 nm_connections ()
 {
   wireless=0
   ethernet=0
-  connections=`nmcli --terse --fields VPN,DEVICES,NAME con status`
+  nmcli_version=`nmcli -v | grep -Po "(?<=version ).*"`
+  version-compare $nmcli_version 0.9.10.1
+  if [[ $? == 2 ]]; then
+    # We are dealing with an old nmcli version
+    connections=`nmcli --terse --fields VPN,DEVICES,NAME con status`
+  else
+    connections=`nmcli --terse --fields TYPE,DEVICE,NAME con show`
+  fi
   nm=()
   for con in $connections; do
     IFS=':' read -a c <<< "$con"
     case "${c[0]}" in
-      yes ) nm=("${nm[@]}" "${c[2]}")
-            ;;
-      no  ) case "${c[1]}" in
-              eth*|enp* ) ethernet=1
-                          ;;
-              wl*       ) wireless=1
-                          ;;
-            esac
-            ;;
+      yes|vpn ) nm=("${nm[@]}" "${c[2]}")
+                ;;
+      * )       case "${c[1]}" in
+                  eth*|enp* ) ethernet=1
+                              ;;
+                  wl* )       wireless=1
+                              ;;
+                esac
+                ;;
     esac
   done
 }
