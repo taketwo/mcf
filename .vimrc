@@ -30,11 +30,9 @@
   " This should be done before loading plugins as some of them may depend
   " on the setting (e.g. vim-indent-guides).
 
-  let shellcmd = 'dconf read /org/gnome/terminal/legacy/profiles:/default'
-  let profile = substitute(system(shellcmd), "['\n]", "", "g")
-  let shellcmd = 'dconf read /org/gnome/terminal/legacy/profiles:/:'.profile.'/background-color'
-  let color = substitute(system(shellcmd), "['\n]", "", "g")
-  if color == "#00002B2B3636"
+  source ~/.vim/plugin/mcf-gnome.vim
+
+  if GetGnomeValue('background-color') == "#00002B2B3636"
     set background=dark
   else
     set background=light
