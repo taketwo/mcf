@@ -4,7 +4,9 @@ function! <SID>CheckGnomeVersion()
     let shellcmd = 'gnome-terminal --version | grep -Po "(?<=Terminal )[0-9\.]*"'
     let vstr = substitute(system(shellcmd), "[\n]", "", "g")
     let vlist = split(vstr, '\.')
-    if (vlist[0] == "3" && vlist[1] >= "8") || vlist[0] >= "4"
+    let major = str2nr(vlist[0])
+    let minor = str2nr(vlist[1])
+    if (major == 3 && minor >= 8) || major >= 4
         return 1
     else
         return 0
