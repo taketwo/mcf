@@ -1,6 +1,6 @@
-let g:UltiSnipsExpandTrigger = '<S-Tab>'
-let g:UltiSnipsListSnippets = '<Leader>u'  "'<c-s>'
-let g:UltiSnipsJumpForwardTrigger = '<S-Tab>'
+let g:UltiSnipsExpandTrigger = '<C-b>'
+let g:UltiSnipsListSnippets = '<Leader>u'
+let g:UltiSnipsJumpForwardTrigger = '<C-b>'
 let g:UltiSnipsJumpBackwardTrigger = ''
 let g:UltiSnipsEditSplit = "vertical"
 let g:UltiSnipsSnippetDirectories = ["UltiSnips", "snippet"]
