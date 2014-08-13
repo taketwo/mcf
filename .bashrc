@@ -143,6 +143,7 @@ alias rs='nohup redshift -l 50.4:7.5 -t 6000:4500 &'
 alias tex-clean='rm -f *.{aux,log,out,bbl,blg}'
 alias trayer-show='trayer --align center --edge top --SetDockType false --SetPartialStrut false --widthtype request --transparent false --tint 0xFFFFFF --heighttype request --distancefrom top --distance 400 --monitor 1 --padding 20'
 alias msync='rsync -avz --size-only --progress --delete /media/Files/Music/ ex:sdcard1/Music'
+alias chmox='chmod +x'
 
 if ! hash see 2>/dev/null; then
   alias see='xdg-open'
