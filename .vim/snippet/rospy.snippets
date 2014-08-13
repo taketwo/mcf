@@ -1,11 +1,9 @@
 snippet rospy "Rospy preamble" !b
 #!/usr/bin/env python
 
-PACKAGE = '${1:package_name}'
+PACKAGE = '${1:`!v b:ros_package_name`}'
 NODE = '${2:`!v Filename("$1")`}'
 
-import roslib
-roslib.load_manifest(PACKAGE)
 import rospy
 
 $0
