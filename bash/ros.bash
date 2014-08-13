@@ -1,9 +1,9 @@
 : ${ROS_DISTRO:?"variable is not set!"}
 
-ROS_SETUP="/opt/ros/$ROS_DISTRO/setup.bash"
+ROS_WORKSPACE_SETUP="$ROS_WORKSPACE_PATH/devel/setup.bash"
 
-if [ -f $ROS_SETUP ]; then
-  source $ROS_SETUP
+if [ -f $ROS_WORKSPACE_SETUP ]; then
+  source $ROS_WORKSPACE_SETUP
 fi
 
 export OGRE_RTT_MODE=Copy
@@ -14,6 +14,3 @@ function message() { rostopic echo -n 1 "$@" ;}
 
 alias rosdr='rosrun rqt_reconfigure rqt_reconfigure'
 alias rviz='rosrun rviz rviz'
-
-# correct usual misspelling
-alias rosamke='rosmake'
