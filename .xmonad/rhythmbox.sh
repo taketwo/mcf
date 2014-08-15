@@ -22,6 +22,8 @@ fi
 
 Fg $solarizedBase3
 
+Click 1 "rhythmbox-client --play-pause"
+
 Flush
 
 # Just for reference, this piece of bash code fetches artist and song
