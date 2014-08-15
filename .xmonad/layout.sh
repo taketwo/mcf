@@ -15,4 +15,5 @@ esac
 
 Click 1 "keyboard -n"
 Click 3 "keyboard -s us"
+
 Flush

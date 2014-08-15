@@ -24,6 +24,12 @@ Bg ()
   fi
 }
 
+# Surround the segment with a clickable area
+# Arguments:
+#   1 Mouse button
+#   2 Action
+# Example:
+#   Click 1 "keyboard -n"
 Click ()
 {
   if [ "$output" != " " ] ; then

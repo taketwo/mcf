@@ -13,11 +13,9 @@ use_spacer none
 TEXT
 ${if_running rhythmbox}\
 ${texeci 15 ~/.xmonad/rhythmbox.sh}\
-| \
 ${endif}\
-^ca(1, xdotool key super+Escape)\
-${exec ~/.xmonad/layout.sh} \
-^ca()\
+## Layout ##
+${exec ~/.xmonad/layout.sh}\
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh}\
 ## Network ##
