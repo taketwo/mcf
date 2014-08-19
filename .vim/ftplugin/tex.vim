@@ -4,6 +4,8 @@ setlocal foldmethod=marker
 
 " Set default completion type to keywords, there is no
 " omnicompletion for tex anyways.
-call SuperTabSetDefaultCompletionType("<c-p>")
+if exists("SuperTabSetDefaultCompletionType")
+    call SuperTabSetDefaultCompletionType("<c-p>")
+endif
 
 nnoremap <buffer> <Space><Space> gq}
