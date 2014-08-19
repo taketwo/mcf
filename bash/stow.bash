@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# This implements an approach proposed by Magnus Thor Torfason
+# (see http://permalink.gmane.org/gmane.comp.gnu.stow.general/6646)
+
+STOW_DIR=/opt/stow
+STOW_TARGET=/usr/local
+
+mktouch ()
+{
+  if [ "$1" == "" ] || [ "$2" != "" ]; then
+    echo "Incorrect number of arguments to mktouch (expected exactly one)."
+    exit 1
+  fi
+  sudo mkdir -p "$(dirname "$1")"
+  sudo touch "$1"
+}
+
+export -f mktouch
+
+stow-adopt-as ()
+{
+  if [ "$1" == "" ] || [ "$2" != "" ]; then
+    echo "Incorrect number of arguments to stow-adopt-as (expected exactly one).";
+    return 1;
+  fi;
+  PACKAGE="$1";
+  chkstow -t $STOW_TARGET -a | sed "s+^Unstowed file: $STOW_TARGET+$STOW_DIR/$PACKAGE+" | xargs -l -i bash -c 'mktouch "$@"' _ {};
+  sudo stow --adopt -t $STOW_TARGET -d $STOW_DIR -vv $PACKAGE
+}
+
+stow-install ()
+{
+  if [ "$1" == "" ] || [ "$2" != "" ]; then
+    echo "Incorrect number of arguments to stow-delete (expected exactly one).";
+    return 1;
+  fi;
+  PACKAGE="$1";
+  sudo stow -t $STOW_TARGET -d $STOW_DIR -vv $PACKAGE
+}
+
+stow-delete ()
+{
+  if [ "$1" == "" ] || [ "$2" != "" ]; then
+    echo "Incorrect number of arguments to stow-delete (expected exactly one).";
+    return 1;
+  fi;
+  PACKAGE="$1";
+  sudo stow -t $STOW_TARGET -d $STOW_DIR -vv --delete $PACKAGE
+}

@@ -44,6 +44,7 @@ apt_packages = ['python-pip',
                 'tmux',
                 'redshift',
                 'fish',
+                'stow',
                ]
 
 pacman_packages = ['python-pip',
@@ -61,6 +62,7 @@ pacman_packages = ['python-pip',
                    'openvpn',
                    'tmux',
                    'redshift',
+                   'stow',
                   ]
 
 aura_packages = ['trayer-srg'
