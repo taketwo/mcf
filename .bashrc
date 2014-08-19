@@ -175,10 +175,14 @@ decrypt ()
   openssl aes-256-cbc -a -d -in $1 -out $1.dec
 }
 
-# always forget this
-alias files-in-package='dpkg-query -L'
-alias file-from-package='apt-file search'
-#alias file-from-package='pkgfile'
+DISTRO=`cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)'`
+if [[ $DISTRO == "Arch" ]]; then
+  alias file-from-package='pkgfile'
+  alias files-in-package='pacman -Ql'
+else
+  alias file-from-package='apt-file search'
+  alias files-in-package='dpkg-query -L'
+fi
 
 vim-ag()
 {
