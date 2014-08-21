@@ -50,7 +50,7 @@ endsnippet
 ###########################################################################
 
 snippet pub "Publisher" !b
-${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type})$0
+${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type}, queue_size=${4:10}${5/.+/, latch=/}${5:True}${5/.+//})$0
 endsnippet
 
 snippet sub "Subscriber" !b
@@ -96,6 +96,11 @@ endsnippet
 
 snippet q2e "Quaternion to euler"
 ${1:rpy} = ${2:tf.transformations.}euler_from_quaternion(${3:q})$0
+endsnippet
+
+snippet qm2e "Quaternion message to euler"
+o = ${1:msg.pose.orientation}
+${2:rpy} = ${3:tf.transformations.}euler_from_quaternion([o.x, o.y, o.z, o.w])$0
 endsnippet
 
 snippet tfl "Transform lookup" !b
