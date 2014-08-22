@@ -48,3 +48,8 @@ stow-delete ()
   PACKAGE="$1";
   sudo stow -t $STOW_TARGET -d $STOW_DIR -vv --delete $PACKAGE
 }
+
+stow-show-orphans ()
+{
+  chkstow -a -t $STOW_TARGET
+}
