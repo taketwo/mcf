@@ -55,3 +55,7 @@ endsnippet
 snippet argb "Add argument (boolean flag)" !b
 parser.add_argument('${1:name}', action='store_true', help='${2:help}')$0
 endsnippet
+
+snippet argf "Add argument (file)" !b
+parser.add_argument('${1:name}', type=argparse.FileType('${2:r}'), help='${3:help}')$0
+endsnippet
