@@ -16,10 +16,10 @@ ${texeci 15 ~/.xmonad/rhythmbox.sh}\
 ${endif}\
 ## Layout ##
 ${exec ~/.xmonad/layout.sh}\
-## Toggl ##
-${texeci 30 ~/.xmonad/toggl.sh}\
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh}\
+## Toggl ##
+${texeci 30 ~/.xmonad/toggl.sh}\
 ## Network ##
 ${texeci 10 ~/.xmonad/network.sh}\
 ## Volume ##
@@ -73,7 +73,7 @@ ${time \
 %m\
 ^fg(#a9a6af).^fg()\
 ^fg(#44aacc)%d^fg() \
-^bg(#859900)^fg(#ffffff) \
+^bg(#2aa198)^fg(#ffffff) \
 %H:%M:%S \
 ^fg()^bg()\
 ^ca()\
