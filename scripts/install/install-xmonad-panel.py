@@ -23,7 +23,9 @@ DEPENDENCIES = {'apt': ['libxft-dev',
                 'aura': ['conky-cli',
                          'dzen2-xft-xpm-xinerama-git'],
                 'pip': ['unidecode',
-                        'beautifulsoup4']}
+                        'beautifulsoup4',
+                        'requests'                     # toggl.sh
+                       ]}
 
 
 def run_tests():
@@ -36,7 +38,8 @@ def run_tests():
                   'network.sh',
                   'rhythmbox.sh',
                   'volume.sh',
-                  'xfm.py']
+                  'xfm.py',
+                  'toggl.sh']
     for c in components:
         print('[*] %s' % c)
         try:
