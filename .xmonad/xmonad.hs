@@ -174,6 +174,7 @@ defaultLayouts = smartBorders $ avoidStruts $
 myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger })
 myIM = named "im" (smartBorders $ avoidStruts $ withIM (1 % 5) (Title "Contact List") Grid)
 myFigures = named "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3))
+myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
 
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
@@ -182,6 +183,7 @@ myLayoutHook =
 -- to switch to a new working dir
   onWorkspace "figures" (myFigures) $
   onWorkspace "im" (myIM) $
+  onWorkspace "rviz" (myRViz) $
   {-$-} defaultLayouts
 
 -- }}}
