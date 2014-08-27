@@ -45,6 +45,7 @@ apt_packages = ['python-pip',
                 'redshift',
                 'fish',
                 'stow',
+                'unrar',
                ]
 
 pacman_packages = ['python-pip',
@@ -63,6 +64,7 @@ pacman_packages = ['python-pip',
                    'tmux',
                    'redshift',
                    'stow',
+                   'unrar',
                   ]
 
 aura_packages = ['trayer-srg'
