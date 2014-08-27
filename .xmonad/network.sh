@@ -96,8 +96,8 @@ done
 
 # Paint blue if online
 if [ $online -eq 1 ] ; then
-  Fg $solarizedBase3
-  Bg $solarizedBlue
+  Fg $SolarizedBase3
+  Bg $SolarizedBlue
 fi
 
 Flush
@@ -109,6 +109,6 @@ for c in $kebrum ; do
   Add $c
 done
 
-Fg $solarizedBase3
-Bg $solarizedYellow
+Fg $SolarizedBase3
+Bg $SolarizedYellow
 Flush

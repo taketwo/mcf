@@ -11,7 +11,7 @@ Start
 
 if (( $volume == 0 )); then
   Icon "mute"
-  Fg $solarizedBlue
+  Fg $SolarizedBlue
 else
   Icon "volume"
   if (( volume < 100 )); then

@@ -6,8 +6,8 @@ Start
 
 if [[ `$MCF/scripts/bin/toggl running` == "yes" ]]; then
   Icon "toggl"
-  Bg $solarizedBase3
-  Fg $solarizedRed
+  Bg $SolarizedGreen
+  Fg $SolarizedBase3
 fi
 
 Flush

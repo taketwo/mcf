@@ -12,8 +12,8 @@ Icon "mail"
 Add $count
 
 if [[ $count > 0 ]]; then
-  Fg $solarizedBase3
-  Bg $solarizedRed
+  Fg $SolarizedBase3
+  Bg $SolarizedRed
 fi
 
 Flush

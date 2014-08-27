@@ -20,7 +20,7 @@ if hash rhythmbox-client 2>/dev/null; then
   esac
 fi
 
-Fg $solarizedBase3
+Fg $SolarizedBase3
 
 Click 1 "rhythmbox-client --play-pause"
 
