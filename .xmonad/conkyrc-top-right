@@ -16,6 +16,8 @@ ${texeci 15 ~/.xmonad/rhythmbox.sh}\
 ${endif}\
 ## Layout ##
 ${exec ~/.xmonad/layout.sh}\
+## Toggl ##
+${texeci 30 ~/.xmonad/toggl.sh}\
 ## Gmail ##
 ${texeci 30 ~/.xmonad/gmail.sh}\
 ## Network ##
