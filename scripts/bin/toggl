@@ -21,6 +21,6 @@ if __name__ == '__main__':
         print('no' if t.current() is None else 'yes')
     else:
         r = t.current()
-        print 'Current time entry: %s' % r['description']
+        print('Current time entry: %s' % r['description'])
         r = t.time_entries()
-        print 'Last time entry: %s' % r[-1]['description']
+        print('Last time entry: %s' % r[-1]['description'])
