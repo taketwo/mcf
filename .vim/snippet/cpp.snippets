@@ -115,11 +115,15 @@ snippet cout "std::cout output" !b
 std::cout << ${1}${2: << std::endl};$0
 endsnippet
 
-snippet nan "NaN"
+#######################################################################
+#                           Numeric limits                            #
+#######################################################################
+
+snippet nan "NaN" w
 std::numeric_limits<${1:float}>::quiet_NaN()$0
 endsnippet
 
-snippet inf "Infinity"
+snippet inf "Infinity" w
 std::numeric_limits<${1:float}>::infinity()$0
 endsnippet
 
@@ -131,23 +135,26 @@ endsnippet
 #                              Includes                               #
 #######################################################################
 
-snippet inc "Include header" !b
-#include <${1:header}.${2:`!p snip.rv = 'hpp' if t[1].startswith('boost') else 'h'`}>$0
+snippet inc "Include header" b
+#include <${1:header.h}>$0
 endsnippet
 
-snippet incs "Include standard library header" !b
+snippet incs "Include standard library header" b
 #include <${1:iostream}>$0
 endsnippet
 
-snippet incl "Include local header" !b
+snippet incl "Include local header" b
 #include "${1:`!p snip.rv = snip.basename`}.${2:h}"$0
+endsnippet
+
+snippet incb "Include Boost library header" b
+#include <boost/${1:format}.hpp>$0
 endsnippet
 
 snippet math "Include math header" !b
 ${1:#define _USE_MATH_DEFINES
 }#include <cmath>$0
 endsnippet
-
 
 #######################################################################
 #                           Random numbers                            #
