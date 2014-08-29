@@ -23,7 +23,7 @@ DEPENDENCIES = {'apt': ['libxft-dev',
                 'aura': ['conky-cli',
                          'dzen2-xft-xpm-xinerama-git'],
                 'pip': ['unidecode',
-                        'beautifulsoup4',
+                        'beautifulsoup4',              # xfm.py
                         'requests'                     # toggl.sh
                        ]}
 
@@ -32,7 +32,6 @@ def run_tests():
     os.chdir(mcf.XMONAD)
     print('1. Testing panel components individually...')
     print('')
-    fail = False
     components = ['gmail.sh',
                   'layout.sh',
                   'network.sh',
