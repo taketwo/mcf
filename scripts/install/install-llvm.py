@@ -5,6 +5,7 @@ import os
 import sys
 import argparse
 from subprocess import call
+from distutils import spawn
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
@@ -13,6 +14,9 @@ if __name__ == '__main__':
     parser.add_argument('path', help='checkout path (a folder "llvm" will be '
                                      'created there automatically)')
     args = parser.parse_args()
+
+    if not spawn.find_executable('svn'):
+        sys.exit('SVN is not installed.')
 
     if not os.path.isdir(args.path):
         sys.exit('Folder "%s" does not exist, create it first.' % args.path)
