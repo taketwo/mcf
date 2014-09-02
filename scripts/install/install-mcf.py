@@ -46,6 +46,7 @@ apt_packages = ['python-pip',
                 'fish',
                 'stow',
                 'unrar',
+                'apt-file',
                ]
 
 pacman_packages = ['python-pip',
