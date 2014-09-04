@@ -94,6 +94,11 @@ fi
 # disable XON/XOFF so that Ctrl-S combination works in reverse-i-search
 stty -ixon
 
+# Make sure that $MCF is set
+if [[ -z "$MCF" ]]; then
+  export MCF=/home/sergey/.mcf
+fi
+
 export EDITOR=vim
 export BROWSER=chromium-browser
 
