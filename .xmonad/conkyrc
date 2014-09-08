@@ -17,7 +17,9 @@ ${endif}\
 ## Layout ##
 ${exec ~/.xmonad/layout.sh}\
 ## Gmail ##
+^ca(1, ~/.xmonad/gmail.sh -p)\
 ${texeci 30 ~/.xmonad/gmail.sh}\
+^ca()\
 ## Toggl ##
 ${texeci 30 ~/.xmonad/toggl.sh}\
 ## Network ##
