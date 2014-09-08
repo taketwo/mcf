@@ -555,7 +555,7 @@ logHookTopLeft handle s = defaultPP
 -- Top right (System status) ----------------------------------------------- {{{
 
 barTopRight :: Int -> Int -> String
-barTopRight screenWidth screenHeight = "conky -c ~/.xmonad/conkyrc-top-right | dzen2"
+barTopRight screenWidth screenHeight = "conky -c ~/.xmonad/conkyrc | dzen2"
                      ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
                      ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
                      ++ " -ta 'r'"
