@@ -14,15 +14,15 @@ nm_connections ()
     # We are dealing with an old nmcli version
     connections=`nmcli --terse --fields VPN,DEVICES,NAME con status`
   else
-    connections=`nmcli --terse --fields TYPE,DEVICE,NAME con show`
+    connections=$(nmcli connection show --active)
   fi
   nm=()
-  for con in $connections; do
-    IFS=':' read -a c <<< "$con"
-    case "${c[0]}" in
-      yes|vpn ) nm=("${nm[@]}" "${c[2]}")
+  while read -r connection; do
+    read -a c <<< "$connection"
+    case "${c[2]}" in
+      yes|vpn ) nm=("${nm[@]}" "${c[0]}")
                 ;;
-      * )       case "${c[1]}" in
+      * )       case "${c[3]}" in
                   eth*|enp* ) ethernet=1
                               ;;
                   wl* )       wireless=1
@@ -30,7 +30,7 @@ nm_connections ()
                 esac
                 ;;
     esac
-  done
+  done < <(nmcli connection show --active)
 }
 
 openvpn_connections ()
