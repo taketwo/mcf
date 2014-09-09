@@ -1,4 +1,4 @@
-Start ()
+StartIndicator ()
 {
   eval "output=' '"
 }
@@ -41,7 +41,7 @@ Add ()
   eval "output='$output${1//\'/^^^} '"
 }
 
-Flush ()
+FlushIndicator ()
 {
   if [ "$output" != " " ] ; then
     # Undo triple hat escape

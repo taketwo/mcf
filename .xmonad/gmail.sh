@@ -12,14 +12,14 @@ if [ "$1" != "-p" ]; then
 #                           Indicator mode                            #
 #######################################################################
   count=`echo "$feed" | grep -o "<entry>" | wc -l`
-  Start
+  StartIndicator
   Icon "mail"
   Add $count
   if [[ $count > 0 ]]; then
     Fg $SolarizedBase3
     Bg $SolarizedRed
   fi
-  Flush
+  FlushIndicator
 else
 #######################################################################
 #                             Popup mode                              #

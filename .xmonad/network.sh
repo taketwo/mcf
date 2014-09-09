@@ -73,7 +73,7 @@ nm_connections
 openvpn_connections
 is_online
 
-Start
+StartIndicator
 
 # NetworkManager devices
 if [ $wireless -eq 1 ] ; then
@@ -101,8 +101,8 @@ if [ $online -eq 1 ] ; then
   Bg $SolarizedBlue
 fi
 
-Flush
-Start
+FlushIndicator
+StartIndicator
 
 # OpenVPN connections (Kebrum)
 for c in $kebrum ; do
@@ -112,4 +112,4 @@ done
 
 Fg $SolarizedBase3
 Bg $SolarizedYellow
-Flush
+FlushIndicator

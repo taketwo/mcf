@@ -3,7 +3,7 @@
 source $MCF/.xmonad/panel.bash
 source $MCF/.xmonad/solarized.bash
 
-Start
+StartIndicator
 
 if hash rhythmbox-client 2>/dev/null; then
   rhythmbox=`/usr/bin/rhythmbox-client --print-playing --no-start --no-present`
@@ -25,7 +25,7 @@ Fg $SolarizedBase3
 
 Click 1 "rhythmbox-client --play-pause"
 
-Flush
+FlushIndicator
 
 # Just for reference, this piece of bash code fetches artist and song
 # names from Xfm. Almost correctly.

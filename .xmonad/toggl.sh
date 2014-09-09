@@ -3,7 +3,7 @@
 source $MCF/.xmonad/panel.bash
 source $MCF/.xmonad/solarized.bash
 
-Start
+StartIndicator
 
 if [[ `$MCF/scripts/bin/toggl running` == "yes" ]]; then
   Icon "toggl"
@@ -11,4 +11,4 @@ if [[ `$MCF/scripts/bin/toggl running` == "yes" ]]; then
   Fg $SolarizedBase3
 fi
 
-Flush
+FlushIndicator
