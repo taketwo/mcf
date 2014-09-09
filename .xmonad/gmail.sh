@@ -25,19 +25,20 @@ else
 #                             Popup mode                              #
 #######################################################################
   # add protection from multiple instances (test ps aux | grep ...)
-  width=400
-  font_pixelsize=11
-  line_height=$((font_pixelsize + 4))
-  lines=8
-  height=$((line_height * (lines + 1)))
-  bottom_gap=20
-  read _ s_width <<< "$(xwininfo -root | egrep Width)"
-  read _ s_height <<< "$(xwininfo -name "dzen title" | egrep Height)"
-  {
-  echo '^fg(#a00)GMail^fg()'
-  titles=`echo "$feed" | grep -oP "(?<=<entry><title>)(.*?)(?=</title>)"`
-  echo $titles
-  echo '^uncollapse()'
-  } | dzen2 -x $((s_width - width)) -y $s_height -w $width -l $lines -h $line_height -sa center -fn "Liberation Mono:pixelsize=$font_pixelsize" -e 'leaveslave=exit;button1=exit;button3=exit;onstart=uncollapse' -p -bg "#3c3b37" -title-name 'gmail_popup'
+  StartPopup
+  count=0
+  while read -r title; do
+    code=$((count+9312))
+    ((count++))
+    # Decode special HTML characters like ampersand
+    #title=`echo " &#$code  $title" | w3m -dump -T text/html`
+    Add " $count "
+    Bg $SolarizedGreen
+    title=`echo "$title" | w3m -dump -T text/html`
+    Add " $title"
+    Fg $SolarizedBase3
+    NewLine
+  done < <(echo "$feed" | grep -oP "(?<=<entry><title>)(.*?)(?=</title>)")
+  FlushPopup
 fi
 
