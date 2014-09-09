@@ -3,6 +3,7 @@
 # Requires amixer
 #   pacman -S alsa-utils
 
+source $MCF/.xmonad/solarized.bash
 source $MCF/.xmonad/panel.bash
 
 volume=`amixer get Master | awk -F'[]%[]' 'BEGIN { nlines = 0 } /%/ { if (nlines == 0) { if ($5 == "off" || $7 == "off") { print "0" } else { print $2 }; nlines++}}'`

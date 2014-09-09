@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source $MCF/.xmonad/panel.bash
+source $MCF/.xmonad/solarized.bash
 
 Start
 
