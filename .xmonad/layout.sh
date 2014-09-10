@@ -2,7 +2,7 @@
 
 source $MCF/.xmonad/panel.bash
 
-Start
+StartIndicator
 
 case `$MCF/scripts/bin/keyboard -g` in
   "us(dvorak)" ) Add "DV"
@@ -16,4 +16,4 @@ esac
 Click 1 "keyboard -n"
 Click 3 "keyboard -s us"
 
-Flush
+FlushIndicator
