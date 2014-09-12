@@ -15,12 +15,17 @@ nnoremap <LocalLeader>f diwds(
 
 " Wrap with function call
 xmap W <Plug>VSurround
+
+" Hint: to get ASCII value put the cursor over a letter and press 'ga'
+
 " w - input function name
 let b:surround_119 = "\1Function: \1(\r)"
 " l - len
 let b:surround_108 = "len(\r)"
 " r - range
 let b:surround_114 = "range(\r)"
+" e - enumerate
+let b:surround_101 = "enumerate(\r)"
 
 " Append colon to the end of line
 nnoremap <silent> <LocalLeader>: :call AppendColon()<CR>
