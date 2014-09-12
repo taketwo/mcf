@@ -70,13 +70,14 @@ pacman_packages = ['python-pip',
                    'w3m',
                   ]
 
-aura_packages = ['trayer-srg'
+aura_packages = ['trayer-srg',
                  'legit-git']
 
 pip_packages = ['pyflakes',
                 'pep8',
                 'flake8',
-                'frosted'
+                'frosted',
+                'isort',
                ]
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
