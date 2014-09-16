@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# YCM support
+read -p "Link to YCM config file? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  ln -s $MCF/misc/.ycm_extra_conf.py .ycm_extra_conf.py
+fi
+
+# Vim project
+read -p "Create Vim project file? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  touch ".vim"
+  # Make
+  read -p " * set makeprg? " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    echo "let &makeprg=\"make\ -C\".expand('<sfile>:p:h').\"/build\"" >> ".vim"
+  fi
+  # Ultisnips
+  read -p " * associate cpp with pcl and eigen snippets? " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    echo "augroup AddSnippets" >> ".vim"
+    echo "  autocmd!" >> ".vim"
+    echo "  autocmd FileType cpp :UltiSnipsAddFiletypes pcl.eigen.cpp" >> ".vim"
+    echo "augroup END" >> ".vim"
+  fi
+fi
+
