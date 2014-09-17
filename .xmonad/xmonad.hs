@@ -5,37 +5,13 @@
 {-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, TypeSynonymInstances, MultiParamTypeClasses,  ImplicitParams, PatternGuards #-}
 
 import XMonad hiding ( (|||) )
-import XMonad.Layout hiding ( (|||) )
-import XMonad.Layout.IM
-import XMonad.Layout.Gaps
 import XMonad.Layout.Named
 import XMonad.Layout.Tabbed
-import XMonad.Layout.Master
 import XMonad.Layout.Reflect
-import XMonad.Layout.MosaicAlt
-import XMonad.Layout.NoFrillsDecoration
-import XMonad.Layout.SimplestFloat
-import XMonad.Layout.NoBorders (noBorders,smartBorders,withBorder)
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.PerWorkspace (onWorkspace)
-import XMonad.Layout.Minimize
-import XMonad.Layout.Maximize
 import XMonad.Layout.Magnifier as Mag
 import XMonad.Layout.LimitWindows
-import XMonad.Layout.WindowNavigation
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.IndependentScreens
-import XMonad.StackSet (RationalRect (..), currentTag)
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.DynamicHooks
-{-import XMonad.Hooks.DynamicBars-}
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.SetWMName
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.FadeInactive
 
 import XMonad.Prompt
 import XMonad.Prompt.Input
