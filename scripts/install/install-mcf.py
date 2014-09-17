@@ -48,6 +48,7 @@ apt_packages = ['python-pip',
                 'unrar',
                 'apt-file',
                 'w3m',
+                'python-urwid',                            # urwid CLI library
                ]
 
 pacman_packages = ['python-pip',
@@ -68,6 +69,7 @@ pacman_packages = ['python-pip',
                    'stow',
                    'unrar',
                    'w3m',
+                   'python-urwid',                         # urwid CLI library
                   ]
 
 aura_packages = ['trayer-srg',
