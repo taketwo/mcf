@@ -26,12 +26,13 @@ files = [('.dircolors', 'Dircolors for Solarized palette'),
          ('.tmux.conf', 'Tmux configuration file'),
          (('fish', '.config/fish'), 'Fish configuration folder')]
 
-apt_packages = ['python-pip',
-                'python-keyring',                          # keyring-password
-                'xdotool',                                 # vim paste
+DEPENDENCIES = {'apt':
+               ['python-pip',
+                'python-keyring',                  # keyring-password
+                'xdotool',                         # vim paste
                 'gitk',
                 'git-gui',
-                'xsel',                                    # vim clipboard
+                'xsel',                            # vim clipboard
                 'vim',
                 'exuberant-ctags',
                 'tree',
@@ -48,39 +49,36 @@ apt_packages = ['python-pip',
                 'unrar',
                 'apt-file',
                 'w3m',
-                'python-urwid',                            # urwid CLI library
-               ]
-
-pacman_packages = ['python-pip',
-                   'python-keyring',                       # keyring-password
-                   'xorg-setxkbmap',                       # keyboard
-                   'xorg-xprop',                           # xprop
-                   'xdotool',                              # vim paste
-                   'git',                                  # gitk
-                   'xsel',                                 # vim clipboard
-                   'gvim',                                 # vim with python
-                   'ctags',                                # exuberant ctags
-                   'tree',
-                   'powertop',
-                   'htop',
-                   'openvpn',
-                   'tmux',
-                   'redshift',
-                   'stow',
-                   'unrar',
-                   'w3m',
-                   'python-urwid',                         # urwid CLI library
-                  ]
-
-aura_packages = ['trayer-srg',
+                'python-urwid']                    # urwid CLI library
+                ,'pacman':
+                ['python-pip',
+                 'python-keyring',                 # keyring-password
+                 'xorg-setxkbmap',                 # keyboard
+                 'xorg-xprop',                     # xprop
+                 'xdotool',                        # vim paste
+                 'git',                            # gitk
+                 'xsel',                           # vim clipboard
+                 'gvim',                           # vim with python
+                 'ctags',                          # exuberant ctags
+                 'tree',
+                 'powertop',
+                 'htop',
+                 'openvpn',
+                 'tmux',
+                 'redshift',
+                 'stow',
+                 'unrar',
+                 'w3m',
+                 'python-urwid']                   # urwid CLI library
+                ,'aura':
+                ['trayer-srg',
                  'legit-git']
-
-pip_packages = ['pyflakes',
-                'pep8',
-                'flake8',
-                'frosted',
-                'isort',
-               ]
+                ,'pip':
+                ['pyflakes',
+                 'pep8',
+                 'flake8',
+                 'frosted',
+                 'isort']}
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
@@ -125,10 +123,7 @@ if __name__ == '__main__':
         decrypt(f)
     print('')
 
-    install.apt(apt_packages)
-    print('')
-
-    install.pip(pip_packages)
+    install.install_dependencies(DEPENDENCIES)
     print('')
 
     print('Configuring Gnome terminal...')
