@@ -79,6 +79,7 @@ Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'smancill/conky-syntax.vim'
 Plugin 'taketwo/vim-ros'
 Plugin 'dag/vim-fish'
+Plugin 'rhysd/vim-clang-format'
 
 " Git related
 Plugin 'gregsexton/gitv'
