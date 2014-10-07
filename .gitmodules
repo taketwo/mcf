@@ -16,3 +16,6 @@
 [submodule "scripts/bundle/ghi"]
 	path = scripts/bundle/ghi
 	url = https://github.com/stephencelis/ghi.git
+[submodule "scripts/bundle/timeout"]
+	path = scripts/bundle/timeout
+	url = https://github.com/pshved/timeout.git
