@@ -9,3 +9,7 @@
 *.errors
 *.hi
 *.o
+
+# Bash
+bash/local/before/*
+bash/local/after/*

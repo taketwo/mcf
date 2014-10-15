@@ -1,6 +1,4 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -110,12 +108,12 @@ load ()
   fi
 }
 
-load archives
-load navigation
-load touchpad
-load network
-load man
-load stow
+#load archives
+#load navigation
+#load touchpad
+#load network
+#load man
+#load stow
 
 # quick out-of-source build preparation
 alias osb='mkd build && ccmake ..'
@@ -224,3 +222,50 @@ source $MCF/scripts/bundle/z/z.sh
 
 # remove load function
 unset -f load
+
+BASH_TIME_STARTUP=${BASH_TIME_STARTUP:-1}
+
+if [[ $BASH_TIME_STARTUP == 1 ]]; then
+  # Track the time it takes to load each configuration file
+  bash_times_file="/tmp/bashtimes.$$"
+  echo -n > "$bash_times_file"
+fi
+
+timed_source()
+{
+  local file="$1"
+  local before=$(date +%s%N)
+  source "$file"
+  local after=$(date +%s%N)
+  echo "$file $before $after" >> "$bash_times_file"
+}
+
+source_dir()
+{
+  local dir="$1"
+  local sourcer
+  if [[ $BASH_TIME_STARTUP == 1 ]]; then
+    sourcer='timed_source'
+  else
+    sourcer='source'
+  fi
+  if [[ -d $dir ]]
+  then
+    local conf_file
+    for conf_file in "$dir"/*
+    do
+      if [[ -f $conf_file ]]; then
+        $sourcer "$conf_file"
+      fi
+    done
+  fi
+}
+
+source_dir $MCF/bash/local/before
+source_dir $MCF/bash
+source_dir $MCF/bash/local/after
+
+unset source_dir
+unset timed_source
+unset bash_times_file
+unset BASH_TIME_STARTUP
