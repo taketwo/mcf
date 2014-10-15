@@ -155,6 +155,11 @@ if ! hash see 2>/dev/null; then
   alias see='xdg-open'
 fi
 
+less ()
+{
+  pygmentize -g -f terminal256 -P style=solarizedlight "$@" | /usr/bin/less -FiXRM
+}
+
 # relaunch the last command in gdb
 gdb-last-command ()
 {
