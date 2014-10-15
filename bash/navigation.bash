@@ -8,3 +8,11 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
+function cdf ()
+{
+  if [[ -e $1 && ! -d $1 ]]; then
+    cd "$(dirname "$1")"
+  else
+    cd "$1"
+  fi
+}
