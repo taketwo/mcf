@@ -10,14 +10,6 @@
 #
 # </doc:archives> }}}
 
-if (( ${BASH_LINENO:-0} == 0 )); then
-    source bashful-doc
-    doc_execute "$0" "$@"
-    exit
-fi
-
-[[ $MCF_ARCHIVES_LOADED ]] && return
-
 extract () #{{{1
 {
   # <doc:extract> {{{
