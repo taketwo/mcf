@@ -1,6 +1,33 @@
-# extract known archive types
-extract ()
+#!/usr/bin/env bash
+
+# Filename:      010-archives.bash
+# Description:   Utility functions for dealing with archive files.
+# Maintainer:    Sergey Alexandrov <alexandrov88@gmail.com>
+
+# <doc:archives> {{{
+#
+# Provides functions for working with archive files.
+#
+# </doc:archives> }}}
+
+if (( ${BASH_LINENO:-0} == 0 )); then
+    source bashful-doc
+    doc_execute "$0" "$@"
+    exit
+fi
+
+[[ $MCF_ARCHIVES_LOADED ]] && return
+
+extract () #{{{1
 {
+  # <doc:extract> {{{
+  #
+  # Extracts an archieve if it has one of the known types
+  #
+  # Usage: extract FILE
+  #
+  # </doc:extract> }}}
+
   if [ -f $1 ] ; then
     case $1 in
       *.tar.bz2)   tar xvjf $1                               ;;
@@ -22,9 +49,26 @@ extract ()
   fi
 }
 
-# pack known archive types
-pack ()
+pack () #{{{1
 {
+  # <doc:pack> {{{
+  #
+  # Packs a file or a directory in an archive of requested type
+  #
+  # Usage: pack TYPE FILE
+  #
+  # Supported archive types:
+  #
+  #     tbz
+  #     tgz
+  #     tar
+  #     bz2
+  #     gz
+  #     zip
+  #     7z
+  #
+  # </doc:pack> }}}
+
   if [ $1 ] ; then
     case $1 in
       tbz)      tar cjvf $2.tar.bz2 $2   ;;
