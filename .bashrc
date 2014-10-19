@@ -47,49 +47,6 @@ esac
 
 export TERM='xterm-256color'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# quick out-of-source build preparation
-alias osb='mkd build && ccmake ..'
-
-# apt-get aliases
-alias agu='sudo apt-get update && sudo apt-get upgrade'
-alias agi='sudo apt-get install'
-alias agr='sudo apt-get remove'
-
-# yaourt aliases
-alias yu='yaourt -Syua'
-alias yi='yaourt -Sa'
-alias yr='yaourt -Rc'
-
-# quick background color switch
-alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/set_dark.sh'
-alias light='~/.mcf/misc/gnome-terminal-colors-solarized/set_light.sh'
-
-# copy and paste to clipboard
-alias cbc='xsel --clipboard --input'
-alias cbp='xsel --clipboard --output'
-
-# misc
-alias ga='gitk --all'
-alias gg='git gui'
-alias ff='find . -name $*'
-alias vundle='vim +BundleInstall +qall'
-alias tex-clean='rm -f *.{aux,log,out,bbl,blg}'
-alias trayer-show='trayer --align center --edge top --SetDockType false --SetPartialStrut false --widthtype request --transparent false --tint 0xFFFFFF --heighttype request --distancefrom top --distance 400 --monitor 1 --padding 20'
-alias msync='rsync -avz --size-only --progress --delete /media/Files/Music/ ex:sdcard1/Music'
-
-if ! hash see 2>/dev/null; then
-  alias see='xdg-open'
-fi
-
-less ()
-{
-  pygmentize -g -f terminal256 -P style=solarizedlight "$@" | /usr/bin/less -FiXRM
-}
-
 # relaunch the last command in gdb
 gdb-last-command ()
 {
@@ -104,25 +61,6 @@ title ()
 {
   echo -ne "\033]0;$1\007"
 }
-
-encrypt ()
-{
-  openssl aes-256-cbc -a -salt -in $1 -out $1.enc
-}
-
-decrypt ()
-{
-  openssl aes-256-cbc -a -d -in $1 -out $1.dec
-}
-
-DISTRO=`cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)'`
-if [[ $DISTRO == "Arch" ]]; then
-  alias file-from-package='pkgfile'
-  alias files-in-package='pacman -Ql'
-else
-  alias file-from-package='apt-file search'
-  alias files-in-package='dpkg-query -L'
-fi
 
 vim-ag()
 {
