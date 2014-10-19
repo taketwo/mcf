@@ -3,24 +3,6 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoredups:ignorespace
-
-# append to the history file, don't overwrite it
-shopt -s histappend
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=25000
-HISTFILESIZE=50000
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -65,55 +47,9 @@ esac
 
 export TERM='xterm-256color'
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    # install dircolors for Solarized theme
-    test -r ~/.dircolors && eval `dircolors ~/.dircolors/dircolors.256dark`
-    # test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    # alias dir='dir --color=auto'
-    # alias vdir='vdir --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
-
-# disable XON/XOFF so that Ctrl-S combination works in reverse-i-search
-stty -ixon
-
-# Make sure that $MCF is set
-if [[ -z "$MCF" ]]; then
-  export MCF=/home/sergey/.mcf
-fi
-
-export EDITOR=vim
-export BROWSER=chromium-browser
-
-load ()
-{
-  script=$MCF/bash/$1.bash
-  if [ -f $script ] ; then
-    . $script
-  fi
-}
-
-#load archives
-#load navigation
-#load touchpad
-#load network
-#load man
-#load stow
 
 # quick out-of-source build preparation
 alias osb='mkd build && ccmake ..'
@@ -192,8 +128,6 @@ vim-ag()
 {
   vim -s <(printf "\e;Ag $1\n")
 }
-
-export PATH=$PATH:$MCF/scripts/bin
 
 # Source local configuration if it exists
 if [ -f ~/.bashrc_local ]; then
