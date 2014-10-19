@@ -78,7 +78,9 @@ DEPENDENCIES = {'apt':
                  'pep8',
                  'flake8',
                  'frosted',
-                 'isort']}
+                 'isort',
+                 'colout',
+                 'pygments-style-solarized']}
 
 encrypted = ['.netrc', '.secrets', '.kebrum']
 
