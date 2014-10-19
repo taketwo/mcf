@@ -47,15 +47,6 @@ esac
 
 export TERM='xterm-256color'
 
-# relaunch the last command in gdb
-gdb-last-command ()
-{
-  cmd=`fc -ln -2 -2 | sed -e 's/^[[:space:]]*//'`
-  bin=`cut -d ' ' -f 1 <<< $cmd`
-  arg=`cut -d ' ' -f 2- <<< $cmd`
-  gdb $bin -ex "run $arg"
-}
-
 # set terminal window title
 title ()
 {
@@ -67,28 +58,10 @@ vim-ag()
   vim -s <(printf "\e;Ag $1\n")
 }
 
-# Source local configuration if it exists
-if [ -f ~/.bashrc_local ]; then
-    . ~/.bashrc_local
-fi
-
 # Load secret configuration settings
 if [ -f ~/.secrets ]; then
     . ~/.secrets
 fi
-
-# Setup fancy "powerline-style" prompt
-function _update_ps1()
-{
-  export PS1="$(~/.mcf/scripts/bundle/powerline-shell/powerline-shell.py $?) "
-}
-export PROMPT_COMMAND="_update_ps1"
-
-# Setup z for quick jumping around
-source $MCF/scripts/bundle/z/z.sh
-
-# remove load function
-unset -f load
 
 BASH_TIME_STARTUP=${BASH_TIME_STARTUP:-1}
 
