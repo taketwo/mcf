@@ -11,7 +11,7 @@ function msync ()
     echo "Need a single argument: last octet of the target IP address"
     return
   fi
-  if [[ $HOSTNAME -eq "x201" ]]; then
+  if [[ $HOSTNAME == "x201" ]]; then
     rsync -avz -e 'ssh -p 2222' --size-only --progress --delete \
       root@10.20.121.$1:sdcard1/Music/ /home/sergey/Music
   else
