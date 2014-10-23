@@ -2,7 +2,7 @@ function kebrum ()
 {
   case $1 in
     off ) if hash systemctl 2>/dev/null; then
-            sudo systemctl stop openvpn
+            sudo systemctl stop openvpn@*
           else
             sudo service openvpn stop
           fi
@@ -10,7 +10,7 @@ function kebrum ()
     *   ) config="$1.Kebrum.TCP"
           if [ -f "/etc/openvpn/$config.conf" ]; then
             if hash systemctl 2>/dev/null; then
-              sudo systemctl start openvpn@$config
+              sudo systemctl start openvpn@$config.service
             else
               sudo service openvpn start $config
             fi
