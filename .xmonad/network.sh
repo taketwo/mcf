@@ -54,11 +54,8 @@ nm_connections ()
   fi
 }
 
-openvpn_connections ()
+openvpn_connections_old ()
 {
-  return
-  openvpn=()
-  kebrum=()
   connections=`service openvpn status | sed -n "s/ \* VPN '\(.*\)' is running/\1/p"`
   for c in $connections; do
     if [[ "$c" =~ "Kebrum" ]] ; then
@@ -68,6 +65,32 @@ openvpn_connections ()
       openvpn=("${openvpn[@]}" "$c")
     fi
   done
+}
+
+openvpn_connections_new ()
+{
+  connections=`systemctl status openvpn@* | grep -oP "(?<=OpenVPN connection to )(.*)"`
+  for c in $connections; do
+    if [[ "$c" =~ "Kebrum" ]] ; then
+      IFS='.' read -a name <<< "$c"
+      kebrum=("${kebrum[@]}" "$name")
+    else
+      openvpn=("${openvpn[@]}" "$c")
+    fi
+  done
+}
+
+openvpn_connections ()
+{
+  openvpn=()
+  kebrum=()
+  nmcli_version=`nmcli -v | grep -Po "(?<=version ).*"`
+  version-compare $nmcli_version 0.9.10.1
+  if [[ $? == 2 ]]; then
+    openvpn_connections_old
+  else
+    openvpn_connections_new
+  fi
 }
 
 is_online ()
