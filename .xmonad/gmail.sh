@@ -11,7 +11,7 @@ if [ "$1" != "-p" ]; then
 #######################################################################
 #                           Indicator mode                            #
 #######################################################################
-  count=`echo "$feed" | grep -o "<entry>" | wc -l`
+  count=`echo "$feed" | grep -oP "(?<=<fullcount>)(.*)(?=</fullcount>)"`
   StartIndicator
   Icon "mail"
   Add $count
