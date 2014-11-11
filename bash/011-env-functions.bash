@@ -163,7 +163,7 @@ function $function_name {
 #
 function link_complete_function()
 {
-   eval "complete -C __complete_$1 -o default ${2:-$1}"
+   eval "complete -F __complete_$1 -o default ${2:-$1}"
 }
 #______________________________________________________________________________
 
