@@ -17,3 +17,12 @@ function kebrum ()
           fi
   esac
 }
+
+function __complete_kebrum ()
+{
+  servers=`ls /etc/openvpn/ | grep -oP "([^.]+)(?=\.Kebrum)"`
+  local current=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=($(compgen -W "$servers off" -- $current))
+}
+
+link_complete_function kebrum
