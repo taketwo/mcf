@@ -53,3 +53,15 @@ stow-show-orphans ()
 {
   chkstow -a -t $STOW_TARGET
 }
+
+function __complete_stow ()
+{
+  packages=`ls "$STOW_DIR"`
+  local current=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=($(compgen -W "$packages" -- $current))
+}
+
+link_complete_function stow stow-adopt-as
+link_complete_function stow stow-install
+link_complete_function stow stow-delete
+
