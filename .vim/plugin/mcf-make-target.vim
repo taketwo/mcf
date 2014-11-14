@@ -13,4 +13,9 @@ function! MakeTarget(...)
     execute "Make ".g:mcf_make_target
 endfunction
 
-command! -nargs=* MakeTarget :call MakeTarget(<f-args>)
+function! s:MakeTargetComplete(ArgLead, CmdLine, CursorPos)
+    let targets = system(&makeprg." -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'")
+    return filter(sort(split(targets, '\n')), 'stridx(v:val, a:ArgLead) != -1')
+endfunction
+
+command! -nargs=* -complete=customlist,s:MakeTargetComplete MakeTarget :call MakeTarget(<f-args>)
