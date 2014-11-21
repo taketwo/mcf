@@ -4,6 +4,7 @@ setlocal foldmethod=syntax
 setlocal foldlevel=100
 
 inoremap <buffer> .. ->
+inoremap <buffer> .3 ...
 
 " Select until the underscore and substitute
 nnoremap <LocalLeader>- vt_s
