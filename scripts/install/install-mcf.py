@@ -78,7 +78,6 @@ DEPENDENCIES = {'apt':
                  'pep8',
                  'flake8',
                  'frosted',
-                 'isort',
                  'colout',
                  'pygments-style-solarized']}
 

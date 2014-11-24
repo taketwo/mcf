@@ -73,7 +73,10 @@ Plugin 'taketwo/vim-exchange'
 " Languages / frameworks
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'davidhalter/jedi-vim'
-Plugin 'fisadev/vim-isort'
+" isort is (temporary) disabled because:
+"   * do not use it that often
+"   * does not work on the Arch box
+" Plugin 'fisadev/vim-isort'
 Plugin 'tpope/vim-markdown'
 Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'smancill/conky-syntax.vim'
