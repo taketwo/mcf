@@ -49,6 +49,7 @@ DEPENDENCIES = {'apt':
                 'unrar',
                 'apt-file',
                 'w3m',
+                'libgit2',
                 'python-urwid']                    # urwid CLI library
                 ,'pacman':
                 ['python-pip',
@@ -69,6 +70,7 @@ DEPENDENCIES = {'apt':
                  'stow',
                  'unrar',
                  'w3m',
+                 'libgit',
                  'python-urwid']                   # urwid CLI library
                 ,'aura':
                 ['trayer-srg',
@@ -79,6 +81,9 @@ DEPENDENCIES = {'apt':
                  'flake8',
                  'frosted',
                  'colout',
+                 'pygit2',
+                 'pip-tools',
+                 'click',
                  'pygments-style-solarized']}
 
 encrypted = ['.netrc', '.secrets', '.kebrum']

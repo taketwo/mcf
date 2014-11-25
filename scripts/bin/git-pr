@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+import click
+import pygit2
+
+import os
+import re
+import shutil
+import argparse
+import subprocess
+
+@click.command()
+@click.argument('id', type=int)
+@click.option('--remote', default='origin', help='remote to use')
+def pr(id, remote):
+    """Check out a GitHub pull request with a given id."""
+    # Make sure that we are in a Git repository
+    try:
+        repo = pygit2.Repository(pygit2.discover_repository('.'))
+    except KeyError:
+        click.echo('Not in a Git repository.')
+        exit(1)
+    # Find requested remote
+    try:
+        names = [remote.name for remote in repo.remotes]
+        rem = repo.remotes[names.index(remote)]
+    except:
+        click.echo('Remote "{}" does not exist.'.format(remote))
+        exit(2)
+    # Make sure remote is hosted on GitHub
+    if not 'github.com' in rem.url:
+        click.echo('Remote "{}" is not hosted on GitHub.'.format(remote))
+        exit(3)
+    # Create 'pull' refspec if absent
+    PULL = '+refs/pull/*/head:refs/pull/origin/*'
+    if PULL not in rem.fetch_refspecs:
+        click.echo('Creating "pull" refspec...')
+        rem.add_fetch(PULL)
+        rem.save()
+    # Fetch remote
+    # TODO: figure out credentials
+    # rem.fetch()
+    # Check out the pull request
+    repo.checkout('refs/pull/origin/{}'.format(id))
+    # TODO: create a branch?
+
+if __name__ == '__main__':
+    pr()
