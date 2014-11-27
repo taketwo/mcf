@@ -49,7 +49,7 @@ DEPENDENCIES = {'apt':
                 'unrar',
                 'apt-file',
                 'w3m',
-                'libgit2',
+                'libgit2-dev',
                 'python-urwid']                    # urwid CLI library
                 ,'pacman':
                 ['python-pip',
