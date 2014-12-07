@@ -21,7 +21,9 @@ ${exec ~/.xmonad/layout.sh}\
 ${texeci 30 ~/.xmonad/gmail.sh}\
 ^ca()\
 ## Toggl ##
+^ca(1, ~/.xmonad/toggl.sh -p)\
 ${texeci 30 ~/.xmonad/toggl.sh}\
+^ca()\
 ## Network ##
 ${texeci 10 ~/.xmonad/network.sh}\
 ## Volume ##
