@@ -37,11 +37,20 @@ def pr(id, remote):
         click.echo('Creating "pull" refspec...')
         rem.add_fetch(PULL)
         rem.save()
+    # TODO: figure out why this does not work
+    # Setup credentials if needed
+    if rem.url.startswith('git@'):
+        rem.credentials = pygit2.UserPass('taketwo', '')
+        rem.credentials = pygit2.Keypair('taketwo',
+                                         '/home/sergey/.ssh/id_rsa.pub',
+                                         '/home/sergey/.ssh/id_rsa', '')
     # Fetch remote
-    # TODO: figure out credentials
     # rem.fetch()
     # Check out the pull request
-    repo.checkout('refs/pull/origin/{}'.format(id))
+    try:
+        repo.checkout('refs/pull/origin/{}'.format(id))
+    except KeyError:
+        click.echo('Please manually fetch the remote and repeat the command')
     # TODO: create a branch?
 
 if __name__ == '__main__':
