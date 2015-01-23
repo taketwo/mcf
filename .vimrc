@@ -32,7 +32,7 @@
 
   source ~/.vim/plugin/mcf-gnome.vim
 
-  if GetGnomeValue('background-color') == "'#00002B2B3636'"
+  if GetGnomeValue('background-color') == "#00002B2B3636"
     set background=dark
   else
     set background=light
