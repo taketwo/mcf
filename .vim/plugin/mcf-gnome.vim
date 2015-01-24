@@ -34,5 +34,5 @@ function! GetGnomeValue(name)
         let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/' . profile . '/' . name . '"'
     endif
     let value = substitute(system(shellcmd), "[\n]", "", "g")
-    return substitute(value, "^'\\(.*\\)'$", "", "")
+    return substitute(value, "^'\\(.*\\)'$", "\\1", "")
 endfunction
