@@ -110,39 +110,6 @@ def cabal(package, local=False):
     subprocess.call(cmd.split())
 
 
-def remove(dest):
-    """
-    Universal remove (handles symlinks, files, and folders).
-    """
-    try:
-        os.unlink(dest)
-        return True
-    except OSError:
-        pass
-    try:
-        os.remove(dest)
-        return True
-    except OSError:
-        pass
-    try:
-        shutil.rmtree(dest)
-        return True
-    except OSError:
-        pass
-
-
-def link(src, dest, desc, verbose=True):
-    """
-    Create symlink.
-    """
-    if os.path.lexists(dest):
-        remove(dest)
-    os.symlink(src, dest)
-    if verbose:
-        print('[*]', desc)
-        print('   ', dest, '->', src)
-
-
 def install_dependencies(dependencies):
     """
     Install dependencies taking into account the current linux distribution.

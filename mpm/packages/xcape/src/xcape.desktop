@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=xcape -e 'Alt_L=Escape;Alt_R=Return;Super_L=Super_L|0;Shift_R=Shift_R|Tab'
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en]=xcape
+Name=xcape
+Comment[en]=
+Comment=

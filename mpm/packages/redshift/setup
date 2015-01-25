@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import os
+import os.path
+import argparse
+
+from filesystem import link
+
+
+def setup():
+    home = os.path.expanduser('~')
+    path, fl = os.path.split(os.path.realpath(__file__))
+    src = os.path.join(path, 'src', 'redshift.desktop')
+    tgt = os.path.join(home, '.config/autostart/redshift.desktop')
+    link(src, tgt, 'RedShift autostart entry')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Setup redshift. This adds the program to autostart.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    args = parser.parse_args()
+    setup()

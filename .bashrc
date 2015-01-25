@@ -101,6 +101,10 @@ source_dir()
   fi
 }
 
+if [ -z "$MCF" ]; then
+  MCF=$HOME/.mcf
+fi
+
 source_dir $MCF/bash/local/before
 source_dir $MCF/bash
 source_dir $MCF/bash/local/after

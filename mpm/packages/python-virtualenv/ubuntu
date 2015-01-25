@@ -1,0 +1,3 @@
+apt: python-virtualenv
+apt: virtualenv-clone
+apt: virtualenvwrapper

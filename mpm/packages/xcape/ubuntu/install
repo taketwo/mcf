@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import argparse
+import subprocess
+
+from git_repository import GitRepository
+
+
+def install():
+    with GitRepository('alols/xcape') as repo:
+        # Change installation path to /usr/local
+        _replace('s/\/usr/\/usr\/local/', 'Makefile')
+        subprocess.call(['make'])
+        subprocess.call(['sudo', 'make', 'install'])
+
+
+def _replace(e, f):
+    cmd = ['sed', '-i', '-e', e, f]
+    subprocess.call(cmd)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Install xcape from source.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    args = parser.parse_args()
+    install()
+

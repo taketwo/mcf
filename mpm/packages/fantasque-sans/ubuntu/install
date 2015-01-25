@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import argparse
+import subprocess
+
+from git_repository import GitRepository
+
+
+def install():
+    with GitRepository('belluzj/fantasque-sans') as repo:
+        # Completely remove line with ttf2eot command
+        _replace('s/^\tttf2eot.*$//', 'Makefile')
+        _replace('s/\.fonts/\.mcf\/\.fonts/', 'Makefile')
+        # Make install
+        subprocess.call(['make', 'install'])
+
+
+def _replace(e, f):
+    cmd = ['sed', '-i', '-e', e, f]
+    subprocess.call(cmd)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Install Fantasque Sans font from source.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    args = parser.parse_args()
+    install()

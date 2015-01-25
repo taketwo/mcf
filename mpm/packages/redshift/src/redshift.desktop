@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=redshift -l 50.4:7.5 -t 6000:4500 &
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en]=redshift
+Name=redshift
+Comment[en]=
+Comment=

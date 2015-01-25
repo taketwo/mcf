@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import os
+import argparse
+from os.path import join, expanduser, lexists
+
+
+def install():
+    print('Creating symlinks...')
+    for f, d in _FILES:
+        _link(f, d)
+
+
+def _link(paths, desc):
+    home = expanduser('~')
+    paths = paths if isinstance(paths, tuple) else (paths, paths)
+    src = join(home, '.mcf', paths[0])
+    dest = join(home, paths[1])
+    if lexists(dest):
+        os.unlink(dest)
+    os.symlink(src, dest)
+    print('[+]', desc)
+    print('   ', dest, '->', src)
+
+
+_FILES = [('.dircolors', 'Dircolors for Solarized palette'),
+          ('.fonts', 'Custom fonts'),
+          ('.vim', 'VIM settings/plugins folder'),
+          ('.vimrc', 'VIM configuration file'),
+          ('.bashrc', 'Bash configuration file'),
+          ('.inputrc', 'Readline configuration file'),
+          ('.pam_environment', 'User environment setup'),
+          ('.mime.types', 'Custom MIME types'),
+          ('.mailcap', 'Custom MIME type-to-program mappings'),
+          ('.xinitrc', 'X client script'),
+          ('texmf', 'Latex packages'),
+          ('.gitconfig', 'GIT configuration file'),
+          ('.tmux.conf', 'Tmux configuration file'),
+          (('fish', '.config/fish'), 'Fish configuration folder')]
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Install MCF symlinks.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    args = parser.parse_args()
+    install()

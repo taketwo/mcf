@@ -1,0 +1,49 @@
+# System
+tmux
+powertop
+htop
+stow
+xorg-setxkbmap                         # keyboard layout switching
+clang
+xcape
+
+# Network/Internet
+openssh
+openvpn
+w3m
+
+# Git
+gitk
+git-gui
+
+# Python-related
+python-pip
+python-virtualenv
+python-keyring
+python-urwid
+pip: pyflakes
+pip: pep8
+pip: flake8
+pip: frosted
+pip: colout                           # for hless command
+pip: pygments-style-solarized         # for hless command
+pip: pip-tools
+pip: click
+
+# Vim
+vim
+xsel                                   # copy to clipboard
+ctags
+xdotool                                # paste with F5
+
+# Util
+unrar
+apt-file
+tree
+xorg-xprop
+ag
+
+# Misc
+trayer
+redshift
+fantasque-sans
