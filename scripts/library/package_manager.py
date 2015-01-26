@@ -5,8 +5,10 @@ from platform import linux_distribution
 from collections import defaultdict
 import subprocess
 
+import stow
 
-PACKAGES = '/home/sergey/.mcf/mcm/packages'
+
+PACKAGES = '/home/sergey/.mcf/misc/packages'
 PLATFORM = linux_distribution()[0].lower()
 NATIVE_PM = {'arch': 'pacman', 'ubuntu': 'apt'}[PLATFORM]
 # PLATFORM = 'ubuntu'
@@ -81,8 +83,8 @@ class PackageManager(object):
             Additional options to pass to the package manager.
         """
         CMD = {'apt': 'sudo apt-get install --force-yes -y',
-               'pacman': 'sudo pacman --noconfirm -S',
-               'yaourt': 'sudo yaourt --noconfirm -Sa',
+               'pacman': 'sudo pacman --noconfirm --needed -S',
+               'yaourt': 'yaourt --noconfirm --needed -Sa',
                'pip': 'sudo pip install --upgrade'}
         if not manager in CMD.keys():
             raise Exception('Unsupported manager')
@@ -94,10 +96,8 @@ class PackageManager(object):
             p = [package]
         cmd = CMD[manager] + ' ' + ' '.join(p) + ' ' + args
         subprocess.check_call(cmd.split())
-
-    def _install_with_script(self, script):
-        # os.environ['PYTHONPATH'] = '/home/sergey/.mcf/scripts/library'
-        subprocess.check_call([script], env=os.environ)
+        if manager == 'pip':
+            stow.adopt_as('pip')
 
     def install(self, package_name, verbose=False):
         commands = self.resolve(package_name)
@@ -113,15 +113,18 @@ class PackageManager(object):
             if 'script' in merged:
                 print('[*] Install scripts\n')
                 for s in sorted(merged['script']):
-                    print(' -', s)
-                    self._install_with_script(s)
+                    print('>', s)
+                    subprocess.check_call([s], env=os.environ)
                     print('')
             if 'setup' in merged:
+                print('[*] Setup scripts\n')
                 for s in merged['setup']:
+                    print('>', s)
                     subprocess.check_call([s], env=os.environ)
+                    print('')
         except Exception as e:
             print('Installation of \"{}\" failed'.format(package_name))
-            print(e)
+            print('Error:', e)
 
     def describe_package(self, package_name, merged):
         print('Package \"{}\" resolved into:\n'.format(package_name))

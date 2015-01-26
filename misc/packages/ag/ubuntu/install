@@ -4,6 +4,7 @@
 import argparse
 import subprocess
 
+from stow import adopt_as
 from git_repository import GitRepository
 
 
@@ -11,11 +12,22 @@ def install():
     with GitRepository('ggreer/the_silver_searcher') as repo:
         subprocess.call(['./build.sh'])
         subprocess.call(['sudo', 'make', 'install'])
+        adopt_as('ag')
+
+
+def is_installed():
+    return subprocess.call(['bash', '-c', 'hash ag']) == 0
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
     Install the silver searcher (ag) from source.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--reinstall', action='store_true',
+                        help='reinstall if the font is already installed')
     args = parser.parse_args()
-    install()
+    if not args.reinstall and is_installed():
+        print('The silver searcher is already installed. '
+              'Pass --reinstall to force reinstallation.')
+    else:
+        install()

@@ -24,7 +24,6 @@ python-urwid
 pip: pyflakes
 pip: pep8
 pip: flake8
-pip: frosted
 pip: colout                           # for hless command
 pip: pygments-style-solarized         # for hless command
 pip: pip-tools

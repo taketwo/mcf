@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
+import locale
 import argparse
 import subprocess
 
@@ -16,6 +17,12 @@ def install():
         subprocess.call(['make', 'install'])
 
 
+def is_installed():
+    enc = locale.getdefaultlocale()[1]
+    fonts = subprocess.check_output(['fc-list']).decode(enc)
+    return fonts.find('FantasqueSans') != -1
+
+
 def _replace(e, f):
     cmd = ['sed', '-i', '-e', e, f]
     subprocess.call(cmd)
@@ -25,5 +32,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
     Install Fantasque Sans font from source.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--reinstall', action='store_true',
+                        help='reinstall if the font is already installed')
     args = parser.parse_args()
-    install()
+    if not args.reinstall and is_installed():
+        print('FantasqueSans is already installed. '
+              'Pass --reinstall to force reinstallation.')
+    else:
+        install()

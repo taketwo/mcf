@@ -4,6 +4,7 @@
 import argparse
 import subprocess
 
+from stow import adopt_as
 from git_repository import GitRepository
 
 
@@ -13,6 +14,11 @@ def install():
         _replace('s/\/usr/\/usr\/local/', 'Makefile')
         subprocess.call(['make'])
         subprocess.call(['sudo', 'make', 'install'])
+        adopt_as('xcape')
+
+
+def is_installed():
+    return subprocess.call(['bash', '-c', 'hash xcape']) == 0
 
 
 def _replace(e, f):
@@ -24,6 +30,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
     Install xcape from source.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--reinstall', action='store_true',
+                        help='reinstall if the font is already installed')
     args = parser.parse_args()
-    install()
-
+    if not args.reinstall and is_installed():
+        print('Xcape is already installed. '
+              'Pass --reinstall to force reinstallation.')
+    else:
+        install()

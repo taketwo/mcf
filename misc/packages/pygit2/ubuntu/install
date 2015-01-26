@@ -4,6 +4,7 @@
 import argparse
 import subprocess
 
+from stow import adopt_as
 from git_repository import GitRepository
 
 
@@ -14,6 +15,7 @@ def install():
         subprocess.call('cmake --build .'.split())
         subprocess.call('sudo cmake --build . --target install'.split())
         subprocess.call('sudo ldconfig'.split())
+        adopt_as('libgit2')
 
 
 if __name__ == '__main__':
