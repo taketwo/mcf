@@ -20,7 +20,7 @@ try:
         subprocess.check_call(cmd.split())
     else:
         print('    cloning the repository')
-        cmd = 'git clone -b mpm --recursive https://code.google.com/p/mcf .mcf'
+        cmd = 'git clone --recursive https://code.google.com/p/mcf .mcf'
         subprocess.check_call(cmd.split())
 except subprocess.CalledProcessError:
     os.exit('Failed to obtain MCF sources, aborting...')
