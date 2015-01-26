@@ -61,7 +61,11 @@ function __complete_stow ()
   COMPREPLY=($(compgen -W "$packages" -- $current))
 }
 
-link_complete_function stow stow-adopt-as
-link_complete_function stow stow-install
-link_complete_function stow stow-delete
+# Small hack to avoid calling this function if it is not defined.
+# This is needed because we explicitly source this file in stow.py.
+if [[ "$(builtin type -t link_complete_function)" == "function" ]]; then
+  link_complete_function stow stow-adopt-as
+  link_complete_function stow stow-install
+  link_complete_function stow stow-delete
+fi
 
