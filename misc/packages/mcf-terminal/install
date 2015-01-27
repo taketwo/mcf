@@ -15,3 +15,4 @@ gconftool-2 --set "/apps/gnome-terminal/profiles/Default/scrollback_unlimited" -
 # Configure bash prompt (powerline-shell)
 cd $HOME/.mcf/scripts/bundle/powerline-shell
 python2 install.py
+sed -i -e 's/env python$/env python2/' powerline-shell.py
