@@ -27,6 +27,7 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle'
 
+Plugin 'tmhedberg/matchit'
 Plugin 'godlygeek/tabular'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'henrik/vim-indexed-search'
