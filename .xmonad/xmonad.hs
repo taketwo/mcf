@@ -280,6 +280,7 @@ table =
   , k "<Tab>"        nextLayout       resetLayout         __                __
   {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
   , k "`"            scratchTerminal      __              __                __
+  , k "'"            gridSelect           __              __                __
   , k "/"            promptSearch     selectSearch             __                __
   , k "0"            gotoPrevWorkspace      __              __                __
   , k "<F5>"             __           restartXMonad       __                __
@@ -357,6 +358,7 @@ table =
     promptSearch            = Unbound "Prompt search"                   (submap . mySearchMap $ myPromptSearch)
     selectSearch            = Unbound "Search X selection"              (submap . mySearchMap $ mySelectSearch)
     closeWindow             = Unbound "Close the focused window"        (kill)
+    gridSelect              = Unbound "Open GridSelect"                 (goToSelected gridSelectConfig)
     -- Audio control
     audioMute               = Unbound "Mute audio"                      (spawn "amixer -D pulse set Master toggle")
     audioLowerVolume        = Unbound "Lower audio volume"              (spawn "amixer set Master 5%-")
@@ -414,6 +416,14 @@ infixl 1 ->>
 (a ->> b) c = do a c
                  b c
 
+-- }}}
+-- Grid Select ------------------------------------------------------------ {{{
+myNavigation :: TwoD a (Maybe a)
+myNavigation = makeXEventhandler $ shadowWithKeymap navKeyMap navDefaultHandler
+  where navKeyMap = M.fromList [ ((0, xK_Escape), cancel) , ((0, xK_Return), select) , ((0, xK_c), move (0, -1) >> myNavigation), ((0, xK_t), move (0, 1) >> myNavigation), ((0, xK_n), move (1, 0) >> myNavigation), ((0, xK_h), move (-1, 0) >> myNavigation) ]
+navDefaultHandler = const myNavigation
+
+gridSelectConfig = defaultGSConfig { gs_navigate = myNavigation }
 -- }}}
 -- Search ------------------------------------------------------------------ {{{
 
