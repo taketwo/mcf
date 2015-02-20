@@ -5,6 +5,7 @@ import os
 import urwid
 from mcf import MCF
 from install import link
+import subprocess
 
 _widget_cache = {}
 
@@ -28,6 +29,14 @@ def f_set_makeprg():
 s_set_makeprg = {'text': 'Set &makeprg',
                  'action': f_set_makeprg}
 
+def f_use_pylint():
+    with open('.vim', 'a') as f:
+        f.write('let g:syntastic_python_pylint_args = \'--rcfile=.pylintrc\'\n')
+    subprocess.call(['pylint', '--generate-rcfile'], stdout=open('.pylintrc', 'w'))
+
+s_use_pylint = {'text': 'Use pylint',
+                'action': f_use_pylint}
+
 snip='''augroup AddSnippets
   autocmd!
   autocmd FileType cpp :UltiSnipsAddFiletypes pcl.eigen.cpp
@@ -42,7 +51,9 @@ s_associate_snippets = {'text': 'Associate cpp with pcl and eigen snippets',
                         'action': f_associate_snippets}
 
 s_create_vim_project = {'text': 'Create Vim project file',
-                        'children': [s_set_makeprg, s_associate_snippets]}
+                        'children': [s_set_makeprg,
+                                     s_associate_snippets,
+                                     s_use_pylint]}
 
 s_settings = {'text': 'Project settings',
               'children': [s_create_vim_project, s_link_ycm_config]}
