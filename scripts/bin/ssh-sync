@@ -1,0 +1,337 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import sys
+import hashlib
+import difflib
+
+import click
+
+import encryption
+
+
+def validate_id(ctx, param, value):
+    try:
+        return ctx.obj[int(value)]
+    except ValueError:
+        if value in ctx.obj:
+            return value
+    except IndexError:
+        pass
+    raise click.BadParameter('id should be a name of existing host or its '
+                             'index number in the hosts list')
+
+
+@click.group()
+@click.pass_context
+def cli(ctx):
+    ctx.obj = SSHManager()
+
+
+@cli.command()
+@click.argument('host', callback=validate_id)
+@click.option('--decrypt', '-d', is_flag=True,
+              help='Decrypt remote host if available (will ask for password)')
+@click.pass_obj
+def show(man, host, decrypt):
+    """
+    Show information about host.
+    """
+    local, remote = man[host]
+    local_t, remote_t = None, None
+    if remote and decrypt:
+        passwd = click.prompt('Decryption password', hide_input=True)
+    click.echo('Name: {}'.format(host))
+    click.echo('Local version: ', nl=False)
+    if local:
+        click.secho('yes', fg='green')
+        click.echo()
+        local_t = str(local).strip()
+        for line in local_t.split('\n'):
+            click.echo('    {}'.format(line))
+        click.echo()
+    else:
+        click.secho('no', fg='red')
+    click.echo('Remote version: ', nl=False)
+    if remote:
+        click.secho('yes', fg='green')
+        click.echo()
+        if decrypt:
+            remote_t = remote.decrypt(passwd).strip()
+            for line in remote_t.split('\n'):
+                click.echo('    {}'.format(line))
+        else:
+            click.secho('    [encrypted]', fg='blue')
+        click.echo()
+    else:
+        click.secho('no', fg='red')
+    if local_t and remote_t:
+        click.echo('Diff:')
+        click.echo()
+        if local == remote:
+            click.secho('    [equal]', fg='blue')
+            click.echo()
+        else:
+            d = difflib.Differ()
+            for line in d.compare(local_t.splitlines(), remote_t.splitlines()):
+                if line.startswith('-'):
+                    color = 'red'
+                elif line.startswith('+'):
+                    color = 'green'
+                else:
+                    color = None
+                click.secho('  {}'.format(line), fg=color)
+
+
+@cli.command()
+# @click.argument('package', type=str)
+# @click.option('--local', is_flag=True, help='list only local SSH hosts')
+@click.pass_obj
+def hosts(man):
+    """List SSH hosts"""
+    with Table([('#', 5), ('Local', 30), ('', 10), ('Remote', 30)]) as tab:
+        for name in man:
+            local, remote = man[name]
+            if local and remote:
+                if local == remote:
+                    tab.line([name, '==', name], 'green')
+                else:
+                    tab.line([name, '!=', name], 'red')
+            elif local:
+                tab.line([name, '', ''])
+            elif remote:
+                tab.line(['', '', name])
+
+
+@cli.command()
+@click.option('--force', '-f', is_flag=True,
+              help='Overwrite remote host if it exists and is different')
+@click.option('--commit/--no-commit', default=True,
+              help='Commit changes to the repository')
+@click.argument('host', callback=validate_id)
+@click.pass_obj
+def push(man, host, force, commit):
+    """
+    Push a local SSH host to remote repository.
+
+    Use with `--force` flag if remote repository already has a host with the
+    same name and their contents do not match.
+
+    The changes will be automatically committed to the repository with a
+    descriptive commit message. Use `--no-commit` to prevent this.
+    """
+    local, remote = man[host]
+    if not local:
+        click.echo('Host #{} is not local'.format(host), err=True)
+        click.echo('Did you want to pull?', err=True)
+        sys.exit(1)
+    if remote and local == remote:
+        click.echo('Host {} is already among remotes and is the the same as '
+                   'local'.format(host), err=True)
+        sys.exit(2)
+    if remote and not force:
+        click.echo('Host {} is already among remotes'.format(host), err=True)
+        click.echo('Did you want to --force overwrite?', err=True)
+        sys.exit(3)
+    directory = os.path.expanduser('~/.mcf/ssh')
+    encrypted = os.path.join(directory, host)
+    passwd = click.prompt('Enter encryption password', hide_input=True)
+    original = encrypted + '.dec'
+    with open(original, 'w') as f:
+        f.write(str(local))
+    with open(os.path.join(directory, host + '.md5'), 'w') as f:
+        f.write(local.md5)
+    encryption.encrypt(original, encrypted, passwd=passwd)
+    os.remove(original)
+
+
+@cli.command()
+@click.option('--force', '-f', is_flag=True,
+              help='Overwrite remote host if it exists and is different')
+@click.argument('host', callback=validate_id)
+@click.pass_obj
+def pull(man, host, force):
+    """
+    Pull an SSH host from remote repository.
+
+    Use with `--force` flag if local repository already has a host with the
+    same name and their contents do not match.
+    """
+    local, remote = man[host]
+    if not remote:
+        click.echo('Host #{} is not remote'.format(host), err=True)
+        click.echo('Maybe you wanted to push?', err=True)
+        sys.exit(1)
+    if local and remote == local:
+        click.echo('Host {} is already among locals and is the the same as '
+                   'remote'.format(host), err=True)
+        sys.exit(2)
+    if local and not force:
+        click.echo('Host {} is already among locals'.format(host), err=True)
+        click.echo('Did you want to --force overwrite?', err=True)
+        sys.exit(3)
+    # pull and save
+    man.save_local_hosts()
+
+
+class SSHManager(object):
+
+    def __init__(self):
+        self._hosts = dict()
+        for host in self._load_local_hosts():
+            self._hosts[host.name] = (host, None)
+        for host in self._load_remote_hosts():
+            if host.name not in self._hosts:
+                self._hosts[host.name] = (None, host)
+            else:
+                self._hosts[host.name] = (self._hosts[host.name][0], host)
+        self._host_names = sorted(self._hosts.keys())
+
+    def __len__(self):
+        return len(self._host_names)
+
+    def __iter__(self):
+        for name in self._host_names:
+            yield name
+
+    def __getitem__(self, key):
+        """
+        When key is int, return host name with the given index.
+        When key is string, return (local, remote) tuple for host with the given
+        name.
+        """
+        if isinstance(key, int):
+            if key < 1 or key > len(self):
+                raise IndexError('host index is outside of valid range')
+            return self._host_names[key - 1]
+        if isinstance(key, str):
+            if key not in self._hosts:
+                raise KeyError('host with given name does not exist')
+            return self._hosts[key]
+        raise TypeError('unsupported host key type')
+
+    def save_local_hosts(self):
+        with open(os.path.expanduser('~/.ssh/config'), 'w') as f:
+            for host in self:
+                local, remote = self._hosts[host]
+                if local:
+                    f.writelines(str(local))
+                    f.write('\n')
+
+    def _load_local_hosts(self):
+        host = Host()
+        for line in open(os.path.expanduser('~/.ssh/config'), 'r'):
+            if line.startswith('# '):
+                host.comment = line[2:].strip()
+            if line.startswith('Host '):
+                host.name = line[5:].strip()
+            if line.startswith('  '):
+                host.options.append(line[2:].strip())
+            if line == '\n' and host.is_valid():
+                yield host
+                host = Host()
+            if host.is_valid():
+                yield host
+
+    def _load_remote_hosts(self):
+        directory = os.path.expanduser('~/.mcf/ssh')
+        for filename in os.listdir(directory):
+            encrypted = os.path.join(directory, filename)
+            md5file = encrypted + '.md5'
+            if not filename.endswith('.md5') and os.path.isfile(md5file):
+                yield EncryptedHost(filename,
+                                    encrypted,
+                                    open(md5file, 'r').read())
+
+
+class Host(object):
+    def __init__(self):
+        self.name = None
+        self.comment = None
+        self.options = []
+        self.remote = None
+
+    @property
+    def md5(self):
+        return hashlib.md5(str(self).encode('ascii')).hexdigest()
+
+    def is_valid(self):
+        return self.name and self.options
+
+    def __eq__(self, other):
+        return self.name == other.name and self.md5 == other.md5
+
+    def __str__(self):
+        text = ''
+        if self.comment:
+            text += '# ' + self.comment + '\n'
+        text += 'Host ' + self.name + '\n'
+        for option in self.options:
+            text += '  ' + option + '\n'
+        return text
+
+
+class EncryptedHost(Host):
+
+    def __init__(self, name, encrypted, md5):
+        self.name = name
+        self.filename = encrypted
+        self._md5 = md5
+
+    def __str__(self):
+        return '{} [encrypted]'.format(self.name)
+
+    def decrypt(self, passwd):
+        return encryption.decrypt(self.filename, passwd=passwd)
+
+    @property
+    def md5(self):
+        return self._md5
+
+
+class Table(object):
+
+    def __init__(self, columns):
+        self.columns = columns
+        self.counter = None
+
+    def header(self):
+        self.line([col[0] for col in self.columns])
+
+    def line(self, items=None, default=None):
+        if not items:
+            click.echo('+'.join('{:-^{}}'.format('', c[1]) for c in self.columns))
+        else:
+            if len(items) + 1 == len(self.columns) and self.columns[0][0] == '#':
+                items = [self.counter] + items
+                self.counter += 1
+            assert len(items) == len(self.columns)
+            fmt = '{:^{}}'
+            for i in range(len(items)):
+                if isinstance(items[i], tuple):
+                    text = fmt.format(items[i][0], self.columns[i][1])
+                    click.secho(text, fg=items[i][1], nl=False)
+                else:
+                    text = fmt.format(items[i], self.columns[i][1])
+                    if default:
+                        click.secho(text, fg=default, nl=False)
+                    else:
+                        click.echo(text, nl=False)
+                if i != len(items) - 1:
+                    click.echo('|', nl=False)
+            click.echo('\n', nl=False)
+
+    def __enter__(self):
+        self.line()
+        self.header()
+        self.line()
+        self.counter = 1
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.line()
+
+
+if __name__ == '__main__':
+    cli()
