@@ -7,6 +7,7 @@ import hashlib
 import difflib
 
 import click
+import pygit2
 
 import encryption
 
@@ -144,6 +145,22 @@ def push(man, host, force, commit):
         f.write(local.md5)
     encryption.encrypt(original, encrypted, passwd=passwd)
     os.remove(original)
+    if commit:
+        try:
+            repo = pygit2.Repository(pygit2.discover_repository('.'))
+            index = repo.index
+            index.read()
+            index.add('ssh/' + host)
+            index.add('ssh/' + host + '.md5')
+            index.write()
+            tree_id = index.write_tree()
+            signature = pygit2.Signature('SSH Sync', 'ssh-sync@local')
+            repo.create_commit('refs/heads/master',
+                               signature, signature,
+                               'ssh-sync: ' + host,
+                               tree_id, [repo.head.get_object().oid])
+        except KeyError:
+            click.echo('Not in a Git repository, unable to commit changes.')
 
 
 @cli.command()
