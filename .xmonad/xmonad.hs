@@ -148,7 +148,9 @@ defaultLayouts = smartBorders $ avoidStruts $
   ||| myCode
 
 myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger })
-myIM = named "im" (smartBorders $ avoidStruts $ withIM (1 % 5) (Title "Contact List") Grid)
+myIM = smartBorders $ avoidStruts $ withIM (1 % 5) skype Full
+  where
+    skype = And (ClassName "Skype") (Role "")
 myFigures = named "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3))
 myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
 
