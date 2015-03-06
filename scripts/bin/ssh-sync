@@ -7,7 +7,6 @@ import hashlib
 import difflib
 
 import click
-import pygit2
 
 import encryption
 
@@ -146,6 +145,7 @@ def push(man, host, force, commit):
     encryption.encrypt(original, encrypted, passwd=passwd)
     os.remove(original)
     if commit:
+        import pygit2
         try:
             repo = pygit2.Repository(pygit2.discover_repository('.'))
             index = repo.index
