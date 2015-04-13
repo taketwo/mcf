@@ -16,3 +16,6 @@
 [submodule "scripts/bundle/timeout"]
 	path = scripts/bundle/timeout
 	url = https://github.com/pshved/timeout.git
+[submodule ".xmonad/bundle/solarized-xmonad"]
+	path = .xmonad/bundle/solarized-xmonad
+	url = https://github.com/ibotty/solarized-xmonad.git
