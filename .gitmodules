@@ -1,6 +1,3 @@
-[submodule ".xmonad/bundle/xmonad-solarized"]
-	path = .xmonad/bundle/xmonad-solarized
-	url = git://github.com/ibotty/solarized-xmonad.git
 [submodule "misc/gnome-terminal-colors-solarized"]
 	path = misc/gnome-terminal-colors-solarized
 	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git
