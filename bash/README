@@ -1,0 +1,15 @@
+Prefix consists of three digits:
+
+  1. Group
+  2. Subgroup
+  3. Priority
+
+Groups:
+
+  1 - Basic helper functions
+  2 - Bash and environment configuration
+  3 - Aliases
+  4 - Replacements or reconfigurations of commands
+  5 - Utility apps or collections of aliases/functions
+  6 - Frameworks configuration
+  9 - Miscellaneous low-priority

@@ -80,36 +80,34 @@ timed_source()
   echo "$file $before $after" >> "$bash_times_file"
 }
 
-source_dir()
-{
-  local dir="$1"
-  local sourcer
-  if [[ $BASH_TIME_STARTUP == 1 ]]; then
-    sourcer='timed_source'
-  else
-    sourcer='source'
-  fi
-  if [[ -d $dir ]]
-  then
-    local conf_file
-    for conf_file in "$dir"/*
-    do
-      if [[ -f $conf_file ]]; then
-        $sourcer "$conf_file"
-      fi
-    done
-  fi
-}
-
 if [ -z "$MCF" ]; then
   MCF=$HOME/.mcf
 fi
 
-source_dir $MCF/bash/local/before
-source_dir $MCF/bash
-source_dir $MCF/bash/local/after
+scripts=()
+for directory in "global" "local"; do
+  dir=$MCF/bash/$directory
+  if [[ -d $dir ]]
+  then
+    for conf_file in "$dir"/*; do
+      if [[ -f $conf_file ]]; then
+        scripts+=($conf_file)
+      fi
+    done
+  fi
+done
 
-unset source_dir
+sorted=($(printf '%s\n' "${scripts[@]}" | sort))
+for conf_file in ${sorted[@]}; do
+  if [[ $BASH_TIME_STARTUP == 1 ]]; then
+    timed_source "$conf_file"
+  else
+    source "$conf_file"
+  fi
+done
+
+unset scrits
+unset sorted
 unset timed_source
 unset bash_times_file
 unset BASH_TIME_STARTUP

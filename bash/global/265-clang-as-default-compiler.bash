@@ -1,0 +1,1 @@
+../265-clang-as-default-compiler.bash
