@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import re
+import socket
+import subprocess
+
+import click
+
+
+def get_host_ip():
+    for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]:
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+        s.close()
+    return ip
+
+
+def validate_ip(ctx, param, value):
+    host_ip = get_host_ip()
+    octet = int(value)
+    if octet >= 0 and octet <= 256:
+        return re.sub(r'(.*\.)(\d+)$', r'\g<1>' + value, host_ip)
+    raise click.BadParameter('should be the last octet of Handy address')
+
+
+LOCATIONS = {'music': {'precision': '/media/Files/Music',
+                       'z3c': 'sdcard1/Music'},
+             'photos': {'precision': '/media/Files/Photos/New',
+                        'z3c': 'storage/sdcard0/DCIM/100ANDRO'}}
+
+
+def rsync(src, dst, delete=True):
+    home = os.environ['HOME']
+    cmd = ['rsync',
+           '-avz',
+           '-e', 'ssh -p 2222 -i {}/.ssh/Z3C'.format(home),
+           '--size-only',
+           '--progress']
+    if delete:
+        cmd.append('--delete')
+    cmd.append(src + '/')
+    cmd.append(dst)
+    print(' '.join(cmd))
+    subprocess.call(cmd)
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+@click.argument('ip', callback=validate_ip)
+def music(ip):
+    """
+    Synchronize music.
+    """
+    locations = LOCATIONS['music']
+    rsync(locations['precision'], 'root@{}:{}'.format(ip, locations['z3c']))
+
+
+@cli.command()
+@click.argument('ip', callback=validate_ip)
+def photos(ip):
+    """
+    Synchronize photos.
+    """
+    locations = LOCATIONS['photos']
+    rsync('root@{}:{}'.format(ip, locations['z3c']), locations['precision'])
+
+
+if __name__ == '__main__':
+    cli()
+
