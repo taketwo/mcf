@@ -1,1 +1,1 @@
-../bundle/xmonad-solarized/Solarized.hs
+../bundle/solarized-xmonad/Solarized.hs
