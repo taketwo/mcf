@@ -1,1 +1,0 @@
-export KEBRUM_DEFAULT=Luxembourg
