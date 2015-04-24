@@ -1,3 +1,10 @@
+This directory contains common configuration scripts that are not host-specific.
+These scripts are NOT sourced automatically. Rather, the contents of global/ and
+local/ directories are sourced. The former is shared across all hosts, is checked
+in the repository, and consists of symbolic links. The latter is specific to each
+particular host, is NOT checked in the repository, and consists of a mix of scripts
+and symbolic links.
+
 Prefix consists of three digits:
 
   1. Group
