@@ -89,8 +89,6 @@ import qualified Control.Exception as Exception
 import Control.Monad (liftM2)
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
-import qualified XMonad.Actions.FlexibleResize as Flex
-import qualified XMonad.Util.ExtensibleState as XS
 import System.IO (Handle, hPutStrLn)
 
 import Solarized
