@@ -11,7 +11,6 @@ import stow
 PACKAGES = '/home/sergey/.mcf/misc/packages'
 PLATFORM = linux_distribution()[0].lower()
 NATIVE_PM = {'arch': 'pacman', 'ubuntu': 'apt'}[PLATFORM]
-# PLATFORM = 'ubuntu'
 
 
 class PackageManager(object):
@@ -99,7 +98,7 @@ class PackageManager(object):
         if manager == 'pip':
             stow.adopt_as('pip')
 
-    def install(self, package_name, verbose=False):
+    def install(self, package_name, verbose=False, force_reinstall=False):
         commands = self.resolve(package_name)
         merged = self._merge(commands)
         if verbose:
@@ -114,7 +113,10 @@ class PackageManager(object):
                 print('[*] Install scripts\n')
                 for s in sorted(merged['script']):
                     print('>', s)
-                    subprocess.check_call([s], env=os.environ)
+                    cmd = [s]
+                    if force_reinstall:
+                        cmd.append('--reinstall')
+                    subprocess.check_call(cmd, env=os.environ)
                     print('')
             if 'setup' in merged:
                 print('[*] Setup scripts\n')
@@ -151,6 +153,6 @@ class PackageManager(object):
         return dict(merged)
 
 
-def install(package_name, verbose=False):
+def install(package_name, verbose=False, force_reinstall=False):
     pm = PackageManager()
-    pm.install(package_name, verbose)
+    pm.install(package_name, verbose, force_reinstall)

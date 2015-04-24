@@ -8,11 +8,11 @@ import package_manager
 
 @click.command()
 @click.argument('package', type=str)
-@click.option('--reinstall', help='force reinstallation')
+@click.option('--reinstall', help='force reinstallation', is_flag=True)
 def install(package, reinstall):
     """Install a package."""
-    click.echo('pac name: {}'.format(package))
-    package_manager.install(package, verbose=True)
+    click.echo('Package name: {}'.format(package))
+    package_manager.install(package, verbose=True, force_reinstall=reinstall)
 
 
 if __name__ == '__main__':
