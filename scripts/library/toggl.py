@@ -2,6 +2,8 @@
 # encoding: utf-8
 
 import requests
+import logging
+logging.captureWarnings(True)
 
 
 class Toggl:
