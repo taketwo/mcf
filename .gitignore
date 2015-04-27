@@ -11,5 +11,4 @@
 *.o
 
 # Bash
-bash/local/before/*
-bash/local/after/*
+bash/local/*
