@@ -49,7 +49,7 @@ def run_tests():
     print('')
     print('2. Testing conky script...')
     print('')
-    cmd = 'conky -c conkyrc-top-right -i 1'
+    cmd = 'conky -c conkyrc -i 1'
     try:
         print(subprocess.check_output(cmd.split()))
     except subprocess.CalledProcessError:
