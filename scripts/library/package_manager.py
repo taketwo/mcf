@@ -75,7 +75,7 @@ class PackageManager(object):
         Arguments
         ---------
         manager: str
-            Name of a package manager to use (apt, pacman, yaourt, pip).
+            Name of a package manager to use (apt, pacman, yaourt, pip, cabal).
         package: str | list
             Package name or list of package names.
         args:
@@ -84,7 +84,8 @@ class PackageManager(object):
         CMD = {'apt': 'sudo apt-get install --force-yes -y',
                'pacman': 'sudo pacman --noconfirm --needed -S',
                'yaourt': 'yaourt --noconfirm --needed -Sa',
-               'pip': 'sudo pip install --upgrade'}
+               'pip': 'sudo pip install --upgrade',
+               'cabal': 'sudo cabal install --global --force-reinstalls'}
         if not manager in CMD.keys():
             raise Exception('Unsupported manager')
         if isinstance(package, list):
@@ -93,6 +94,8 @@ class PackageManager(object):
             p = list(package)
         else:
             p = [package]
+        if manager == 'cabal':
+            subprocess.check_call(['cabal', 'update'])
         cmd = CMD[manager] + ' ' + ' '.join(p) + ' ' + args
         subprocess.check_call(cmd.split())
         if manager == 'pip':
@@ -104,7 +107,7 @@ class PackageManager(object):
         if verbose:
             self.describe_package(package_name, merged)
         try:
-            for pm in ['apt', 'pacman', 'yaourt', 'pip']:
+            for pm in ['apt', 'pacman', 'yaourt', 'pip', 'cabal']:
                 if pm in merged:
                     print('[*] Install {} packages\n'.format(pm.capitalize()))
                     self._install_with_package_manager(pm, merged[pm])
@@ -130,7 +133,7 @@ class PackageManager(object):
 
     def describe_package(self, package_name, merged):
         print('Package \"{}\" resolved into:\n'.format(package_name))
-        for pm in ['apt', 'pacman', 'yaourt', 'pip']:
+        for pm in ['apt', 'pacman', 'yaourt', 'pip', 'cabal']:
             if pm in merged:
                 print(' - {} packages\n'.format(pm.capitalize()))
                 print('  ', ' '.join(merged[pm]))
