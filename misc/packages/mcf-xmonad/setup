@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import os
+import argparse
+from os.path import join, expanduser, lexists
+
+
+def install():
+    print('Creating symlinks...')
+    for f, d in _FILES:
+        _link(f, d)
+
+
+def _link(paths, desc):
+    home = expanduser('~')
+    paths = paths if isinstance(paths, tuple) else (paths, paths)
+    basename = os.path.basename(paths[0])
+    src = join(home, '.mcf/.xmonad', paths[0])
+    dest = os.path.join(paths[1], basename) if basename else paths[1]
+    if lexists(dest):
+        os.unlink(dest)
+    os.symlink(src, dest)
+    print('[+]', desc)
+    print('   ', dest, '->', src)
+
+
+_FILES = [(('',
+            '/home/sergey/.xmonad'),
+           'Xmonad settings folder'),
+          (('images/custom_xmonad_badge.png',
+            '/usr/share/unity-greeter'),
+           'Custom Xmonad badge for the login screen'),
+          (('entries/xsessions/xmonad.desktop',
+            '/usr/share/xsessions'),
+           'Xmonad xsession configuration'),
+          (('entries/applications/xmonad.desktop',
+            '/usr/share/applications'),
+           'Xmonad applications entry'),
+          (('entries/sessions/xmonad.session',
+            '/usr/share/gnome-session/sessions'),
+           'Xmonad GNOME session configuration')]
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Setup MCF XMonad symlinks.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    args = parser.parse_args()
+    install()
