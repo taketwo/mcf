@@ -1,0 +1,6 @@
+dzen2
+conky
+curl
+pip: unidecode
+pip: beautifulsoup4
+pip: requests

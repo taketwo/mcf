@@ -1,0 +1,8 @@
+dzen2
+conky
+curl
+pacman: alsa-utils
+pacman: ttf-liberation
+pip: unidecode
+pip: beautifulsoup4
+pip: requests
