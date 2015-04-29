@@ -71,6 +71,16 @@ def photos(ip):
     rsync('root@{}:{}'.format(ip, locations['z3c']), locations['precision'])
 
 
+@cli.command()
+@click.argument('what')
+@click.argument('ip', callback=validate_ip)
+def pull(what, ip):
+    """
+    Pull contents of a given folder.
+    """
+    rsync('root@{}:{}'.format(ip, what), '.', delete=False)
+
+
 if __name__ == '__main__':
     cli()
 
