@@ -17,6 +17,7 @@
   out = log @{u}..
   remotes = remote -v
   tags = tag -l
+  start = "!git init && git commit --allow-empty -m 'Initial commit'"
   # Legit aliases
   switch = !legit switch \"$@\"
   branches = !legit branches
