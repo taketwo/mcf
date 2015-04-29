@@ -40,7 +40,7 @@ def rsync(src, dst, delete=True):
            '--progress']
     if delete:
         cmd.append('--delete')
-    cmd.append(src + '/')
+    cmd.append(src + ('' if src.endswith('/') else '/'))
     cmd.append(dst)
     print(' '.join(cmd))
     subprocess.call(cmd)
