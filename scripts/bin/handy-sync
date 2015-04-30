@@ -62,7 +62,11 @@ def music(ip):
     Synchronize music.
     """
     locations = LOCATIONS['music']
-    rsync(locations['precision'], 'root@{}:{}'.format(ip, locations['z3c']))
+    hostname = socket.gethostname()
+    if hostname == 'precision':
+        rsync(locations[hostname], 'root@{}:{}'.format(ip, locations['z3c']))
+    else:
+        rsync('root@{}:{}'.format(ip, locations['z3c']), locations[hostname])
 
 
 @cli.command()
