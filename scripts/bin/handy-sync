@@ -19,13 +19,17 @@ def get_host_ip():
 
 def validate_ip(ctx, param, value):
     host_ip = get_host_ip()
-    octet = int(value)
-    if octet >= 0 and octet <= 256:
-        return re.sub(r'(.*\.)(\d+)$', r'\g<1>' + value, host_ip)
+    try:
+        octet = int(value)
+        if octet >= 0 and octet <= 256:
+            return re.sub(r'(.*\.)(\d+)$', r'\g<1>' + value, host_ip)
+    except ValueError:
+        return value
     raise click.BadParameter('should be the last octet of Handy address')
 
 
 LOCATIONS = {'music': {'precision': '/media/Files/Music',
+                       'raccoon': '/media/Files/Music',
                        'z3c': 'sdcard1/Music'},
              'photos': {'precision': '/media/Files/Photos/New',
                         'z3c': 'storage/sdcard0/DCIM/100ANDRO'}}
