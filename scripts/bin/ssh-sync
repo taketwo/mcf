@@ -16,7 +16,7 @@ def validate_id(ctx, param, value):
         return ctx.obj[int(value)]
     except ValueError:
         if value in ctx.obj:
-            return value
+            return str(value)
     except IndexError:
         pass
     raise click.BadParameter('id should be a name of existing host or its '
