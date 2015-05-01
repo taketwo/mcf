@@ -58,6 +58,8 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.Spacing
+import XMonad.Layout.Gaps
 import XMonad.Util.Timer
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
@@ -123,7 +125,7 @@ topLeftBarWidth      = 800
 topBarTitleLength    = 80
 
 myTabConfig = defaultTheme
-  { activeColor         = colorBg
+  { activeColor         = colorBorderActive
   , activeTextColor     = colorFgLight
   , activeBorderColor   = colorBorderActive
   , inactiveColor       = colorBg
@@ -135,15 +137,16 @@ myTabConfig = defaultTheme
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
 
-defaultLayouts = smartBorders $ avoidStruts $
-      windowNavigation mouseResizableTile
-        { draggerType = BordersDragger }
-  ||| windowNavigation mouseResizableTile
-        { draggerType = BordersDragger
-        , isMirrored  = True }
-  ||| windowNavigation Grid
-  ||| tabbedBottom shrinkText myTabConfig
-  ||| myCode
+defaultLayouts = avoidStruts $
+      gap (windowNavigation mouseResizableTile { draggerType = dragger })
+  ||| gap (windowNavigation mouseResizableTile { draggerType = dragger, isMirrored  = True })
+  ||| spacing space (windowNavigation Grid)
+  ||| gap (tabbedBottom shrinkText myTabConfig)
+  {-||| myCode-}
+  where
+    space = 10
+    dragger = FixedDragger (space * 2) (space * 2 - 5)
+    gap = gaps [(U, space), (D, space), (L, space), (R, space)]
 
 myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger })
 myIM = smartBorders $ avoidStruts $ withIM (1 % 5) skype Full
@@ -475,7 +478,7 @@ main = do
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
-    , borderWidth        = 1                 -- width of border around windows
+    , borderWidth        = 2                 -- width of border around windows
     , terminal           = appTerminal        -- default terminal program
     , workspaces         = myTopicNames
     , manageHook = manageHook gnomeConfig <+> myManageHook
