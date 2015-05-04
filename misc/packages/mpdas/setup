@@ -16,7 +16,7 @@ def setup():
     src = join(path, 'src', 'mpdas.desktop')
     tgt = join(home, '.config/autostart/mpdas.desktop')
     link(src, tgt, 'MPDAS autostart entry')
-    username = input("Enter username: ")
+    username = input("Enter Last.fm username: ")
     passwd = getpass('Enter password: ')
     config = join(home, '.mpdasrc')
     with open(config, 'w') as f:
