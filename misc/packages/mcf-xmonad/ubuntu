@@ -1,5 +1,6 @@
 libx11-dev
 libxrandr-dev
 cabal-install
+gnome-settings-daemon
 cabal: http://code.haskell.org/xmonad/xmonad.tar.gz
 cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
