@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=redshift -l 50.4:7.5 -t 6000:4500 &
+Exec=redshift -l 48.1:16.3 -t 6000:4500 &
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
