@@ -1,0 +1,9 @@
+# Common
+pip: pygit2
+
+# Arch
+arch: libgit2
+
+# Ubuntu
+ubuntu: cmake
+ubuntu: python-dev

@@ -10,7 +10,6 @@ import stow
 
 PACKAGES = '/home/sergey/.mcf/misc/packages'
 PLATFORM = linux_distribution()[0].lower()
-NATIVE_PM = {'arch': 'pacman', 'ubuntu': 'apt'}[PLATFORM]
 
 
 class PackageManager(object):
@@ -24,43 +23,28 @@ class PackageManager(object):
         package and its dependencies.
         """
         directory = join(PACKAGES, package_name)
-        if isdir(directory):
-            return self._resolve_directory(directory, package_name)
-        return [(NATIVE_PM, package_name)]
-
-    def resolve_dependencies_file(self, filename):
-        commands = list()
-        for line in open(filename, 'r'):
-            package_name = self._remove_comments(line).strip()
-            if len(package_name.split(': ')) == 2:
-                commands.append(tuple(package_name.split(': ')))
-            elif package_name:
-                commands += self.resolve(package_name)
-        return commands
-
-    def _resolve_directory(self, directory, package_name):
-        commands = list()
-        # Check for platform-specific instructions
-        platform = join(directory, PLATFORM)
-        if os.path.isdir(platform):
-            commands += self._resolve_directory(platform, package_name)
-        elif os.path.isfile(platform):
-            commands += self.resolve_dependencies_file(platform)
+        if not isdir(directory):
+            return [(PLATFORM, package_name)]
         else:
+            commands = list()
             deps = join(directory, 'DEPENDENCIES')
-            script = join(directory, 'install')
-            if not os.path.isfile(deps) and not os.path.isfile(script):
-                commands.append((NATIVE_PM, package_name))
-            else:
-                if os.path.isfile(deps):
-                    commands += self.resolve_dependencies_file(deps)
-                if os.path.isfile(script):
-                    commands.append(('script', script))
-        # Check for setup script
-        setup = join(directory, 'setup')
-        if os.path.isfile(setup):
-            commands.append(('setup', setup))
-        return commands
+            if os.path.isfile(deps):
+                for line in open(deps, 'r'):
+                    package = self._remove_comments(line).strip()
+                    if len(package.split(': ')) == 2:
+                        commands.append(tuple(package.split(': ')))
+                    elif package:
+                        if package != package_name:
+                            commands += self.resolve(package)
+                        else:
+                            commands.append((PLATFORM, package))
+            install_script = join(directory, 'install')
+            if os.path.isfile(install_script):
+                commands.append(('script', install_script))
+            setup_script = join(directory, 'setup')
+            if os.path.isfile(setup_script):
+                commands.append(('setup', setup_script))
+            return commands
 
     def _remove_comments(self, line):
         p = line.find("#")
@@ -81,9 +65,8 @@ class PackageManager(object):
         args:
             Additional options to pass to the package manager.
         """
-        CMD = {'apt': 'sudo apt-get install --force-yes -y',
-               'pacman': 'sudo pacman --noconfirm --needed -S',
-               'yaourt': 'yaourt --noconfirm --needed -Sa',
+        CMD = {'ubuntu': 'sudo apt-get install --force-yes -y',
+               'arch': 'yaourt --noconfirm --needed -Sa',
                'pip': 'sudo pip install --upgrade',
                'cabal': 'sudo cabal install --global --force-reinstalls'}
         if not manager in CMD.keys():
@@ -107,7 +90,7 @@ class PackageManager(object):
         if verbose:
             self.describe_package(package_name, merged)
         try:
-            for pm in ['apt', 'pacman', 'yaourt', 'pip', 'cabal']:
+            for pm in [PLATFORM, 'pip', 'cabal']:
                 if pm in merged:
                     print('[*] Install {} packages\n'.format(pm.capitalize()))
                     self._install_with_package_manager(pm, merged[pm])
@@ -133,7 +116,7 @@ class PackageManager(object):
 
     def describe_package(self, package_name, merged):
         print('Package \"{}\" resolved into:\n'.format(package_name))
-        for pm in ['apt', 'pacman', 'yaourt', 'pip', 'cabal']:
+        for pm in [PLATFORM, 'pip', 'cabal']:
             if pm in merged:
                 print(' - {} packages\n'.format(pm.capitalize()))
                 print('  ', ' '.join(merged[pm]))

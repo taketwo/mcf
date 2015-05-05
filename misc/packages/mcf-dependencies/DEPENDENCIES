@@ -3,9 +3,10 @@ tmux
 powertop
 htop
 stow
-xorg-setxkbmap                         # keyboard layout switching
 clang
 xcape
+
+arch: xorg-setxkbmap                         # keyboard layout switching, arch-only
 
 # Network/Internet
 openssh
@@ -13,8 +14,7 @@ openvpn
 w3m
 
 # Git
-gitk
-git-gui
+git
 
 # Python-related
 python-pip
@@ -37,10 +37,10 @@ xdotool                                # paste with F5
 
 # Util
 unrar
-apt-file
 tree
-xorg-xprop
 ag
+ubuntu: apt-file
+arch: xorg-xprop
 
 # Misc
 trayer

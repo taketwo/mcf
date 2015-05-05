@@ -1,0 +1,7 @@
+# Arch
+arch: xcape
+
+# Ubuntu
+ubuntu: libx11-dev
+ubuntu: libxtst-dev
+ubuntu: libxi-dev

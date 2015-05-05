@@ -3,9 +3,14 @@
 
 import os
 import argparse
+from subprocess import call
+from platform import linux_distribution
 from os.path import join, split, expanduser, realpath
 
 from filesystem import link
+
+
+PLATFORM = linux_distribution()[0].lower()
 
 
 def setup():
@@ -20,6 +25,10 @@ def setup():
     src = join(path, 'src', 'mpd.desktop')
     tgt = join(home, '.config', 'autostart', 'mpd.desktop')
     link(src, tgt, 'MPD autostart entry')
+    if PLATFORM == 'ubuntu':
+        print('Disabling MPD system service...')
+        call(['sudo', 'service', 'mpd', 'stop'])
+        call(['sudo', 'update-rc.d', 'mpd', 'disable'])
 
 
 if __name__ == '__main__':

@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
+import locale
 import argparse
 import subprocess
 
-from stow import adopt_as
 from git_repository import GitRepository
+from install import only
 
 
+@only('ubuntu')
 def install():
-    with GitRepository('alols/xcape') as repo:
-        # Change installation path to /usr/local
-        _replace('s/\/usr/\/usr\/local/', 'Makefile')
-        subprocess.call(['make'])
-        subprocess.call(['sudo', 'make', 'install'])
-        adopt_as('xcape')
+    with GitRepository('belluzj/fantasque-sans') as repo:
+        # Completely remove line with ttf2eot command
+        _replace('s/^\tttf2eot.*$//', 'Makefile')
+        _replace('s/\.fonts/\.mcf\/\.fonts/', 'Makefile')
+        # Make install
+        subprocess.call(['make', 'install'])
 
 
 def is_installed():
-    return subprocess.call(['bash', '-c', 'hash xcape']) == 0
+    enc = locale.getdefaultlocale()[1]
+    fonts = subprocess.check_output(['fc-list']).decode(enc)
+    return fonts.find('FantasqueSans') != -1
 
 
 def _replace(e, f):
@@ -28,13 +32,13 @@ def _replace(e, f):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
-    Install xcape from source.
+    Install Fantasque Sans font from source.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--reinstall', action='store_true',
                         help='reinstall if the font is already installed')
     args = parser.parse_args()
     if not args.reinstall and is_installed():
-        print('Xcape is already installed. '
+        print('FantasqueSans is already installed. '
               'Pass --reinstall to force reinstallation.')
     else:
         install()

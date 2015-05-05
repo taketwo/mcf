@@ -1,0 +1,7 @@
+# Arch
+arch: ttf-fantasque-sans-git
+
+# Ubuntu
+ubuntu: fontforge
+ubuntu: ttfautohint
+ubuntu: woff-tools

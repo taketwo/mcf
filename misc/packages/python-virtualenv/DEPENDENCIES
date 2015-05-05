@@ -1,0 +1,10 @@
+# Common
+python-virtualenv
+
+# Arch
+arch: python-virtualenv-clone
+arch: python-virtualenvwrapper
+
+# Ubuntu
+ubuntu: virtualenv-clone
+ubuntu: virtualenvwrapper

@@ -6,8 +6,10 @@ import subprocess
 
 from stow import adopt_as
 from git_repository import GitRepository
+from install import only
 
 
+@only('ubuntu')
 def install():
     with GitRepository('robm/dzen') as repo:
         # Comment option 1

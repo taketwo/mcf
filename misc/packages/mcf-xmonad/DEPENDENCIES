@@ -1,6 +1,9 @@
-libx11-dev
-libxrandr-dev
+# Common
 cabal-install
-gnome-settings-daemon
 cabal: http://code.haskell.org/xmonad/xmonad.tar.gz
 cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
+
+# Ubuntu
+ubuntu: libx11-dev
+ubuntu: libxrandr-dev
+ubuntu: gnome-settings-daemon

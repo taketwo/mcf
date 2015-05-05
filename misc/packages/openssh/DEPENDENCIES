@@ -1,0 +1,3 @@
+arch: openssh
+ubuntu: openssh-client
+ubuntu: openssh-server

@@ -1,3 +1,0 @@
-pacman: python-virtualenv
-pacman: python-virtualenv-clone
-pacman: python-virtualenvwrapper

@@ -1,6 +1,11 @@
+# Common
 dzen2
 conky
 curl
 pip: unidecode
 pip: beautifulsoup4
 pip: requests
+
+# Arch
+arch: alsa-utils
+arch: ttf-liberation

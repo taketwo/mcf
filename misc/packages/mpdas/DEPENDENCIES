@@ -1,2 +1,8 @@
+# Common
 curl
-libmpdclient
+
+# Arch
+arch: libmpdclient
+
+# Ubuntu
+ubuntu: libmpdclient-dev

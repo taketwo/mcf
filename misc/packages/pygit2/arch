@@ -1,2 +1,0 @@
-pacman: libgit2
-pip: pygit2

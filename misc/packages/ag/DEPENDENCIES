@@ -1,0 +1,9 @@
+# Arch
+arch: silver-searcher-git
+
+# Ubuntu
+ubuntu: automake
+ubuntu: pkg-config
+ubuntu: libpcre3-dev
+ubuntu: liblzma-dev
+ubuntu: zlib1g-dev
