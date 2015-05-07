@@ -366,8 +366,8 @@ table =
     gridSelect              = Unbound "Open GridSelect"                 (goToSelected gridSelectConfig)
     -- Audio control
     audioMute               = Unbound "Mute audio"                      (spawn "amixer -D pulse set Master toggle")
-    audioLowerVolume        = Unbound "Lower audio volume"              (spawn "amixer set Master 5%-")
-    audioRaiseVolume        = Unbound "Raise audio volume"              (spawn "amixer set Master 5%+")
+    audioLowerVolume        = Unbound "Lower audio volume"              (spawn "amixer -D pulse set Master 5%-")
+    audioRaiseVolume        = Unbound "Raise audio volume"              (spawn "amixer -D pulse set Master 5%+")
     audioPlay               = Unbound "Play/pause audio playback"       (spawn "rhythmbox-client --play-pause")
     audioStop               = Unbound "Stop audio playback"             (spawn "rhythmbox-client --pause")
     audioRate1              = Unbound "Rate current song with 1 star"   (spawn "rhythmbox-client --set-rating 1")
