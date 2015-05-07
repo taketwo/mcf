@@ -267,7 +267,7 @@ table =
   , k "n"            goRight          swapRight           __           expandMaster
   , k "o"                __               __              __                __
   , k "p"                __               __              __                __
-  , k "q"            closeWindow          __              __                __
+  , k "q"            closeWindow      deleteWorkspace     __                __
   , k "r"                __               __              __           __
   {-, k "s"            toggleStruts     cntrlCenter         __         swapScreens-}
   , k "s"            swapScreens          __              __                __
