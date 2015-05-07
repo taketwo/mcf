@@ -176,7 +176,7 @@ data TopicItem = TI { topicName   :: Topic
 myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
-  , ti "music"    ""
+  , TI "music"    ""                                         (spawnInShell "ncmpcpp")
   , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , ti "im"       ""
