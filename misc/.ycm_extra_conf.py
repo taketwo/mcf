@@ -44,7 +44,7 @@ def DirectoryOfThisScript():
 # These are the compilation flags that will be used in case there's no
 # compilation database set (by default, one is not set).
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
-flags = list()
+FLAGS = list()
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
 # compile_commands.json file to use that instead of 'flags'. See here for
@@ -123,5 +123,5 @@ def FlagsForFile(filename, **kwargs):
                                  compilation_info.compiler_working_dir_)
     if not flags:
       relative_to = DirectoryOfThisScript()
-      flags = MakeAbsolute(flags, relative_to)
+      flags = MakeAbsolute(FLAGS, relative_to)
     return {'flags': flags, 'do_cache': True}
