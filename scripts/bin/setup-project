@@ -3,9 +3,11 @@
 
 import os
 import urwid
-from mcf import MCF
-from install import link
 import subprocess
+
+import mcf
+from filesystem import link
+
 
 _widget_cache = {}
 
@@ -15,7 +17,7 @@ def add_widget(setting, widget):
 
 
 def f_link_ycm_config():
-    link(os.path.join(MCF, 'misc', '.ycm_extra_conf.py'),
+    link(mcf.path('misc', '.ycm_extra_conf.py'),
          '.ycm_extra_conf.py',
          'Standard YCM config file')
 
