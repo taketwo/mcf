@@ -1,0 +1,107 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import re
+import pwd
+import sys
+import time
+import imaplib
+from subprocess import Popen, PIPE
+
+import keyring
+
+
+REGEX = re.compile(r'X-GM-THRID (\d+) UID')
+
+SolarizedRed="#dc322f"
+SolarizedBase3="#fdf6e3"
+
+
+def color(text, fg, bg=None):
+    bg = ',' + bg if bg is not None else ''
+    return '<fc={}{}>{}</fc>'.format(fg, bg, text)
+
+
+def symbol(name):
+    return {'mail': ''}[name]
+
+
+def retry(timeout, attempts, recovery=None):
+    def decorator(function):
+        def function_retry(*args, **kwargs):
+            tries = attempts
+            while tries > 0:
+                try:
+                    return function(*args, **kwargs)
+                except:
+                    tries -= 1
+                    print('Failed. Will try another {} times'.format(tries))
+                    if recovery:
+                        recovery()
+                    time.sleep(timeout)
+            print('No way. This just does not work!')
+            return None
+        return function_retry
+    return decorator
+
+
+class Gmail(object):
+
+    def __init__(self):
+        pass
+
+    def __enter__(self):
+        user = pwd.getpwuid(os.getuid()).pw_name
+        passwd = keyring.get_password('liamg', user)
+        self.imap = imaplib.IMAP4_SSL('imap.gmail.com', '993')
+        self.imap.login('alexandrov88@gmail.com', passwd)
+        self.imap.select()
+        print('Connection to GMail IMAP server established')
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.imap.close()
+        self.imap.logout()
+        print('Connection to GMail IMAP server closed')
+
+    def get_unread_count(self):
+        sys.stdout.write('.')
+        uids = self.imap.uid('search', None, 'UnSeen')[1][0].decode().split()
+        if not uids:
+            return 0
+        query = bytes(','.join(uids), 'UTF-8')
+        items = [t.decode() for t in self.imap.uid('fetch', query, '(X-GM-THRID)')[1]]
+        tids = REGEX.findall(' '.join(items))
+        return len(set(tids))
+
+
+CHECK_INTERVAL = 5
+PIPE_NAME = '/tmp/gmail'
+old_unread = -1
+
+if os.path.exists(PIPE_NAME):
+    os.unlink(PIPE_NAME)
+os.mkfifo(PIPE_NAME)
+pipe = os.open(PIPE_NAME, os.O_RDWR)
+
+while True:
+    try:
+        with Gmail() as gmail:
+            while True:
+                sys.stdout.write('<')
+                sys.stdout.flush()
+                unread = gmail.get_unread_count()
+                sys.stdout.write('>')
+                sys.stdout.flush()
+                if unread:
+                    out = color(' {} {} '.format(symbol('mail'), unread), SolarizedBase3, SolarizedRed)
+                else:
+                    out = symbol('mail')
+                os.write(pipe, bytes(out + '\n', 'UTF-8'))
+                time.sleep(CHECK_INTERVAL)
+    except:
+        print('Failure. Restart GMail')
+    time.sleep(CHECK_INTERVAL)
+
+os.close(pipe)
