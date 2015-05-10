@@ -3,6 +3,12 @@ cabal-install
 cabal: http://code.haskell.org/xmonad/xmonad.tar.gz
 cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
 
+# Dependencies of xmobar, not resolved automatically for some reason
+cabal: alex
+cabal: happy
+cabal: c2hs
+cabal: xmobar --flags="all_extensions"
+
 # Ubuntu
 ubuntu: libx11-dev
 ubuntu: libxrandr-dev
