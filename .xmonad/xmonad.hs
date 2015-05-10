@@ -4,6 +4,11 @@
 -- Language
 {-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, TypeSynonymInstances, MultiParamTypeClasses,  ImplicitParams, PatternGuards #-}
 
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+
+
 import XMonad hiding ( (|||) )
 import XMonad.Layout.Named
 import XMonad.Layout.Tabbed
@@ -29,6 +34,7 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.WorkspaceCompare
 import XMonad.Actions.CycleWS
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.ShowText
@@ -68,12 +74,12 @@ import XMonad.Actions.Plane
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 
-import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import Data.Ratio ((%))
 import Data.List
 import Data.IORef
 import Data.Monoid
+import Data.Maybe (fromJust)
 import Graphics.X11.ExtraTypes.XF86
 
 import System.Exit
@@ -97,11 +103,12 @@ import Solarized
 import MCF.Apps
 import MCF.Paths
 import MCF.Icons
+import MCF.Xmobar
 
 -- Appearance -------------------------------------------------------------- {{{
 
-myFont               = "Liberation Mono"
-fontXP               = "xft:" ++ myFont ++ ":pixelsize=11"
+myFont               = "Fantasque Sans Mono"
+fontXP               = "xft:" ++ myFont ++ ":pixelsize=14:bold"
 fontDzen             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
 colorBg              = "#3c3b37"
 colorFgLight         = "#d7dbd2"
@@ -355,7 +362,7 @@ table =
     deleteWorkspace         = Unbound "Remove workspace"                (removeWorkspace)
     -- Misc
     scratchTerminal         = Unbound "Open scratch terminal"           (namedScratchpadAction myScratchPads "terminal")
-    restartXMonad           = Unbound "Restart XMonad"                  (spawn "killall conky dzen2" <+> restart "xmonad" True)
+    restartXMonad           = Unbound "Restart XMonad"                  (spawn "killall xmobar" <+> restart "xmonad" True)
     swapScreens             = Unbound "Swap current and next screen"    (nextScreen)
     powerOff                = Unbound "Power off the system"            (spawn "gnome-session-quit --power-off")
     reboot                  = Unbound "Reboot the system"               (spawn "gnome-session-quit --reboot")
@@ -399,7 +406,7 @@ myXPConfig = defaultXPConfig
   , borderColor         = colorGrayAlt
   , promptBorderWidth   = 0
   , height              = topBarHeight
-  , position            = Top
+  , position            = Bottom
   , historySize         = 100
   , historyFilter       = deleteConsecutive
   , autoComplete        = Nothing
@@ -467,13 +474,12 @@ viewWeb = windows (W.view "web")
 
 main :: IO ()
 main = do
-  screenCount     <- countScreens
-  display         <- openDisplay $ unsafePerformIO $ getEnv "DISPLAY"
-  let screen       = defaultScreenOfDisplay display
-  let screenWidth  = read (show (widthOfScreen screen))  :: Int
-  let screenHeight = read (show (heightOfScreen screen)) :: Int
-  dzenTopRight <- spawnPipe (barTopRight screenWidth screenHeight)
-  dzensTopLeft <- mapM (spawnPipe . barTopLeft) [1 .. screenCount]
+  screenCount      <- countScreens
+  display          <- openDisplay $ unsafePerformIO $ getEnv "DISPLAY"
+  let screen        = defaultScreenOfDisplay display
+  let screenWidth   = read (show (widthOfScreen screen))  :: Int
+  let screenHeight  = read (show (heightOfScreen screen)) :: Int
+  xmobars          <- mapM (spawnPipe . xmobarConfig) [1 .. screenCount]
   xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
@@ -481,83 +487,53 @@ main = do
     , borderWidth        = 2                 -- width of border around windows
     , terminal           = appTerminal        -- default terminal program
     , workspaces         = myTopicNames
-    , manageHook = manageHook gnomeConfig <+> myManageHook
-    , logHook = (mapM_ dynamicLogWithPP $ zipWith logHookTopLeft dzensTopLeft [1 .. screenCount])
-                >> updatePointer (Relative 0.5 0.5)
-    , layoutHook = myLayoutHook
+    , manageHook         = manageHook gnomeConfig <+> myManageHook
+    , logHook            = (mapM_ dynamicLogWithPP $ zipWith logHookXmobar xmobars [1 .. screenCount])
+                           >> updatePointer (Relative 0.5 0.5)
+    , layoutHook         = myLayoutHook
     , handleEventHook    = myHandleEventHook
     , startupHook        = setWMName "LG3D"
     }
     `additionalKeysP`
     myKeyBindingsTable
+
 -- }}}
--- Status bars ------------------------------------------------------------- {{{
--- Helper functions -------------------------------------------------------- {{{
-wrapTextBox :: String -> String -> String -> String -> String
-wrapTextBox fg bg1 bg2 t = "^fg(" ++ bg1 ++ ")" ++ getIcon "boxleft" ++ "^ib(1)^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg(" ++ fg ++ ")" ++ t ++ "^fg(" ++ bg1 ++ ")" ++ getIcon "boxright" ++ "^fg(" ++ bg2 ++ ")^r(" ++ show xRes ++ "x" ++ show topBarBoxHeight ++ ")^p(-" ++ show xRes ++ ")^fg()^ib(0)"
+-- Status bar -------------------------------------------------------------- {{{
 
 xdoMod :: String -> String
 xdoMod key = "/usr/bin/xdotool key super+" ++ key
 
-wrapClickLayout x = "^ca(1," ++ xdoMod "Tab" ++ ")" ++ x ++ "^ca()"
+xmobarConfig (S n) = "xmobar " ++ pathXmobar ++ " -x '" ++ show n ++ "'"
 
-wrapLoggerBox :: String -> String -> String -> Logger -> Logger
-wrapLoggerBox fg bg1 bg2 l = do
-  log <- l
-  let text = do
-      logStr <- log
-      return $ wrapTextBox fg bg1 bg2 logStr
-  return text
--- }}}
--- Top left (XMonad status) ------------------------------------------------ {{{
+myWorkspaceSorter = do
+  srt <- fmap (namedScratchpadFilterOutWorkspace.) getSortByXineramaRule
+  let prm (one:two:rest) = two:one:rest
+  return (prm . srt)
 
-barTopLeft (S n) = "dzen2"
-                   ++ " -x '0' -y '0'"
-                   ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show topLeftBarWidth ++ "'"
-                   ++ " -ta 'l'"
-                   ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                   ++ " -bg '" ++ colorBg ++ "'"
-                   ++ " -fn '" ++ fontDzen ++ "'"
-                   ++ " -xs '" ++ show n ++ "'"
-
-logHookTopLeft handle s = defaultPP
-  { ppOutput          = hPutStrLn handle
-  , ppSort            = fmap (namedScratchpadFilterOutWorkspace.) DO.getSortByOrder
-  , ppOrder           = \(ws:l:t:x) -> [ws, l, t] ++ x
-  , ppSep             = " "
-  , ppWsSep           = ""
-  , ppCurrent         =                      wrapTextBox colorFgDark  colorFgLight colorBg
-  , ppUrgent          =                      wrapTextBox solarizedBase3 solarizedRed colorBg
-  , ppVisible         =                      wrapTextBox colorFgLight colorFgDark  colorBg
-  , ppHiddenNoWindows = const ""
-  , ppHidden          =                      wrapTextBox colorFgLight colorBg      colorBg
-  , ppTitle           = (" " ++)           . dzenColor   colorFgLight colorBg             . dzenEscape . shorten topBarTitleLength
-  , ppLayout          = wrapClickLayout    . dzenColor   colorFgDark  colorBg             .
+logHookXmobar handle s = xmobarPP
+  { ppOutput           = hPutStrLn handle
+  , ppSort             = myWorkspaceSorter
+  , ppOrder            = \(ws:l:t:x) -> [ws, l, t] ++ x
+  , ppSep              = "   "
+  , ppWsSep            = " "
+  , ppCurrent          = xmobarColor colorFgLight solarizedOrange . wrap " " " "
+  , ppUrgent           = xmobarColor solarizedRed ""
+  , ppVisible          = xmobarColor colorFgLight ""
+  , ppHiddenNoWindows  = const ""
+  , ppTitle            = (" " ++) . xmobarColor colorFgLight "" . shorten topBarTitleLength
+  , ppLayout           = xmobarAction (xdoMod "Tab") 1 .
     (\x -> case x of
-    "MouseResizableTile"        -> getIcon "tall"
-    "Mirror MouseResizableTile" -> getIcon "mtall"
-    "Grid"                      -> getIcon "grid"
-    "Tabbed Bottom Simplest"    -> getIcon "full"
-    "code"                      -> getIcon "code"
+    "MouseResizableTile"        -> xmobarIcon "tall"
+    "Mirror MouseResizableTile" -> xmobarIcon "mtall"
+    "Spacing 10 Grid"           -> xmobarIcon "grid"
+    "Tabbed Simplest"           -> xmobarIcon "full"
+    "code"                      -> xmobarIcon "code"
     "im"                        -> ""
     "figures"                   -> ""
     _ -> x
     )
   }
 
--- }}}
--- Top right (System status) ----------------------------------------------- {{{
-
-barTopRight :: Int -> Int -> String
-barTopRight screenWidth screenHeight = "conky -c ~/.xmonad/conkyrc | dzen2"
-                     ++ " -x '" ++ show topLeftBarWidth ++ "' -y '0'"
-                     ++ " -h '" ++ show topBarHeight ++ "' -w '" ++ show (screenWidth - topLeftBarWidth) ++ "'"
-                     ++ " -ta 'r'"
-                     ++ " -fg '" ++ colorWhiteAlt ++ "'"
-                     ++ " -bg '" ++ colorBg ++ "'"
-                     ++ " -fn '" ++ fontDzen ++ "'"
-
--- }}}
 -- }}}
 -- HandleEvent hook -------------------------------------------------------- {{{
 

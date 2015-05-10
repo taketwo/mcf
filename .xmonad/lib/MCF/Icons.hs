@@ -5,4 +5,4 @@ module MCF.Icons
 import MCF.Paths
 
 getIcon :: String -> String
-getIcon icon = "^i(" ++ pathIcons ++ icon ++ ".xbm)"
+getIcon icon = "<icon=" ++ pathIcons ++ icon ++ ".xbm/>"

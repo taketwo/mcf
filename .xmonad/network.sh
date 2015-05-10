@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $MCF/.xmonad/panel.bash
+source $MCF/.xmonad/xmobar.bash
 source $MCF/.xmonad/solarized.bash
 source $MCF/scripts/library/version-compare.bash
 
@@ -96,16 +96,6 @@ openvpn_connections ()
 is_online ()
 {
   online=1
-  ping -c1 8.8.8.8 >/dev/null
-  if [ $? -ne 0 ] ; then
-    online=0
-    return
-  fi
-  ping -c1 173.194.112.70 >/dev/null
-  if [ $? -ne 0 ] ; then
-    online=0
-    return
-  fi
   ping -c1 google.com >/dev/null
   if [ $? -ne 0 ] ; then
     online=0
@@ -121,7 +111,7 @@ StartIndicator
 
 # NetworkManager devices
 if [ $wireless -eq 1 ] ; then
-  Icon "wifi"
+  Symbol "wifi"
 fi
 if [ $ethernet -eq 1 ] ; then
   Icon "net_wired"
@@ -141,8 +131,7 @@ done
 
 # Paint blue if online
 if [ $online -eq 1 ] ; then
-  Fg $SolarizedBase3
-  Bg $SolarizedBlue
+  Color $SolarizedBase3 $SolarizedBlue
 fi
 
 FlushIndicator
@@ -154,6 +143,5 @@ for c in $kebrum ; do
   Add $c
 done
 
-Fg $SolarizedBase3
-Bg $SolarizedYellow
+Color $SolarizedBase3 $SolarizedYellow
 FlushIndicator
