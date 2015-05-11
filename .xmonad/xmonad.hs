@@ -527,6 +527,7 @@ logHookXmobar handle s = xmobarPP
     "Mirror MouseResizableTile" -> xmobarIcon "mtall"
     "Spacing 10 Grid"           -> xmobarIcon "grid"
     "Tabbed Simplest"           -> xmobarIcon "full"
+    "Tabbed Bottom Simplest"    -> xmobarIcon "full"
     "code"                      -> xmobarIcon "code"
     "im"                        -> ""
     "figures"                   -> ""
