@@ -79,8 +79,12 @@ class PackageManager(object):
             p = [package]
         if manager == 'cabal':
             subprocess.check_call(['cabal', 'update'])
-        cmd = CMD[manager] + ' ' + ' '.join(p) + ' ' + args
-        subprocess.check_call(cmd.split())
+            for package in p:
+                cmd = CMD[manager] + ' ' + package + ' ' + args
+                subprocess.check_call(cmd.split())
+        else:
+            cmd = CMD[manager] + ' ' + ' '.join(p) + ' ' + args
+            subprocess.check_call(cmd.split())
         if manager == 'pip':
             stow.adopt_as('pip')
 
