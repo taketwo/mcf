@@ -3,10 +3,16 @@ cabal-install
 cabal: http://code.haskell.org/xmonad/xmonad.tar.gz
 cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
 
-# Dependencies of xmobar, not resolved automatically for some reason
+# Dependencies of xmobar
+# These are not resolved automatically for some reason
 cabal: alex
 cabal: happy
 cabal: c2hs
+# This is for some plugins
+ubuntu: libmpd-dev
+ubuntu: libasound2-dev
+ubuntu: libiw-dev
+
 cabal: xmobar --flags="all_extensions"
 
 # Ubuntu
