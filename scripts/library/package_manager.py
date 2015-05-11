@@ -119,7 +119,7 @@ class PackageManager(object):
         for pm in [PLATFORM, 'pip', 'cabal']:
             if pm in merged:
                 print(' - {} packages\n'.format(pm.capitalize()))
-                print('  ', ' '.join(merged[pm]))
+                print('  ', ', '.join(merged[pm]))
                 print('')
         if 'script' in merged:
             print(' - Custom install scripts\n')
