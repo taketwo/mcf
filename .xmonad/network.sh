@@ -114,7 +114,7 @@ if [ $wireless -eq 1 ] ; then
   Symbol "wifi"
 fi
 if [ $ethernet -eq 1 ] ; then
-  Icon "net_wired"
+  Symbol "planet"
 fi
 
 # NetworkManager VPN connections
