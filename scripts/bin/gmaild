@@ -19,12 +19,13 @@ SolarizedBase3="#fdf6e3"
 
 
 def color(text, fg, bg=None):
+    fmt = unicode('<fc={}{}>{}</fc>', 'utf-8')
     bg = ',' + bg if bg is not None else ''
-    return '<fc={}{}>{}</fc>'.format(fg, bg, text)
+    return fmt.format(fg, bg, text)
 
 
 def symbol(name):
-    return {'mail': ''}[name]
+    return {'mail': unicode('', 'utf-8')}[name]
 
 
 def retry(timeout, attempts, recovery=None):
@@ -70,7 +71,7 @@ class Gmail(object):
         uids = self.imap.uid('search', None, 'UnSeen')[1][0].decode().split()
         if not uids:
             return 0
-        query = bytes(','.join(uids), 'UTF-8')
+        query = ','.join(uids).encode('utf-8')
         items = [t.decode() for t in self.imap.uid('fetch', query, '(X-GM-THRID)')[1]]
         tids = REGEX.findall(' '.join(items))
         return len(set(tids))
@@ -95,13 +96,18 @@ while True:
                 sys.stdout.write('>')
                 sys.stdout.flush()
                 if unread:
-                    out = color(' {} {} '.format(symbol('mail'), unread), SolarizedBase3, SolarizedRed)
+                    out = unicode(' ', 'utf-8')
+                    out += symbol('mail')
+                    out += ' '
+                    out += unicode(str(unread), 'utf-8')
+                    out += ' '
+                    out = color(out, SolarizedBase3, SolarizedRed)
                 else:
-                    out = symbol('mail')
-                os.write(pipe, bytes(out + '\n', 'UTF-8'))
+                    out = ''
+                os.write(pipe, (out + '\n').encode('utf-8'))
                 time.sleep(CHECK_INTERVAL)
-    except:
-        print('Failure. Restart GMail')
+    except Exception as e:
+        print('Failure:', e, '\nRestart GMail')
     time.sleep(CHECK_INTERVAL)
 
 os.close(pipe)
