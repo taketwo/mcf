@@ -3,6 +3,9 @@ cabal-install
 cabal: http://code.haskell.org/xmonad/xmonad.tar.gz
 cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
 
+# For clickable workspace names
+cabal: split
+
 # Dependencies of xmobar
 # These are not resolved automatically for some reason
 cabal: alex

@@ -77,6 +77,7 @@ import XMonad.Hooks.UrgencyHook
 import qualified Data.Map as M
 import Data.Ratio ((%))
 import Data.List
+import Data.List.Split
 import Data.IORef
 import Data.Monoid
 import Data.Maybe (fromJust)
@@ -503,6 +504,15 @@ main = do
 xdoMod :: String -> String
 xdoMod key = "/usr/bin/xdotool key super+" ++ key
 
+addPluses :: String -> String
+addPluses = intercalate " + " . chunksOf 1
+
+xdoGotoWorkspace :: String -> String
+xdoGotoWorkspace ws = xdoMod "w" ++ " " ++ addPluses ws
+
+clickable :: String -> String
+clickable ws = xmobarAction (xdoGotoWorkspace ws) 1 ws
+
 xmobarConfig (S n) = "xmobar " ++ pathXmobar ++ " -x '" ++ show n ++ "'"
 
 myWorkspaceSorter = do
@@ -518,7 +528,8 @@ logHookXmobar handle s = xmobarPP
   , ppWsSep            = " "
   , ppCurrent          = xmobarColor colorFgLight solarizedOrange . wrap " " " "
   , ppUrgent           = xmobarColor solarizedRed ""
-  , ppVisible          = xmobarColor colorFgLight "" . wrap " " " "
+  , ppVisible          = xmobarColor colorFgLight "" . wrap " " " " . clickable
+  , ppHidden           = clickable
   , ppHiddenNoWindows  = const ""
   , ppTitle            = (" " ++) . xmobarColor colorFgLight "" . shorten topBarTitleLength
   , ppLayout           = xmobarAction (xdoMod "Tab") 1 .
