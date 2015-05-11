@@ -133,9 +133,10 @@ class PackageManager(object):
             print('')
 
     def _merge(self, commands):
-        merged = defaultdict(set)
+        merged = defaultdict(list)
         for c in commands:
-            merged[c[0]].add(c[1])
+            if c[1] not in merged[c[0]]:
+                merged[c[0]].append(c[1])
         return dict(merged)
 
 
