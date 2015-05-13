@@ -22,3 +22,7 @@ cabal: xmobar --flags="all_extensions"
 ubuntu: libx11-dev
 ubuntu: libxrandr-dev
 ubuntu: gnome-settings-daemon
+ubuntu: gnome-control-center
+ubuntu: libxft-dev
+ubuntu: libxinerama-dev
+ubuntu: libxpm-dev
