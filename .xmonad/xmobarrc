@@ -11,7 +11,7 @@ Config
   -- Layout
   , sepChar          = "%"   -- delineator between plugin names and straight text
   , alignSep         = "}{"  -- separator between left-right alignment
-  , template         = "%UnsafeStdinReader%   %dynnetwork% }{ %mpd% %kbd% %LOWW% %gmail%%net% %battery% %date%"
+  , template         = "%UnsafeStdinReader%   %dynnetwork% }{ %mpd%  %gmail%%net% %kbd% %LOWW% %vol% %battery% %date%"
   -- General behavior
   , lowerOnStart     = False   -- send to bottom of window stack on start
   , hideOnStart      = False   -- start with window unmapped (hidden)
@@ -44,7 +44,7 @@ Config
     , "--high"     , "darkred"
     ] 10
     -- Battery monitor
-    , Run Battery        [ "--template" , "Batt: <acstatus>"
+    , Run Battery        [ "--template" , "<acstatus>"
     , "--Low"      , "10"        -- units: %
     , "--High"     , "80"        -- units: %
     , "--low"      , "darkred"
@@ -54,11 +54,11 @@ Config
     -- battery specific options
     , "--"
     -- discharging status
-    , "-o"   , "<left>% (<timeleft>)"
+    , "-o"   , " <left>% (<timeleft>)"
     -- AC "on" status
-    , "-O"   , "<fc=#dAA520>Charging</fc>"
+    , "-O"   , "<fc=#dAA520></fc> <left>%"
     -- charged status
-    , "-i"   , "<fc=#006000>Charged</fc>"
+    , "-i"   , "<fc=#006000></fc>"
     , "-f"   , "ACAD/online"
     ] 50
     -- Time and date indicator
@@ -71,7 +71,8 @@ Config
     ]
     , Run PipeReader "/tmp/gmail" "gmail"
     , Run UnsafeStdinReader
-    , Run MPD ["-t", "<action=`mpc toggle`><state>: <artist> - <title></action>"] 10
+    , Run MPD ["-t", "<action=`mpc toggle`><fc=#d7dbd2><artist> - <title></fc></action>"] 10
     , Run Com "/home/sergey/.xmonad/network.sh" [] "net" 100
+    , Run Com "/home/sergey/.xmonad/volume.sh" [] "vol" 100
     ]
   }
