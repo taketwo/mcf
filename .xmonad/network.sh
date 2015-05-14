@@ -119,13 +119,13 @@ fi
 
 # NetworkManager VPN connections
 for c in $nm ; do
-  Icon "lock"
+  Symbol "shield"
   Add $c
 done
 
 # OpenVPN connections (non Kebrum)
 for c in $openvpn ; do
-  Icon "lock"
+  Symbol "shield"
   Add $c
 done
 
@@ -139,7 +139,7 @@ StartIndicator
 
 # OpenVPN connections (Kebrum)
 for c in $kebrum ; do
-  Icon "lock"
+  Symbol "shield"
   Add $c
 done
 
