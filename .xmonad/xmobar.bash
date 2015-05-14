@@ -6,7 +6,11 @@ StartIndicator ()
 Color ()
 {
   if [ "$__output" != " " ] ; then
-    eval "__output='<fc=$1,$2>$__output</fc>'"
+    if [[ $# -gt 1 ]] ; then
+      eval "__output='<fc=$1,$2>$__output</fc>'"
+    else
+      eval "__output='<fc=$1>$__output</fc>'"
+    fi
   fi
 }
 
