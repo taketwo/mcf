@@ -6,10 +6,29 @@ import re
 import pwd
 import sys
 import time
+import signal
 import imaplib
 from subprocess import Popen, PIPE
+from contextlib import contextmanager
+
 
 import keyring
+
+
+class TimeoutException(Exception):
+    pass
+
+
+@contextmanager
+def timeout(seconds):
+    def signal_handler(signum, frame):
+        raise TimeoutException
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
 
 
 REGEX = re.compile(r'X-GM-THRID (\d+) UID')
@@ -51,21 +70,17 @@ def retry(timeout, attempts, recovery=None):
 class Gmail(object):
 
     def __init__(self):
-        pass
-
-    def __enter__(self):
         user = pwd.getpwuid(os.getuid()).pw_name
         passwd = keyring.get_password('liamg', user)
         self.imap = imaplib.IMAP4_SSL('imap.gmail.com', '993')
         self.imap.login('alexandrov88@gmail.com', passwd)
         self.imap.select()
         print('Connection to GMail IMAP server established')
-        return self
 
-    def __exit__(self, type, value, traceback):
+    def close(self):
+        print('Closing GMail IMAP server connection...')
         self.imap.close()
         self.imap.logout()
-        print('Connection to GMail IMAP server closed')
 
     def get_unread_count(self):
         self.imap.select()
@@ -78,7 +93,7 @@ class Gmail(object):
         return len(set(tids))
 
 
-CHECK_INTERVAL = 5
+CHECK_INTERVAL = 10
 PIPE_NAME = '/tmp/gmail'
 old_unread = -1
 
@@ -89,25 +104,26 @@ pipe = os.open(PIPE_NAME, os.O_RDWR)
 
 while True:
     try:
-        with Gmail() as gmail:
-            while True:
-                sys.stdout.write('<')
-                sys.stdout.flush()
+        gmail = Gmail()
+        while True:
+            sys.stdout.write('<')
+            sys.stdout.flush()
+            with timeout(CHECK_INTERVAL):
                 unread = gmail.get_unread_count()
-                sys.stdout.write(str(unread))
-                sys.stdout.write('>')
-                sys.stdout.flush()
-                if unread:
-                    out = unicode(' ', 'utf-8')
-                    out += symbol('mail')
-                    out += ' '
-                    out += unicode(str(unread), 'utf-8')
-                    out += ' '
-                    out = color(out, SolarizedBase3, SolarizedOrange)
-                else:
-                    out = ''
-                os.write(pipe, (out + '\n').encode('utf-8'))
-                time.sleep(CHECK_INTERVAL)
+            sys.stdout.write(str(unread))
+            sys.stdout.write('>')
+            sys.stdout.flush()
+            if unread:
+                out = unicode(' ', 'utf-8')
+                out += symbol('mail')
+                out += ' '
+                out += unicode(str(unread), 'utf-8')
+                out += ' '
+                out = color(out, SolarizedBase3, SolarizedOrange)
+            else:
+                out = ''
+            os.write(pipe, (out + '\n').encode('utf-8'))
+            time.sleep(CHECK_INTERVAL)
     except Exception as e:
         print('Failure:', e, '\nRestart GMail')
     time.sleep(CHECK_INTERVAL)
