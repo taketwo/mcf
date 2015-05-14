@@ -256,48 +256,39 @@ myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
 
 myKeyBindingsTable = concat $ table
 
---        key                  M-              M-S-           M-C-           M-S-C-
+--    key             M-                     M-S-                    M-C-                    M-S-C-
 table =
-  [ k "<Return>"     launchTerminal         __              __                __
-  , k "a"            __                     __              __                __
-  , k "b"            __               __            launchBrowser        __
-  , k "c"            goUp             swapUp        launchCalendar       shrinkMaster
-  {-, k "d"            launchWithDmenu      __              __                __-}
-  {-, k "e"            wicdNetwork          __              __                __-}
-  , k "f"            __               tileFloating        __           resizeFloatingWindow
-  {-, k "g"            gotoMenu'        bringMenu'    windowMenu'      xmonadCommands-}
-  , k "h"            goLeft           swapLeft            __           shrinkMaster
-  , k "i"            __               __              __                __
-  , k "j"                __               __              __                __
-  {-, k "k"            focusUrgent'         __              __         clearUrgents'-}
-  {-, k "l"            expandMaster     shrinkMaster  incMaster        decMaster -}
-  , k "m"            gotoMaster       swapMaster          __           toggleMagnifier
-  , k "n"            goRight          swapRight           __           expandMaster
-  , k "o"                __               __              __                __
-  , k "p"                __               __              __                __
-  , k "q"            closeWindow      deleteWorkspace     __                __
-  , k "r"                __               __              __           __
-  {-, k "s"            toggleStruts     cntrlCenter         __         swapScreens-}
-  , k "s"            swapScreens          __              __                __
-  , k "t"            goDown           swapDown            __           expandMaster
-  {-, k "u"            gotoScreen0      sendScreen0   takeScreen0      swapScreen0-}
-  {-, k "v"            volumeMuteToggle volumeDown    volumeUp                __-}
-  , k "w"            gotoWorkspace    shiftToWorkspace createWorkspace    shiftAndGoToWorkspace
-  , k "x"            nextWorkspace    prevWorkspace renameWorkspace' deleteWorkspace
-  , k "y"                __               __              __                __
-  , k "z"                __               __              __                __
-  , k "<Backspace>"  closeWindow          __              __         deleteWorkspace
-  , k "<Space>"      launchKupfer           __              __                __
-  , k "<Tab>"        nextLayout       resetLayout         __                __
-  {-, k "-"            gotoRecentWS     sendRecentWS  takeRecentWS            __-}
-  , k "`"            scratchTerminal      __              __                __
-  , k "'"            gridSelect           __              __                __
-  , k "/"            promptSearch     selectSearch             __                __
-  , k "0"            gotoPrevWorkspace      __              __                __
-  , k "<F5>"             __           restartXMonad       __                __
-  , k "<F10>"            __           logout              __                __
-  , k "<F11>"            __           reboot              __                __
-  , k "<F12>"            __           powerOff            __                __
+  [ k "<Return>"     launchTerminal          __                      __                      __
+  , k "a"            __                      __                      __                      __
+  , k "b"            __                      __                      __                      __
+  , k "c"            goUp                    swapUp                  __                      shrinkMaster
+  , k "f"            __                      tileFloating            __                      resizeFloatingWindow
+  , k "h"            goLeft                  swapLeft                __                      shrinkMaster
+  , k "i"            __                      __                      __                      __
+  , k "j"            __                      __                      __                      __
+  , k "m"            gotoMaster              swapMaster              __                      toggleMagnifier
+  , k "n"            goRight                 swapRight               __                      expandMaster
+  , k "o"            __                      __                      __                      __
+  , k "p"            __                      __                      __                      __
+  , k "q"            closeWindow             deleteWorkspace         __                      __
+  , k "r"            __                      __                      __                      __
+  , k "s"            swapScreens             __                      __                      __
+  , k "t"            goDown                  swapDown                __                      expandMaster
+  , k "w"            gotoWorkspace           shiftToWorkspace        createWorkspace         shiftAndGoToWorkspace
+  , k "x"            nextWorkspace           prevWorkspace           renameWorkspace'        deleteWorkspace
+  , k "y"            __                      __                      __                      __
+  , k "z"            __                      __                      __                      __
+  , k "<Backspace>"  closeWindow             __                      __                      deleteWorkspace
+  , k "<Space>"      launchKupfer            __                      __                      __
+  , k "<Tab>"        nextLayout              resetLayout             __                      __
+  , k "`"            scratchTerminal         __                      __                      __
+  , k "'"            gridSelect              __                      __                      __
+  , k "/"            promptSearch            selectSearch            __                      __
+  , k "0"            gotoPrevWorkspace       __                      __                      __
+  , k "<F5>"         __                      restartXMonad           __                      __
+  , k "<F10>"        __                      logout                  __                      __
+  , k "<F11>"        __                      reboot                  __                      __
+  , k "<F12>"        __                      powerOff                __                      __
   , [bind "M1-" "<Tab>" gotoNextWindow]
   -- Multimedia keys
   , [bind "" "<XF86AudioMute>"         audioMute]
