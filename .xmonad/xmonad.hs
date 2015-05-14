@@ -46,6 +46,7 @@ import XMonad.Actions.Search
 import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.FloatKeys
 import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 import qualified XMonad.Actions.FlexibleResize as FR
 import XMonad.Operations
@@ -261,19 +262,26 @@ table =
   [ k "<Return>"     launchTerminal          __                      __                      __
   , k "a"            __                      __                      __                      __
   , k "b"            __                      __                      __                      __
-  , k "c"            goUp                    swapUp                  __                      shrinkMaster
+  , k "c"            goUp                    swapUp                  expandVertical          moveUp
+  , k "d"            __                      __                      __                      __
+  , k "e"            __                      __                      __                      __
   , k "f"            __                      tileFloating            __                      resizeFloatingWindow
-  , k "h"            goLeft                  swapLeft                __                      shrinkMaster
+  , k "g"            __                      __                      __                      __
+  , k "h"            goLeft                  swapLeft                shrinkHorizontal        moveLeft
   , k "i"            __                      __                      __                      __
   , k "j"            __                      __                      __                      __
+  , k "k"            __                      __                      __                      __
+  , k "l"            __                      __                      __                      __
   , k "m"            gotoMaster              swapMaster              __                      toggleMagnifier
-  , k "n"            goRight                 swapRight               __                      expandMaster
+  , k "n"            goRight                 swapRight               expandHorizontal        moveRight
   , k "o"            __                      __                      __                      __
   , k "p"            __                      __                      __                      __
   , k "q"            closeWindow             deleteWorkspace         __                      __
   , k "r"            __                      __                      __                      __
   , k "s"            swapScreens             __                      __                      __
-  , k "t"            goDown                  swapDown                __                      expandMaster
+  , k "t"            goDown                  swapDown                shrinkVertical          moveDown
+  , k "u"            __                      __                      __                      __
+  , k "v"            __                      __                      __                      __
   , k "w"            gotoWorkspace           shiftToWorkspace        createWorkspace         shiftAndGoToWorkspace
   , k "x"            nextWorkspace           prevWorkspace           renameWorkspace'        deleteWorkspace
   , k "y"            __                      __                      __                      __
@@ -318,65 +326,74 @@ table =
 
     -- Actions
     -- Launch program
-    launchBrowser           = Unbound "Launch browser"                  (spawn appBrowser)
-    launchTerminal          = Unbound "Launch terminal"                 (spawn appTerminal)
-    launchKupfer            = Unbound "Launch kupfer"                   (spawn "kupfer")
-    launchCalendar          = Unbound "Launch calendar"                 (appBrowse "--app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
+    launchBrowser           = Unbound "Launch browser"                      (spawn appBrowser)
+    launchTerminal          = Unbound "Launch terminal"                     (spawn appTerminal)
+    launchKupfer            = Unbound "Launch kupfer"                       (spawn "kupfer")
+    launchCalendar          = Unbound "Launch calendar"                     (appBrowse "--app-id=ejjicmeblgpmajnghnpcppodonldlgfn")
     -- Window navigation
-    gotoNextWindow          = Unbound "Switch to next window"           (windows W.focusDown)
-    gotoMaster              = Unbound "Move focus to the master window" (windows W.focusMaster)
-    goUp                    = Unbound "Switch to window above"          (sendMessage $ Go U)
-    goDown                  = Unbound "Switch to window below"          (sendMessage $ Go D)
-    goLeft                  = Unbound "Switch to window to the left"    (sendMessage $ Go L)
-    goRight                 = Unbound "Switch to window to the right"   (sendMessage $ Go R)
-    swapMaster              = Unbound "Swap with the master window"     (windows W.swapMaster)
-    swapUp                  = Unbound "Swap with window above"          (sendMessage $ Swap U)
-    swapDown                = Unbound "Swap with window below"          (sendMessage $ Swap D)
-    swapLeft                = Unbound "Swap with window to the left"    (sendMessage $ Swap L)
-    swapRight               = Unbound "Swap with window to the right"   (sendMessage $ Swap R)
+    gotoNextWindow          = Unbound "Switch to next window"               (windows W.focusDown)
+    gotoMaster              = Unbound "Move focus to the master window"     (windows W.focusMaster)
+    goUp                    = Unbound "Switch to window above"              (sendMessage $ Go U)
+    goDown                  = Unbound "Switch to window below"              (sendMessage $ Go D)
+    goLeft                  = Unbound "Switch to window to the left"        (sendMessage $ Go L)
+    goRight                 = Unbound "Switch to window to the right"       (sendMessage $ Go R)
+    swapMaster              = Unbound "Swap with the master window"         (windows W.swapMaster)
+    swapUp                  = Unbound "Swap with window above"              (sendMessage $ Swap U)
+    swapDown                = Unbound "Swap with window below"              (sendMessage $ Swap D)
+    swapLeft                = Unbound "Swap with window to the left"        (sendMessage $ Swap L)
+    swapRight               = Unbound "Swap with window to the right"       (sendMessage $ Swap R)
+    -- Floating window manipulation
+    moveUp                  = Unbound "Move floating window up"             (withFocused (keysMoveWindow (0, -10)))
+    moveDown                = Unbound "Move floating window down"           (withFocused (keysMoveWindow (0, 10)))
+    moveLeft                = Unbound "Move floating window left"           (withFocused (keysMoveWindow (-10, 0)))
+    moveRight               = Unbound "Move floating window right"          (withFocused (keysMoveWindow (10, 0)))
+    expandVertical          = Unbound "Expand floating window vertically"   (withFocused (keysResizeWindow (0, 10) (0, 1%2)))
+    expandHorizontal        = Unbound "Expand floating window horizontally" (withFocused (keysResizeWindow (10, 0) (1%2, 0)))
+    shrinkVertical          = Unbound "Shrink floating window vertically"   (withFocused (keysResizeWindow (0, -10) (0, 1%2)))
+    shrinkHorizontal        = Unbound "Shrink floating window horizontally" (withFocused (keysResizeWindow (-10, 0) (1%2, 0)))
     -- Layout management
-    shrinkMaster            = Unbound "Shrink master window"            (sendMessage Shrink)
-    expandMaster            = Unbound "Expand master window"            (sendMessage Expand)
-    nextLayout              = Unbound "Switch to next layout"           (sendMessage NextLayout)
-    resetLayout             = Unbound "Switch to default layout"        (sendMessage FirstLayout)
-    tileFloating            = Unbound "Push into tile"                  (withFocused $ windows . W.sink)
-    resizeFloatingWindow    = Unbound "Resize focused floating window"  (withFocused $ FR.mouseResizeWindow)
-    toggleMagnifier         = Unbound "Toggle magnifier"                (sendMessage Mag.Toggle)
+    shrinkMaster            = Unbound "Shrink master window"                (sendMessage Shrink)
+    expandMaster            = Unbound "Expand master window"                (sendMessage Expand)
+    nextLayout              = Unbound "Switch to next layout"               (sendMessage NextLayout)
+    resetLayout             = Unbound "Switch to default layout"            (sendMessage FirstLayout)
+    tileFloating            = Unbound "Push into tile"                      (withFocused $ windows . W.sink)
+    resizeFloatingWindow    = Unbound "Resize focused floating window"      (withFocused $ FR.mouseResizeWindow)
+    toggleMagnifier         = Unbound "Toggle magnifier"                    (sendMessage Mag.Toggle)
     -- Workspace navigation
-    gotoPrevWorkspace       = Unbound "Switch to previous workspace"    (toggleWS' ["NSP"])
-    gotoWorkspace           = Unbound "Go to named workspace"           (removeIfEmpty (withWorkspace myXPConfigAutoComplete goto))
-    shiftToWorkspace        = Unbound "Shift to named workspace"        (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
-    shiftAndGoToWorkspace   = Unbound "Shift and go to named workspace" (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
-    nextWorkspace           = Unbound "Go to next workspace"            (removeIfEmpty (DO.moveTo Next HiddenNonEmptyWS))
-    prevWorkspace           = Unbound "Go to previous workspace"        (removeIfEmpty (DO.moveTo Prev HiddenNonEmptyWS))
-    createWorkspace         = Unbound "Create named workspace"          (selectWorkspace myXPConfig)
-    renameWorkspace'        = Unbound "Rename workspace"                (renameWorkspace myXPConfig)
-    deleteWorkspace         = Unbound "Remove workspace"                (removeWorkspace)
+    gotoPrevWorkspace       = Unbound "Switch to previous workspace"        (toggleWS' ["NSP"])
+    gotoWorkspace           = Unbound "Go to named workspace"               (removeIfEmpty (withWorkspace myXPConfigAutoComplete goto))
+    shiftToWorkspace        = Unbound "Shift to named workspace"            (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
+    shiftAndGoToWorkspace   = Unbound "Shift and go to named workspace"     (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
+    nextWorkspace           = Unbound "Go to next workspace"                (removeIfEmpty (DO.moveTo Next HiddenNonEmptyWS))
+    prevWorkspace           = Unbound "Go to previous workspace"            (removeIfEmpty (DO.moveTo Prev HiddenNonEmptyWS))
+    createWorkspace         = Unbound "Create named workspace"              (selectWorkspace myXPConfig)
+    renameWorkspace'        = Unbound "Rename workspace"                    (renameWorkspace myXPConfig)
+    deleteWorkspace         = Unbound "Remove workspace"                    (removeWorkspace)
     -- Misc
-    scratchTerminal         = Unbound "Open scratch terminal"           (namedScratchpadAction myScratchPads "terminal")
-    restartXMonad           = Unbound "Restart XMonad"                  (spawn "killall xmobar" <+> restart "xmonad" True)
-    swapScreens             = Unbound "Swap current and next screen"    (nextScreen)
-    powerOff                = Unbound "Power off the system"            (spawn "gnome-session-quit --power-off")
-    reboot                  = Unbound "Reboot the system"               (spawn "gnome-session-quit --reboot")
-    logout                  = Unbound "Logout"                          (spawn "session-logout")
-    promptSearch            = Unbound "Prompt search"                   (submap . mySearchMap $ myPromptSearch)
-    selectSearch            = Unbound "Search X selection"              (submap . mySearchMap $ mySelectSearch)
-    closeWindow             = Unbound "Close the focused window"        (kill)
-    gridSelect              = Unbound "Open GridSelect"                 (goToSelected gridSelectConfig)
+    scratchTerminal         = Unbound "Open scratch terminal"               (namedScratchpadAction myScratchPads "terminal")
+    restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> restart "xmonad" True)
+    swapScreens             = Unbound "Swap current and next screen"        (nextScreen)
+    powerOff                = Unbound "Power off the system"                (spawn "gnome-session-quit --power-off")
+    reboot                  = Unbound "Reboot the system"                   (spawn "gnome-session-quit --reboot")
+    logout                  = Unbound "Logout"                              (spawn "session-logout")
+    promptSearch            = Unbound "Prompt search"                       (submap . mySearchMap $ myPromptSearch)
+    selectSearch            = Unbound "Search X selection"                  (submap . mySearchMap $ mySelectSearch)
+    closeWindow             = Unbound "Close the focused window"            (kill)
+    gridSelect              = Unbound "Open GridSelect"                     (goToSelected gridSelectConfig)
     -- Audio control
-    audioMute               = Unbound "Mute audio"                      (spawn "amixer -D pulse set Master toggle")
-    audioLowerVolume        = Unbound "Lower audio volume"              (spawn "amixer -D pulse set Master 5%-")
-    audioRaiseVolume        = Unbound "Raise audio volume"              (spawn "amixer -D pulse set Master 5%+")
-    audioPlay               = Unbound "Play/pause audio playback"       (spawn "mpc toggle")
-    audioStop               = Unbound "Stop audio playback"             (spawn "mpc stop")
-    audioRate1              = Unbound "Rate current song with 1 star"   (spawn "rhythmbox-client --set-rating 1")
-    audioRate2              = Unbound "Rate current song with 2 star"   (spawn "rhythmbox-client --set-rating 2")
-    audioRate3              = Unbound "Rate current song with 3 star"   (spawn "rhythmbox-client --set-rating 3")
-    audioRate4              = Unbound "Rate current song with 4 star"   (spawn "rhythmbox-client --set-rating 4")
-    audioRate5              = Unbound "Rate current song with 5 star"   (spawn "rhythmbox-client --set-rating 5")
+    audioMute               = Unbound "Mute audio"                          (spawn "amixer -D pulse set Master toggle")
+    audioLowerVolume        = Unbound "Lower audio volume"                  (spawn "amixer -D pulse set Master 5%-")
+    audioRaiseVolume        = Unbound "Raise audio volume"                  (spawn "amixer -D pulse set Master 5%+")
+    audioPlay               = Unbound "Play/pause audio playback"           (spawn "mpc toggle")
+    audioStop               = Unbound "Stop audio playback"                 (spawn "mpc stop")
+    audioRate1              = Unbound "Rate current song with 1 star"       (spawn "rhythmbox-client --set-rating 1")
+    audioRate2              = Unbound "Rate current song with 2 star"       (spawn "rhythmbox-client --set-rating 2")
+    audioRate3              = Unbound "Rate current song with 3 star"       (spawn "rhythmbox-client --set-rating 3")
+    audioRate4              = Unbound "Rate current song with 4 star"       (spawn "rhythmbox-client --set-rating 4")
+    audioRate5              = Unbound "Rate current song with 5 star"       (spawn "rhythmbox-client --set-rating 5")
     -- Brightness control
-    brightnessDown          = Unbound "Brightness down"                 (spawn "xbacklight -dec 1")
-    brightnessUp            = Unbound "Brightness up"                   (spawn "xbacklight -inc 1")
+    brightnessDown          = Unbound "Brightness down"                     (spawn "xbacklight -dec 1")
+    brightnessUp            = Unbound "Brightness up"                       (spawn "xbacklight -inc 1")
 
     {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
     {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
