@@ -36,7 +36,7 @@ Symbol ()
 {
   declare -A symbols
   symbols["wifi"]=
-  symbols+=( ["planet"]= )
+  symbols+=( ["planet"]= ["shield"]= ["mute"]= ["volume"]=)
   eval "__output='$__output${symbols[${1}]} '"
 }
 
