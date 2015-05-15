@@ -10,6 +10,10 @@ set completion-prefix-display-length 2
 # which allows to use C-w shortcut
 set bind-tty-special-chars off
 
+# How to find the terminal key code for a given combo?
+# Run: `sed -n l`, press key combo, then Enter.
+# See http://unix.stackexchange.com/a/76591/55482
+
 #######################################################################
 #                         Commands for moving                         #
 #######################################################################
@@ -96,3 +100,7 @@ set bind-tty-special-chars off
 # Alt-Space
 # Print the contents of the current directory
 "\e ": "ls -lah\C-m"
+
+# Shift-Tab
+# Trigger fzf completion
+"\e[Z": "\C-e**\t"
