@@ -577,7 +577,6 @@ manageWindows = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "music" | x <- myMusicShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -589,7 +588,6 @@ manageWindows = composeAll . concat $
     myIgnores = []
     myGimpShifts = ["Gimp"]
     myMendeleyShifts = ["Mendeley Desktop"]
-    myMusicShifts = ["Rhythmbox", "Workrave"]
     myIMShifts = ["Skype"
                  , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
                  , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
