@@ -53,7 +53,7 @@ Plug 'rhysd/clever-f.vim'
 Plug 'taketwo/vim-exchange'
 
 " Languages / frameworks
-Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
 "Plugin 'davidhalter/jedi-vim'
 " isort is (temporary) disabled because:
 "   * do not use it that often
