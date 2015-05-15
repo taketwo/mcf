@@ -12,8 +12,8 @@ Plug 'tmhedberg/matchit'
 Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'henrik/vim-indexed-search'
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeMirrorToggle' }
+Plug 'jistr/vim-nerdtree-tabs', { 'on':  'NERDTreeMirrorToggle' }
 Plug 'skwp/vim-easymotion'
 Plug 'skwp/vim-colors-solarized'
 Plug 'bling/vim-airline'
