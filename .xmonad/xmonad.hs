@@ -506,7 +506,7 @@ main = do
     `additionalKeysP`
     myKeyBindingsTable
     `additionalMouseBindings`
-    [ ((mod4Mask, button2), (\w -> FR.mouseResizeWindow w)) ]
+    [ ((mod4Mask, button2), (\w -> focus w >> FR.mouseResizeWindow w)) ]
 
 -- }}}
 -- Status bar -------------------------------------------------------------- {{{
