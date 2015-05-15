@@ -193,9 +193,9 @@ myTopics =
   , TI "tocs"     "/media/Workspace/Projects/tocs"           (spawnShell)
   , TI "eval"     "/media/Workspace/Projects/tocs/data"      (spawnShell)
   , TI "blog"     "/media/Workspace/Projects/tocs/blog"      (blog)
-  , TI "pcl"      "/media/Workspace/Libraries/pcl-canonical" (spawnShell)
+  , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
-  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus /media/Files/Downloads/Torrents")
+  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Files/Downloads/Torrents")
   , TI "xmonad"   ".xmonad"                                  (appEdit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , ti "figures"  ""
   , ti "gimp"     ""
