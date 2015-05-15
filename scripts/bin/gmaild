@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 # encoding: utf-8
 
+from __future__ import print_function
+
 import os
 import re
 import pwd
@@ -16,6 +18,10 @@ import keyring
 
 
 class TimeoutException(Exception):
+    pass
+
+
+class PasswordException(Exception):
     pass
 
 
@@ -72,6 +78,8 @@ class Gmail(object):
     def __init__(self):
         user = pwd.getpwuid(os.getuid()).pw_name
         passwd = keyring.get_password('liamg', user)
+        if passwd is None:
+            raise PasswordException('Gmail password is not stored in keyring')
         self.imap = imaplib.IMAP4_SSL('imap.gmail.com', '993')
         self.imap.login('alexandrov88@gmail.com', passwd)
         self.imap.select()
@@ -124,6 +132,10 @@ while True:
                 out = ''
             os.write(pipe, (out + '\n').encode('utf-8'))
             time.sleep(CHECK_INTERVAL)
+    except PasswordException:
+        sys.exit('No password in the keyring, exiting...')
+    except TimeoutException:
+        print('Communication timeout, will wait and reconnect...')
     except Exception as e:
         print('Failure:', e, '\nRestart GMail')
     time.sleep(CHECK_INTERVAL)
