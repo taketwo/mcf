@@ -16,17 +16,9 @@
   in = "!git remote update -p; git log ..@{u}"
   out = log @{u}..
   remotes = remote -v
+  branches = branch -v
   tags = tag -l
   start = "!git init && git commit --allow-empty -m 'Initial commit'"
-  # Legit aliases
-  switch = !legit switch \"$@\"
-  branches = !legit branches
-  sprout = !legit sprout \"$@\"
-  unpublish = !legit unpublish \"$@\"
-  harvest = !legit harvest \"$@\"
-  sync = !legit sync \"$@\"
-  publish = !legit publish \"$@\"
-  graft = !legit graft \"$@\"
 [core]
   editor = vim
 [push]
