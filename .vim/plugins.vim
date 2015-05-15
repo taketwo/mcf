@@ -82,6 +82,9 @@ Plug 'lucapette/vim-textobj-underscore'
 " Snippets
 Plug 'honza/vim-snippets'
 
+" Non-vim
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+
 " Try these plugins:
 "Plug 'sjl/splice.vim'
 "Plug 'tpope/vim-repeat'
