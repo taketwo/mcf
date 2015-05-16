@@ -26,6 +26,18 @@ song=`mpc -f %file% current 2>/dev/null` || \
 if [[ -z "$song" ]]; then
   echo 'No song is playing.'
   exit 1
+elif [[ "$1" == "?" ]]; then
+  echo "Rating of the current song:"
+  for n in {1..5}; do
+    f="$playlists/${pl_prefix}$n${pl_suffix}"
+    if [[ -f "$f" ]]; then
+      grep -qF "$song" "$f"
+      if [[ $? -eq 0 ]]; then
+        echo $n
+      fi
+    fi
+  done
+  exit 1
 elif [[ "$1" -lt 0 || "$1" -gt 5 ]]; then
   echo "Rating must be between 1 and 5. Or zero to delete the current song's rating."
   exit 1
