@@ -304,11 +304,11 @@ table =
   , [bind "" "<XF86AudioRaiseVolume>"  audioRaiseVolume]
   , [bind "" "<XF86AudioPlay>"         audioPlay]
   , [bind "" "<XF86AudioStop>"         audioStop]
-  , [bind "" "<XF86Launch5>"           audioRate1]
-  , [bind "" "<XF86Launch6>"           audioRate2]
-  , [bind "" "<XF86Launch7>"           audioRate3]
-  , [bind "" "<XF86Launch8>"           audioRate4]
-  , [bind "" "<XF86Launch9>"           audioRate5]
+  , [bind "" "<XF86Launch5>"           (audioRate 1)]
+  , [bind "" "<XF86Launch6>"           (audioRate 2)]
+  , [bind "" "<XF86Launch7>"           (audioRate 3)]
+  , [bind "" "<XF86Launch8>"           (audioRate 4)]
+  , [bind "" "<XF86Launch9>"           (audioRate 5)]
   , [bind "" "<XF86MonBrightnessDown>" brightnessDown]
   , [bind "" "<XF86MonBrightnessUp>"   brightnessUp]
   ]
@@ -386,11 +386,7 @@ table =
     audioRaiseVolume        = Unbound "Raise audio volume"                  (spawn "amixer -D pulse set Master 5%+")
     audioPlay               = Unbound "Play/pause audio playback"           (spawn "mpc toggle")
     audioStop               = Unbound "Stop audio playback"                 (spawn "mpc stop")
-    audioRate1              = Unbound "Rate current song with 1 star"       (spawn "rhythmbox-client --set-rating 1")
-    audioRate2              = Unbound "Rate current song with 2 star"       (spawn "rhythmbox-client --set-rating 2")
-    audioRate3              = Unbound "Rate current song with 3 star"       (spawn "rhythmbox-client --set-rating 3")
-    audioRate4              = Unbound "Rate current song with 4 star"       (spawn "rhythmbox-client --set-rating 4")
-    audioRate5              = Unbound "Rate current song with 5 star"       (spawn "rhythmbox-client --set-rating 5")
+    audioRate rating        = Unbound "Rate current song"                   (spawn ("mpdrate " ++ show rating))
     -- Brightness control
     brightnessDown          = Unbound "Brightness down"                     (spawn "xbacklight -dec 1")
     brightnessUp            = Unbound "Brightness up"                       (spawn "xbacklight -inc 1")
