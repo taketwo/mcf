@@ -22,21 +22,52 @@ pl_suffix='.m3u'
 song=`mpc -f %file% current 2>/dev/null` || \
     { echo "Error: you need mpc installed to run this script. Aborting." >&2; exit 1; }
 
-## Error cases
-if [[ -z "$song" ]]; then
-  echo 'No song is playing.'
-  exit 1
-elif [[ "$1" == "?" ]]; then
-  echo "Rating of the current song:"
+function get_song_rating()
+{
+  local filename=$1
+  local n
   for n in {1..5}; do
-    f="$playlists/${pl_prefix}$n${pl_suffix}"
-    if [[ -f "$f" ]]; then
-      grep -qF "$song" "$f"
+    local playlist="$playlists/${pl_prefix}$n${pl_suffix}"
+    if [[ -f "$playlist" ]]; then
+      grep -qF "$filename" "$playlist"
       if [[ $? -eq 0 ]]; then
-        echo $n
+        echo "$n"
+        return
       fi
     fi
   done
+}
+
+function rating_as_stars()
+{
+  if [[ "$1" -lt 1 || "$1" -gt 5 ]]; then
+    echo "          "
+  else
+    declare -a stars=('          ' '         ' '        ' '       ' '      ' '     ');
+    echo ${stars[$1]}
+  fi
+  #echo "--$1--"
+}
+
+## Error cases
+if [[ $# -eq 0 ]]; then
+  OIFS=$IFS
+  IFS='@'
+  while read -a line; do
+    song=${line[0]}
+    filename=${line[1]}
+    rating=`get_song_rating "$filename"`
+    stars=`rating_as_stars $rating`
+    echo "$stars $song"
+  done < <(mpc playlist -f "%artist% - %title%@%file%")
+  IFS=$OIFS
+  exit 1
+elif [[ -z "$song" ]]; then
+  echo 'No song is playing.'
+  exit 1
+elif [[ "$1" == "?" ]]; then
+  rating=`get_song_rating "$song"`
+  echo "Rating of the current song: $rating"
   exit 1
 elif [[ "$1" -lt 0 || "$1" -gt 5 ]]; then
   echo "Rating must be between 1 and 5. Or zero to delete the current song's rating."
