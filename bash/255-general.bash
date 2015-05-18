@@ -82,7 +82,7 @@ HISTSIZE=25000
 # the oldest entries, to contain no more than that number of  lines. The
 # default value is 500. The history file is also truncated to this size after
 # writing it when an interactive shell exits.
-HISTFILESIZE=50000
+HISTFILESIZE=100000
 
 # }}}
 # HISTIGNORE {{{
@@ -96,7 +96,7 @@ HISTFILESIZE=50000
 # backslash is removed before attempting a match. The second and subsequent
 # lines of a multi-line compound command are not tested, and are added to the
 # history regardless of the value of HISTIGNORE.
-HISTIGNORE="ls:cd:cd *:pwd:cdd *:p"
+HISTIGNORE="?:??:cd *:keyring-password *:pwd:cdd *:p"
 
 # }}}
 # HISTTIMEFORMAT {{{
