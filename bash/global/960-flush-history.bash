@@ -1,0 +1,1 @@
+../960-flush-history.bash
