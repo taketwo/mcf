@@ -278,12 +278,12 @@ table =
   , k "p"            __                      __                      __                      __
   , k "q"            closeWindow             deleteWorkspace         __                      __
   , k "r"            __                      __                      __                      __
-  , k "s"            swapScreens             __                      __                      __
+  , k "s"            jumpToNextScreen        jumpToPrevScreen        __                      __
   , k "t"            goDown                  swapDown                shrinkVertical          moveDown
   , k "u"            __                      __                      __                      __
   , k "v"            __                      __                      __                      __
   , k "w"            gotoWorkspace           shiftToWorkspace        createWorkspace         shiftAndGoToWorkspace
-  , k "x"            nextWorkspace           prevWorkspace           renameWorkspace'        deleteWorkspace
+  , k "x"            __                      __                      renameWorkspace'        deleteWorkspace
   , k "y"            __                      __                      __                      __
   , k "z"            __                      __                      __                      __
   , k "<Backspace>"  closeWindow             __                      __                      deleteWorkspace
@@ -372,7 +372,8 @@ table =
     -- Misc
     scratchTerminal         = Unbound "Open scratch terminal"               (namedScratchpadAction myScratchPads "terminal")
     restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> restart "xmonad" True)
-    swapScreens             = Unbound "Swap current and next screen"        (nextScreen)
+    jumpToNextScreen        = Unbound "Jump to next screen"                 (nextScreen)
+    jumpToPrevScreen        = Unbound "Jump to previous screen"             (prevScreen)
     powerOff                = Unbound "Power off the system"                (spawn "gnome-session-quit --power-off")
     reboot                  = Unbound "Reboot the system"                   (spawn "gnome-session-quit --reboot")
     logout                  = Unbound "Logout"                              (spawn "session-logout")
