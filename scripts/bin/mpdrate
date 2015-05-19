@@ -51,14 +51,19 @@ function rating_as_stars()
 
 ## Error cases
 if [[ $# -eq 0 ]]; then
+  bold=$(tput bold)
+  normal=$(tput sgr0)
   OIFS=$IFS
   IFS='@'
   while read -a line; do
-    song=${line[0]}
+    track=${line[0]}
     filename=${line[1]}
     rating=`get_song_rating "$filename"`
     stars=`rating_as_stars $rating`
-    echo "$stars $song"
+    if [[ "$song" == "$filename" ]]; then
+      track="${bold}${track}${normal}"
+    fi
+    echo "$stars $track"
   done < <(mpc playlist -f "%artist% - %title%@%file%")
   IFS=$OIFS
   exit 1
