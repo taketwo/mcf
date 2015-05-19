@@ -524,7 +524,7 @@ xmobarConfig (S n) = "xmobar " ++ pathXmobar ++ " -x '" ++ show n ++ "'"
 
 myWorkspaceSorter = do
   srt <- fmap (namedScratchpadFilterOutWorkspace.) getSortByXineramaRule
-  let prm (one:two:rest) = two:one:rest
+  let prm (one:two:rest) = one:two:rest
   return (prm . srt)
 
 logHookXmobar handle s = xmobarPP
