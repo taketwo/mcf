@@ -11,10 +11,11 @@ cabal: split
 cabal: alex
 cabal: happy
 cabal: c2hs
-# This is for some plugins
+# This is for xmobar plugins
 ubuntu: libmpd-dev
 ubuntu: libasound2-dev
 ubuntu: libiw-dev
+ubuntu: libxpm-dev
 
 cabal: xmobar --flags="all_extensions"
 
@@ -25,4 +26,3 @@ ubuntu: gnome-settings-daemon
 ubuntu: gnome-control-center
 ubuntu: libxft-dev
 ubuntu: libxinerama-dev
-ubuntu: libxpm-dev
