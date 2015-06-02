@@ -31,7 +31,6 @@ import XMonad.Util.Timer
 import XMonad.Util.Cursor
 import XMonad.Util.Loggers
 import XMonad.Util.EZConfig
-import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.WorkspaceCompare
@@ -106,6 +105,9 @@ import MCF.Apps
 import MCF.Paths
 import MCF.Icons
 import MCF.Xmobar
+
+unspawn :: String -> X ()
+unspawn p = spawn $ "for pid in $(pgrep -f " ++ p ++ "); do kill -9 $pid; done"
 
 -- Appearance -------------------------------------------------------------- {{{
 
@@ -371,7 +373,7 @@ table =
     deleteWorkspace         = Unbound "Remove workspace"                    (removeWorkspace)
     -- Misc
     scratchTerminal         = Unbound "Open scratch terminal"               (namedScratchpadAction myScratchPads "terminal")
-    restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> restart "xmonad" True)
+    restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> unspawn "gmaild" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next screen"                 (nextScreen)
     jumpToPrevScreen        = Unbound "Jump to previous screen"             (prevScreen)
     powerOff                = Unbound "Power off the system"                (spawn "gnome-session-quit --power-off")
@@ -485,6 +487,7 @@ main = do
   let screen        = defaultScreenOfDisplay display
   let screenWidth   = read (show (widthOfScreen screen))  :: Int
   let screenHeight  = read (show (heightOfScreen screen)) :: Int
+  gmaild           <- spawn "gmaild"
   xmobars          <- mapM (spawnPipe . xmobarConfig) [1 .. screenCount]
   xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
