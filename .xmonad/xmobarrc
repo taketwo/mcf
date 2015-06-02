@@ -71,7 +71,7 @@ Config
     ]
     , Run PipeReader "/tmp/gmail" "gmail"
     , Run UnsafeStdinReader
-    , Run MPD ["-t", "<action=`mpc toggle`><fc=#d7dbd2><artist> - <title></fc></action>"] 10
+    , Run MPD ["-t", "<action=`mpc toggle`><fc=#d7dbd2><artist> - <title></fc></action>"] 50
     , Run Com "/home/sergey/.xmonad/network.sh" [] "net" 100
     , Run Com "/home/sergey/.xmonad/volume.sh" [] "vol" 100
     ]
