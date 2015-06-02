@@ -13,6 +13,12 @@ import imaplib
 from subprocess import Popen, PIPE
 from contextlib import contextmanager
 
+try:
+    from systemd.journal import send as log
+except ImportError:
+    def log(message):
+        pass
+
 
 import keyring
 
@@ -63,11 +69,9 @@ def retry(timeout, attempts, recovery=None):
                     return function(*args, **kwargs)
                 except:
                     tries -= 1
-                    print('Failed. Will try another {} times'.format(tries))
                     if recovery:
                         recovery()
                     time.sleep(timeout)
-            print('No way. This just does not work!')
             return None
         return function_retry
     return decorator
@@ -83,12 +87,12 @@ class Gmail(object):
         self.imap = imaplib.IMAP4_SSL('imap.gmail.com', '993')
         self.imap.login('alexandrov88@gmail.com', passwd)
         self.imap.select()
-        print('Connection to GMail IMAP server established')
+        log('Established connection with GMail IMAP server')
 
     def close(self):
-        print('Closing GMail IMAP server connection...')
         self.imap.close()
         self.imap.logout()
+        log('Closed connection with GMail IMAP server')
 
     def get_unread_count(self):
         self.imap.select()
@@ -105,9 +109,9 @@ CHECK_INTERVAL = 10
 PIPE_NAME = '/tmp/gmail'
 old_unread = -1
 
-if os.path.exists(PIPE_NAME):
-    os.unlink(PIPE_NAME)
-os.mkfifo(PIPE_NAME)
+if not os.path.exists(PIPE_NAME):
+    os.mkfifo(PIPE_NAME)
+    # os.unlink(PIPE_NAME)
 pipe = os.open(PIPE_NAME, os.O_RDWR)
 
 
@@ -142,11 +146,12 @@ while True:
             os.write(pipe, out)
             time.sleep(CHECK_INTERVAL)
     except PasswordException:
-        sys.exit('No password in the keyring, exiting...')
+        log('No password in the keyring, will exit now')
+        sys.exit()
     except TimeoutException:
-        print('Communication timeout, will wait and reconnect...')
+        log('Communication timeout, will wait and reconnect')
     except Exception as e:
-        print('Failure:', e, '\nRestart GMail')
+        log('Exception: {}'.format(e))
     time.sleep(CHECK_INTERVAL)
 
 os.close(pipe)
