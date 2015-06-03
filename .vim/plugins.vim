@@ -12,8 +12,8 @@ Plug 'tmhedberg/matchit'
 Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'henrik/vim-indexed-search'
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeMirrorToggle' }
-Plug 'jistr/vim-nerdtree-tabs', { 'on':  'NERDTreeMirrorToggle' }
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeMirrorToggle' }
+Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeMirrorToggle' }
 Plug 'skwp/vim-easymotion'
 Plug 'skwp/vim-colors-solarized'
 Plug 'bling/vim-airline'
@@ -60,9 +60,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
 " Plugin 'fisadev/vim-isort'
 Plug 'tpope/vim-markdown'
 Plug 'nelstrom/vim-markdown-folding'
-Plug 'smancill/conky-syntax.vim'
 Plug 'taketwo/vim-ros'
-Plug 'dag/vim-fish'
 Plug 'rhysd/vim-clang-format'
 
 " Git related
