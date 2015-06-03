@@ -48,7 +48,6 @@ Plug 'sjl/gundo.vim'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'Valloric/ListToggle'
 Plug 'xolox/vim-misc'
-Plug 'mhinz/vim-startify'
 Plug 'rhysd/clever-f.vim'
 Plug 'taketwo/vim-exchange'
 
