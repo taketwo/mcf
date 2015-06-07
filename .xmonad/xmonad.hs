@@ -193,8 +193,6 @@ myTopics =
   , ti "im"       ""
   , TI "mcf"      ".mcf"                                     (spawnShell)
   , TI "tocs"     "/media/Workspace/Projects/tocs"           (spawnShell)
-  , TI "eval"     "/media/Workspace/Projects/tocs/data"      (spawnShell)
-  , TI "blog"     "/media/Workspace/Projects/tocs/blog"      (blog)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Files/Downloads/Torrents")
@@ -205,11 +203,6 @@ myTopics =
   where
     -- Make a default topic item that just spawns a shell.
     ti t d = TI t d spawnShell
-
-blog = do
-  appBrowse "--new-window file:///media/Workspace/Projects/tocs/blog/repository/blogweb/_build/html/tocs/alexandrov/tmp.html"
-  spawnShell
-  spawnShell
 
 myTopicNames :: [Topic]
 myTopicNames = map topicName myTopics
