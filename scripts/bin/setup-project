@@ -221,6 +221,6 @@ if __name__=="__main__":
     # ExampleTreeBrowser(sample).main()
     config_tree = {'name': 'hello'}
     ConfigTreeBrowser(config_tree).main()
-    for s, w in _widget_cache.iteritems():
+    for s, w in _widget_cache.items():
         if w.checked and 'action' in s.get_value():
             s.get_value()['action']()
