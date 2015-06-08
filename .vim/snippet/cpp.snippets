@@ -151,6 +151,10 @@ snippet incb "Include Boost library header" b
 #include <boost/${1:format}.hpp>$0
 endsnippet
 
+snippet incv "Include VTK library header" b
+#include <vtk${1:SmartPointer}.h>$0
+endsnippet
+
 snippet math "Include math header" !b
 ${1:#define _USE_MATH_DEFINES
 }#include <cmath>$0
