@@ -198,3 +198,12 @@ if (${1:map}.count (${2:element}) == 0)
   $0
 }
 endsnippet
+
+#######################################################################
+#                               Idioms                                #
+#######################################################################
+
+snippet pimpl "PIMPL idiom" b
+struct Impl;
+std::unique_ptr<Impl> p;
+endsnippet
