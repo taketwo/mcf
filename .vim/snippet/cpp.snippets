@@ -13,15 +13,15 @@ snippet class "Class declaration" !b
 class ${1:`!p snip.rv = snakecase_to_camelcase(snip.basename) or "Name"`}
 {
 
-public:
+  public:
 
-  ${1/(\w+).*/$1/}(${2});
+    ${1/(\w+).*/$1/}(${2});
 
-  virtual ~${1/(\w+).*/$1/}() { };
+    virtual ~${1/(\w+).*/$1/}() { };
 
-private:
+  private:
 
-  $0
+    $0
 
 };
 endsnippet
@@ -43,12 +43,12 @@ snippet sp "Shared pointer"
 std::shared_ptr<${1:${VISUAL:Type}}>$0
 endsnippet
 
-snippet tdup "Typedef unique pointer" !b
-typedef std::unique_ptr<${1:Type}> ${2:UPtr};$0
+snippet uup "Using unique pointer" !b
+using ${2:UPtr} = std::unique_ptr<${1:Type}>;$0
 endsnippet
 
-snippet tdsp "Typedef shared pointer" !b
-typedef std::shared_ptr<${1:Type}> ${2:Ptr};$0
+snippet usp "Using shared pointer" !b
+using ${2:Ptr} = std::shared_ptr<${1:Type}>;$0
 endsnippet
 
 snippet sc "Static cast"
@@ -60,7 +60,7 @@ reinterpret_cast<${2:float*}>(${1:${VISUAL:variable}})$0
 endsnippet
 
 snippet temp "Template" !b
-template <typename ${1:T}>$0
+template<typename ${1:T}>$0
 endsnippet
 
 snippet tn "Typename" !b
@@ -184,7 +184,7 @@ snippet str "String"
 std::string$0
 endsnippet
 
-snippet csr "const String&" w
+snippet csr "const string&" w
 const std::string&$0
 endsnippet
 
