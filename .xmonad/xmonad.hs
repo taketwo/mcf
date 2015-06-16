@@ -282,7 +282,7 @@ table =
   , k "y"            __                      __                      __                      __
   , k "z"            __                      __                      __                      __
   , k "<Backspace>"  closeWindow             __                      __                      deleteWorkspace
-  , k "<Space>"      launchKupfer            __                      __                      __
+  , k "<Space>"      launchKupfer            nextKeyboardLayout      __                      __
   , k "<Tab>"        nextLayout              resetLayout             __                      __
   , k "`"            scratchTerminal         __                      __                      __
   , k "'"            gridSelect              __                      __                      __
@@ -376,6 +376,8 @@ table =
     selectSearch            = Unbound "Search X selection"                  (submap . mySearchMap $ mySelectSearch)
     closeWindow             = Unbound "Close the focused window"            (kill)
     gridSelect              = Unbound "Open GridSelect"                     (goToSelected gridSelectConfig)
+    -- Keyboard control
+    nextKeyboardLayout      = Unbound "Next keyboard layout"                (spawn "keyboard -n")
     -- Audio control
     audioMute               = Unbound "Mute audio"                          (spawn "amixer -D pulse set Master toggle")
     audioLowerVolume        = Unbound "Lower audio volume"                  (spawn "amixer -D pulse set Master 5%-")
