@@ -5,5 +5,5 @@ let g:ycm_key_detailed_diagnostics = '<Leader>D'
 
 let g:ycm_semantic_triggers = {
 \   'roslaunch' : ['="', '$(', '/'],
-\   'rosmsg,rossrv,rosaction' : ['re!^'],
+\   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
 \ }
