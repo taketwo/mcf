@@ -492,8 +492,11 @@ main = do
     , terminal           = appTerminal        -- default terminal program
     , workspaces         = myTopicNames
     , manageHook         = manageHook gnomeConfig <+> myManageHook
-    , logHook            = (mapM_ dynamicLogWithPP $ zipWith logHookXmobar xmobars [1 .. screenCount])
-                           >> updatePointer (Relative 0.5 0.5)
+    , logHook            = do
+        mapM_ dynamicLogWithPP $ zipWith logHookXmobar xmobars [1 .. screenCount]
+        updatePointer (0.5, 0.5) (0, 0)
+        {- (Relative 0.5 0.5) -}
+        logHook gnomeConfig
     , layoutHook         = myLayoutHook
     , handleEventHook    = myHandleEventHook
     , startupHook        = setWMName "LG3D"
