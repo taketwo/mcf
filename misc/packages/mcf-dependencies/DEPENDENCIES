@@ -7,6 +7,7 @@ clang
 xcape
 
 arch: xorg-setxkbmap                         # keyboard layout switching, arch-only
+ubuntu: xbacklight
 
 # Network/Internet
 openssh
