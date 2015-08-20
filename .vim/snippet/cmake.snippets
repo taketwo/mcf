@@ -78,3 +78,7 @@ add_definitions(
   ${PCL_DEFINITIONS}
 )
 endsnippet
+
+snippet find "Find package" b
+find_package(${1:package}${2/.+/ COMPONENTS /}${2:component}${3/.+/ /}${3:REQUIRED})
+endsnippet
