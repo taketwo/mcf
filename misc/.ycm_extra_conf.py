@@ -100,7 +100,7 @@ def GetCompilationInfoForFile(filename):
     # entries for header files. We try to find corresponding source file by
     # grepping for the base name. If one exists, the flags for that file
     # should be good enough.
-    if IsHeaderFile(filename):
+    if False: #IsHeaderFile(filename):
         p, fn = os.path.split(filename)
         fn, e = os.path.splitext(fn)
         r = r'"file": "(.*{0}\.(?:{1}))"'.format(fn, '|'.join(SOURCES))
