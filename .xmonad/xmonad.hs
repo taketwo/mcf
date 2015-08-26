@@ -163,7 +163,6 @@ myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 
 myIM = smartBorders $ avoidStruts $ withIM (1 % 5) skype Full
   where
     skype = And (ClassName "Skype") (Role "")
-myFigures = named "figures" (windowNavigation $ Mag.magnifierOff $ GridRatio (4/3))
 myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
 
 -- Here we combine our default layouts with our specific, workspace-locked
@@ -171,7 +170,6 @@ myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3
 myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
-  onWorkspace "figures" (myFigures) $
   onWorkspace "im" (myIM) $
   onWorkspace "rviz" (myRViz) $
   {-$-} defaultLayouts
@@ -197,7 +195,6 @@ myTopics =
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Files/Downloads/Torrents")
   , TI "xmonad"   ".xmonad"                                  (appEdit "/home/sergey/.mcf/.xmonad/xmonad.hs")
-  , ti "figures"  ""
   , ti "gimp"     ""
   ]
   where
@@ -549,7 +546,6 @@ logHookXmobar handle s = xmobarPP
     "Tabbed Bottom Simplest"    -> xmobarIcon "full"
     "code"                      -> xmobarIcon "code"
     "im"                        -> ""
-    "figures"                   -> ""
     _ -> x
     )
   }
