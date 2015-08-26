@@ -91,7 +91,7 @@ for directory in "global" "local"; do
   then
     for conf_file in "$dir"/*; do
       if [[ -f $conf_file ]]; then
-        scripts+=($conf_file)
+        scripts+=($(basename $conf_file))
       fi
     done
   fi
@@ -99,10 +99,17 @@ done
 
 sorted=($(printf '%s\n' "${scripts[@]}" | sort))
 for conf_file in ${sorted[@]}; do
-  if [[ $BASH_TIME_STARTUP == 1 ]]; then
-    timed_source "$conf_file"
-  else
-    source "$conf_file"
+  local_conf="$MCF/bash/local/$conf_file"
+  if [[ -f "$local_conf" ]]; then
+    timed_source "$local_conf"
+    shared_conf="$MCF/bash/$conf_file"
+    if [[ -f "$shared_conf" ]]; then
+      timed_source "$shared_conf"
+    fi
+  fi
+  global_conf="$MCF/bash/global/$conf_file"
+  if [[ -f "$global_conf" ]]; then
+    timed_source "$global_conf"
   fi
 done
 
