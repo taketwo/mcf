@@ -1,6 +1,9 @@
 # Set ag as the default source for fzf
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
+# Default options
+export FZF_DEFAULT_OPTS='--tiebreak=end --ansi --select-1'
+
 # Setup fzf if exists
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
