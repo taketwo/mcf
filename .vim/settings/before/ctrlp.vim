@@ -48,7 +48,6 @@ nnoremap <Leader>.. :CtrlP<CR>
 nnoremap <Leader>.s :CtrlP src<CR>
 nnoremap <Leader>.h :CtrlP include<CR>
 nnoremap <Leader>.i :CtrlP impl<CR>
-nnoremap <Leader>.b :CtrlPBuffer<CR>
 nnoremap <Leader>.t :CtrlPBufTag<CR>
 nnoremap <Leader>.T :CtrlPBufTagAll<CR>
 nnoremap <Leader>.l :CtrlPLine<CR>
