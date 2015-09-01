@@ -1,4 +1,25 @@
+global !p
+def get_mode(c):
+    print("::: >> ", c)
+    if c:
+        for l in ["WARNING", "AUTHOR_WARNING", "SEND_ERROR", "FATAL_ERROR", "DEPRECATION"]:
+            if l.lower().startswith(c.lower()):
+                return l
+    return "STATUS"
+endglobal
+
+snippet "mes(\w?)" "Message" br
+message(`!p
+snip.rv = get_mode(match.group(1))
+` "${1:Message}")$0
+endsnippet
+
+snippet $ "CMake variable" i
+\$\{${1:VARIABLE}\}$0
+endsnippet
+
 snippet cmake "CMake template" b
+
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project(${1:name})
