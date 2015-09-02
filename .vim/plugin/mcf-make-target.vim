@@ -14,7 +14,7 @@ function! MakeTarget(...)
 endfunction
 
 function! s:MakeTargetComplete(ArgLead, CmdLine, CursorPos)
-    let targets = system(&makeprg." -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'")
+    let targets = system(&makeprg." -qp | awk -F':' '/^[a-zA-Z0-9][^$#\\/\\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'")
     return filter(sort(split(targets, '\n')), 'stridx(v:val, a:ArgLead) != -1')
 endfunction
 
