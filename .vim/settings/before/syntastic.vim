@@ -10,6 +10,6 @@ let g:syntastic_quiet_messages = {'level': 'warnings'}
 let g:syntastic_error_symbol = '✘'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'passive_filetypes': ['cpp', 'tex', 'sh', 'vim', 'rst'] }
+                           \ 'passive_filetypes': ['cpp', 'tex', 'sh', 'vim', 'rst', 'cuda'] }
 let g:syntastic_cpp_check_header = 0
 let g:syntastic_python_checkers = ['frosted']
