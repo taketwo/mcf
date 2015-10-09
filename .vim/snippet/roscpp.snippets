@@ -74,7 +74,7 @@ endsnippet
 ###########################################################################
 
 snippet init "Initialize node" !b
-ros::init(argc, argv, "${1:`!v Filename("$1")`}");$0
+ros::init(argc, argv, "${1:`!p snip.rv = snip.basename`}");$0
 endsnippet
 
 snippet node "Node class declaration" !b
