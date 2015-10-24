@@ -17,13 +17,17 @@ class ${1:`!p snip.rv = snakecase_to_camelcase(snip.basename) or "Name"`}
 
     ${1/(\w+).*/$1/}(${2});
 
-    virtual ~${1/(\w+).*/$1/}() { };
+    virtual ~${1/(\w+).*/$1/}() { }
 
   private:
 
     $0
 
 };
+endsnippet
+
+snippet ponce "Pragma once" b
+#pragma once$0
 endsnippet
 
 snippet ns "Namespace" !b
