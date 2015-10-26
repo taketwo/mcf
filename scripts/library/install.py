@@ -21,8 +21,9 @@ def only(platforms):
     if get_platform() in platforms:
         def decorator(function):
             return function
-        return decorator
     else:
         def nothing():
             pass
-        return nothing
+        def decorator(function):
+            return nothing
+    return decorator
