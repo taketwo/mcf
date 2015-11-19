@@ -82,6 +82,7 @@ Plug 'honza/vim-snippets'
 
 " Non-vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf.vim'
 
 " Try these plugins:
 "Plug 'sjl/splice.vim'

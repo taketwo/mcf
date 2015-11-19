@@ -1,17 +1,11 @@
-function! s:buflist()
-  redir => ls
-  silent ls
-  redir END
-  return split(ls, '\n')
-endfunction
+let g:fzf_command_prefix = 'Fzf'
 
-function! s:bufopen(e)
-  execute 'buffer' matchstr(a:e, '^[ 0-9]*')
-endfunction
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
 
-nnoremap <silent> <Leader>.b :call fzf#run({
-\   'source':  reverse(<sid>buflist()),
-\   'sink':    function('<sid>bufopen'),
-\   'options': '+m',
-\   'down':    len(<sid>buflist()) + 2
-\ })<CR>
+nnoremap <Leader>.. :FzfFiles<CR>
+nnoremap <Leader>.b :FzfBuffers<CR>
+nnoremap <Leader>.t :FzfBTags<CR>
+nnoremap <Leader>.T :FzfTags<CR>
+nnoremap <Leader>.c :FzfBCommits<CR>
