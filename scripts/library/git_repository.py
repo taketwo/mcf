@@ -8,7 +8,7 @@ import subprocess
 
 class GitRepository:
 
-    def __init__(self, url):
+    def __init__(self, url, shallow=True):
         """
         Arguments
         ---------
@@ -17,6 +17,7 @@ class GitRepository:
             a short form 'USER/REPOSITORY' (e.g. 'taketwo/vim-ros') and will be
             automatically expanded.
         """
+        self.shallow = shallow
         if re.search(r'^[\w_-]+/[\w_-]+$', url):
             self.url = 'https://github.com/%s.git' % url
         else:
@@ -24,7 +25,8 @@ class GitRepository:
 
     def __enter__(self):
         self.path = tempfile.mkdtemp()
-        cmd = 'git clone --recursive %s %s' % (self.url, self.path)
+        depth = '--depth 1' if self.shallow else ''
+        cmd = 'git clone --recursive %s %s %s' % (depth, self.url, self.path)
         subprocess.call(cmd.split())
         self.original_cwd = os.getcwd()
         os.chdir(self.path)
