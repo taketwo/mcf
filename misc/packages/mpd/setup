@@ -21,11 +21,6 @@ def setup():
     src = join(path, 'src', 'mpd')
     tgt = join(home, '.config', 'mpd')
     link(src, tgt, 'MPD config directory')
-    # NCMPCPP config directory
-    path, fl = split(realpath(__file__))
-    src = join(path, 'src', 'ncmpcpp')
-    tgt = join(home, '.ncmpcpp')
-    link(src, tgt, 'NCMPCPP config directory')
     # Autostart item
     src = join(path, 'src', 'mpd.desktop')
     tgt = join(home, '.config', 'autostart', 'mpd.desktop')
