@@ -11,6 +11,7 @@
 
 ## Path to playlists
 playlists="$HOME/.config/mpd/playlists"
+host=${MPD_HOST:-localhost}
 
 ## END USER CONFIGURATION--------------------------------------------------
 
@@ -19,7 +20,7 @@ pl_prefix='rating-'
 pl_suffix='.m3u'
 
 ## Get current song from ncmpcpp or cmus or throw an error
-song=`mpc -f %file% current 2>/dev/null` || \
+song=`mpc -h $host -f %file% current 2>/dev/null` || \
     { echo "Error: you need mpc installed to run this script. Aborting." >&2; exit 1; }
 
 function get_song_rating()
@@ -64,7 +65,7 @@ if [[ $# -eq 0 ]]; then
       track="${bold}${track}${normal}"
     fi
     echo "$stars $track"
-  done < <(mpc playlist -f "%artist% - %title%@%file%")
+  done < <(mpc -h "$host" playlist -f "%artist% - %title%@%file%")
   IFS=$OIFS
   exit 1
 elif [[ -z "$song" ]]; then
