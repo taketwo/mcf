@@ -77,7 +77,6 @@ import XMonad.Hooks.UrgencyHook
 import qualified Data.Map as M
 import Data.Ratio ((%))
 import Data.List
-import Data.List.Split
 import Data.IORef
 import Data.Monoid
 import Data.Maybe (fromJust)
@@ -510,7 +509,9 @@ xdoMod :: String -> String
 xdoMod key = "/usr/bin/xdotool key super+" ++ key
 
 addPluses :: String -> String
-addPluses = intercalate " + " . chunksOf 1
+addPluses = init . go
+  where go [] = []
+        go xs = let (as, bs) = splitAt 1 xs in as ++ ('+' : go bs)
 
 xdoGotoWorkspace :: String -> String
 xdoGotoWorkspace ws = xdoMod "w" ++ " " ++ addPluses ws
