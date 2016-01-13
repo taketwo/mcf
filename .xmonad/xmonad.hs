@@ -491,7 +491,6 @@ main = do
     , logHook            = do
         mapM_ dynamicLogWithPP $ zipWith logHookXmobar xmobars [1 .. screenCount]
         updatePointer (0.5, 0.5) (0, 0)
-        {- (Relative 0.5 0.5) -}
         logHook gnomeConfig
     , layoutHook         = myLayoutHook
     , handleEventHook    = myHandleEventHook
