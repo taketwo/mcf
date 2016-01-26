@@ -447,22 +447,21 @@ mySearchMap method = M.fromList $
         , ((0, xK_w), method wikipedia)
         , ((0, xK_s), method scholar)
         , ((0, xK_m), method maps)
-        , ((0, xK_a), method alpha)
-        , ((0, xK_l), method lucky)
+        , ((0, xK_y), method youtube)
         -- custom searches
         , ((0, xK_e), method multitranEnglish)
         , ((0, xK_d), method multitranDeutsch)
         , ((0, xK_c), method cppreference)
         ]
 
-multitranEnglish = searchEngine "multitranEnglish" "http://www.multitran.ru/c/m.exe?l1=1&l2=2&s="
-multitranDeutsch = searchEngine "multitranDeutsch" "http://www.multitran.ru/c/m.exe?l1=3&l2=2&s="
+multitranEnglish = searchEngine "multitran (english)" "http://www.multitran.ru/c/m.exe?l1=1&l2=2&s="
+multitranDeutsch = searchEngine "multitran (deutsch)" "http://www.multitran.ru/c/m.exe?l1=3&l2=2&s="
 cppreference = searchEngine "c++ reference" "http://en.cppreference.com/mwiki/index.php?search="
 
 -- Prompt search: get input from the user via a prompt, then run the search in
 -- the browser and automatically switch to the web workspace
-myPromptSearch (SearchEngine _ site)
-  = inputPrompt myXPConfig "Search" ?+ \s ->
+myPromptSearch (SearchEngine name site)
+  = inputPrompt myXPConfig ("Search " ++ name) ?+ \s ->
       (search appBrowser site s >> viewWeb)
 
 -- Select search: do a search based on the X selection
