@@ -452,10 +452,12 @@ mySearchMap method = M.fromList $
         -- custom searches
         , ((0, xK_e), method multitranEnglish)
         , ((0, xK_d), method multitranDeutsch)
+        , ((0, xK_c), method cppreference)
         ]
 
 multitranEnglish = searchEngine "multitranEnglish" "http://www.multitran.ru/c/m.exe?l1=1&l2=2&s="
 multitranDeutsch = searchEngine "multitranDeutsch" "http://www.multitran.ru/c/m.exe?l1=3&l2=2&s="
+cppreference = searchEngine "c++ reference" "http://en.cppreference.com/mwiki/index.php?search="
 
 -- Prompt search: get input from the user via a prompt, then run the search in
 -- the browser and automatically switch to the web workspace
