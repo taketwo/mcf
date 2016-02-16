@@ -16,7 +16,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeMirrorToggle' }
 Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeMirrorToggle' }
 Plug 'skwp/vim-easymotion'
 Plug 'skwp/vim-colors-solarized'
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'kshenoy/vim-signature'
