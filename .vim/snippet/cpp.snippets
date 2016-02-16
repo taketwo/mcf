@@ -211,3 +211,15 @@ snippet pimpl "PIMPL idiom" b
 struct Impl;
 std::unique_ptr<Impl> p;
 endsnippet
+
+#######################################################################
+#                        Operator overloading                         #
+#######################################################################
+
+snippet op<< "operator<< overload" b
+std::ostream& operator<<(std::ostream& os, const ${1:Type}& obj)
+{
+	$0
+	return os;
+}
+endsnippet
