@@ -19,3 +19,6 @@
 [submodule ".xmonad/bundle/solarized-xmonad"]
 	path = .xmonad/bundle/solarized-xmonad
 	url = https://github.com/ibotty/solarized-xmonad.git
+[submodule "scripts/bundle/diff-so-fancy"]
+	path = scripts/bundle/diff-so-fancy
+	url = https://github.com/so-fancy/diff-so-fancy.git
