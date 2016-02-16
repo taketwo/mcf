@@ -80,3 +80,4 @@ inoremap <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
 
 nnoremap <buffer> gD :YcmCompleter GoTo<CR>
 nnoremap <buffer> gd :YcmCompleter GoToImprecise<CR>
+nnoremap <silent> <LocalLeader>f :YcmCompleter FixIt<CR>
