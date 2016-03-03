@@ -1,0 +1,9 @@
+snippet prop "RTTR property registration" b
+.property("${1:name}", &${2:Klass}::${3:get${1/(\w+)\s?/\u$1/g}}, &$2::${4:set${1/(\w+)\s?/\u$1/g}}${5/.+/, /}${5:meta})
+endsnippet
+
+snippet meta "RTTR property metadata"
+{ rttr::metadata("minimum", ${1:0.1f}),
+	rttr::metadata("maximum", ${2:1.0f}),
+	rttr::metadata("singleStep", ${3:0.1f})}
+endsnippet
