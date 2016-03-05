@@ -45,7 +45,7 @@ xterm*|rxvt*)
     ;;
 esac
 
-export TERM='xterm-256color'
+[[ $TMUX = "" ]] && export TERM='xterm-256color'
 
 # set terminal window title
 title ()
