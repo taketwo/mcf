@@ -2,7 +2,7 @@
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 # Default options
-export FZF_DEFAULT_OPTS='--tiebreak=end --ansi --select-1'
+export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,tab:toggle-sort'
 
 # Setup fzf if exists
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
