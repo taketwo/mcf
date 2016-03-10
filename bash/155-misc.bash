@@ -25,14 +25,14 @@ function bashtimes()
    sort -k1 -n -r
 }
 
-function hl()
+function highlight()
 {
    pygmentize -g -f terminal256 -P style=solarizedlight "$@"
 }
 
-hless()
+hl()
 {
-   hl "$@" | /usr/bin/less -FiXRM
+   highlight "$@" | /usr/bin/less -FiXRM
 }
 
 #______________________________________________________________________________
