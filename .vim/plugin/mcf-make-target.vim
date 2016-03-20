@@ -10,7 +10,7 @@ function! MakeTarget(...)
     if a:0 > 0
         let g:mcf_make_target = a:1
     endif
-    execute "Make ".g:mcf_make_target
+    execute "Make ".g:mcf_make_target." -j4"
 endfunction
 
 function! s:MakeTargetComplete(ArgLead, CmdLine, CursorPos)
