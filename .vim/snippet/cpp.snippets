@@ -12,17 +12,13 @@ endsnippet
 snippet class "Class declaration" !b
 class ${1:`!p snip.rv = snakecase_to_camelcase(snip.basename) or "Name"`}
 {
+public:
+  ${1/(\w+).*/$1/}(${2});
 
-  public:
+  virtual ~${1/(\w+).*/$1/}() { }
 
-    ${1/(\w+).*/$1/}(${2});
-
-    virtual ~${1/(\w+).*/$1/}() { }
-
-  private:
-
-    $0
-
+private:
+  $0
 };
 endsnippet
 
@@ -31,12 +27,11 @@ snippet ponce "Pragma once" b
 endsnippet
 
 snippet ns "Namespace" !b
-namespace ${1}
-{
+namespace ${1} {
 
 $0
 
-}
+} // namespace $1
 endsnippet
 
 snippet up "Unique pointer"
