@@ -58,7 +58,7 @@ function code()
       function)
          echo "$1 is a function"
          find_function $1 | awk '{ printf("Defined in: %s +%d\n", $3, $2) }'
-         builtin declare -f "$1" | hless
+         builtin declare -f "$1" | hl
          ;;
       builtin | keyword)
          echo "$1 is a shell $type"
@@ -68,7 +68,7 @@ function code()
          local path="$(which "$1")"
          if head -1 "$path" | grep -q "^#!"; then
             echo "$1 is a script at $path"
-            cat "$path" | hless
+            cat "$path" | hl
          else
             echo "$1 is a binary at $path"
          fi
