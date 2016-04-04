@@ -9,9 +9,28 @@ snip.rv = ' ' + rpad * '=' + ' "'`
 $0
 endsnippet
 
-snippet rosmake "Set makeprg to rosmake the current package" !b
-let makeprg="rosmake\ ${1:`!p
-import os
-snip.rv = os.path.split(os.path.dirname(path))[1]
-`}"
+snippet local "Template for local .vimrc file" b
+" Execute on every buffer enter event {{{
+
+" }}}
+
+if g:localvimrc_sourced_once_for_file
+  finish
+endif
+
+" Execute only once for an edited file {{{
+
+" }}}
+
+if g:localvimrc_sourced_once
+  finish
+endif
+
+" Execute only once for a running vim instance {{{
+$0
+" }}}
+endsnippet
+
+snippet make "Set makeprg to run in build/ directory" b
+let &l:makeprg="make -C".g:localvimrc_script_dir."/build"
 endsnippet
