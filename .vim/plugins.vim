@@ -50,6 +50,7 @@ Plug 'Valloric/ListToggle'
 Plug 'xolox/vim-misc'
 Plug 'rhysd/clever-f.vim'
 Plug 'taketwo/vim-exchange'
+Plug 'janko-m/vim-test'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
