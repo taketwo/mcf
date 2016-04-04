@@ -200,8 +200,8 @@ autocmd QuickFixCmdPost    l* nested lwindow
 
 " Jump to next line in location list (useful for Syntastic)
 
-nnoremap <Leader>e :ll<CR>
-nnoremap <Leader>E :lp<CR>
+nnoremap >l :lnext<CR>
+nnoremap <l :lprev<CR>
 
 " Copy short/long filename to clipboard
 
