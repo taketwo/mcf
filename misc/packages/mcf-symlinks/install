@@ -36,8 +36,7 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
           ('.xinitrc', 'X client script'),
           ('texmf', 'Latex packages'),
           ('.gitconfig', 'GIT configuration file'),
-          ('.tmux.conf', 'Tmux configuration file'),
-          (('fish', '.config/fish'), 'Fish configuration folder')]
+          ('.tmux.conf', 'Tmux configuration file')]
 
 
 if __name__ == '__main__':
