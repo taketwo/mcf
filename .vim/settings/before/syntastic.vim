@@ -14,4 +14,10 @@ let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'passive_filetypes': ['cpp', 'tex', 'sh', 'vim', 'rst', 'cuda'] }
 let g:syntastic_cpp_check_header = 0
 let g:syntastic_python_checkers = ['frosted']
-let g:syntastic_javascript_checkers = ['standard']
+
+" Javascript
+let standard_exec = substitute(system('npm bin'), '\n\+$', '', '').'/standard'
+if executable(standard_exec)
+    let g:syntastic_javascript_checkers = ['standard']
+    let g:syntastic_javascript_standard_exec = standard_exec
+endif
