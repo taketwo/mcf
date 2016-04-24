@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=xcape -e 'Alt_L=Escape;Alt_R=Return;Super_L=Super_L|0;Shift_R=Shift_R|Tab'
+Exec=xcape -e 'Alt_L=Escape;Alt_R=Return;Super_L=Super_L|0;Shift_R=Shift_R|Tab;Control_L=Control_L|a'
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
