@@ -11,6 +11,7 @@ cabal: split
 cabal: alex
 cabal: happy
 cabal: c2hs
+cabal: libmpd
 # This is for xmobar plugins
 ubuntu: libmpd-dev
 ubuntu: libasound2-dev
