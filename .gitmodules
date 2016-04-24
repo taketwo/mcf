@@ -22,3 +22,6 @@
 [submodule "scripts/bundle/diff-so-fancy"]
 	path = scripts/bundle/diff-so-fancy
 	url = https://github.com/so-fancy/diff-so-fancy.git
+[submodule "tmux/plugins/tmux-resurrect"]
+	path = tmux/plugins/tmux-resurrect
+	url = https://github.com/tmux-plugins/tmux-resurrect
