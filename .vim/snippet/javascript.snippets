@@ -1,0 +1,14 @@
+global !p
+def get_level(c):
+  levels = ['log', 'error', 'dir', 'info', 'group', 'warn']
+  for l in levels:
+    if l.lower().startswith(c.lower()):
+      return l
+  return "log"
+endglobal
+
+snippet "c(\w?)" "Output message to console" br
+console.`!p
+snip.rv = get_level(match.group(1) or 'l')
+`(${1:'Message'})$0
+endsnippet
