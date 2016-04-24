@@ -62,6 +62,7 @@ Plug 'nelstrom/vim-markdown-folding'
 Plug 'taketwo/vim-ros'
 Plug 'rhysd/vim-clang-format'
 Plug 'tikhomirov/vim-glsl'
+Plug 'digitaltoad/vim-pug'
 
 " Git related
 Plug 'gregsexton/gitv'
