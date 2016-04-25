@@ -10,7 +10,7 @@ enum
 endsnippet
 
 snippet class "Class declaration" !b
-class ${1:`!p snip.rv = snakecase_to_pascalcase(snip.basename) or "Name"`}
+class ${1:`!p snip.rv = to_pascalcase(snip.basename) or "Name"`}
 {
 public:
   ${1/(\w+).*/$1/}(${2});

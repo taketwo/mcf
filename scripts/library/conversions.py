@@ -5,57 +5,86 @@ _underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
 _underscorer2 = re.compile('([a-z0-9])([A-Z])')
 
 
-def snakecase_to_camelcase(value):
+def to_camelcase(value):
     """
-    Convert a string from snake_case to camelCase.
+    Convert a string to camelCase.
 
-    >>> snakecase_to_camelcase('snake_case')
+    >>> to_camelcase('PascalCase')
+    'pascalCase'
+    >>> to_camelcase('camelCase')
+    'camelCase'
+    >>> to_camelcase('snake_case')
     'snakeCase'
-    >>> snakecase_to_camelcase('_snake_case')
+    >>> to_camelcase('_snake_case')
     'snakeCase'
-    >>> snakecase_to_camelcase('another_snake_case_')
+    >>> to_camelcase('another_snake_case_')
     'anotherSnakeCase'
+    >>> to_camelcase('kebab-case')
+    'kebabCase'
     """
+    if is_pascalcase(value):
+        return value[0].lower() + value[1:]
+    if is_camelcase(value):
+        return value
+    if is_snakecase(value):
+        separator = '_'
+    elif is_kebabcase(value):
+        separator = '-'
+    else:
+        raise Exception('Unknown case')
     def camelcase():
         yield type(value).lower
         while True:
             yield type(value).capitalize
     c = camelcase()
-    return ''.join(c.next()(x) if x else '' for x in value.split('_'))
+    return ''.join(c.next()(x) if x else '' for x in value.split(separator))
 
 
-def snakecase_to_pascalcase(value):
+def to_pascalcase(value):
     """
-    Convert a string from snake_case to PascalCase.
+    Convert a string to PascalCase.
 
-    >>> snakecase_to_pascalcase('snake_case')
+    >>> to_pascalcase('PascalCase')
+    'PascalCase'
+    >>> to_pascalcase('camelCase')
+    'CamelCase'
+    >>> to_pascalcase('snake_case')
     'SnakeCase'
-    >>> snakecase_to_pascalcase('_snake_case')
+    >>> to_pascalcase('_snake_case')
     'SnakeCase'
-    >>> snakecase_to_pascalcase('another_snake_case_')
+    >>> to_pascalcase('another_snake_case_')
     'AnotherSnakeCase'
+    >>> to_pascalcase('kebab-case')
+    'KebabCase'
     """
+    if is_pascalcase(value):
+        return value
+    if is_camelcase(value):
+        return value[0].capitalize() + value[1:]
+    if is_snakecase(value):
+        separator = '_'
+    elif is_kebabcase(value):
+        separator = '-'
+    else:
+        raise Exception('Unknown case')
     def pascalcase():
         while True:
             yield type(value).capitalize
     c = pascalcase()
-    return ''.join(c.next()(x) if x else '' for x in value.split('_'))
-
-
-    if start_with_lowercase:
-        def camelcase():
-            yield type(value).lower
-            while True:
-                yield type(value).capitalize
-    else:
-        def camelcase():
-            while True:
-                yield type(value).capitalize
-    c = camelcase()
-    return "".join(c.next()(x) if x else '_' for x in value.split("_"))
+    return ''.join(c.next()(x) if x else '' for x in value.split(separator))
 
 
 def camelcase_to_snakecase(value):
+    """
+    Convert a string from camelCase to snake_case.
+
+    >>> camelcase_to_snakecase('camelCase')
+    'camel_case'
+    >>> camelcase_to_snakecase('anotherLongCamelCase')
+    'another_long_camel_case'
+    >>> camelcase_to_snakecase('word')
+    'word'
+    """
     subbed = _underscorer1.sub(r'\1_\2', value)
     return _underscorer2.sub(r'\1_\2', subbed).lower()
 
@@ -81,6 +110,33 @@ def is_camelcase(s):
     """
     return ((s != s.lower() or s != s.upper()) and
             s[0].islower() and
+            '_' not in s and
+            '-' not in s)
+
+
+def is_pascalcase(s):
+    """
+    Test if a string is in PascalCase.
+
+    >>> is_pascalcase('PascalCase')
+    True
+    >>> is_pascalcase('AnotherPascalCase')
+    True
+    >>> is_pascalcase('camelCase')
+    False
+    >>> is_pascalcase('AlmostPascal-Case')
+    False
+    >>> is_pascalcase('Word')
+    True
+    >>> is_pascalcase('word')
+    False
+    >>> is_pascalcase('snake_case')
+    False
+    >>> is_pascalcase('kebab-case')
+    False
+    """
+    return ((s != s.lower() or s != s.upper()) and
+            s[0].isupper() and
             '_' not in s and
             '-' not in s)
 
