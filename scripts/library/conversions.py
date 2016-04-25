@@ -75,6 +75,28 @@ def is_snakecase(s):
     return (s == s.lower() and '-' not in s)
 
 
+def is_kebabcase(s):
+    """
+    Test if a string is in kebab-case.
+
+    >>> is_kebabcase('camelCase')
+    False
+    >>> is_kebabcase('PascalCase')
+    False
+    >>> is_kebabcase('word')
+    True
+    >>> is_kebabcase('snake_case')
+    False
+    >>> is_kebabcase('kebab-case')
+    True
+    >>> is_kebabcase('another-kebab-case')
+    True
+    >>> is_kebabcase('strange_mixed-case')
+    False
+    """
+    return (s == s.lower() and '_' not in s)
+
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
