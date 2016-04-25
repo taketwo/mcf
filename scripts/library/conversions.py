@@ -5,7 +5,43 @@ _underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
 _underscorer2 = re.compile('([a-z0-9])([A-Z])')
 
 
-def snakecase_to_camelcase(value, start_with_lowercase=False):
+def snakecase_to_camelcase(value):
+    """
+    Convert a string from snake_case to camelCase.
+
+    >>> snakecase_to_camelcase('snake_case')
+    'snakeCase'
+    >>> snakecase_to_camelcase('_snake_case')
+    'snakeCase'
+    >>> snakecase_to_camelcase('another_snake_case_')
+    'anotherSnakeCase'
+    """
+    def camelcase():
+        yield type(value).lower
+        while True:
+            yield type(value).capitalize
+    c = camelcase()
+    return ''.join(c.next()(x) if x else '' for x in value.split('_'))
+
+
+def snakecase_to_pascalcase(value):
+    """
+    Convert a string from snake_case to PascalCase.
+
+    >>> snakecase_to_pascalcase('snake_case')
+    'SnakeCase'
+    >>> snakecase_to_pascalcase('_snake_case')
+    'SnakeCase'
+    >>> snakecase_to_pascalcase('another_snake_case_')
+    'AnotherSnakeCase'
+    """
+    def pascalcase():
+        while True:
+            yield type(value).capitalize
+    c = pascalcase()
+    return ''.join(c.next()(x) if x else '' for x in value.split('_'))
+
+
     if start_with_lowercase:
         def camelcase():
             yield type(value).lower

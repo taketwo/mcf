@@ -52,7 +52,7 @@ def ToggleCase():
     if conversions.is_camelcase(word):
         converted = conversions.camelcase_to_snakecase(word)
     elif conversions.is_snakecase(word):
-        converted = conversions.snakecase_to_camelcase(word, True)
+        converted = conversions.snakecase_to_camelcase(word)
     else:
         return
     vim.command('normal! viws%s' % converted)
