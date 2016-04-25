@@ -25,8 +25,56 @@ def camelcase_to_snakecase(value):
 
 
 def is_camelcase(s):
-    return ((s != s.lower() or s != s.upper()) and '_' not in s)
+    """
+    Test if a string is in camelCase.
+
+    >>> is_camelcase('camelCase')
+    True
+    >>> is_camelcase('anotherCamelCase')
+    True
+    >>> is_camelcase('almostCamel_Case')
+    False
+    >>> is_camelcase('PascalCase')
+    False
+    >>> is_camelcase('word')
+    True
+    >>> is_camelcase('snake_case')
+    False
+    >>> is_camelcase('kebab-case')
+    False
+    """
+    return ((s != s.lower() or s != s.upper()) and
+            s[0].islower() and
+            '_' not in s and
+            '-' not in s)
 
 
 def is_snakecase(s):
-    return (s == s.lower() and '_' in s)
+    """
+    Test if a string is in snake_case.
+
+    >>> is_snakecase('camelCase')
+    False
+    >>> is_snakecase('PascalCase')
+    False
+    >>> is_snakecase('word')
+    True
+    >>> is_snakecase('snake_case')
+    True
+    >>> is_snakecase('another_snake_case')
+    True
+    >>> is_snakecase('_snake_case')
+    True
+    >>> is_snakecase('snake_case_')
+    True
+    >>> is_snakecase('kebab-case')
+    False
+    >>> is_snakecase('strange_mixed-case')
+    False
+    """
+    return (s == s.lower() and '-' not in s)
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
