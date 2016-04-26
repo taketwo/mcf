@@ -1,4 +1,7 @@
 global !p
+from conversions import to_pascalcase
+from filesystem import get_stem
+
 def get_level(c):
   levels = ['log', 'error', 'dir', 'info', 'group', 'warn']
   for l in levels:
@@ -11,4 +14,8 @@ snippet "c(\w?)" "Output message to console" br
 console.`!p
 snip.rv = get_level(match.group(1) or 'l')
 `(${1:'Message'})$0
+endsnippet
+
+snippet req "Require Common.js module" b
+var ${2:`!p snip.rv += to_pascalcase(get_stem(t[1]))`} = require('$1')$0
 endsnippet
