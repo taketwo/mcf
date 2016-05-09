@@ -1,13 +1,15 @@
 # System
-tmux
 powertop
 htop
 stow
 clang
 xcape
-
-arch: xorg-setxkbmap                         # keyboard layout switching, arch-only
+arch: xorg-setxkbmap                   # keyboard layout switching
 ubuntu: xbacklight
+
+# Terminal
+tmux
+pip: tmuxp                             # tmux session management
 
 # Network/Internet
 openssh
@@ -21,14 +23,14 @@ git
 python-pip
 python-virtualenv
 python-keyring
-arch: python-keyring-alt                    # not clear if exists/needed on Ubuntu
-arch: python2-keyring-alt                   # not clear if exists/needed on Ubuntu
+arch: python-keyring-alt               # not clear if exists/needed on Ubuntu
+arch: python2-keyring-alt              # not clear if exists/needed on Ubuntu
 python-urwid
 pip: pyflakes
 pip: pep8
 pip: flake8
-pip: colout                           # for hless command
-pip: pygments-style-solarized         # for hless command
+pip: colout                            # for hl command
+pip: pygments-style-solarized          # for hl command
 pip: pip-tools
 pip: click
 
