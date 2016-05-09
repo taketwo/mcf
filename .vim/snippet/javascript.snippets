@@ -17,5 +17,12 @@ snip.rv = get_level(match.group(1) or 'l')
 endsnippet
 
 snippet req "Require Common.js module" b
-var ${2:`!p snip.rv += to_pascalcase(get_stem(t[1]))`} = require('$1')$0
+var ${2:`!p
+if t[1] == 'lodash':
+  snip.rv += '_'
+elif t[1] == 'jquery':
+  snip.rv += '$'
+else:
+  snip.rv += to_pascalcase(get_stem(t[1]))
+`} = require('$1')$0
 endsnippet
