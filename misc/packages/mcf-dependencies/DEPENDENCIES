@@ -2,10 +2,12 @@
 powertop
 htop
 stow
-clang
-xcape
 arch: xorg-setxkbmap                   # keyboard layout switching
 ubuntu: xbacklight
+
+# Development
+cmake                                  # also YouCompleteMe requires this
+clang
 
 # Terminal
 tmux
@@ -48,6 +50,13 @@ ubuntu: apt-file
 arch: xorg-xprop
 
 # Misc
+xcape
 trayer
 redshift
 fantasque-sans
+
+# Required in xinitrc
+arch: nitrogen
+arch: xcompmgr
+arch: unclutter
+arch: xorg-xsetroot
