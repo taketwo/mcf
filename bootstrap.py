@@ -5,6 +5,10 @@ import os
 import sys
 import subprocess
 from os.path import expanduser, join
+from shutil import which
+
+if not which('git'):
+    sys.exit('Please install git before running bootstrap script')
 
 print('[*] Bootstrap MCF')
 print('')
