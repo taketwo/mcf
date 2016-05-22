@@ -1,5 +1,5 @@
 # Arch
-arch: ttf-fantasque-sans-git
+arch: ttf-fantasque-sans
 
 # Ubuntu
 ubuntu: fontforge

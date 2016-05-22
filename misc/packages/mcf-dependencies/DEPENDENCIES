@@ -23,8 +23,8 @@ git
 python-pip
 python-virtualenv
 python-keyring
-arch: python-keyring-alt               # not clear if exists/needed on Ubuntu
-arch: python2-keyring-alt              # not clear if exists/needed on Ubuntu
+arch: python-keyrings-alt               # not clear if exists/needed on Ubuntu
+arch: python2-keyrings-alt              # not clear if exists/needed on Ubuntu
 python-urwid
 pip: pyflakes
 pip: pep8

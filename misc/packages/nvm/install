@@ -33,6 +33,7 @@ def install():
         print('latest release version: {}'.format(ver))
         cmd = 'git checkout ' + ver
         subprocess.check_call(cmd.split())
+        print('NOTE: do not forget to run `nvm install node`')
 
 
 if __name__ == '__main__':
