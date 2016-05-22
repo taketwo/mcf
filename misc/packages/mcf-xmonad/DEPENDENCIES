@@ -28,3 +28,8 @@ ubuntu: gnome-settings-daemon
 ubuntu: gnome-control-center
 ubuntu: libxft-dev
 ubuntu: libxinerama-dev
+
+# Arch
+arch: ttf-liberation
+
+kupfer
