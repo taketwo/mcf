@@ -51,7 +51,7 @@ Plug 'taketwo/vim-exchange'
 Plug 'janko-m/vim-test'
 
 " Languages / frameworks
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --tern-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 "Plugin 'davidhalter/jedi-vim'
 " isort is (temporary) disabled because:
 "   * do not use it that often
