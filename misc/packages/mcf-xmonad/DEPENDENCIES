@@ -7,6 +7,7 @@ cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
 cabal: split
 
 # Dependencies of xmobar
+arch: wireless_tools
 # These are not resolved automatically for some reason
 cabal: alex
 cabal: happy
