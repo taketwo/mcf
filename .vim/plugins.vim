@@ -81,7 +81,7 @@ Plug 'lucapette/vim-textobj-underscore'
 Plug 'honza/vim-snippets'
 
 " Non-vim
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all && cd ../.mcf && git checkout -- .bashrc' }
 Plug 'junegunn/fzf.vim'
 
 " Try these plugins:
