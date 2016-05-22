@@ -13,4 +13,8 @@ xsetroot -cursor_name left_ptr
 
 nitrogen --restore
 
-exec cinnamon-session --session=xmonad
+if hash cinnamon-session 2>/dev/null; then
+  exec cinnamon-session --session=xmonad
+else
+  exec gnome-session --session=xmonad
+fi
