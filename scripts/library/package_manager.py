@@ -78,10 +78,11 @@ class PackageManager(object):
         else:
             p = [package]
         if manager == 'cabal':
-            subprocess.check_call(['cabal', 'update'])
+            subprocess.check_call(['sudo', 'cabal', 'update'])
             for package in p:
                 cmd = CMD[manager] + ' ' + package + ' ' + args
                 subprocess.check_call(cmd.split())
+            stow.adopt_as('cabal')
         else:
             cmd = CMD[manager] + ' ' + ' '.join(p) + ' ' + args
             subprocess.check_call(cmd.split())
