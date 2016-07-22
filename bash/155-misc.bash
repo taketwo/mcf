@@ -35,6 +35,12 @@ hl()
    highlight "$@" | /usr/bin/less -FiXRM
 }
 
+# Hexdump with highlighting
+hex()
+{
+  hexdump -C "$@" | pygmentize -l hexdump | /usr/bin/less -FiXRM
+}
+
 #______________________________________________________________________________
 #
 # Find the type of executable "thing" that the shell will use and try to
