@@ -38,6 +38,11 @@ class GitRepository:
         shutil.rmtree(self.path)
         os.chdir(self.original_cwd)
 
+    def __getitem__(self, key):
+        if isinstance(key, tuple):
+            return os.path.join(self.path, *key)
+        return os.path.join(self.path, key)
+
 
 def make_install():
     subprocess.call(['make'])
