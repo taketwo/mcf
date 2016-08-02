@@ -16,7 +16,7 @@ endfunction
 " Get the name of Gnome profile
 function! <SID>GetGnomeProfile()
     if <SID>CheckGnomeVersion()
-        let shellcmd = 'dconf read /org/gnome/terminal/legacy/profiles:/default'
+        let shellcmd = 'dconf list /org/gnome/terminal/legacy/profiles:/'
     else
         let shellcmd = 'gconftool-2 -R /apps/gnome-terminal/profiles | grep /apps/gnome-terminal/profiles | cut -d/ -f5 | cut -d: -f1'
     endif
@@ -28,7 +28,7 @@ function! GetGnomeValue(name)
     let profile = <SID>GetGnomeProfile()
     if <SID>CheckGnomeVersion()
         let name = substitute(a:name, "[_]", "-", "g")
-        let shellcmd = 'dconf read /org/gnome/terminal/legacy/profiles:/:' . profile . '/' . name
+        let shellcmd = 'dconf read /org/gnome/terminal/legacy/profiles:/' . profile . name
     else
         let name = substitute(a:name, "[-]", "_", "g")
         let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/' . profile . '/' . name . '"'
