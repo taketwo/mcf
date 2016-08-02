@@ -1,2 +1,2 @@
 # Bash completion for tmuxp
-source tmuxp.bash
+eval "$(_TMUXP_COMPLETE=source tmuxp)"
