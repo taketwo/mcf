@@ -12,8 +12,14 @@ from install import only
 @only('ubuntu')
 def install():
     with GitRepository('belluzj/fantasque-sans') as repo:
-        # Completely remove line with ttf2eot command
+        # Completely remove lines with:
+        #    - ttf2eot command
         _replace('s/^\tttf2eot.*$//', 'Makefile')
+        #    - woff2_compress command
+        _replace('s/^\twoff2_compress.*$//', 'Makefile')
+        #    - moving of woff2 files
+        _replace('s/^\tmv.*woff2.*Webfonts$//', 'Makefile')
+        # Change installation path to .mcf/.fonts directory
         _replace('s/\.fonts/\.mcf\/\.fonts/', 'Makefile')
         # Make install
         subprocess.call(['make', 'install'])
