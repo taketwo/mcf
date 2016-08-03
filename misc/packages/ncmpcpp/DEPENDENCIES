@@ -6,3 +6,4 @@ ubuntu: libmpdclient-dev
 ubuntu: libcurl3-gnutls
 ubuntu: libtag1-dev
 ubuntu: libncursesw5-dev
+ubuntu: libreadline-dev
