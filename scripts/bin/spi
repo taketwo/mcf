@@ -1,0 +1,11 @@
+#!/bin/bash
+
+orphans=`chkstow -a -t /usr/local | wc -l`
+if [[ $orphans -gt 0 ]]; then
+  echo "There are orphans, please stow them first!"
+  exit 1
+fi
+
+sudo pip install "$@"
+
+echo -e "\e[91mDo not forget to stow the newly installed files!\e[39m"
