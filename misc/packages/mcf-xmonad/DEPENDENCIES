@@ -19,8 +19,9 @@ ubuntu: libmpd-dev
 ubuntu: libasound2-dev
 ubuntu: libiw-dev
 ubuntu: libxpm-dev
+ubuntu: libxml2-dev
 
-cabal: xmobar --flags="all_extensions"
+cabal: xmobar --flags=all_extensions
 
 # Ubuntu
 ubuntu: libx11-dev
