@@ -1,3 +1,5 @@
+# Collection of bash helper functions to create indicators for Xmobar panel
+
 StartIndicator ()
 {
   eval "__output=' '"
@@ -27,6 +29,11 @@ Action ()
   fi
 }
 
+# Append icon
+# Arguments:
+#   1 Icon name (without .xbm extension)
+# Example:
+#   Icon "mail"
 Icon ()
 {
   eval "__output='$__output<icon=/home/sergey/.xmonad/icons/${1}.xbm/> '"
