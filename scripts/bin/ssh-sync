@@ -105,7 +105,7 @@ def hosts(man):
 @cli.command()
 @click.option('--force', '-f', is_flag=True,
               help='Overwrite remote host if it exists and is different')
-@click.option('--commit/--no-commit', default=True,
+@click.option('--commit/--no-commit', default=False,
               help='Commit changes to the repository')
 @click.argument('host', callback=validate_id)
 @click.pass_obj
