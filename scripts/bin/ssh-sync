@@ -47,8 +47,7 @@ def show(man, host, decrypt):
     if local:
         click.secho('yes', fg='green')
         click.echo()
-        local_t = str(local).strip()
-        for line in local_t.split('\n'):
+        for line in str(local).strip().split('\n'):
             click.echo('    {}'.format(line))
         click.echo()
     else:
@@ -58,8 +57,7 @@ def show(man, host, decrypt):
         click.secho('yes', fg='green')
         click.echo()
         if decrypt:
-            remote_t = remote.decrypt(passwd).strip()
-            for line in remote_t.split('\n'):
+            for line in str(remote.decrypt(passwd)).strip().split('\n'):
                 click.echo('    {}'.format(line))
         else:
             click.secho('    [encrypted]', fg='blue')
@@ -229,7 +227,7 @@ class SSHManager(object):
         raise TypeError('unsupported host key type')
 
     def save_local_hosts(self):
-        with open(os.path.expanduser('~/.ssh/config'), 'w') as f:
+        with open(self._get_config_filename(), 'w') as f:
             for host in self:
                 local, remote = self._hosts[host]
                 if local:
@@ -237,19 +235,14 @@ class SSHManager(object):
                     f.write('\n')
 
     def _load_local_hosts(self):
-        host = Host()
-        for line in open(os.path.expanduser('~/.ssh/config'), 'r'):
-            if line.startswith('# '):
-                host.comment = line[2:].strip()
-            if line.startswith('Host '):
-                host.name = line[5:].strip()
-            if line.startswith('  '):
-                host.options.append(line[2:].strip())
-            if line == '\n' and host.is_valid():
-                yield host
-                host = Host()
-            if host.is_valid():
-                yield host
+        host_lines = list()
+        for line in open(self._get_config_filename(), 'r'):
+            if not line == '\n':
+                host_lines.append(line)
+            else:
+                if host_lines:
+                    yield Host(host_lines)
+                    host_lines = list()
 
     def _load_remote_hosts(self):
         directory = os.path.expanduser('~/.mcf/ssh')
@@ -261,13 +254,28 @@ class SSHManager(object):
                                     encrypted,
                                     open(md5file, 'r').read())
 
+    def _get_config_filename(self):
+        return os.path.expanduser('~/.ssh/config')
+
 
 class Host(object):
-    def __init__(self):
+
+    def __init__(self, config):
         self.name = None
         self.comment = None
-        self.options = []
+        self.options = list()
         self.remote = None
+        for line in config if isinstance(config, list) else config.split('\n'):
+            if line.startswith('# '):
+                self.comment = line[2:].strip()
+            if line.startswith('Host '):
+                self.name = line[5:].strip()
+            if line.startswith('  '):
+                self.options.append(line[2:].strip())
+            if line == '\n':
+                break
+        if not self.is_valid():
+            raise Exception('Invalid host config')
 
     @property
     def md5(self):
@@ -300,7 +308,7 @@ class EncryptedHost(Host):
         return '{} [encrypted]'.format(self.name)
 
     def decrypt(self, passwd):
-        return encryption.decrypt(self.filename, passwd=passwd)
+        return Host(encryption.decrypt(self.filename, passwd=passwd))
 
     @property
     def md5(self):
