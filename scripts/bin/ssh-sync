@@ -175,7 +175,7 @@ def pull(man, host, force):
     """
     local, remote = man[host]
     if not remote:
-        click.echo('Host #{} is not remote'.format(host), err=True)
+        click.echo('Host {} is not remote'.format(host), err=True)
         click.echo('Maybe you wanted to push?', err=True)
         sys.exit(1)
     if local and remote == local:
@@ -186,7 +186,9 @@ def pull(man, host, force):
         click.echo('Host {} is already among locals'.format(host), err=True)
         click.echo('Did you want to --force overwrite?', err=True)
         sys.exit(3)
-    # pull and save
+    passwd = click.prompt('Decryption password', hide_input=True)
+    local = remote.decrypt(passwd)
+    man[host] = (local, remote)
     man.save_local_hosts()
 
 
@@ -225,6 +227,12 @@ class SSHManager(object):
                 raise KeyError('host with given name does not exist')
             return self._hosts[key]
         raise TypeError('unsupported host key type')
+
+    def __setitem__(self, key, value):
+        if isinstance(key, str):
+            if key not in self._hosts:
+                raise KeyError('host with given name does not exist')
+            self._hosts[key] = value
 
     def save_local_hosts(self):
         with open(self._get_config_filename(), 'w') as f:
