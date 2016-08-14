@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+
+import os
+import socket
+import subprocess
+
+import click
+
+
+def get_music_location(host=None):
+    host = host or socket.gethostname()
+    if host == 'precision' or host == 'raccoon':
+        return os.path.expanduser('~/Music')
+    elif host == 'z3c':
+        return host + ':sdcard1/Music'
+    elif host == 'pi':
+        return host + ':/home/pi/Music'
+    else:
+        raise Exception('unknown host')
+
+
+def rsync(src, dst, delete=True):
+    cmd = ['rsync',
+           '-avz',
+           '--size-only',
+           '--progress']
+    if delete:
+        cmd.append('--delete')
+    cmd.append(src + ('' if src.endswith('/') else '/'))
+    cmd.append(dst)
+    subprocess.call(cmd)
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+@click.option('--delete', '-d', is_flag=True,
+              help='Delete extraneous files from destination')
+@click.argument('host')
+def push(host, delete):
+    """
+    Push music to another host.
+    """
+    src = get_music_location()
+    dst = get_music_location(host)
+    rsync(src, dst, delete=delete)
+
+
+if __name__ == '__main__':
+    cli()
