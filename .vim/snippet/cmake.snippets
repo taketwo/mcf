@@ -18,6 +18,14 @@ snippet $ "CMake variable" i
 \$\{${1:VARIABLE}\}$0
 endsnippet
 
+snippet color "Color diagnostics" b
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	add_definitions(-fcolor-diagnostics)
+else()
+	add_definitions(-fdiagnostics-color)
+endif()
+endsnippet
+
 snippet cmake "CMake template" b
 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
