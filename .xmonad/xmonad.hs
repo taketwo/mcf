@@ -36,6 +36,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.WorkspaceCompare
 import XMonad.Actions.CycleWS
 import XMonad.Actions.CycleRecentWS
+import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.ShowText
 import XMonad.Actions.GridSelect
 import XMonad.Actions.MouseResize
@@ -364,8 +365,8 @@ table =
     -- Misc
     scratchTerminal         = Unbound "Open scratch terminal"               (namedScratchpadAction myScratchPads "terminal")
     restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> unspawn "gmaild" <+> restart "xmonad" True)
-    jumpToNextScreen        = Unbound "Jump to next screen"                 (nextScreen)
-    jumpToPrevScreen        = Unbound "Jump to previous screen"             (prevScreen)
+    jumpToNextScreen        = Unbound "Jump to next physical screen"        (onNextNeighbour W.view)
+    jumpToPrevScreen        = Unbound "Jump to previous physical screen"    (onPrevNeighbour W.view)
     powerOff                = Unbound "Power off the system"                (spawn "gnome-session-quit --power-off")
     reboot                  = Unbound "Reboot the system"                   (spawn "gnome-session-quit --reboot")
     logout                  = Unbound "Logout"                              (spawn "session-logout")
