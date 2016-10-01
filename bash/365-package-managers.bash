@@ -3,6 +3,9 @@ alias agu='sudo apt-get update && sudo apt-get upgrade'
 alias agi='sudo apt-get install'
 alias agr='sudo apt-get remove'
 
+# dpkg aliases
+alias dgrep='dpkg -l | grep -i'
+
 # yaourt aliases
 alias yu='yaourt -Syua'
 alias yi='yaourt -Sa'
