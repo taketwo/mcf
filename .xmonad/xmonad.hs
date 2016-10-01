@@ -190,11 +190,10 @@ myTopics =
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , ti "im"       ""
   , TI "mcf"      ".mcf"                                     (spawnShell)
-  , TI "tocs"     "/media/Workspace/Projects/tocs"           (spawnShell)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnShell)
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
-  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Files/Downloads/Torrents")
+  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
   , TI "xmonad"   ".xmonad"                                  (appEdit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , ti "gimp"     ""
   ]
