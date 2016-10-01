@@ -10,6 +10,10 @@ export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:back
 # Claim back Alt-c
 bind '"\ec": history-search-backward'
 
+#######################################################################
+#                            From FZF wiki                            #
+#######################################################################
+
 # Integration with z
 # - like normal z when used with arguments
 # - displays an fzf prompt when used without
@@ -20,5 +24,15 @@ z()
     cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
   else
     _z "$@"
+  fi
+}
+
+# fkill - kill process
+fkill()
+{
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+  if [ "x$pid" != "x" ]
+  then
+    kill -${1:-9} $pid
   fi
 }
