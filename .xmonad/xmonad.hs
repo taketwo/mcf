@@ -560,7 +560,7 @@ myHandleEventHook = ED.fullscreenEventHook <+> docksEventHook
 -- Manage hook ------------------------------------------------------------- {{{
 
 myManageHook :: ManageHook
-myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads
+myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads <+> fullscreenManageHook
 
 manageWindows = composeAll . concat $
     [ [isDialog --> doCenterFloat]
