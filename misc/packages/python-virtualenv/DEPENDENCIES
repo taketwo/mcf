@@ -1,10 +1,9 @@
 # Common
 python-virtualenv
+pip: pew
 
 # Arch
 arch: python-virtualenv-clone
-arch: python-virtualenvwrapper
 
 # Ubuntu
 ubuntu: virtualenv-clone
-ubuntu: virtualenvwrapper
