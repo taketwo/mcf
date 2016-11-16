@@ -19,33 +19,33 @@ snippet sc "Script"
 endsnippet
 
 #######################################################################
-#                        Sections with markers                        #
+#                        Chapters, sections                           #
 #######################################################################
 
-snippet "Cha(p(ter)?)?" "Chapter with fold markers" !br
-\chapter{${1:Chapter name}
+snippet "cha(p(ter)?)?" "Chapter (with fold markers)" !br
+\chapter{${1:Chapter name}}
 %==========================================================================={{{
-\label{cha:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}}
+\label{cha:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}
 
 $0
 
 %===========================================================================}}}
 endsnippet
 
-snippet "Sec(t(ion)?)?" "Section with fold markers" !br
-\section{${1:Section name}
+snippet "sec(t(ion)?)?" "Section (with fold markers)" !br
+\section{${1:Section name}}
 %---------------------------------------------------------------------------{{{
-\label{sec:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}}
+\label{sec:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}
 
 $0
 
 %---------------------------------------------------------------------------}}}
 endsnippet
 
-snippet "Sub(s(ec(tion)?)?)?" "Subsection with fold markers" !br
-\subsection{${1:Subsection name}
+snippet "sub(s(ec(tion)?)?)?" "Subsection (with fold markers)" !br
+\subsection{${1:Subsection name}}
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {{{
-\label{sub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}}
+\label{sub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:-:\L$1$2$3\E)/g}}}
 
 $0
 
