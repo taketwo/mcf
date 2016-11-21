@@ -1,0 +1,60 @@
+priority 100
+
+global !p
+from conversions import *
+endglobal
+
+snippet vsp "VTK smart pointer" i
+vtkSmartPointer<${1:vtkDoubleArray}>::New()$0
+endsnippet
+
+snippet vsdc "VTK safe down cast" i
+${1:vtkDoubleArray}::SafeDownCast($2)$0
+endsnippet
+
+snippet vsnm "VTK standard new macro" b
+#include <vtkObjectFactory.h>
+vtkStandardNewMacro(${1:`!p snip.rv = to_camelcase(snip.basename) or "ClassName"`})
+endsnippet
+
+snippet vcd "VTK constructor/destructor" b
+${1:`!p snip.rv = to_camelcase(snip.basename) or "ClassName"`}::$1()
+{
+	$0
+}
+
+$1::~$1()
+{
+}
+endsnippet
+
+snippet vps "VTK print self" b
+void ${1:`!p snip.rv = to_camelcase(snip.basename) or "ClassName"`}::PrintSelf(ostream& os, vtkIndent indent)
+{
+	this->Superclass::PrintSelf(os, indent);
+}
+endsnippet
+
+snippet class "VTK class declaration" !b
+class ${1:`!p snip.rv = to_camelcase(snip.basename) or "ClassName"`} : public ${2:vtkAlgorithm}
+{
+public:
+	static $1 *New();
+
+	vtkTypeMacro($1, $2);
+
+	virtual void PrintSelf(ostream& os, vtkIndent indent) override;
+
+protected:
+	$1();
+
+	~$1();
+
+	$0
+
+private:
+	$1(const $1&) = delete;
+
+	void operator=(const $1&) = delete;
+};
+endsnippet
