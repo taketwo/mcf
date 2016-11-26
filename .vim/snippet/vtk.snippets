@@ -4,6 +4,11 @@ global !p
 from conversions import *
 endglobal
 
+snippet vsg "VTK set/get macros" b
+vtkSetMacro(${1:Variable}, ${2:double});
+vtkGetMacro($1, $2);$0
+endsnippet
+
 snippet vsp "VTK smart pointer" i
 vtkSmartPointer<${1:vtkDoubleArray}>::New()$0
 endsnippet
