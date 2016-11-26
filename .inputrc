@@ -63,13 +63,13 @@ set bind-tty-special-chars off
 #                     Commands for changing text                      #
 #######################################################################
 
-# Ctrl-d
+# Ctrl-b
 # Delete the character under the cursor, unless the cursor is at the
 # end of the line
-"\C-d": forward-backward-delete-char
+"\C-b": forward-backward-delete-char
 
 # Ctrl-D
-"\C-D": kill-whole-line
+"\C-d": kill-whole-line
 
 # Ctrl-w
 # This makes it so when you have your cursor (|) positioned here
