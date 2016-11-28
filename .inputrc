@@ -84,7 +84,7 @@ set bind-tty-special-chars off
 # Ctrl-e
 # Launch vim to edit current command and execute it on exit
 # Hint: exit with :cq to avoid command execution
-"\C-e": edit-and-execute-command
+"\C-e\C-e": edit-and-execute-command
 
 #######################################################################
 #                           Super commands                            #
