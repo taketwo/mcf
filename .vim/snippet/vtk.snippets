@@ -9,6 +9,11 @@ vtkSetMacro(${1:Variable}, ${2:double});
 vtkGetMacro($1, $2);$0
 endsnippet
 
+snippet vsgs "VTK set/get string macros" b
+vtkSetStringMacro(${1:Variable});
+vtkGetStringMacro($1);$0
+endsnippet
+
 snippet vsp "VTK smart pointer" i
 vtkSmartPointer<${1:vtkDoubleArray}>::New()$0
 endsnippet
