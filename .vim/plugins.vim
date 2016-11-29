@@ -75,6 +75,7 @@ Plug 'coderifous/textobj-word-column.vim'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-function'
+Plug 'jceb/vim-textobj-uri'
 Plug 'lucapette/vim-textobj-underscore'
 
 " Snippets
