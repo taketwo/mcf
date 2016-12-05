@@ -1,11 +1,23 @@
-snippet ifh "if hash" b
+snippet ifh "check if program exists" b
 if hash ${1:program} 2>/dev/null; then
 	$0
 fi
 endsnippet
 
-snippet if? "if exit status" b
+snippet if? "check if exit code is non-zero" b
 if [[ $? -ne 0 ]]; then
+	$0
+fi
+endsnippet
+
+snippet ifs "check if variable is set" b
+if [[ -n \$${1:var} ]]; then
+	$0
+fi
+endsnippet
+
+snippet ifns "check if variable is not set" b
+if [[ -z \$${1:var} ]]; then
 	$0
 fi
 endsnippet
