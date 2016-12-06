@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [[ $EUID != 0 ]]; then
+  sudo "$0" "$@"
+  exit $?
+fi
+
+config='/etc/systemd/system/docker.service.d/dns.conf'
+if [[ $1 == "uni" ]]; then
+  dns=' --dns 128.131.4.3'
+fi
+sudo echo "[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd${dns}" > ${config}
+systemctl daemon-reload
+systemctl restart docker
