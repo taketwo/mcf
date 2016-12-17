@@ -218,3 +218,35 @@ std::ostream& operator<<(std::ostream& os, const ${1:Type}& obj)
 	return os;
 }
 endsnippet
+
+snippet opcomp "operotor comparison overload" b
+inline bool operator==(const ${1:Type}& lhs, const $1& rhs)
+{
+	${2:/* do actual comparison */}
+}
+
+inline bool operator!=(const $1& lhs, const $1& rhs)
+{
+	return !operator==(lhs, rhs);
+}
+
+inline bool operator< (const $1& lhs, const $1& rhs)
+{
+	${0:/* do actual comparison */}
+}
+
+inline bool operator> (const $1& lhs, const $1& rhs)
+{
+	return  operator< (rhs, lhs);
+}
+
+inline bool operator<=(const $1& lhs, const $1& rhs)
+{
+	return !operator> (lhs, rhs);
+}
+
+inline bool operator>=(const $1& lhs, const $1& rhs)
+{
+	return !operator< (lhs, rhs);
+}
+endsnippet
