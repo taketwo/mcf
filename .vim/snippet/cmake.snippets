@@ -111,3 +111,7 @@ endsnippet
 snippet find "Find package" b
 find_package(${1:package}${2/.+/ COMPONENTS /}${2:component}${3/.+/ /}${3:REQUIRED})
 endsnippet
+
+snippet pic "Add -fPIC compiler option" b
+set_property(TARGET ${1:library} PROPERTY POSITION_INDEPENDENT_CODE ON)$0
+endsnippet
