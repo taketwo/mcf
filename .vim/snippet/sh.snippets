@@ -21,3 +21,21 @@ if [[ -z \$${1:var} ]]; then
 	$0
 fi
 endsnippet
+
+snippet ifd "check if directory exists" b
+if [[ -d ${1:directory} ]]; then
+	$0
+fi
+endsnippet
+
+snippet iff "check if file (regular) exists" b
+if [[ -f ${1:file} ]]; then
+	$0
+fi
+endsnippet
+
+snippet ife "check if exists (file, directory, node, etc)" b
+if [[ -f ${1:path} ]]; then
+	$0
+fi
+endsnippet
