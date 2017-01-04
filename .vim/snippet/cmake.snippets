@@ -34,11 +34,11 @@ project(${1:name})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/" ${CMAKE_MODULE_PATH})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 11)
 
 option(BUILD_TESTS "Build tests." OFF)
 
 add_definitions(-fcolor-diagnostics)
-add_definitions(-std=c++11)
 add_definitions(-Wall)
 
 include_directories(
