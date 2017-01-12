@@ -49,6 +49,7 @@ Plug 'xolox/vim-misc'
 Plug 'rhysd/clever-f.vim'
 Plug 'taketwo/vim-exchange'
 Plug 'janko-m/vim-test'
+Plug 'machakann/vim-highlightedyank'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
