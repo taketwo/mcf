@@ -108,10 +108,22 @@ add_definitions(
 )
 endsnippet
 
+snippet ecc "Export compile commands" b
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endsnippet
+
 snippet find "Find package" b
 find_package(${1:package}${2/.+/ COMPONENTS /}${2:component}${3/.+/ /}${3:REQUIRED})
 endsnippet
 
 snippet pic "Add -fPIC compiler option" b
 set_property(TARGET ${1:library} PROPERTY POSITION_INDEPENDENT_CODE ON)$0
+endsnippet
+
+snippet tinc "Target include directories" b
+target_include_directories(${1:target} ${2:PUBLIC} ${3:directories})
+endsnippet
+
+snippet tdef "Target compile definitions" b
+target_compile_definitions(${1:target} ${2:PUBLIC} ${3:definitions})
 endsnippet
