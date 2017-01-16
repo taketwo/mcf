@@ -26,3 +26,9 @@
 [pager]
   diff = diff-so-fancy | less --tabs=1,5 -RFX
   show = diff-so-fancy | less --tabs=1,5 -RFX
+[user]
+  signingkey = B70F82225D2CBAF4
+[gpg]
+  program = gpg2
+[commit]
+  gpgsign = true
