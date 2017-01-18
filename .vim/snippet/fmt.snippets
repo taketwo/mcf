@@ -1,0 +1,15 @@
+global !p
+def create_placeholders(snip):
+  fmt = snip.tabstops[1].current_text
+  # Count the number of placeholders {}
+  import re
+  ph = len(re.findall('{.*?}', fmt))
+  if ph > 0:
+    snippet = ', ' + ', '.join(['$' + str(i + 1) for i in range(ph)])
+    snip.expand_anon(snippet)
+endglobal
+
+post_jump "if snip.tabstop == 2: create_placeholders(snip)"
+snippet fmt "fmt::print()" b
+fmt::print("$1"$2)$0
+endsnippet
