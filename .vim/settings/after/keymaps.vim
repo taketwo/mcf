@@ -247,7 +247,7 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   " DelimitMate
 
-  imap <C-l> <Plug>delimitMateS-Tab
+  imap <C-s> <Plug>delimitMateS-Tab
 
   " Sideways
 
