@@ -80,6 +80,10 @@ for (const auto& ${1:item} : ${2:items})
 }
 endsnippet
 
+snippet cr "Const reference" w
+const ${1:type}&$0
+endsnippet
+
 snippet ar "Auto reference" !b
 auto& ${1:variable} = $0
 endsnippet
@@ -216,6 +220,16 @@ std::ostream& operator<<(std::ostream& os, const ${1:Type}& obj)
 {
 	$0
 	return os;
+}
+endsnippet
+
+snippet op>> "operator>> overload" b
+std::istream& operator>>(std::istream& is, ${1:Type}& obj)
+{
+	$2
+	if (${3: /* $1 could not be constructed */ })
+		is.setstate(std::ios::failbit);
+	return is;
 }
 endsnippet
 
