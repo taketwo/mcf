@@ -78,6 +78,12 @@ inoremap <LocalLeader>] <C-o>o{<CR>}<C-o>O
 nnoremap <silent> <LocalLeader>; :call AppendSemicolon()<CR>
 inoremap <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
 
+" YCM mappings
+nnoremap <buffer> gf :YcmCompleter GoToInclude<CR>
 nnoremap <buffer> gD :YcmCompleter GoTo<CR>
 nnoremap <buffer> gd :YcmCompleter GoToImprecise<CR>
 nnoremap <silent> <LocalLeader>f :YcmCompleter FixIt<CR>
+nnoremap <silent> <LocalLeader>t :YcmCompleter GetType<CR>
+nnoremap <silent> <LocalLeader>T :YcmCompleter GetTypeImprecise<CR>
+nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
+nnoremap <silent> <LocalLeader>D :YcmCompleter GetDocImprecise<CR>
