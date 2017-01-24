@@ -57,6 +57,8 @@ void ${1:`!p snip.rv = to_camelcase(snip.basename) or "ClassName"`}::PrintSelf(o
 endsnippet
 
 snippet class "VTK class declaration" !b
+#include <$2.h>
+
 class ${1:`!p snip.rv = to_camelcase(snip.basename) or "ClassName"`} : public ${2:vtkAlgorithm}
 {
 public:
