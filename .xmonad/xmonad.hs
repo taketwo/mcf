@@ -103,7 +103,6 @@ import System.IO (Handle, hPutStrLn)
 import Solarized
 import MCF.Apps
 import MCF.Paths
-import MCF.Icons
 import MCF.Xmobar
 
 unspawn :: String -> X ()
