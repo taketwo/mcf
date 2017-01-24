@@ -9,7 +9,7 @@ module MCF.Apps
 import XMonad.Core
 
 appTerminal = "gnome-terminal"
-appBrowser  = "chromium-browser"
+appBrowser  = "browser"
 appShell    = "bash"
 
 appEdit :: String -> X ()
