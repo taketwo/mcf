@@ -2,6 +2,12 @@ priority 100
 
 global !p
 from conversions import *
+def get_level(c):
+  levels = ["Debug", "Warning", "Error"]
+  for l in levels:
+    if l.lower().startswith(c.lower()):
+      return l
+  return "Debug"
 endglobal
 
 snippet vsg "VTK set/get macros" b
@@ -80,4 +86,10 @@ private:
 
 	void operator=(const $1&) = delete;
 };
+endsnippet
+
+snippet "vlog(\w?)" "Log message" br
+vtk`!p
+snip.rv = get_level(match.group(1) or 'd')
+`Macro(${1:"Message with << operators"})$0
 endsnippet
