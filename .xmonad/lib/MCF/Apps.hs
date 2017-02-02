@@ -8,7 +8,7 @@ module MCF.Apps
 
 import XMonad.Core
 
-appTerminal = "gnome-terminal"
+appTerminal = "gnome-terminal -e 'tmux'"
 appBrowser  = "browser"
 appShell    = "bash"
 
