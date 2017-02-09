@@ -14,7 +14,7 @@ def get_music_location(host=None):
     if host == 'precision' or host == 'raccoon':
         return os.path.expanduser('~/Music')
     elif host == 'z3c':
-        return host + ':sdcard1/Music'
+        return host + ':/storage/0123-4567/Music'
     elif host == 'pi':
         return host + ':/home/pi/Music'
     else:
