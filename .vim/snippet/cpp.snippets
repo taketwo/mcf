@@ -27,11 +27,20 @@ snippet ponce "Pragma once" b
 endsnippet
 
 snippet ns "Namespace" !b
-namespace ${1} {
+namespace ${1}
+{
 
 $0
 
-} // namespace $1
+}
+endsnippet
+
+snippet nsn "Namespace nested" b
+${1/^([^:]*)(.*)/namespace $1 {/}${1/([^:]*)(:+)?([^:]*)?/(?3: namespace $3 {)/g}
+
+$0
+
+${1/([^:]*)(:+)?/} /g}// namespace ${1:name}
 endsnippet
 
 snippet up "Unique pointer"
