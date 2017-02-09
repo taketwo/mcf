@@ -11,7 +11,7 @@ Config
   -- Layout
   , sepChar          = "%"   -- delineator between plugin names and straight text
   , alignSep         = "}{"  -- separator between left-right alignment
-  , template         = "%UnsafeStdinReader%   %dynnetwork% }{ %mpd%  %gmail%%net% %kbd% %LOWW% %vol% %battery% %date%"
+  , template         = "%UnsafeStdinReader%   %dynnetwork% }{ %mpd%  %gmail%%net% %kbd% %vol% %battery% %date%"
   -- General behavior
   , lowerOnStart     = False   -- send to bottom of window stack on start
   , hideOnStart      = False   -- start with window unmapped (hidden)
@@ -32,11 +32,8 @@ Config
   --   color can be set by enclosing in <fc></fc> tags. For more details
   --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
   , commands =
-    -- Weather monitor
-    [ Run Weather "LOWW" [ "--template", "<fc=#4682B4><tempC></fc>°C"
-    ] 36000
     -- Network activity monitor (dynamic interface resolution)
-    , Run DynNetwork     [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
+    [ Run DynNetwork     [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
     , "--Low"      , "1000"       -- units: kB/s
     , "--High"     , "5000"       -- units: kB/s
     , "--low"      , "darkgreen"
