@@ -51,12 +51,12 @@ Config
     -- battery specific options
     , "--"
     -- discharging status
-    , "-o"   , " <left>% (<timeleft>)"
+    , "-o"   , "▼ <left>% (<timeleft>)"
     -- AC "on" status
-    , "-O"   , "<fc=#dAA520></fc> <left>%"
+    , "-O"   , "<fc=#dAA520>▲</fc> <left>%"
     -- charged status
-    , "-i"   , "<fc=#006000></fc>"
-    , "-f"   , "ACAD/online"
+    , "-i"   , "<fc=#006000>▬</fc>"
+    , "-f"   , "AC/online"
     ] 50
     -- Time and date indicator
     , Run Date       "<fc=#ffffff>%A</fc> %Y.%m.<fc=#44aacc>%d</fc> <fc=#ffffff,#cb4b16> %T </fc>" "date" 10
