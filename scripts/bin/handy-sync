@@ -28,10 +28,7 @@ def validate_ip(ctx, param, value):
     raise click.BadParameter('should be the last octet of Handy address')
 
 
-LOCATIONS = {'music': {'precision': '/media/Files/Music',
-                       'raccoon': '/media/Files/Music',
-                       'z3c': 'sdcard1/Music'},
-             'photos': {'precision': '/media/Files/Photos/New',
+LOCATIONS = {'photos': {'precision': '/media/Files/Photos/New',
                         'z3c': 'storage/sdcard0/DCIM/100ANDRO'}}
 
 
@@ -53,20 +50,6 @@ def rsync(src, dst, delete=True):
 @click.group()
 def cli():
     pass
-
-
-@cli.command()
-@click.argument('ip', callback=validate_ip)
-def music(ip):
-    """
-    Synchronize music.
-    """
-    locations = LOCATIONS['music']
-    hostname = socket.gethostname()
-    if hostname == 'precision':
-        rsync(locations[hostname], 'root@{}:{}'.format(ip, locations['z3c']))
-    else:
-        rsync('root@{}:{}'.format(ip, locations['z3c']), locations[hostname])
 
 
 @cli.command()
