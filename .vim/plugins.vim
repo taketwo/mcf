@@ -50,7 +50,6 @@ Plug 'taketwo/vim-exchange'
 Plug 'janko-m/vim-test'
 Plug 'machakann/vim-highlightedyank'
 Plug 'AndrewRadev/dsf.vim'
-Plug 'pseewald/vim-anyfold'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
