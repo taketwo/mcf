@@ -17,6 +17,7 @@ function set_layout()
 {
   case $1 in
     laptop) xrandr --output eDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP1 --off --output DP2-1 --off --output DP2-2 --off --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
+    office-0) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --off --output DP2-2 --off --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
     office-1) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --off --output DP2-2 --mode 2560x1440 --pos 0x0 --rotate normal --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
     office-2) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --mode 1680x1050 --pos 2560x0 --rotate normal --output DP2-2 --mode 2560x1440 --pos 0x0 --rotate normal --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
     office) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --mode 1680x1050 --pos 4240x0 --rotate normal --output DP2-2 --mode 2560x1440 --pos 1680x0 --rotate normal --output DP2-3 --mode 1680x1050 --pos 0x0 --rotate normal --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
@@ -38,6 +39,7 @@ done
 if [[ $layout == "laptop" ]]; then
   set_layout "laptop"
 elif [[ $layout == "office" ]]; then
+  set_layout "office-0"
   set_layout "office-1"
   set_layout "office-2"
   set_layout "office"
