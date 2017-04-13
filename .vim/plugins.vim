@@ -64,6 +64,7 @@ Plug 'taketwo/vim-ros'
 Plug 'rhysd/vim-clang-format'
 Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
+Plug 'lervag/vimtex'
 
 " Git related
 Plug 'gregsexton/gitv'
