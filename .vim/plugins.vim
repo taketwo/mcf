@@ -65,6 +65,7 @@ Plug 'rhysd/vim-clang-format'
 Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
+Plug 'Vimjas/vim-python-pep8-indent'
 
 " Git related
 Plug 'gregsexton/gitv'
