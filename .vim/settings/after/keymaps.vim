@@ -229,7 +229,6 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   " Minibufexplorer
 
-  noremap <F2> :MBEToggle<CR>
   noremap N :MBEbn<CR>
   noremap H :MBEbp<CR>
   for i in range(1,9)
