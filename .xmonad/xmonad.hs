@@ -187,6 +187,7 @@ myTopics =
   , TI "music"    ""                                         (spawnInShell "ncmpcpp")
   , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
+  , TI "zeal"     ""                                         (spawn "zeal")
   , ti "im"       ""
   , TI "mcf"      ".mcf"                                     (spawnShell)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
@@ -276,13 +277,13 @@ table =
   , k "w"            gotoWorkspace           shiftToWorkspace        createWorkspace         shiftAndGoToWorkspace
   , k "x"            __                      __                      renameWorkspace'        deleteWorkspace
   , k "y"            __                      __                      __                      __
-  , k "z"            __                      __                      __                      __
+  , k "z"            promptZealSearch        __                      __                      __
   , k "<Backspace>"  closeWindow             __                      __                      deleteWorkspace
   , k "<Space>"      launchKupfer            nextKeyboardLayout      __                      __
   , k "<Tab>"        nextLayout              resetLayout             __                      __
   , k "`"            scratchTerminal         __                      __                      __
   , k "'"            gridSelect              __                      __                      __
-  , k "/"            promptSearch            selectSearch            __                      __
+  , k "/"            promptWebSearch         selectWebSearch         __                      __
   , k "0"            gotoPrevWorkspace       __                      __                      __
   , k "<F5>"         __                      restartXMonad           __                      __
   , k "<F10>"        __                      logout                  __                      __
@@ -368,8 +369,9 @@ table =
     powerOff                = Unbound "Power off the system"                (spawn "gnome-session-quit --power-off")
     reboot                  = Unbound "Reboot the system"                   (spawn "gnome-session-quit --reboot")
     logout                  = Unbound "Logout"                              (spawn "session-logout")
-    promptSearch            = Unbound "Prompt search"                       (submap . mySearchMap $ myPromptSearch)
-    selectSearch            = Unbound "Search X selection"                  (submap . mySearchMap $ mySelectSearch)
+    promptZealSearch        = Unbound "Prompt Zeal search"                  (myPromptZealSearch)
+    promptWebSearch         = Unbound "Prompt web search"                   (submap . mySearchMap $ myPromptWebSearch)
+    selectWebSearch         = Unbound "X selection web search"              (submap . mySearchMap $ mySelectWebSearch)
     closeWindow             = Unbound "Close the focused window"            (kill)
     gridSelect              = Unbound "Open GridSelect"                     (goToSelected gridSelectConfig)
     -- Keyboard control
@@ -457,14 +459,18 @@ multitranEnglish = searchEngine "multitran (english)" "http://www.multitran.ru/c
 multitranDeutsch = searchEngine "multitran (deutsch)" "http://www.multitran.ru/c/m.exe?l1=3&l2=2&s="
 cppreference = searchEngine "c++ reference" "http://en.cppreference.com/mwiki/index.php?search="
 
--- Prompt search: get input from the user via a prompt, then run the search in
+-- Prompt Zeal search: get input from the user via a prompt, then run Zeal
+myPromptZealSearch = inputPrompt myXPConfig "Search Zeal" ?+ \s ->
+      (spawn ("zeal " ++ s))
+
+-- Prompt web search: get input from the user via a prompt, then run the search in
 -- the browser and automatically switch to the web workspace
-myPromptSearch (SearchEngine name site)
+myPromptWebSearch (SearchEngine name site)
   = inputPrompt myXPConfig ("Search " ++ name) ?+ \s ->
       (search appBrowser site s >> viewWeb)
 
--- Select search: do a search based on the X selection
-mySelectSearch eng = selectSearch eng >> viewWeb
+-- Select search: do a web search based on the X selection
+mySelectWebSearch eng = selectSearch eng >> viewWeb
 
 -- Switch to the "web" workspace
 viewWeb = windows (W.view "web")
