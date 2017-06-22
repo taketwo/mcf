@@ -28,3 +28,6 @@
 [submodule "tmux/plugins/tmux-yank"]
 	path = tmux/plugins/tmux-yank
 	url = https://github.com/tmux-plugins/tmux-yank
+[submodule "scripts/bundle/git-rebase-all"]
+	path = scripts/bundle/git-rebase-all
+	url = https://github.com/nornagon/git-rebase-all.git
