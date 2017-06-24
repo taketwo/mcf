@@ -1,3 +1,15 @@
+global !p
+def insert_import(pkg):
+    # Find first line in the buffer that matches "import xyz" pattern
+    import re
+    r = re.compile('^(from \w+ )?import \w+( as \w+)?$')
+    for i, line in enumerate(snip.buffer):
+        if r.match(line):
+            snip.buffer.append('import argparse', i)
+            print('matched')
+            break
+endglobal
+
 snippet def "Function" !b
 def ${1:function}(`!p
 if snip.indent:
@@ -40,6 +52,7 @@ endsnippet
 #                            Argparse snippets                            #
 ###########################################################################
 
+post_expand "insert_import('argparse')"
 snippet argparse "Argparse" !b
 parser = argparse.ArgumentParser(description='''
 ${1}
