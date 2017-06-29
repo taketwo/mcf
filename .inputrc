@@ -68,7 +68,7 @@ set bind-tty-special-chars off
 # end of the line
 "\C-b": forward-backward-delete-char
 
-# Ctrl-D
+# Ctrl-d
 "\C-d": kill-whole-line
 
 # Ctrl-w
@@ -81,7 +81,7 @@ set bind-tty-special-chars off
 "\C-n": menu-complete
 "\C-h": menu-complete-backward
 
-# Ctrl-e
+# Ctrl-e Ctrl-e
 # Launch vim to edit current command and execute it on exit
 # Hint: exit with :cq to avoid command execution
 "\C-e\C-e": edit-and-execute-command
