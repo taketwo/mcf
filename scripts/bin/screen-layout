@@ -16,11 +16,11 @@ EOF
 function set_layout()
 {
   case $1 in
-    laptop) xrandr --output eDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP1 --off --output DP2-1 --off --output DP2-2 --off --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
-    office-0) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --off --output DP2-2 --off --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
-    office-1) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --off --output DP2-2 --mode 2560x1440 --pos 0x0 --rotate normal --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
-    office-2) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --mode 1680x1050 --pos 2560x0 --rotate normal --output DP2-2 --mode 2560x1440 --pos 0x0 --rotate normal --output DP2-3 --off --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
-    office) xrandr --output eDP1 --off --output DP1 --off --output DP2-1 --mode 1680x1050 --pos 4240x0 --rotate normal --output DP2-2 --mode 2560x1440 --pos 1680x0 --rotate normal --output DP2-3 --mode 1680x1050 --pos 0x0 --rotate normal --output HDMI2 --off --output HDMI1 --off --output DP2 --off;;
+    laptop) xrandr --output $EDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output $DP21 --off --output $DP22 --off --output $DP23 --off;;
+    office-0) xrandr --output $EDP1 --off --output $DP21 --off --output $DP22 --off --output $DP23 --off;;
+    office-1) xrandr --output $EDP1 --off --output $DP21 --off --output $DP22 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP23 --off;;
+    office-2) xrandr --output $EDP1 --off --output $DP21 --mode 1680x1050 --pos 2560x0 --rotate normal --output $DP22 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP23 --off;;
+    office) xrandr --output $EDP1 --off --output $DP21 --mode 1680x1050 --pos 4240x0 --rotate normal --output $DP22 --mode 2560x1440 --pos 1680x0 --rotate normal --output $DP23 --mode 1680x1050 --pos 0x0 --rotate normal;;
   esac
   sleep 7
 }
@@ -35,6 +35,22 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# Monitor naming scheme changes from time to time
+# Sometimes it has dashes (eDP-1), sometimes it does not (eDP1)
+# We detect the current scheme and set monitor names accordingly
+
+if [[ `xrandr | grep eDP1` ]]; then
+  EDP1='eDP1'
+  DP21='DP2-1'
+  DP22='DP2-2'
+  DP23='DP2-3'
+else
+  EDP1='eDP-1'
+  DP21='DP-2-1'
+  DP22='DP-2-2'
+  DP23='DP-2-3'
+fi
 
 if [[ $layout == "laptop" ]]; then
   set_layout "laptop"
