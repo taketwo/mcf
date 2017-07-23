@@ -31,3 +31,6 @@
 [submodule "scripts/bundle/git-rebase-all"]
 	path = scripts/bundle/git-rebase-all
 	url = https://github.com/nornagon/git-rebase-all.git
+[submodule "texmf/tex/latex/colorbrewer"]
+	path = texmf/tex/latex/colorbrewer
+	url = https://github.com/vtraag/tikz-colorbrewer.git
