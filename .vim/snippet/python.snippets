@@ -1,13 +1,20 @@
 global !p
 def insert_import(pkg):
-    # Find first line in the buffer that matches "import xyz" pattern
     import re
-    r = re.compile('^(from \w+ )?import \w+( as \w+)?$')
+    r1 = re.compile('^(from \w+ )?import \w+( as \w+)?$')
+    r2 = re.compile('^# -\*- coding: utf-8 -\*-$')
+    # Scan the buffer to find (a) any existing imports (b) "coding" line
+    # If imports exists, insert before them. If imports do not exist, instert
+    # after the "coding" line. If that does not exist either, instert in the
+    # beginning of the file.
+    location = 0
     for i, line in enumerate(snip.buffer):
-        if r.match(line):
-            snip.buffer.append('import argparse', i)
-            print('matched')
+        if r1.match(line):
+            location = i
             break
+        elif r2.match(line):
+            location = i + 1
+    snip.buffer.append('import {}'.format(pkg), location)
 endglobal
 
 snippet def "Function" !b
