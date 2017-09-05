@@ -85,7 +85,7 @@ def find_nearest(path, target):
         return find_nearest(parent, target)
 
 
-def flags_for_clang_complete(root):
+def flags_from_clang_complete(root):
     try:
         clang_complete_path = find_nearest(root, '.clang_complete')
         clang_complete_flags = open(clang_complete_path, 'r').read().splitlines()
@@ -94,7 +94,7 @@ def flags_for_clang_complete(root):
         return None
 
 
-def flags_for_include(root):
+def flags_from_include_directory(root):
     try:
         include_path = find_nearest(root, 'include')
         flags = []
@@ -107,7 +107,7 @@ def flags_for_include(root):
         return None
 
 
-def flags_for_compilation_database(root, filename):
+def flags_from_compilation_database(root, filename):
     try:
         compilation_db_path = find_nearest(root, 'compile_commands.json')
         compilation_db_dir = os.path.dirname(compilation_db_path)
@@ -127,15 +127,15 @@ def flags_for_compilation_database(root, filename):
 
 def flags_for_file(filename):
     root = os.path.realpath(filename)
-    compilation_db_flags = flags_for_compilation_database(root, filename)
+    compilation_db_flags = flags_from_compilation_database(root, filename)
     if compilation_db_flags:
         final_flags = compilation_db_flags
     else:
         final_flags = BASE_FLAGS
-        clang_flags = flags_for_clang_complete(root)
+        clang_flags = flags_from_clang_complete(root)
         if clang_flags:
             final_flags = final_flags + clang_flags
-        include_flags = flags_for_include(root)
+        include_flags = flags_from_include_directory(root)
         if include_flags:
             final_flags = final_flags + include_flags
     return { 'flags': final_flags, 'do_cache': True }
