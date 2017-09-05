@@ -69,6 +69,24 @@ def get_compilation_info_for_file(dbpath, database, filename):
     return database.GetCompilationInfoForFile(filename)
 
 
+def try_find_ros_compilation_database(filename):
+    try:
+        from catkin_tools.metadata import find_enclosing_workspace
+        from catkin_tools.context import Context
+        import rospkg
+        workspace = find_enclosing_workspace(filename)
+        ctx = Context.load(workspace, {}, {}, load_env=False)
+        package = rospkg.get_package_name(filename)
+        path = os.path.join(ctx.build_space_abs, package)
+        candidate = os.path.join(path, 'compile_commands.json')
+        if os.path.isfile(candidate) or os.path.isdir(candidate):
+            logging.info("Found ROS compilation database for " + filename + " at " + candidate)
+            return candidate
+    except:
+        pass
+    return None
+
+
 def find_nearest(path, target):
     candidate = os.path.join(path, target)
     build_candidate = os.path.join(path, 'build', target)
@@ -109,7 +127,9 @@ def flags_from_include_directory(root):
 
 def flags_from_compilation_database(root, filename):
     try:
-        compilation_db_path = find_nearest(root, 'compile_commands.json')
+        compilation_db_path = try_find_ros_compilation_database(filename)
+        if compilation_db_path is None:
+            compilation_db_path = find_nearest(root, 'compile_commands.json')
         compilation_db_dir = os.path.dirname(compilation_db_path)
         logging.info("Set compilation database directory to " + compilation_db_dir)
         compilation_db = ycm_core.CompilationDatabase(compilation_db_dir)
