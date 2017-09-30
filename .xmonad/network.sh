@@ -3,6 +3,7 @@
 source $MCF/.xmonad/xmobar.bash
 source $MCF/.xmonad/solarized.bash
 source $MCF/scripts/library/version-compare.bash
+source $MCF/bash/555-boleh.bash
 
 nm_connections_old ()
 {
@@ -54,43 +55,13 @@ nm_connections ()
   fi
 }
 
-openvpn_connections_old ()
+boleh_connections ()
 {
-  connections=`service openvpn status | sed -n "s/ \* VPN '\(.*\)' is running/\1/p"`
+  boleh=()
+  connections=$(__boleh_active)
   for c in $connections; do
-    if [[ "$c" =~ "Kebrum" ]] ; then
-      IFS='.' read -a name <<< "$c"
-      kebrum=("${kebrum[@]}" "$name")
-    else
-      openvpn=("${openvpn[@]}" "$c")
-    fi
+    boleh=("${boleh[@]}" "$c")
   done
-}
-
-openvpn_connections_new ()
-{
-  connections=`systemctl status openvpn@* | grep -oP "(?<=OpenVPN connection to )(.*)"`
-  for c in $connections; do
-    if [[ "$c" =~ "Kebrum" ]] ; then
-      IFS='.' read -a name <<< "$c"
-      kebrum=("${kebrum[@]}" "$name")
-    else
-      openvpn=("${openvpn[@]}" "$c")
-    fi
-  done
-}
-
-openvpn_connections ()
-{
-  openvpn=()
-  kebrum=()
-  nmcli_version=`nmcli -v | grep -Po "(?<=version ).*"`
-  version-compare $nmcli_version 0.9.10.1
-  if [[ $? == 2 ]]; then
-    openvpn_connections_old
-  else
-    openvpn_connections_new
-  fi
 }
 
 is_online ()
@@ -104,7 +75,7 @@ is_online ()
 }
 
 nm_connections
-openvpn_connections
+boleh_connections
 is_online
 
 StartIndicator
@@ -123,12 +94,6 @@ for c in $nm ; do
   Add $c
 done
 
-# OpenVPN connections (non Kebrum)
-for c in $openvpn ; do
-  Symbol "shield"
-  Add $c
-done
-
 # Paint blue if online
 if [ $online -eq 1 ] ; then
   Color $SolarizedBase3 $SolarizedBlue
@@ -137,8 +102,8 @@ fi
 FlushIndicator
 StartIndicator
 
-# OpenVPN connections (Kebrum)
-for c in $kebrum ; do
+# Boleh OpenVPN connections
+for c in $boleh ; do
   Symbol "shield"
   Add $c
 done
