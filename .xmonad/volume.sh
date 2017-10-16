@@ -13,11 +13,13 @@ StartIndicator
 if (( $volume == 0 )); then
   Symbol "mute"
   Color $SolarizedBlue
+  Action 1 "amixer -D pulse set Master on"
 else
   Symbol "volume"
   if (( volume < 100 )); then
     Add $volume
   fi
+  Action 1 "amixer -D pulse set Master off"
 fi
 
 FlushIndicator
