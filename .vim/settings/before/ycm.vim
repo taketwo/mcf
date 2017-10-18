@@ -9,7 +9,7 @@ function! BuildYCM(info)
     if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
         let opts = ' --clang-completer'
         if tlib#sys#IsExecutable('npm')
-            let opts = opts.' --tern-completer'
+            let opts = opts.' --js-completer'
         endif
         execute '!./install.py'.opts
     endif
