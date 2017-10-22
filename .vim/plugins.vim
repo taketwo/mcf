@@ -69,9 +69,10 @@ Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'keith/tmux.vim'
 
 " Git related
-Plug 'gregsexton/gitv'
+Plug 'gregsexton/gitv', {'on': ['Gitv']}
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
+Plug 'tpope/vim-rhubarb'
 
 " Text objects
 Plug 'michaeljsmith/vim-indent-object'
