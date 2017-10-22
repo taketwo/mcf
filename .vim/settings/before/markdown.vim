@@ -1,2 +1,2 @@
-" Highlight github-style fenced code blocks for these languages
-let g:markdown_fenced_languages = ['cpp', 'python']
+" Fold in a style like python-mode
+let g:vim_markdown_folding_style_pythonic = 1

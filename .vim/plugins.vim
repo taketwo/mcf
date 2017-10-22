@@ -59,8 +59,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 "   * do not use it that often
 "   * does not work on the Arch box
 " Plugin 'fisadev/vim-isort'
-Plug 'tpope/vim-markdown'
-Plug 'nelstrom/vim-markdown-folding'
+Plug 'plasticboy/vim-markdown'
 Plug 'taketwo/vim-ros'
 Plug 'rhysd/vim-clang-format'
 Plug 'tikhomirov/vim-glsl'
