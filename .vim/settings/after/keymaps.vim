@@ -33,6 +33,11 @@ vnoremap - $
 nnoremap _ ^
 vnoremap _ ^
 
+" Navigate between buffers with N/H
+
+noremap N :bnext<CR>
+noremap H :bprev<CR>
+
 " }}}
 " Push text around {{{
 
@@ -185,7 +190,7 @@ inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
 
 " Close the current buffer with F11
 
-nnoremap <F11> :MBEbw<CR>
+nnoremap <F11> :BW<CR>
 
 " Join line (because J is seized by 'clever-f')
 
@@ -226,14 +231,6 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   noremap <F6> :w<CR>:SyntasticCheck<CR>
   noremap <S-F6> :SyntasticToggleMode<CR>
-
-  " Minibufexplorer
-
-  noremap N :MBEbn<CR>
-  noremap H :MBEbp<CR>
-  for i in range(1,9)
-    exec "noremap <Leader>".i." :b".i."<CR>"
-  endfor
 
   " Gundo
 
