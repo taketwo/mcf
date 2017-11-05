@@ -1,6 +1,0 @@
-# Arch
-arch: tmux
-
-# Ubuntu
-ubuntu: libevent-dev
-ubuntu: libncurses-dev

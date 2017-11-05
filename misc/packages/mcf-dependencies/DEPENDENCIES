@@ -10,7 +10,7 @@ cmake                                  # also YouCompleteMe requires this
 clang
 
 # Terminal
-tmux
+nix: tmux
 pip: tmuxp                             # tmux session management
 
 # Network/Internet
