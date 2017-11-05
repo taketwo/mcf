@@ -67,6 +67,7 @@ class PackageManager(object):
         """
         CMD = {'ubuntu': 'sudo apt-get install --force-yes -y',
                'arch': 'yaourt --noconfirm --needed -Sa',
+               'nix': 'nix-env -i',
                'pip': 'sudo pip install --upgrade',
                'cabal': 'sudo cabal install --global --force-reinstalls'}
         if not manager in CMD.keys():
@@ -95,7 +96,7 @@ class PackageManager(object):
         if verbose:
             self.describe_package(package_name, merged)
         try:
-            for pm in [PLATFORM, 'pip', 'cabal']:
+            for pm in [PLATFORM, 'nix', 'pip', 'cabal']:
                 if pm in merged:
                     print('[*] Install {} packages\n'.format(pm.capitalize()))
                     self._install_with_package_manager(pm, merged[pm])
@@ -121,7 +122,7 @@ class PackageManager(object):
 
     def describe_package(self, package_name, merged):
         print('Package \"{}\" resolved into:\n'.format(package_name))
-        for pm in [PLATFORM, 'pip', 'cabal']:
+        for pm in [PLATFORM, 'nix', 'pip', 'cabal']:
             if pm in merged:
                 print(' - {} packages\n'.format(pm.capitalize()))
                 print('  ', ', '.join(merged[pm]))
