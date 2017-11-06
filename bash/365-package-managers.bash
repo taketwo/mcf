@@ -11,6 +11,11 @@ alias yu='yaourt -Syua'
 alias yi='yaourt -Sa'
 alias yr='yaourt -Rc'
 
+# nix aliases
+alias ni='nix-env -i'
+alias nu='nix-env -u'
+alias nr='nix-env -e'
+
 DISTRO=`cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)'`
 if [[ $DISTRO == "Arch" ]]; then
   alias file-from-package='pkgfile'
