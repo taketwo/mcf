@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# (F)uzzy (I)nteractive (R)ebase
+# Perform interactive rebase onto a commit (inclusive)
+
+commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+git rebase -i $(echo "$commit" | sed "s/ .*/^/")
