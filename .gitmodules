@@ -1,6 +1,6 @@
 [submodule "misc/gnome-terminal-colors-solarized"]
 	path = misc/gnome-terminal-colors-solarized
-	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git
+	url = https://github.com/Anthony25/gnome-terminal-colors-solarized.git
 [submodule "scripts/bundle/powerline-shell"]
 	path = scripts/bundle/powerline-shell
 	url = https://github.com/taketwo/powerline-shell.git
