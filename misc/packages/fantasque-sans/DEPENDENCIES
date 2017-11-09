@@ -1,7 +1,0 @@
-# Arch
-arch: ttf-fantasque-sans
-
-# Ubuntu
-ubuntu: fontforge
-ubuntu: ttfautohint
-ubuntu: woff-tools
