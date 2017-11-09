@@ -13,7 +13,7 @@ alias yr='yaourt -Rc'
 
 # nix aliases
 alias ni='nix-env -i'
-alias nu='nix-env -u'
+alias nu='nix-channel --update && nix-env -u'
 alias nr='nix-env -e'
 
 DISTRO=`cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)'`
