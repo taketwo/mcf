@@ -159,9 +159,6 @@ defaultLayouts = avoidStruts $
     gap = gaps [(U, space), (D, space), (L, space), (R, space)]
 
 myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger })
-myIM = smartBorders $ avoidStruts $ withIM (1 % 5) skype Full
-  where
-    skype = And (ClassName "Skype") (Role "")
 myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
 
 -- Here we combine our default layouts with our specific, workspace-locked
@@ -169,7 +166,6 @@ myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3
 myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
-  onWorkspace "im" (myIM) $
   onWorkspace "rviz" (myRViz) $
   {-$-} defaultLayouts
 
@@ -188,7 +184,7 @@ myTopics =
   , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , TI "zeal"     ""                                         (spawn "zeal")
-  , ti "im"       ""
+  , TI "skype"    ""                                         (spawn "skype")
   , TI "mcf"      ".mcf"                                     (spawnShell)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnShell)
@@ -551,7 +547,6 @@ logHookXmobar handle s = xmobarPP
     "Tabbed Simplest"           -> xmobarIcon "full"
     "Tabbed Bottom Simplest"    -> xmobarIcon "full"
     "code"                      -> xmobarIcon "code"
-    "im"                        -> ""
     _ -> x
     )
   }
@@ -576,7 +571,7 @@ manageWindows = composeAll . concat $
     , [resource  =? i --> doIgnore  | i <- myIgnores]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "im" | x <- myIMShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "skype" | x <- mySkypeShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -588,11 +583,7 @@ manageWindows = composeAll . concat $
     myIgnores = []
     myGimpShifts = ["Gimp"]
     myMendeleyShifts = ["Mendeley Desktop"]
-    myIMShifts = ["Skype"
-                 , "crx_kbpgddbgniojgndnhlkjbkpknjhppkbk" -- Google+ Hangouts application
-                 , "crx_nckgahadagoaajjgafhacjanaoiihapd" -- Google+ Hangouts extension
-                 , "Empathy"
-                 ]
+    mySkypeShifts = ["Skype"]
 
 -- Hint: use `xprop` to figure out window class name
 
