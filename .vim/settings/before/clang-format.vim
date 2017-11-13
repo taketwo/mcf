@@ -1,4 +1,4 @@
-for v in ['3.8', '3.6']
+for v in ['5.0', '4.0', '3.8', '3.6']
     let e = 'clang-format-' . v
     if executable(e)
         let g:clang_format#command = e
