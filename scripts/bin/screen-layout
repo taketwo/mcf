@@ -7,6 +7,9 @@ function show_help() {
   This script configures the screen layout according to predefined rules.
   Supported layouts: laptop, office.
 
+  If layout is not given, then count the number of connected displays and
+  choose between laptop and office accordingly.
+
   Options:
 
     -h        Display this help and exit.
@@ -50,6 +53,21 @@ else
   DP21='DP-2-1'
   DP22='DP-2-2'
   DP23='DP-2-3'
+fi
+
+if [[ $layout == "" ]]; then
+  displays=`xrandr --query | grep -c " connected "`
+  echo -n "Number of connected displays: $displays, "
+  if [[ $displays == 4 ]]; then
+    layout='office'
+    echo "auto selecting layout: $layout"
+  elif [[ $displays == 1 ]]; then
+    layout='laptop'
+    echo "auto selecting layout: $layout"
+  else
+    echo "unable to auto select layout"
+    exit 1
+  fi
 fi
 
 if [[ $layout == "laptop" ]]; then
