@@ -1,0 +1,3 @@
+#!/bin/bash
+
+telegram-cli -W -e "msg Anja 😘" >/dev/null
