@@ -8,6 +8,7 @@ ubuntu: xbacklight
 # Development
 cmake                                  # also YouCompleteMe requires this
 clang
+nix: ninja
 
 # Terminal
 nix: tmux
