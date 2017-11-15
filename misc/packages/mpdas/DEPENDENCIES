@@ -1,9 +1,1 @@
-# Common
-curl
-
-# Arch
-arch: libmpdclient
-
-# Ubuntu
-ubuntu: libmpdclient-dev
-ubuntu: libcurl4-openssl-dev
+nix: mpdas
