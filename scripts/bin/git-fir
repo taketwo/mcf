@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# (F)uzzy (I)nteractive (R)ebase
+# Perform interactive rebase onto a commit
+#   Enter   → exclusive
+#   Ctrl-i  → inclusive
+
+commits=$(git log --color=always --pretty=oneline --abbrev-commit --reverse) &&
+out=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse --expect=ctrl-i) &&
+key=$(echo "$out" | head -1) &&
+commit=$(echo "$out" | head -2 | tail -1) &&
+if [ "$key" = ctrl-i ]; then pattern="^"; fi &&
+git rebase -i $(echo "$commit" | sed "s/ .*/$pattern/")
