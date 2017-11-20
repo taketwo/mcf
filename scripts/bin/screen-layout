@@ -19,11 +19,11 @@ EOF
 function set_layout()
 {
   case $1 in
-    laptop) xrandr --output $EDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output $DP21 --off --output $DP22 --off --output $DP23 --off;;
-    office-0) xrandr --output $EDP1 --off --output $DP21 --off --output $DP22 --off --output $DP23 --off;;
-    office-1) xrandr --output $EDP1 --off --output $DP21 --off --output $DP22 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP23 --off;;
-    office-2) xrandr --output $EDP1 --off --output $DP21 --mode 1680x1050 --pos 2560x0 --rotate normal --output $DP22 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP23 --off;;
-    office) xrandr --output $EDP1 --off --output $DP21 --mode 1680x1050 --pos 4240x0 --rotate normal --output $DP22 --mode 2560x1440 --pos 1680x0 --rotate normal --output $DP23 --mode 1680x1050 --pos 0x0 --rotate normal;;
+    laptop) xrandr --output $EDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output $DP1 --off --output $DP2 --off --output $DP3 --off;;
+    office-0) xrandr --output $EDP1 --off --output $DP1 --off --output $DP2 --off --output $DP3 --off;;
+    office-1) xrandr --output $EDP1 --off --output $DP1 --off --output $DP2 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP3 --off;;
+    office-2) xrandr --output $EDP1 --off --output $DP1 --mode 1680x1050 --pos 2560x0 --rotate normal --output $DP2 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP3 --off;;
+    office) xrandr --output $EDP1 --off --output $DP1 --mode 1680x1050 --pos 4240x0 --rotate normal --output $DP2 --mode 2560x1440 --pos 1680x0 --rotate normal --output $DP3 --mode 1680x1050 --pos 0x0 --rotate normal;;
   esac
   sleep 7
 }
@@ -43,16 +43,21 @@ done
 # Sometimes it has dashes (eDP-1), sometimes it does not (eDP1)
 # We detect the current scheme and set monitor names accordingly
 
-if [[ `xrandr | grep eDP1` ]]; then
-  EDP1='eDP1'
-  DP21='DP2-1'
-  DP22='DP2-2'
-  DP23='DP2-3'
-else
+if [[ `xrandr | grep eDP-1-1` ]]; then
+  EDP1='eDP-1-1'
+  DP1='DP-1-2-1'
+  DP2='DP-1-2-2'
+  DP3='DP-1-2-3'
+elif [[ `xrandr | grep eDP1-1` ]]; then
   EDP1='eDP-1'
-  DP21='DP-2-1'
-  DP22='DP-2-2'
-  DP23='DP-2-3'
+  DP1='DP-2-1'
+  DP2='DP-2-2'
+  DP3='DP-2-3'
+else
+  EDP1='eDP1'
+  DP1='DP2-1'
+  DP2='DP2-2'
+  DP3='DP2-3'
 fi
 
 if [[ $layout == "" ]]; then
