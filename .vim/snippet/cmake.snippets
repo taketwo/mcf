@@ -19,10 +19,11 @@ snippet $ "CMake variable" i
 endsnippet
 
 snippet color "Color diagnostics" b
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	add_definitions(-fcolor-diagnostics)
-else()
-	add_definitions(-fdiagnostics-color)
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.5)
+	# Color diagnostics output was added in GCC 4.9.0 (and GCC 4.8.5 was the last release in the 4.8 series).
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
 endif()
 endsnippet
 
