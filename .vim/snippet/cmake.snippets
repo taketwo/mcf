@@ -1,11 +1,17 @@
 global !p
 def get_mode(c):
-    print("::: >> ", c)
     if c:
         for l in ["WARNING", "AUTHOR_WARNING", "SEND_ERROR", "FATAL_ERROR", "DEPRECATION"]:
             if l.lower().startswith(c.lower()):
                 return l
     return "STATUS"
+
+def complete(t, options):
+    if t:
+        options = [m[len(t):] for m in options if m.startswith(t)]
+    if len(options) == 1:
+        return options[0]
+    return '[' + '|'.join(options) + ']'
 endglobal
 
 snippet "mes(\w?)" "Message" br
@@ -18,6 +24,10 @@ snippet $ "CMake variable" i
 \$\{${1:VARIABLE}\}$0
 endsnippet
 
+snippet path "Path component extraction" b
+get_filename_component(${1:variable} ${2:filename} $3`!p snip.rv = complete(t[3], ['DIRECTORY', 'NAME', 'EXT', 'NAME_WE', 'ABSOLUTE', 'REALPATH', 'PROGRAM'])`)$0
+endsnippet
+
 snippet color "Color diagnostics" b
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
@@ -28,7 +38,6 @@ endif()
 endsnippet
 
 snippet cmake "CMake template" b
-
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project(${1:name})
@@ -39,7 +48,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 option(BUILD_TESTS "Build tests." OFF)
 
-add_definitions(-fcolor-diagnostics)
 add_definitions(-Wall)
 
 include_directories(
@@ -52,17 +60,8 @@ if(BUILD_TESTS)
 endif()
 endsnippet
 
-snippet sec "Section comment" !b
-`!p
-padding = 78 - len(t[1]) - 8
-snip.rv = '#...: '
-`${1:Section}`!p
-snip.rv = ' :' + padding * '.'`
-$0
-endsnippet
-
 snippet werror "Warnings and errors" !b
-#...: treat warnings as errors and disable centain warnings
+# Treat warnings as errors and disable certain warnings
 add_definitions(-Werror)
 add_definitions(-Wno-error=unused-variable)
 add_definitions(-Wno-error=unknown-pragmas)
@@ -71,7 +70,7 @@ add_definitions(-Wno-deprecated)
 endsnippet
 
 snippet wall "Warnings as errors" !b
-#...: enable all but certain warnings
+# Enable all but certain warnings
 add_definitions(-Wall)
 add_definitions(-Wno-unknown-pragmas)
 add_definitions(-Wno-deprecated)
