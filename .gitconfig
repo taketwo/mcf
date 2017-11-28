@@ -19,6 +19,8 @@
   branches = branch -v
   tags = tag -l
   start = "!git init && git commit --allow-empty -m 'Initial commit'"
+  reword = commit --amend
+  amend = commit --amend --no-edit
 [core]
   editor = vim
 [push]
