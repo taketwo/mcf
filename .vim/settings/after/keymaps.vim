@@ -126,9 +126,13 @@ noremap <C-w><C-t> <C-w>j
 " Resize windows with Alt+arrow
 
 nnoremap <Up> <C-w>+
+nnoremap [1;3A <C-w>+
 nnoremap <Down> <C-w>-
+nnoremap [1;3B <C-w>-
 nnoremap <Right> <C-w>>
+nnoremap [1;3C <C-w>>
 nnoremap <Left> <C-w><
+nnoremap [1;3D <C-w><
 
 " }}}
 " Search {{{
