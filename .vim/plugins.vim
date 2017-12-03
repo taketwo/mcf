@@ -37,7 +37,7 @@ Plug 'dantler/vim-alternate'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-dispatch'
-Plug 'rking/ag.vim'
+Plug 'mileszs/ack.vim'
 Plug 'Peeja/vim-cdo'
 Plug 'terryma/vim-expand-region'
 Plug 'tpope/vim-abolish'
@@ -59,6 +59,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 "   * do not use it that often
 "   * does not work on the Arch box
 " Plugin 'fisadev/vim-isort'
+
 Plug 'plasticboy/vim-markdown'
 Plug 'taketwo/vim-ros'
 Plug 'rhysd/vim-clang-format'

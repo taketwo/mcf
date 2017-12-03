@@ -46,7 +46,7 @@ xdotool                                # paste with F5
 # Util
 unrar
 tree
-ag
+nix: ripgrep
 ubuntu: apt-file
 arch: xorg-xprop
 
