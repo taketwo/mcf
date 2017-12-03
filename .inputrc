@@ -109,3 +109,5 @@ set bind-tty-special-chars off
 # Shift-Tab
 # Trigger fzf completion
 "\e[Z": "\C-e**\t"
+
+"\C-v": "fv\C-m"

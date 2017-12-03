@@ -33,3 +33,11 @@ fkill()
     echo $pid | xargs kill -${1:-9}
   fi
 }
+
+# fv - fuzzy vim (with preview)
+fv()
+{
+  local files
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'head -100 {}'))
+  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+}
