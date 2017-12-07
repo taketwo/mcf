@@ -196,7 +196,7 @@ inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
 
 nnoremap <F11> :BW<CR>
 
-" Join line (because J is seized by 'clever-f')
+" Join line (because J is used by 'vim-sneak')
 
 nnoremap <C-J> J
 
