@@ -61,18 +61,25 @@ else
 fi
 
 if [[ $layout == "" ]]; then
-  displays=`xrandr --query | grep -c " connected "`
-  echo -n "Number of connected displays: $displays, "
-  if [[ $displays == 4 ]]; then
-    layout='office'
-    echo "auto selecting layout: $layout"
-  elif [[ $displays == 1 ]]; then
+  connected=`xrandr --query | grep -c " connected "`
+  active=`xrandr --query | grep -c "*"`
+  echo -n "Number of connected/active displays: $connected/$active, "
+  if [[ $connected == 4 ]]; then
+    if [[ $active == 1 ]]; then
+      layout='office'
+    elif [[ $active == 3 ]]; then
+      layout='laptop'
+    else
+      echo "unable to auto select layout"
+      exit 1
+    fi
+  elif [[ $connected == 1 ]]; then
     layout='laptop'
-    echo "auto selecting layout: $layout"
   else
     echo "unable to auto select layout"
     exit 1
   fi
+  echo "auto selecting layout: $layout"
 fi
 
 if [[ $layout == "laptop" ]]; then
