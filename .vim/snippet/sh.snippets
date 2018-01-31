@@ -17,7 +17,7 @@ fi
 endsnippet
 
 snippet ifns "check if variable is not set" b
-if [[ -z \$${1:var} ]]; then
+if [[ -z \$\{${1:var}+x\} ]]; then
 	$0
 fi
 endsnippet
