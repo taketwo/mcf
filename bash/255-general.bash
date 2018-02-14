@@ -28,7 +28,7 @@ pathprepend "$MCF/scripts/bin"
 #############################################################################
 
 export EDITOR=vim
-export BROWSER=chromium-browser
+export BROWSER=browser
 export PAGER=less
 
 # Enable color support of ls and grep
