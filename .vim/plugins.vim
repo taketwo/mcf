@@ -67,6 +67,7 @@ Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'keith/tmux.vim'
+Plug 'benmills/vimux'
 Plug 'LnL7/vim-nix'
 
 " Git related

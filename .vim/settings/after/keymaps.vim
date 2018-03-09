@@ -200,6 +200,11 @@ nnoremap <F11> :BW<CR>
 
 nnoremap <C-J> J
 
+" Run last Vimux command with F8
+
+nnoremap <F8> :VimuxRunLastCommand<CR>
+inoremap <F8> <C-o>:VimuxRunLastCommand<CR>
+
 " Run make with F9
 
 nnoremap <F9> :MakeTarget<CR>
