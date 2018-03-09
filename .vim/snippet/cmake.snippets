@@ -127,3 +127,8 @@ endsnippet
 snippet tdef "Target compile definitions" b
 target_compile_definitions(${1:target} ${2:PUBLIC} ${3:definitions})
 endsnippet
+
+snippet topt "Target compile options" b
+target_compile_options(${1:target} ${2:PUBLIC} ${3:"-opt1;-opt2"})
+endsnippet
+
