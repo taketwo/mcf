@@ -251,6 +251,8 @@ class SSHManager(object):
                 if host_lines:
                     yield Host(host_lines)
                     host_lines = list()
+        if host_lines:
+            yield Host(host_lines)
 
     def _load_remote_hosts(self):
         directory = os.path.expanduser('~/.mcf/ssh')
