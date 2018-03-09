@@ -184,7 +184,6 @@ myTopics =
   , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , TI "zeal"     ""                                         (spawn "zeal")
-  , TI "skype"    ""                                         (spawn "skype")
   , TI "mcf"      ".mcf"                                     (spawnShell)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnShell)
@@ -576,7 +575,6 @@ manageWindows = composeAll . concat $
     , [resource  =? i --> doIgnore  | i <- myIgnores]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "skype" | x <- mySkypeShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -588,7 +586,6 @@ manageWindows = composeAll . concat $
     myIgnores = []
     myGimpShifts = ["Gimp"]
     myMendeleyShifts = ["Mendeley Desktop"]
-    mySkypeShifts = ["Skype"]
 
 -- Hint: use `xprop` to figure out window class name
 
