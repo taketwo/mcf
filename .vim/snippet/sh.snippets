@@ -39,3 +39,15 @@ if [[ -f ${1:path} ]]; then
 	$0
 fi
 endsnippet
+
+snippet filename "extract filename from a full path" b
+filename=$(basename "\$${1:path}")
+endsnippet
+
+snippet "ext(ension)?" "extract extension from a filename" br
+extension="\${${1:filename}##*.}"
+endsnippet
+
+snippet stem "extract stem from a filename" b
+stem="\${${1:filename}%.*}"
+endsnippet
