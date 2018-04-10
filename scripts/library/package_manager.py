@@ -68,7 +68,7 @@ class PackageManager(object):
         CMD = {'ubuntu': 'sudo apt-get install --force-yes -y',
                'arch': 'yaourt --noconfirm --needed -Sa',
                'nix': 'nix-env -i',
-               'pip': 'sudo pip install --upgrade',
+               'pip': 'sudo -H pip install --upgrade',
                'cabal': 'sudo cabal install --global --force-reinstalls'}
         if not manager in CMD.keys():
             raise Exception('Unsupported manager')
