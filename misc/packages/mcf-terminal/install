@@ -1,19 +1,28 @@
 #!/bin/bash
 
-# Install solarized palette using the script from the
-# 'gnome-terminal-colors-solarized' submodule
-# Note that before we explicitly set profile name to be modified to "Default", because it seemed to
-# be the name of the default profile in Gnome Terminal. However, I've encountered an Ubuntu with
-# "Unnamed" profile as the default. Thus not specify anything and fall back to interactive mode.
-bash $HOME/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s dark
+GTCS="$HOME/.mcf/misc/gnome-terminal-colors-solarized"
+
+# Ask user to select a profile that is to be modified
+source $GTCS/src/tools.sh
+source $GTCS/src/profiles.sh
+check_empty_profile
+interactive_select_profile "${profiles[@]}"
+
+# Install solarized palette for the selected profile
+bash $GTCS/install.sh -s dark -p $profile --skip-dircolors
+
+# Prefare path for further configuration with dconf
+profile=:$profile
+dconfdir=/org/gnome/terminal/legacy/profiles:
+profile_path=$dconfdir/$profile
 
 # Set custom font
-gconftool-2 --set "/apps/gnome-terminal/profiles/Default/use_system_font" --type boolean "false"
-gconftool-2 --set "/apps/gnome-terminal/profiles/Default/font" --type string "FantasqueSansMono 11"
+dconf write $profile_path/use-system-font "false"
+dconf write $profile_path/font "'Fantasque Sans Mono 12'"
 
 # Set 1024 lines (just in case) and unlimited scrolling
-gconftool-2 --set "/apps/gnome-terminal/profiles/Default/scrollback_lines" --type integer "1024"
-gconftool-2 --set "/apps/gnome-terminal/profiles/Default/scrollback_unlimited" --type bool "true"
+dconf write $profile_path/scrollback-lines "1024"
+dconf write $profile_path/scrollback-unlimited "true"
 
 # Configure bash prompt (powerline-shell)
 cd $HOME/.mcf/scripts/bundle/powerline-shell
