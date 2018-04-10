@@ -14,8 +14,8 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias osb='mkd build && ccmake ..'
 
 # quick background color switch
-alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s dark -p Default'
-alias light='~/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s light -p Default'
+alias dark='~/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s dark -p Default --skip-dircolors'
+alias light='~/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s light -p Default --skip-dircolors'
 
 # copy and paste to clipboard
 alias cbc='xsel --clipboard --input'
