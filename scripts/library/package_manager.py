@@ -6,9 +6,10 @@ from collections import defaultdict
 import subprocess
 
 import stow
+import mcf
 
 
-PACKAGES = '/home/sergey/.mcf/misc/packages'
+PACKAGES = mcf.path('misc', 'packages')
 PLATFORM = linux_distribution()[0].lower()
 
 
