@@ -2,7 +2,10 @@
 
 # Install solarized palette using the script from the
 # 'gnome-terminal-colors-solarized' submodule
-bash $HOME/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s dark -p Default
+# Note that before we explicitly set profile name to be modified to "Default", because it seemed to
+# be the name of the default profile in Gnome Terminal. However, I've encountered an Ubuntu with
+# "Unnamed" profile as the default. Thus not specify anything and fall back to interactive mode.
+bash $HOME/.mcf/misc/gnome-terminal-colors-solarized/install.sh -s dark
 
 # Set custom font
 gconftool-2 --set "/apps/gnome-terminal/profiles/Default/use_system_font" --type boolean "false"
