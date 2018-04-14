@@ -4,18 +4,27 @@
 import os
 import argparse
 from os.path import join, expanduser, lexists
+from subprocess import call
+import mcf
 
 
 def install():
     print('Creating symlinks...')
     for f, d in _FILES:
         _link(f, d)
+    print('Generating user environment setup (.pam_environment)...')
+    dest = join(mcf.HOME, '.pam_environment')
+    if lexists(dest):
+        os.unlink(dest)
+    with open(dest, 'w') as f:
+        cmd = "sed s|@MCF@|{}| {}".format(mcf.MCF, mcf.path('.pam_environment'))
+        call(cmd.split(' '), stdout=f)
 
 
 def _link(paths, desc):
     home = expanduser('~')
     paths = paths if isinstance(paths, tuple) else (paths, paths)
-    src = join(home, '.mcf', paths[0])
+    src = mcf.path(paths[0])
     dest = join(home, paths[1])
     if lexists(dest):
         os.unlink(dest)
@@ -31,7 +40,6 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
           ('.bashrc', 'Bash configuration file'),
           ('.profile', 'Profile for login shells'),
           ('.inputrc', 'Readline configuration file'),
-          ('.pam_environment', 'User environment setup'),
           ('.mime.types', 'Custom MIME types'),
           ('.mailcap', 'Custom MIME type-to-program mappings'),
           ('.xinitrc', 'X client script'),
