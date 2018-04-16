@@ -1,8 +1,8 @@
 # Common
 cabal-install
 ghc
-cabal: http://code.haskell.org/xmonad/xmonad.tar.gz
-cabal: http://code.haskell.org/XMonadContrib/xmc.tar.gz
+cabal: xmonad
+cabal: xmonad-contrib
 
 # For clickable workspace names
 cabal: split
