@@ -4,6 +4,7 @@
 import os
 import argparse
 from os.path import join, expanduser, lexists
+import mcf
 
 
 def install():
@@ -16,7 +17,7 @@ def _link(paths, desc):
     home = expanduser('~')
     paths = paths if isinstance(paths, tuple) else (paths, paths)
     basename = os.path.basename(paths[0])
-    src = join(home, '.mcf/.xmonad', paths[0])
+    src = mcf.path('.xmonad', paths[0])
     dest = os.path.join(paths[1], basename) if basename else paths[1]
     if lexists(dest):
         os.unlink(dest)
@@ -26,7 +27,7 @@ def _link(paths, desc):
 
 
 _FILES = [(('',
-            '/home/sergey/.xmonad'),
+            mcf.XMONAD),
            'Xmonad settings folder'),
           (('images/custom_xmonad_badge.png',
             '/usr/share/unity-greeter'),
