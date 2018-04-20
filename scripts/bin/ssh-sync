@@ -244,13 +244,16 @@ class SSHManager(object):
 
     def _load_local_hosts(self):
         host_lines = list()
-        for line in open(self._get_config_filename(), 'r'):
-            if not line == '\n':
-                host_lines.append(line)
-            else:
-                if host_lines:
-                    yield Host(host_lines)
-                    host_lines = list()
+        try:
+            for line in open(self._get_config_filename(), 'r'):
+                if not line == '\n':
+                    host_lines.append(line)
+                else:
+                    if host_lines:
+                        yield Host(host_lines)
+                        host_lines = list()
+        except IOError:
+            pass
         if host_lines:
             yield Host(host_lines)
 
