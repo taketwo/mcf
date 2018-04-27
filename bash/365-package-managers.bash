@@ -15,6 +15,8 @@ alias yr='yaourt -Rc'
 alias ni='nix-env -i'
 alias nu='nix-channel --update && nix-env -u'
 alias nr='nix-env -e'
+alias ngc='nix-collect-garbage -d'
+alias nix-list-installed='nix-env -qs'
 
 DISTRO=`cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)'`
 if [[ $DISTRO == "Arch" ]]; then
