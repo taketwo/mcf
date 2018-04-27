@@ -31,5 +31,5 @@ ffmpeg            \
   -i "$IFILE"     \
   -t "$DURATION"  \
   -vcodec copy    \
-  "$audio"        \
+  $audio          \
   "$OFILE"
