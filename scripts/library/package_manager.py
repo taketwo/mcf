@@ -25,7 +25,7 @@ class PackageManager(object):
         """
         directory = join(PACKAGES, package_name)
         if not isdir(directory):
-            return [(PLATFORM, package_name)]
+            return {PLATFORM: [package_name]}
         else:
             commands = list()
             deps = join(directory, 'DEPENDENCIES')
@@ -39,13 +39,16 @@ class PackageManager(object):
                             commands += self.resolve(package)
                         else:
                             commands.append((PLATFORM, package))
+            nix_expression = join(directory, 'default.nix')
+            if os.path.isfile(nix_expression):
+                commands.append(('nix', '-f {}'.format(directory)))
             install_script = join(directory, 'install')
             if os.path.isfile(install_script):
                 commands.append(('script', install_script))
             setup_script = join(directory, 'setup')
             if os.path.isfile(setup_script):
                 commands.append(('setup', setup_script))
-            return commands
+            return self._merge(commands)
 
     def _remove_comments(self, line):
         p = line.find("#")
@@ -92,8 +95,7 @@ class PackageManager(object):
             stow.adopt_as('pip')
 
     def install(self, package_name, verbose=False, force_reinstall=False):
-        commands = self.resolve(package_name)
-        merged = self._merge(commands)
+        merged = self.resolve(package_name)
         if verbose:
             self.describe_package(package_name, merged)
         try:
@@ -126,7 +128,7 @@ class PackageManager(object):
         for pm in [PLATFORM, 'nix', 'pip', 'cabal']:
             if pm in merged:
                 print(' - {} packages\n'.format(pm.capitalize()))
-                print('  ', ', '.join(merged[pm]))
+                print('  ' + ', '.join(merged[pm]))
                 print('')
         if 'script' in merged:
             print(' - Custom install scripts\n')
