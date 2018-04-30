@@ -48,11 +48,15 @@ $0
 endsnippet
 
 snippet comp "(List) comprehension" !i
-${4:item} for ${1:item} in ${2:items}${3/.+/ if /}${3:condition}${3/.+//}$0
+${4:item} for ${2:item} in ${1:items}${3/.+/ if /}${3:condition}${3/.+//}$0
 endsnippet
 
 snippet p "Print" b
 print($0)
+endsnippet
+
+snippet super "Initialize base class" b
+super().__init__($1)$0
 endsnippet
 
 ###########################################################################
