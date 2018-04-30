@@ -515,13 +515,16 @@ main = do
 xdoMod :: String -> String
 xdoMod key = "/usr/bin/xdotool key super+" ++ key
 
-addPluses :: String -> String
-addPluses = init . go
+xdoModCtrl :: String -> String
+xdoModCtrl key = "/usr/bin/xdotool key super+ctrl+" ++ key
+
+addSpaces :: String -> String
+addSpaces = init . go
   where go [] = []
-        go xs = let (as, bs) = splitAt 1 xs in as ++ ('+' : go bs)
+        go xs = let (as, bs) = splitAt 1 xs in as ++ (' ' : go bs)
 
 xdoGotoWorkspace :: String -> String
-xdoGotoWorkspace ws = xdoMod "w" ++ " " ++ addPluses ws
+xdoGotoWorkspace ws = xdoModCtrl "w" ++ " " ++ addSpaces ws ++ " KP_Enter"
 
 clickable :: String -> String
 clickable ws = xmobarAction (xdoGotoWorkspace ws) 1 ws
