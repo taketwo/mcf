@@ -284,9 +284,10 @@ table =
   , k "/"            promptWebSearch         selectWebSearch         __                      __
   , k "0"            gotoPrevWorkspace       __                      __                      __
   , k "<F5>"         __                      restartXMonad           __                      __
-  , k "<F10>"        __                      logout                  __                      __
-  , k "<F11>"        __                      reboot                  __                      __
-  , k "<F12>"        __                      powerOff                __                      __
+  , k "<F9>"         __                      __                      __                      lockScreen
+  , k "<F10>"        __                      __                      __                      logout
+  , k "<F11>"        __                      __                      __                      reboot
+  , k "<F12>"        __                      __                      __                      shutdown
   , [bind "M1-" "<Tab>" gotoNextWindow]
   -- Multimedia keys
   , [bind "" "<XF86AudioMute>"         audioMute]
@@ -364,9 +365,10 @@ table =
     restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> unspawn "gmaild" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"        (onNextNeighbour W.view)
     jumpToPrevScreen        = Unbound "Jump to previous physical screen"    (onPrevNeighbour W.view)
-    powerOff                = Unbound "Power off the system"                (spawn "gnome-session-quit --power-off")
-    reboot                  = Unbound "Reboot the system"                   (spawn "gnome-session-quit --reboot")
-    logout                  = Unbound "Logout"                              (spawn "session-logout")
+    lockScreen              = Unbound "Lock screen"                         (spawn "session lock")
+    logout                  = Unbound "Logout"                              (spawn "session logout")
+    reboot                  = Unbound "Reboot the system"                   (spawn "session reboot")
+    shutdown                = Unbound "Power off the system"                (spawn "session shutdown")
     promptZealSearch        = Unbound "Prompt Zeal search"                  (myPromptZealSearch)
     promptWebSearch         = Unbound "Prompt web search"                   (submap . mySearchMap $ myPromptWebSearch)
     selectWebSearch         = Unbound "X selection web search"              (submap . mySearchMap $ mySelectWebSearch)
