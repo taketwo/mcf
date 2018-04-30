@@ -1,9 +1,0 @@
-#!/bin/sh
-
-if hash cinnamon-session-quit 2>/dev/null; then
-  cinnamon-session-quit --logout --no-prompt
-fi
-
-if hash gnome-session-quit 2>/dev/null; then
-  gnome-session-quit --logout
-fi

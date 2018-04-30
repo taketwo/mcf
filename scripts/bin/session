@@ -1,0 +1,10 @@
+#!/bin/sh
+
+eval $(xargs -n 1 -0 < /proc/`pgrep gnome-session`/environ | grep DBUS)
+
+case $1 in
+  lock) gnome-screensaver-command -l;;
+  logout) gnome-session-quit --logout;;
+  reboot) systemctl reboot;;
+  shutdown) gnome-session-quit --power-off;;
+esac
