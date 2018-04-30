@@ -191,7 +191,6 @@ myTopics =
   , TI "dslam"    "~/Workspace/Projects/dslam"               (spawnShell)
   , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
-  , TI "xmonad"   ".xmonad"                                  (appEdit "/home/sergey/.mcf/.xmonad/xmonad.hs")
   , ti "gimp"     ""
   ]
   where
