@@ -2,7 +2,7 @@ Config
   { font             = "xft:Fantasque Sans Mono:size=9:bold:antialias=true,icons:size=12,xft:Liberation Mono:size=8:antialias=true"
   , bgColor          = "#3c3b37"
   , fgColor          = "#646464"
-  , position         = BottomP 10 10
+  , position         = BottomP 0 0
   , border           = FullBM 1
   , borderColor      = "#cb4b16"
   , borderWidth      = 1
