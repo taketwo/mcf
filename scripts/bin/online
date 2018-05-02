@@ -1,4 +1,6 @@
-# figure out whether we are online or not
+#!/usr/bin/env bash
+
+# Check whether we are online or not
 online ()
 {
   ping -c1 8.8.8.8 >/dev/null

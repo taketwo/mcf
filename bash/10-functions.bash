@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# Filename:      010-function-functions.bash
-# Description:   Utility functions for handling bash functions.
-
-# Stolen from "https://github.com/jdevera/dotfiles"
+# Utility functions for handling bash functions
+# Based on: https://github.com/jdevera/dotfiles
 
 # Check if a function given by name is defined in the current shell instance
-function_exists()
+function function_exists()
 {
    local a_function_name="$1"
 
@@ -30,7 +28,7 @@ function find_function()
    ( shopt -s extdebug; declare -F $1 )
 }
 
-# Show a pretty printed of shell functions, sorted by file and line
+# Show a pretty printed list of shell functions, sorted by file and line
 function list_functions()
 {
    # Get the functions with the origin files and lines
