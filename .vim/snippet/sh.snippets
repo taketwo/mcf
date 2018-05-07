@@ -40,6 +40,12 @@ if [[ -f ${1:path} ]]; then
 fi
 endsnippet
 
+snippet ifm "check if path is a mounting point" b
+if mountpoint -q ${1:path}; then
+	$0
+fi
+endsnippet
+
 snippet filename "extract filename from a full path" b
 filename=$(basename "\$${1:path}")
 endsnippet
