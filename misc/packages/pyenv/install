@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import os
+import sys
+import argparse
+import subprocess
+
+from filesystem import remove
+
+
+def make_pyenv_path():
+    return os.path.join(os.path.expanduser('~'), '.pyenv')
+
+
+def is_installed():
+    return os.path.isdir(make_pyenv_path())
+
+
+def install():
+    p = make_pyenv_path()
+    if os.path.isdir(p):
+        print('.pyenv folder already exists, removing first')
+        remove(p)
+    else:
+        print('cloning the repository')
+        cmd = 'git clone https://github.com/pyenv/pyenv.git ' + p
+        subprocess.check_call(cmd.split())
+        os.chdir(p)
+        cmd = 'git describe --abbrev=0 --tags'
+        ver = subprocess.check_output(cmd.split()).strip()
+        ver = ver.decode(sys.stdout.encoding)
+        print('latest released version: {}'.format(ver))
+        cmd = 'git checkout ' + ver
+        subprocess.check_call(cmd.split())
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Install Pyenv from Git repository.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--reinstall', action='store_true',
+                        help='reinstall if already installed')
+    args = parser.parse_args()
+    if not args.reinstall and is_installed():
+        print('Pyenv is already installed. '
+              'Pass --reinstall to force reinstallation.')
+    else:
+        install()
