@@ -29,4 +29,9 @@ let b:surround_101 = "enumerate(\r)"
 
 " Append colon to the end of line
 nnoremap <silent> <LocalLeader>: :call AppendColon()<CR>
-inoremap <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
+nnoremap <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
+
+" YCM mappings
+nnoremap <buffer> gd :YcmCompleter GoTo<CR>
+nnoremap <buffer> gr :YcmCompleter GoToReferences<CR>
+nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
