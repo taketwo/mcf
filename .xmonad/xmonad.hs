@@ -105,7 +105,6 @@ import qualified Codec.Binary.UTF8.String as UTF8
 import Solarized
 import MCF.Apps
 import MCF.Paths
-import MCF.Xmobar
 import MCF.Polybar
 
 unspawn :: String -> X ()
@@ -480,10 +479,8 @@ viewWeb = windows (W.view "web")
 
 main :: IO ()
 main = do
-  dbus <- D.connectSession
-  -- Request access to the DBus name
-  D.requestName dbus (D.busName_ "org.xmonad.Log")
-    [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+  dbus             <- D.connectSession
+  D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
   screenCount      <- countScreens
   display          <- openDisplay $ unsafePerformIO $ getEnv "DISPLAY"
   let screen        = defaultScreenOfDisplay display
@@ -528,10 +525,7 @@ xdoGotoWorkspace :: String -> String
 xdoGotoWorkspace ws = xdoModCtrl "w" ++ " " ++ addSpaces ws ++ " KP_Enter"
 
 clickable :: String -> String
-clickable ws = xmobarAction (xdoGotoWorkspace ws) 1 ws
-
-clickablePolybar :: String -> String
-clickablePolybar ws = polybarAction (xdoGotoWorkspace ws) 1 ws
+clickable ws = polybarAction (xdoGotoWorkspace ws) 1 ws
 
 polybarConfig = "polybar -c " ++ pathPolybar ++ " -r primary"
 
@@ -539,36 +533,10 @@ myWorkspaceSorter = do
   srt <- fmap (namedScratchpadFilterOutWorkspace.) getSortByXineramaPhysicalRule
   return srt
 
-logHookXmobar handle s = xmobarPP
-  { ppOutput           = hPutStrLn handle
-  , ppSort             = myWorkspaceSorter
-  , ppOrder            = \(ws:l:t:x) -> [ws, l, t] ++ x
-  , ppSep              = "   "
-  , ppWsSep            = " "
-  , ppCurrent          = xmobarColor colorFgLight solarizedOrange . wrap " " " "
-  , ppUrgent           = xmobarColor colorFgLight solarizedViolet . wrap " " " " . clickable
-  , ppVisible          = xmobarColor colorFgLight "" . wrap " " " " . clickable
-  , ppHidden           = clickable
-  , ppHiddenNoWindows  = const ""
-  , ppTitle            = (" " ++) . xmobarColor colorFgLight "" . shorten topBarTitleLength
-  , ppLayout           = xmobarAction (xdoMod "Tab") 1 .
-    (\x -> case x of
-    "MouseResizableTile"        -> xmobarIcon "tall"
-    "Mirror MouseResizableTile" -> xmobarIcon "mtall"
-    "Spacing 10 Grid"           -> xmobarIcon "grid"
-    "Tabbed Simplest"           -> xmobarIcon "full"
-    "Tabbed Bottom Simplest"    -> xmobarIcon "full"
-    "code"                      -> xmobarIcon "code"
-    _ -> x
-    )
-  }
-
 -- Emit a DBus signal on log updates
 dbusOutput :: D.Client -> String -> IO ()
 dbusOutput dbus str = do
-    let signal = (D.signal objectPath interfaceName memberName) {
-            D.signalBody = [D.toVariant $ UTF8.decodeString str]
-        }
+    let signal = (D.signal objectPath interfaceName memberName) { D.signalBody = [D.toVariant $ UTF8.decodeString str] }
     D.emit dbus signal
   where
     objectPath = D.objectPath_ "/org/xmonad/Log"
@@ -582,9 +550,9 @@ logHookPolybar dbus = def
   , ppSep              = "   "
   , ppWsSep            = " "
   , ppCurrent          = polybarColor "#ffffff" solarizedCyan . wrap " " " "
-  , ppUrgent           = polybarColor colorFgLight solarizedViolet . wrap " " " " . clickablePolybar
-  , ppVisible          = polybarColor colorFgLight "" . wrap " " " " . clickablePolybar
-  , ppHidden           = clickablePolybar
+  , ppUrgent           = polybarColor colorFgLight solarizedViolet . wrap " " " " . clickable
+  , ppVisible          = polybarColor colorFgLight "" . wrap " " " " . clickable
+  , ppHidden           = clickable
   , ppHiddenNoWindows  = const ""
   , ppTitle            = (" " ++) . polybarColor colorFgLight "" . shorten topBarTitleLength
   , ppLayout           = polybarAction (xdoMod "Tab") 1 .
