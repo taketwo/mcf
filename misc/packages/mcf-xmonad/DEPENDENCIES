@@ -7,21 +7,7 @@ cabal: xmonad-contrib
 # For clickable workspace names
 cabal: split
 
-# Dependencies of xmobar
-arch: wireless_tools
-# These are not resolved automatically for some reason
-cabal: alex
-cabal: happy
-cabal: c2hs
-cabal: libmpd
-# This is for xmobar plugins
-ubuntu: libmpd-dev
-ubuntu: libasound2-dev
-ubuntu: libiw-dev
-ubuntu: libxpm-dev
-ubuntu: libxml2-dev
-
-cabal: xmobar --flags=all_extensions
+nix: xmonad-log
 
 # Ubuntu
 ubuntu: libx11-dev
