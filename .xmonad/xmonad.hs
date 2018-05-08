@@ -98,10 +98,15 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import System.IO (Handle, hPutStrLn)
 
+import qualified DBus as D
+import qualified DBus.Client as D
+import qualified Codec.Binary.UTF8.String as UTF8
+
 import Solarized
 import MCF.Apps
 import MCF.Paths
 import MCF.Xmobar
+import MCF.Polybar
 
 unspawn :: String -> X ()
 unspawn p = spawn $ "for pid in $(pgrep -f " ++ p ++ "); do kill -9 $pid; done"
@@ -112,8 +117,8 @@ myFont               = "Fantasque Sans Mono"
 fontXP               = "xft:" ++ myFont ++ ":pixelsize=14:bold"
 fontDzen             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
 colorBg              = "#3c3b37"
-colorFgLight         = "#d7dbd2"
-colorFgDark          = "#7f7d76"
+colorFgLight         = "#c7c2bb"
+colorFgDark          = "#6c6b65"
 colorBorderActive    = solarizedOrange
 dzenUrgent           = "#19b6ee"
 colorBlack           = "#020202" --Background (Dzen_BG)
@@ -145,7 +150,7 @@ myTabConfig = defaultTheme
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
 
-defaultLayouts = smartBorders $ avoidStruts $
+defaultLayouts = fullscreenFull $ smartBorders $ avoidStruts $
       windowNavigation mouseResizableTile { draggerType = BordersDragger }
   ||| windowNavigation mouseResizableTile { draggerType = BordersDragger, isMirrored  = True }
   ||| windowNavigation Grid
@@ -356,7 +361,7 @@ table =
     deleteWorkspace         = Unbound "Remove workspace"                    (removeWorkspace)
     -- Misc
     scratchTerminal         = Unbound "Open scratch terminal"               (namedScratchpadAction myScratchPads "terminal")
-    restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall xmobar" <+> unspawn "gmaild" <+> restart "xmonad" True)
+    restartXMonad           = Unbound "Restart XMonad"                      (spawn "killall polybar" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"        (onNextNeighbour W.view)
     jumpToPrevScreen        = Unbound "Jump to previous physical screen"    (onPrevNeighbour W.view)
     lockScreen              = Unbound "Lock screen"                         (spawn "session lock")
@@ -475,13 +480,15 @@ viewWeb = windows (W.view "web")
 
 main :: IO ()
 main = do
+  dbus <- D.connectSession
+  -- Request access to the DBus name
+  D.requestName dbus (D.busName_ "org.xmonad.Log")
+    [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
   screenCount      <- countScreens
   display          <- openDisplay $ unsafePerformIO $ getEnv "DISPLAY"
   let screen        = defaultScreenOfDisplay display
   let screenWidth   = read (show (widthOfScreen screen))  :: Int
   let screenHeight  = read (show (heightOfScreen screen)) :: Int
-  gmaild           <- spawn "gmaild"
-  xmobars          <- mapM (spawnPipe . xmobarConfig) [1 .. screenCount]
   xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
@@ -491,12 +498,12 @@ main = do
     , workspaces         = myTopicNames
     , manageHook         = manageHook gnomeConfig <+> myManageHook
     , logHook            = do
-        mapM_ dynamicLogWithPP $ zipWith logHookXmobar xmobars [1 .. screenCount]
         updatePointer (0.5, 0.5) (0, 0)
         logHook gnomeConfig
+        dynamicLogWithPP (logHookPolybar dbus)
     , layoutHook         = myLayoutHook
     , handleEventHook    = myHandleEventHook
-    , startupHook        = setWMName "LG3D"
+    , startupHook        = setWMName "LG3D" <+> spawn polybarConfig
     }
     `additionalKeysP`
     myKeyBindingsTable
@@ -523,7 +530,10 @@ xdoGotoWorkspace ws = xdoModCtrl "w" ++ " " ++ addSpaces ws ++ " KP_Enter"
 clickable :: String -> String
 clickable ws = xmobarAction (xdoGotoWorkspace ws) 1 ws
 
-xmobarConfig (S n) = "xmobar " ++ pathXmobar ++ " -x '" ++ show n ++ "'"
+clickablePolybar :: String -> String
+clickablePolybar ws = polybarAction (xdoGotoWorkspace ws) 1 ws
+
+polybarConfig = "polybar -c " ++ pathPolybar ++ " -r primary"
 
 myWorkspaceSorter = do
   srt <- fmap (namedScratchpadFilterOutWorkspace.) getSortByXineramaPhysicalRule
@@ -549,6 +559,42 @@ logHookXmobar handle s = xmobarPP
     "Tabbed Simplest"           -> xmobarIcon "full"
     "Tabbed Bottom Simplest"    -> xmobarIcon "full"
     "code"                      -> xmobarIcon "code"
+    _ -> x
+    )
+  }
+
+-- Emit a DBus signal on log updates
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str = do
+    let signal = (D.signal objectPath interfaceName memberName) {
+            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+        }
+    D.emit dbus signal
+  where
+    objectPath = D.objectPath_ "/org/xmonad/Log"
+    interfaceName = D.interfaceName_ "org.xmonad.Log"
+    memberName = D.memberName_ "Update"
+
+logHookPolybar dbus = def
+  { ppOutput           = dbusOutput dbus
+  , ppSort             = myWorkspaceSorter
+  , ppOrder            = \(ws:l:t:x) -> [ws, l, t] ++ x
+  , ppSep              = "   "
+  , ppWsSep            = " "
+  , ppCurrent          = polybarColor "#ffffff" solarizedCyan . wrap " " " "
+  , ppUrgent           = polybarColor colorFgLight solarizedViolet . wrap " " " " . clickablePolybar
+  , ppVisible          = polybarColor colorFgLight "" . wrap " " " " . clickablePolybar
+  , ppHidden           = clickablePolybar
+  , ppHiddenNoWindows  = const ""
+  , ppTitle            = (" " ++) . polybarColor colorFgLight "" . shorten topBarTitleLength
+  , ppLayout           = polybarAction (xdoMod "Tab") 1 .
+    (\x -> case x of
+    "MouseResizableTile"        -> "[T]"
+    "Mirror MouseResizableTile" -> "[M]"
+    "Spacing 10 Grid"           -> "[G]"
+    "Tabbed Simplest"           -> "[F]"
+    "Tabbed Bottom Simplest"    -> "[F]"
+    "code"                      -> "[code]"
     _ -> x
     )
   }

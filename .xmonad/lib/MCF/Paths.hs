@@ -1,7 +1,7 @@
 module MCF.Paths
   ( pathHome
   , pathXmonad
-  , pathXmobar
+  , pathPolybar
   , pathIcons
   ) where
 
@@ -11,5 +11,5 @@ import System.FilePath (joinPath)
 
 pathHome = unsafePerformIO $ getHomeDirectory
 pathXmonad = joinPath [pathHome, ".xmonad/"]
-pathXmobar = joinPath [pathXmonad, "xmobarrc"]
+pathPolybar = joinPath [pathXmonad, "polybarrc"]
 pathIcons = joinPath [pathXmonad, "icons/"]
