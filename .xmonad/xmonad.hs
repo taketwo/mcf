@@ -112,39 +112,44 @@ unspawn p = spawn $ "for pid in $(pgrep -f " ++ p ++ "); do kill -9 $pid; done"
 
 -- Appearance -------------------------------------------------------------- {{{
 
-myFont               = "Fantasque Sans Mono"
-fontXP               = "xft:" ++ myFont ++ ":pixelsize=14:bold"
-fontDzen             = "-*-" ++ myFont ++ "-*-r-normal-*-11-*-*-*-*-*-*-*"
+fontSpec             = "xft:Fantasque Sans Mono:pixelsize=14:bold"
 colorBg              = "#3c3b37"
-colorFgLight         = "#c7c2bb"
-colorFgDark          = "#6c6b65"
+colorFgPrimary       = "#c7c2bb"
+colorFgSecondary     = "#6c6b65"
+colorAccent          = "#ffffff"
 colorBorderActive    = solarizedOrange
-dzenUrgent           = "#19b6ee"
-colorBlack           = "#020202" --Background (Dzen_BG)
-colorBlackAlt        = "#1c1c1c" --Black Xdefaults
-colorGray            = "#444444" --Gray       (Dzen_FG2)
-colorGrayAlt         = "#101010" --Gray dark
-colorWhite           = "#a9a6af" --Foreground (Shell_FG)
-colorWhiteAlt        = "#9d9d9d" --White dark (Dzen_FG)
-colorBlue            = "#44aacc"
-myNormalBorderColor  = colorBlackAlt
-myFocusedBorderColor = colorGray
-xRes                 = 166
-yRes                 = 768
-topBarHeight         = 14
-topBarBoxHeight      = 12
-topLeftBarWidth      = 800
-topBarTitleLength    = 80
+barHeight            = 22
 
 myTabConfig = defaultTheme
   { activeColor         = colorBorderActive
-  , activeTextColor     = colorFgLight
+  , activeTextColor     = colorAccent
   , activeBorderColor   = colorBorderActive
   , inactiveColor       = colorBg
-  , inactiveTextColor   = colorFgDark
+  , inactiveTextColor   = colorFgSecondary
   , inactiveBorderColor = colorBg
-  , fontName            = fontXP
+  , fontName            = fontSpec
   }
+
+myXPConfig :: XPConfig
+myXPConfig = defaultXPConfig
+  { font                = fontSpec
+  , bgColor             = colorBg
+  , fgColor             = colorFgPrimary
+  , promptBorderWidth   = 0
+  , height              = barHeight
+  , position            = Bottom
+  , historySize         = 100
+  , historyFilter       = deleteConsecutive
+  , autoComplete        = Nothing
+  }
+
+myXPConfigAutoComplete :: XPConfig
+myXPConfigAutoComplete = myXPConfig
+ -- If only one completion remains, auto-select it after 1
+ -- microsecond. Increasing the delay could help to stop accidentally
+ -- sending keypresses to the newly focused window, but with my
+ -- current usage, 1 microsecond is working just fine.
+  { autoComplete = Just 1 }
 
 -- }}}
 -- Layouts ----------------------------------------------------------------- {{{
@@ -396,30 +401,6 @@ data Action = Unbound String (          X ()) |
               Bound   String (String -> X ())
 
 
-myXPConfig :: XPConfig
-myXPConfig = defaultXPConfig
-  { font                = fontXP
-  , bgColor             = colorBg
-  , fgColor             = colorFgLight
-  , bgHLight            = colorBlue
-  , fgHLight            = colorBlack
-  , borderColor         = colorGrayAlt
-  , promptBorderWidth   = 0
-  , height              = topBarHeight
-  , position            = Bottom
-  , historySize         = 100
-  , historyFilter       = deleteConsecutive
-  , autoComplete        = Nothing
-  }
-
-myXPConfigAutoComplete :: XPConfig
-myXPConfigAutoComplete = myXPConfig
- -- If only one completion remains, auto-select it after 1
- -- microsecond. Increasing the delay could help to stop accidentally
- -- sending keypresses to the newly focused window, but with my
- -- current usage, 1 microsecond is working just fine.
-  { autoComplete = Just 1 }
-
 gotoX = windows . W.view
 sendX = windows . W.shift
 takeX = sendX ->> gotoX
@@ -550,11 +531,11 @@ logHookPolybar dbus = def
   , ppSep              = "   "
   , ppWsSep            = " "
   , ppCurrent          = polybarColor "#ffffff" solarizedCyan . wrap " " " "
-  , ppUrgent           = polybarColor colorFgLight solarizedViolet . wrap " " " " . clickable
-  , ppVisible          = polybarColor colorFgLight "" . wrap " " " " . clickable
+  , ppUrgent           = polybarColor colorFgPrimary solarizedViolet . wrap " " " " . clickable
+  , ppVisible          = polybarColor colorFgPrimary "" . wrap " " " " . clickable
   , ppHidden           = clickable
   , ppHiddenNoWindows  = const ""
-  , ppTitle            = (" " ++) . polybarColor colorFgLight "" . shorten topBarTitleLength
+  , ppTitle            = (" " ++) . polybarColor colorFgPrimary "" . shorten 80
   , ppLayout           = polybarAction (xdoMod "Tab") 1 .
     (\x -> case x of
     "MouseResizableTile"        -> "[T]"
