@@ -1,0 +1,225 @@
+[colors/solarized]
+
+base03 = #002b36
+base02 = #073642
+base01 = #586e75
+base00 = #657b83
+base0 = #839496
+base1 = #93a1a1
+base2 = #eee8d5
+base3 = #fdf6e3
+yellow = #b58900
+orange = #cb4b16
+red = #dc322f
+magenta = #d33682
+violet = #6c71c4
+blue = #268bd2
+cyan = #2aa198
+green = #859900
+
+[colors]
+
+background = #3c3b37
+foreground = #c7c2bb
+foreground-alt = $ffffff
+primary = #c7c2bb
+secondary = #6c6b65
+accent = ${colors/solarized.base3}
+alert = ${colors/solarized.orange}
+
+[bar/primary]
+
+;monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 22
+radius = 0.0
+fixed-center = true
+bottom = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = #f00
+
+module-margin-left = 0
+module-margin-right = 0
+
+font-0 = FantasqueSansMono:pixelsize=10:bold:antialias=true;2
+font-1 = FontAwesome:pixelsize=10;2
+
+modules-left = xmonad speed
+modules-center = 
+modules-right = mpd volume keyboard eth wlan gmail battery0 battery1 date
+
+tray-position = center
+tray-padding = 2
+tray-transparent = true
+tray-background = #0063ff
+
+override-redirect = true
+
+[settings]
+
+screenchange-reload = true
+
+[global/wm]
+
+margin-top = 0
+margin-bottom = 0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                        Module configuration                         ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[module/speed]
+
+type = internal/network
+interface = wlp3s0
+interval = 3
+accumulate-stats = true
+format-connected = "    <label-connected> "
+format-connected-foreground = ${colors.secondary}
+label-connected = %downspeed% %upspeed%
+
+[module/xmonad]
+
+type = custom/script
+exec = xmonad-log
+tail = true
+
+[module/mpd]
+
+type = internal/mpd
+
+format-online = " %{A1:mpc toggle:A3:mpc stop:}<label-song>%{A A} "
+format-paused = " %{A1:mpc toggle:A3:mpc stop:F#6c6b65}<label-song>%{A A F-} "
+format-stopped = <toggle>
+
+icon-play = "  "
+icon-pause = "  "
+
+label-song = %artist% - %title%
+label-song-maxlen = 50
+label-song-ellipsis = true
+
+[module/keyboard]
+
+type = custom/script
+exec = $MCF/.xmonad/keyboard.sh
+tail = false
+interval = 1
+
+[module/gmail]
+
+type = custom/script
+exec = $MCF/.xmonad/gmail.py
+tail = true
+
+[common/network]
+
+interval = 3.0
+ping-interval = 3
+
+format-connected = <label-connected>
+label-connected-foreground = ${colors.foreground-alt}
+label-connected-background = ${colors/solarized.blue}
+
+format-packetloss = <label-connected>
+label-packetloss-foreground = ${colors/solarized.base1}
+label-packetloss-background = ${colors/solarized.base01}
+
+[module/eth]
+
+type = internal/network
+inherit = common/network
+interface = enp0s25
+
+label-connected = "  "
+
+[module/wlan]
+
+type = internal/network
+inherit = common/network
+interface = wlp3s0
+
+label-connected = "  "
+
+[module/volume]
+
+type = internal/pulseaudio
+
+format-muted = <label-muted>
+label-muted = "  "
+format-muted-foreground = ${colors.alert}
+format-muted-background = ${colors/solarized.base2}
+
+format-volume = " <bar-volume> "
+bar-volume-width = 12
+bar-volume-foreground-0 = ${colors/solarized.cyan}
+bar-volume-foreground-1 = ${colors/solarized.cyan}
+bar-volume-foreground-2 = ${colors/solarized.cyan}
+bar-volume-foreground-3 = ${colors/solarized.cyan}
+bar-volume-foreground-4 = ${colors/solarized.cyan}
+bar-volume-foreground-5 = ${colors/solarized.yellow}
+bar-volume-foreground-6 = ${colors/solarized.orange}
+bar-volume-gradient = false
+bar-volume-indicator-foreground = ${colors.accent}
+bar-volume-indicator = ─
+bar-volume-fill = ─
+bar-volume-empty = ─
+
+[common/battery]
+
+time-format = %-H:%M
+
+label-charging = %percentage%% %time%
+format-charging = " <animation-charging> <label-charging> "
+label-charging-foreground = ${colors.foreground-alt}
+format-charging-background = ${colors/solarized.green}
+
+format-full =
+
+label-discharging = %percentage%% %time%
+format-discharging = " <ramp-capacity> <label-discharging> "
+label-discharging-foreground = ${colors.foreground-alt}
+format-discharging-background = ${colors/solarized.violet}
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
+
+[module/battery0]
+
+type = internal/battery
+inherit = common/battery
+battery = BAT0
+adapter = AC
+full-at = 98
+
+[module/battery1]
+
+type = internal/battery
+inherit = common/battery
+battery = BAT1
+adapter = AC
+full-at = 98
+
+[module/date]
+
+type = internal/date
+interval = 1
+date = " %A %{F#6c6b65}%Y.%m.%{F-}%{F#2aa198}%d%{F-} %{B#2aa198 F#ffffff} %H:%M:%S %{B- F-}"
+
+; vim:ft=dosini
