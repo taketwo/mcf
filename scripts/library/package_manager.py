@@ -25,7 +25,7 @@ class PackageManager(object):
         """
         directory = join(PACKAGES, package_name)
         if not isdir(directory):
-            return {PLATFORM: [package_name]}
+            return [(PLATFORM, package_name)]
         else:
             commands = list()
             deps = join(directory, 'DEPENDENCIES')
@@ -48,7 +48,7 @@ class PackageManager(object):
             setup_script = join(directory, 'setup')
             if os.path.isfile(setup_script):
                 commands.append(('setup', setup_script))
-            return self._merge(commands)
+            return commands
 
     def _remove_comments(self, line):
         p = line.find("#")
@@ -95,7 +95,8 @@ class PackageManager(object):
             stow.adopt_as('pip')
 
     def install(self, package_name, verbose=False, force_reinstall=False):
-        merged = self.resolve(package_name)
+        commands = self.resolve(package_name)
+        merged = self._merge(commands)
         if verbose:
             self.describe_package(package_name, merged)
         try:
