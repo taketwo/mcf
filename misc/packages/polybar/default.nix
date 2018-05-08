@@ -1,8 +1,6 @@
 let
   nixpkgs = import <nixpkgs> {};
   pkgs = with nixpkgs; {
-    polybar = nixpkgs.polybar.override {
-      mpdSupport = true;
-    };
+    polybar = callPackage ./polybar.nix { };
   };
 in pkgs
