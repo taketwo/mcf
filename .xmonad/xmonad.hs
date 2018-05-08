@@ -1,114 +1,61 @@
---- Large sections of this file come from
---- github.com/davidbrewer/xmonad-ubuntu-conf
-
--- Language
-{-# LANGUAGE DeriveDataTypeable, NoMonomorphismRestriction, TypeSynonymInstances, MultiParamTypeClasses,  ImplicitParams, PatternGuards #-}
-
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-
+{-# LANGUAGE ImplicitParams #-}
 
 import XMonad hiding ( (|||) )
-import XMonad.Layout.Named
-import XMonad.Layout.Tabbed
-import XMonad.Layout.Reflect
-import XMonad.Layout.Magnifier as Mag
-import XMonad.Layout.LimitWindows
-import XMonad.Layout.LayoutCombinators
-import XMonad.Layout.IndependentScreens
-
-import XMonad.Prompt
-import XMonad.Prompt.Input
-import XMonad.Prompt.RunOrRaise
-import XMonad.Prompt.Shell
-import XMonad.Prompt.Man
-import XMonad.Prompt.Window
-import XMonad.Prompt.Workspace
-import XMonad.Prompt.AppLauncher as AL
-
-import XMonad.Util.Timer
-import XMonad.Util.Cursor
-import XMonad.Util.Loggers
-import XMonad.Util.EZConfig
-import XMonad.Util.Scratchpad
-import XMonad.Util.NamedScratchpad
-import XMonad.Util.WorkspaceCompare
 import XMonad.Actions.CycleWS
-import XMonad.Actions.CycleRecentWS
-import XMonad.Actions.PhysicalScreens
-import XMonad.Actions.ShowText
+import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
-import XMonad.Actions.MouseResize
-import XMonad.Actions.UpdatePointer
-import XMonad.Actions.Commands
+import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.Search
 import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.FloatKeys
-import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
-import qualified XMonad.Actions.FlexibleResize as FR
-import XMonad.Operations
-import XMonad.Core
+import XMonad.Actions.UpdatePointer
 import XMonad.Config.Gnome
-import XMonad.ManageHook
-import qualified XMonad.Hooks.EwmhDesktops as ED
-import XMonad.Hooks.SetWMName
+import XMonad.Core
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-
+import XMonad.Hooks.SetWMName
+import XMonad.Hooks.UrgencyHook
+import XMonad.Layout.Fullscreen
 import XMonad.Layout.Grid
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.MouseResizableTile
 import XMonad.Layout.IM
+import XMonad.Layout.IndependentScreens
+import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.Magnifier as Mag
+import XMonad.Layout.MouseResizableTile
+import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace (onWorkspace)
-import XMonad.Layout.Fullscreen
+import XMonad.Layout.Reflect
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
-import XMonad.Util.Timer
+import XMonad.ManageHook
+import XMonad.Prompt
+import XMonad.Prompt.Input
+import XMonad.Prompt.Workspace
 import XMonad.Util.EZConfig
-import XMonad.Util.Run
-import XMonad.Hooks.DynamicLog
-import XMonad.Actions.Plane
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.UrgencyHook
-
-import qualified Data.Map as M
-import Data.Ratio ((%))
-import Data.List
-import Data.IORef
-import Data.Monoid
-import Data.Maybe (fromJust)
-import Graphics.X11.ExtraTypes.XF86
-
-import System.Exit
-import System.Directory
-import System.Environment (getEnv)
-
-import System.Posix.IO
-import System.Posix.Process
-import System.Posix.Types
-import System.Exit
-import System.IO (Handle, hPutStrLn)
-import System.IO.Unsafe (unsafePerformIO)
-{-import Control.Exception as E-}
-import qualified Control.Exception as Exception
-import Control.Monad (liftM2)
+import XMonad.Util.NamedScratchpad
+import XMonad.Util.WorkspaceCompare
+import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
+import qualified XMonad.Actions.FlexibleResize as FR
+import qualified XMonad.Hooks.EwmhDesktops as ED
 import qualified XMonad.StackSet as W
-import qualified Data.Map as M
-import System.IO (Handle, hPutStrLn)
 
+import Control.Monad (liftM2)
+import Data.Ratio ((%))
+import System.Environment (getEnv)
+import System.IO.Unsafe (unsafePerformIO)
+import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
 import qualified DBus.Client as D
-import qualified Codec.Binary.UTF8.String as UTF8
+import qualified Data.Map as M
 
 import Solarized
 import MCF.Apps
 import MCF.Paths
 import MCF.Polybar
-
-unspawn :: String -> X ()
-unspawn p = spawn $ "for pid in $(pgrep -f " ++ p ++ "); do kill -9 $pid; done"
 
 -- Appearance -------------------------------------------------------------- {{{
 
@@ -159,9 +106,7 @@ defaultLayouts = fullscreenFull $ smartBorders $ avoidStruts $
   ||| windowNavigation mouseResizableTile { draggerType = BordersDragger, isMirrored  = True }
   ||| windowNavigation Grid
   ||| tabbedBottom shrinkText myTabConfig
-  {-||| myCode-}
 
-myCode = named "code" (windowNavigation $ limitWindows 3 $ Mag.magnifiercz' 1.4 $ mouseResizableTile { draggerType = BordersDragger })
 myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
 
 -- Here we combine our default layouts with our specific, workspace-locked
@@ -184,15 +129,14 @@ myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
   , TI "music"    ""                                         (spawnInShell "ncmpcpp")
-  , TI "papers"   "Downloads/papers"                         (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
+  , TI "papers"   "~/Downloads/papers"                       (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , TI "zeal"     ""                                         (spawn "zeal")
-  , TI "mcf"      ".mcf"                                     (spawnShell)
+  , TI "mcf"      "~/.mcf"                                   (spawnShell)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnShell)
   , TI "v4r"      "~/Workspace/Projects/v4r"                 (spawnShell)
   , TI "dslam"    "~/Workspace/Projects/dslam"               (spawnShell)
-  , TI "ipy"      ""                                         (spawnInShell "ipython --pylab")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
   , ti "gimp"     ""
   ]
@@ -391,15 +335,10 @@ table =
     brightnessDown          = Unbound "Brightness down"                     (spawn "xbacklight -dec 1")
     brightnessUp            = Unbound "Brightness up"                       (spawn "xbacklight -inc 1")
 
-    {-gotoRecentWS     = Unbound "Switch to the most recently visited invisible workspace" (windows gotoRecent)-}
-    {-sendRecentWS     = Unbound   "Send to the most recently visited invisible workspace" (windows sendRecent)-}
-    {-takeRecentWS     = Unbound   "Take to the most recently visited invisible workspace" (windows takeRecent)-}
-
 -- Two varieties of Action: B(ound) is aware of the key that was used to
 -- invoke it, U(nbound) is not aware of the key.
 data Action = Unbound String (          X ()) |
               Bound   String (String -> X ())
-
 
 gotoX = windows . W.view
 sendX = windows . W.shift
@@ -414,12 +353,21 @@ infixl 1 ->>
 
 -- }}}
 -- Grid Select ------------------------------------------------------------ {{{
+
 myNavigation :: TwoD a (Maybe a)
 myNavigation = makeXEventhandler $ shadowWithKeymap navKeyMap navDefaultHandler
-  where navKeyMap = M.fromList [ ((0, xK_Escape), cancel) , ((0, xK_Return), select) , ((0, xK_c), move (0, -1) >> myNavigation), ((0, xK_t), move (0, 1) >> myNavigation), ((0, xK_n), move (1, 0) >> myNavigation), ((0, xK_h), move (-1, 0) >> myNavigation) ]
-navDefaultHandler = const myNavigation
+  where
+    navKeyMap = M.fromList [ ((0, xK_Escape), cancel)
+                           , ((0, xK_Return), select)
+                           , ((0, xK_c), move (0, -1) >> myNavigation)
+                           , ((0, xK_t), move (0, 1) >> myNavigation)
+                           , ((0, xK_n), move (1, 0) >> myNavigation)
+                           , ((0, xK_h), move (-1, 0) >> myNavigation)
+                           ]
 
+navDefaultHandler = const myNavigation
 gridSelectConfig = defaultGSConfig { gs_navigate = myNavigation }
+
 -- }}}
 -- Search ------------------------------------------------------------------ {{{
 
@@ -472,7 +420,7 @@ main = do
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
     , borderWidth        = 1                 -- width of border around windows
-    , terminal           = appTerminal        -- default terminal program
+    , terminal           = appTerminal       -- default terminal program
     , workspaces         = myTopicNames
     , manageHook         = manageHook gnomeConfig <+> myManageHook
     , logHook            = do
@@ -540,10 +488,9 @@ logHookPolybar dbus = def
     (\x -> case x of
     "MouseResizableTile"        -> "[T]"
     "Mirror MouseResizableTile" -> "[M]"
-    "Spacing 10 Grid"           -> "[G]"
+    "Grid"                      -> "[G]"
     "Tabbed Simplest"           -> "[F]"
     "Tabbed Bottom Simplest"    -> "[F]"
-    "code"                      -> "[code]"
     _ -> x
     )
   }
