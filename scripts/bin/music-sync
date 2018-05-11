@@ -1,22 +1,57 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 
 import os
 import socket
 import subprocess
+import tempfile
+import os.path
 
 import click
+
+
+class Location(object):
+
+    def __init__(self, path):
+        self.path = path
+
+    def __enter__(self):
+        return self.path
+
+    def __exit__(self, type, value, traceback):
+        pass
+
+
+class JMTPFSLocation(object):
+
+    def __init__(self, relative_path):
+        self.relative_path = relative_path
+
+    def __enter__(self):
+        self.path = tempfile.TemporaryDirectory()
+        print('Mounting jmtpfs at {}'.format(self.path.name))
+        cmd = 'jmtpfs {}'.format(self.path.name)
+        subprocess.check_call(cmd.split())
+        return os.path.join(self.path.name, self.relative_path)
+
+    def __exit__(self, type, value, traceback):
+        print('Unmounting jmtpfs from {}'.format(self.path.name))
+        cmd = 'fusermount -u {}'.format(self.path.name)
+        subprocess.check_call(cmd.split())
+        self.path.cleanup()
 
 
 def get_music_location(host=None):
     host = host or socket.gethostname()
     if host == 'precision' or host == 'raccoon':
-        return os.path.expanduser('~/Music')
+        return Location(os.path.expanduser('~/Music'))
     elif host == 'z3c':
-        return host + ':/storage/0123-4567/Music'
+        return Location(host + ':/storage/0123-4567/Music')
     elif host == 'pi':
-        return host + ':/home/pi/Music'
+        return Location(host + ':/home/pi/Music')
+    elif host == 'xz1c':
+        return JMTPFSLocation('SD card/Music')
     else:
         raise Exception('unknown host')
 
@@ -46,9 +81,9 @@ def push(host, delete):
     """
     Push music to another host.
     """
-    src = get_music_location()
-    dst = get_music_location(host)
-    rsync(src, dst, delete=delete)
+    with get_music_location() as src:
+        with get_music_location(host) as dst:
+            rsync(src, dst, delete=delete)
 
 
 if __name__ == '__main__':
