@@ -7,9 +7,6 @@
 [submodule "scripts/bundle/z"]
 	path = scripts/bundle/z
 	url = https://github.com/rupa/z.git
-[submodule "scripts/bundle/spark"]
-	path = scripts/bundle/spark
-	url = https://github.com/holman/spark.git
 [submodule "scripts/bundle/ghi"]
 	path = scripts/bundle/ghi
 	url = https://github.com/stephencelis/ghi.git
