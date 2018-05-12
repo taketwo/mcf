@@ -26,7 +26,7 @@
 #                      - "beg" to insert at the beginning
 #                      - "end" to insert at the end
 #
-# DEPENDS-ON:   myrmlistitems
+# DEPENDS-ON:   remove_from_list
 #______________________________________________________________________________
 #
 addtopath()
@@ -42,7 +42,7 @@ addtopath()
     # If the directory is already in the path, remove it so that
     # it can be inserted in the desired position without
     # poluting $PATH with duplicates
-    local newpath=`echo $PATH | myrmlistitems "$a_directory" ':'`
+    local newpath=`echo $PATH | remove_from_list "$a_directory" ':'`
 
     if [[ $a_position == beg ]]; then    # Prefix to $PATH
         export PATH="$a_directory:$newpath"
@@ -75,14 +75,14 @@ pathprepend() { addtopath $1 beg; return $?; }
 #
 # PARAMETERS:   1 (r): Directory to delete
 #
-# DEPENDS-ON:   myrmlistitems
+# DEPENDS-ON:   remove_from_list
 #______________________________________________________________________________
 #
 delfrompath()
 {
     local a_directory="$1"
 
-    export PATH=`echo $PATH | myrmlistitems "$a_directory" ':'`
+    export PATH=`echo $PATH | remove_from_list "$a_directory" ':'`
 }
 #______________________________________________________________________________
 
