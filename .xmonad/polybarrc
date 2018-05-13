@@ -52,8 +52,8 @@ modules-right = mpd volume keyboard eth wlan gmail battery0 battery1 date
 
 tray-position = center
 tray-padding = 2
-tray-transparent = true
-tray-background = #0063ff
+tray-transparent = false
+tray-background = ${self.background}
 
 override-redirect = true
 
