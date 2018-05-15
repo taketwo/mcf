@@ -232,6 +232,10 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   nnoremap <F10> :QToggle<CR>
 
+  " Autoformat
+
+  nnoremap <F2> :Autoformat<CR>
+
   " Tagbar
 
   nnoremap <F3> :TagbarToggle<CR>
