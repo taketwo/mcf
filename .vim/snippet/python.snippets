@@ -55,8 +55,8 @@ snippet p "Print" b
 print($0)
 endsnippet
 
-snippet super "Initialize base class" b
-super().__init__($1)$0
+snippet super "Call base class method" b
+super().${1:__init__}($2)$0
 endsnippet
 
 ###########################################################################
