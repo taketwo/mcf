@@ -1,10 +1,10 @@
 global !p
-def insert_import(pkg):
+def insert_import(pkg, identifier=None):
     import re
     r1 = re.compile('^(from \w+ )?import \w+( as \w+)?$')
     r2 = re.compile('^# -\*- coding: utf-8 -\*-$')
     # Scan the buffer to find (a) any existing imports (b) "coding" line
-    # If imports exists, insert before them. If imports do not exist, instert
+    # If imports exists, insert before them. If imports do not exist, insert
     # after the "coding" line. If that does not exist either, instert in the
     # beginning of the file.
     location = 0
@@ -14,7 +14,10 @@ def insert_import(pkg):
             break
         elif r2.match(line):
             location = i + 1
-    snip.buffer.append('import {}'.format(pkg), location)
+    if identifier is None:
+        snip.buffer.append('import {}'.format(pkg), location)
+    else:
+        snip.buffer.append('from {} import {}'.format(pkg, identifier), location)
 endglobal
 
 snippet def "Function" !b
