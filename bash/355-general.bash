@@ -24,7 +24,6 @@ alias cbp='xsel --clipboard --output'
 # misc
 alias ga='gitk --all'
 alias gg='git gui'
-alias ff='find . -name $*'
 alias tex-clean='rm -f *.{aux,log,out,bbl,blg}'
 alias trayer-show='trayer --align center --edge top --SetDockType false --SetPartialStrut false --widthtype request --transparent false --tint 0xFFFFFF --heighttype request --distancefrom top --distance 400 --monitor 1 --padding 20'
 
