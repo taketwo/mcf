@@ -35,3 +35,7 @@ nnoremap <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
 nnoremap <buffer> gd :YcmCompleter GoTo<CR>
 nnoremap <buffer> gr :YcmCompleter GoToReferences<CR>
 nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
+
+" ALE config
+" Turn flake8 style errors into warnings
+let b:ale_type_map = {'flake8': {'ES': 'WS'}}

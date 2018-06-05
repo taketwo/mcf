@@ -86,3 +86,7 @@ nnoremap <silent> <LocalLeader>t :YcmCompleter GetType<CR>
 nnoremap <silent> <LocalLeader>T :YcmCompleter GetTypeImprecise<CR>
 nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
 nnoremap <silent> <LocalLeader>D :YcmCompleter GetDocImprecise<CR>
+
+" ALE config
+" Disable ALE, YCM will do the job
+let b:ale_enabled = 0
