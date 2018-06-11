@@ -2,6 +2,9 @@
 let g:ycm_key_list_previous_completion = ['<Up>']
 " Do not use <Leader>d
 let g:ycm_key_detailed_diagnostics = '<Leader>D'
+" Use same error/warning symbols as ALE
+let g:ycm_error_symbol = g:ale_sign_error
+let g:ycm_warning_symbol = g:ale_sign_warning
 
 let g:ycm_global_ycm_extra_conf = $MCF.'/misc/.ycm_extra_conf.py'
 
