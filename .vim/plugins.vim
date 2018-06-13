@@ -62,14 +62,12 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 
 Plug 'plasticboy/vim-markdown'
 Plug 'taketwo/vim-ros'
-Plug 'rhysd/vim-clang-format'
 Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
 Plug 'keith/tmux.vim'
 Plug 'benmills/vimux'
 Plug 'LnL7/vim-nix'
-Plug 'Chiel92/vim-autoformat'
 
 " Git related
 Plug 'gregsexton/gitv', {'on': ['Gitv']}

@@ -232,9 +232,9 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   nnoremap <F10> :QToggle<CR>
 
-  " Autoformat
+  " ALEFix
 
-  nnoremap <F2> :Autoformat<CR>
+  nnoremap <F2> :ALEFix<CR>
 
   " Tagbar
 

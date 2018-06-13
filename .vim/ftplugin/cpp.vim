@@ -90,3 +90,12 @@ nnoremap <silent> <LocalLeader>D :YcmCompleter GetDocImprecise<CR>
 " ALE config
 " Disable ALE, YCM will do the job
 let b:ale_enabled = 0
+" Setup clang-format fixer (pick the newest version)
+for v in ['5.0', '4.0', '3.8', '3.6']
+    let e = 'clang-format-' . v
+    if executable(e)
+        let g:ale_c_clangformat_executable = e
+        break
+    endif
+endfor
+let b:ale_fixers = [ 'clang-format' ]
