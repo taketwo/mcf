@@ -88,8 +88,20 @@ nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
 nnoremap <silent> <LocalLeader>D :YcmCompleter GetDocImprecise<CR>
 
 " ALE config
-" Disable ALE, YCM will do the job
+" Disable ALE linting, YCM will do the job
 let b:ale_enabled = 0
+" Linters (use clang-tidy in case we enable linting)
+let b:ale_linters = [ 'clangtidy' ]
+" Setup clang-tidy fixer (pick the newest version)
+for v in ['5.0', '4.0', '3.8', '3.6']
+    let e = 'clang-tidy-' . v
+    if executable(e)
+        let g:ale_cpp_clangtidy_executable = e
+        break
+    endif
+endfor
+" Fixers
+let b:ale_fixers = [ 'clang-format' ]
 " Setup clang-format fixer (pick the newest version)
 for v in ['5.0', '4.0', '3.8', '3.6']
     let e = 'clang-format-' . v
@@ -98,4 +110,3 @@ for v in ['5.0', '4.0', '3.8', '3.6']
         break
     endif
 endfor
-let b:ale_fixers = [ 'clang-format' ]
