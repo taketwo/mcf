@@ -3,8 +3,7 @@ let maplocalleader = '\'
 setlocal tabstop=4
 setlocal softtabstop=4
 setlocal shiftwidth=4
-setlocal textwidth=80
-setlocal colorcolumn=80
+setlocal colorcolumn=88
 setlocal nosmartindent
 setlocal completeopt=menu,menuone,longest,preview
 autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
@@ -39,3 +38,8 @@ nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
 " ALE config
 " Turn flake8 style errors into warnings
 let b:ale_type_map = {'flake8': {'ES': 'WS'}}
+" Flake8 configuration, as recommened by Black
+let b:ale_python_flake8_options = '--ignore=E501 --select=C,E,F,W,B,B950 --max-line-length=80'
+" Fixers
+let b:ale_fixers = [ 'black' ]
+
