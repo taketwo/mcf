@@ -9,8 +9,15 @@ endif
 function! MakeTarget(...)
     if a:0 > 0
         let g:mcf_make_target = a:1
+        let target = a:1
+    else
+        if exists('b:mcf_make_target')
+            let target = b:mcf_make_target
+        else
+            let target = g:mcf_make_target
+        endif
     endif
-    execute "Make ".g:mcf_make_target." -j4"
+    execute "Make ".target." -j4"
 endfunction
 
 function! s:MakeTargetComplete(ArgLead, CmdLine, CursorPos)
