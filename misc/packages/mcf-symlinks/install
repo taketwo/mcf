@@ -4,7 +4,6 @@
 import os
 import argparse
 from os.path import join, expanduser, lexists
-from subprocess import call
 import mcf
 
 
@@ -12,13 +11,6 @@ def install():
     print('Creating symlinks...')
     for f, d in _FILES:
         _link(f, d)
-    print('Generating user environment setup (.pam_environment)...')
-    dest = join(mcf.HOME, '.pam_environment')
-    if lexists(dest):
-        os.unlink(dest)
-    with open(dest, 'w') as f:
-        cmd = "sed s|@MCF@|{}| {}".format(mcf.MCF, mcf.path('.pam_environment'))
-        call(cmd.split(' '), stdout=f)
 
 
 def _link(paths, desc):
@@ -38,6 +30,7 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
           ('.vim', 'VIM settings/plugins folder'),
           ('.vimrc', 'VIM configuration file'),
           ('.bashrc', 'Bash configuration file'),
+          ('.bash_profile', 'Bash profile'),
           ('.profile', 'Profile for login shells'),
           ('.inputrc', 'Readline configuration file'),
           ('.mime.types', 'Custom MIME types'),
