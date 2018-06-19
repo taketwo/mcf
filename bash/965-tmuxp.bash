@@ -1,2 +1,4 @@
 # Bash completion for tmuxp
-eval "$(_TMUXP_COMPLETE=source tmuxp)"
+if hash tmuxp 2>/dev/null; then
+  eval "$(_TMUXP_COMPLETE=source tmuxp)"
+fi
