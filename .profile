@@ -2,22 +2,24 @@
 # works, in case I need to understand it one day again.
 #
 # .profile
-# POSIX syntax
-# First section sets up environment, will be run always
-# Second (conditional, only for interactive) section may print or exec
-# Do not source .bashrc
+#   - POSIX syntax
+#   - First section sets up environment, will be run always
+#   - Second section (currently not present) may print or exec, but should be conditional,
+#     only for interactive shells
+#   - Do not source .bashrc
 #
 # .bash_profile
-# Source .profile
-# Source .bashrc if interactive
+#   - Source .profile
+#   - Source .bashrc if interactive
 #
 # .bashrc
-# Source .profile if not interactive and return
+#   - Source .profile if not interactive and return
 #
 # References:
-# * What goes where (pam, profile, rc, etc), a very comprehensive answer: https://unix.stackexchange.com/a/88266/55482
-# * Another good answer: https://stackoverflow.com/a/903213/1525865
-
+#   - What goes where (pam, profile, rc, etc), a very comprehensive answer:
+#     https://unix.stackexchange.com/a/88266/55482
+#   - Another good answer:
+#     https://stackoverflow.com/a/903213/1525865
 
 #---------------------------------------------------------------------#
 #                               Locale                                #
@@ -85,3 +87,4 @@ export PYENV_ROOT="${HOME}/.pyenv"
 # Python virtual environments
 export WORKON_HOME="${HOME}/.virtualenvs"
 mkdir -p ${WORKON_HOME}
+
