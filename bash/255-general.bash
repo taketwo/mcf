@@ -5,32 +5,8 @@
 
 # Stolen from "https://github.com/jdevera/dotfiles"
 
-# Section: Files and directories (ENV) {{{
-#############################################################################
-
-# Directories
-if [[ -z "$MCF" ]]; then
-  export MCF=/home/sergey/.mcf
-fi
-
-#############################################################################
-
-# }}}
-# Section: PATH {{{
-#############################################################################
-
-pathprepend "$MCF/scripts/bin"
-pathprepend "$HOME/.local/bin"
-
-#############################################################################
-
-# }}}
 # Section: Apps {{{
 #############################################################################
-
-export EDITOR=vim
-export BROWSER=browser
-export PAGER=less
 
 # Enable color support of ls and grep
 if [ -x /usr/bin/dircolors ]; then
