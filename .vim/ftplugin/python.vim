@@ -27,8 +27,8 @@ let b:surround_114 = "range(\r)"
 let b:surround_101 = "enumerate(\r)"
 
 " Append colon to the end of line
-nnoremap <silent> <LocalLeader>: :call AppendColon()<CR>
-nnoremap <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
+nnoremap <buffer> <silent> <LocalLeader>: :call AppendColon()<CR>
+inoremap <buffer> <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
 
 " YCM mappings
 nnoremap <buffer> gd :YcmCompleter GoTo<CR>

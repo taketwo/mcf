@@ -74,8 +74,8 @@ nnoremap <LocalLeader>0 dt)
 inoremap <LocalLeader>] <C-o>o{<CR>}<C-o>O
 
 " Append semicolon to the end of line
-nnoremap <silent> <LocalLeader>; :call AppendSemicolon()<CR>
-inoremap <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
+nnoremap <buffer> <silent> <LocalLeader>; :call AppendSemicolon()<CR>
+inoremap <buffer> <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
 
 " YCM mappings
 nnoremap <buffer> gf :YcmCompleter GoToInclude<CR>
