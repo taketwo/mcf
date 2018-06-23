@@ -29,7 +29,6 @@ python-urwid
 pip: pyflakes
 pip: pep8
 pip: flake8
-pip: colout                            # for hl command
 pip: pygments-style-solarized          # for hl command
 pip: pip-tools
 pip: click

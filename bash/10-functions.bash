@@ -56,9 +56,6 @@ function list_functions()
          prev = $3
       }
       printf("%4s\t%s\n", $2, $1)
-   }' |
-
-   # Colorize titles (filename)
-   colout '^/.*' cyan
+   }'
 }
 
