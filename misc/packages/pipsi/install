@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Pipsi uses this location by default
+VENVS="$HOME/.local/venvs"
+
+if [[ -d "$VENVS/pipsi" ]]; then
+  if [[ $1 == "--reinstall" ]]; then
+    pipsi uninstall pipsi
+    # Remove symlinks created by Pipsi from ~/.local/bin
+    for exe in ~/.local/bin/*; do
+      if [[ -L "$exe" ]]; then
+        if [[ "$(readlink -- "$exe")" =~ "$VENVS" ]]; then
+          rm "$exe"
+        fi
+      fi
+    done
+    rm -rf "$VENVS"
+  else
+    echo "Pipsi is already installed. Pass --reinstall to force reinstallation."
+    echo "Note that all packages managed by pipsi will be permanently removed."
+    exit
+  fi
+fi
+
+# Install Pipsi with Python 3
+eval "$(pyenv init -)"
+pyenv shell 3.6.5
+curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python - --no-modify-path
