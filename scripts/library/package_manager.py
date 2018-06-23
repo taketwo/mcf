@@ -39,6 +39,28 @@ class Pip(Install):
         stow.adopt_as("pip")
 
 
+class Pipsi(Install):
+    CMD = "pipsi install"
+
+    def __init__(self, packages, args=""):
+        for package in packages:
+            # We support package specs with multiple entries separated by spaces.
+            # First entry is the main app that is to be installed with Pipsi.
+            # The remaining entries are additional packages that are to be installed
+            # into the virtual environment created by Pipsi.
+            # Example: "pygments pygments-style-solarized"
+            entries = package.split(" ")
+            if len(entries) > 1:
+                package = entries[0]
+            cmd = self.CMD + " " + package + " " + args
+            subprocess.check_call(cmd.split())
+            if len(entries) > 1:
+                activate = "source ~/.local/venvs/{}/bin/activate".format(package)
+                for entry in entries[1:]:
+                    install = "pip install {}".format(entry)
+                    cmd = "bash -c '{} && {}'".format(activate, install)
+                    os.system(cmd)
+
 
 class Cabal(Install):
     CMD = "sudo cabal install --global --force-reinstalls"
@@ -51,7 +73,7 @@ class Cabal(Install):
         stow.adopt_as("cabal")
 
 
-INSTALL = {"nix": Nix, "pip": Pip, "cabal": Cabal}
+INSTALL = {"nix": Nix, "pip": Pip, "pipsi": Pipsi, "cabal": Cabal}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
 if PLATFORM == "arch":
