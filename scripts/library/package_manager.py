@@ -6,10 +6,56 @@ import subprocess
 
 import stow
 import mcf
+from install import get_platform
 
 
 PACKAGES = mcf.path("misc", "packages")
-PLATFORM = linux_distribution()[0].lower()
+PLATFORM = get_platform()
+
+
+class Install(object):
+    def __init__(self, packages, args=""):
+        cmd = self.CMD + " " + " ".join(packages) + " " + args
+        subprocess.check_call(cmd.split())
+
+
+class AptGet(Install):
+    CMD = "sudo apt-get install --force-yes -y"
+
+
+class Yaourt(Install):
+    CMD = "yaourt --noconfirm --needed -Sa"
+
+
+class Nix(Install):
+    CMD = "nix-env -i"
+
+
+class Pip(Install):
+    CMD = "sudo -H pip install --upgrade"
+
+    def __init__(self, packages, args=""):
+        super().__init__(packages, args)
+        stow.adopt_as("pip")
+
+
+
+class Cabal(Install):
+    CMD = "sudo cabal install --global --force-reinstalls"
+
+    def __init__(self, packages, args=""):
+        subprocess.check_call(["sudo", "cabal", "update"])
+        for package in packages:
+            cmd = self.CMD + " " + package + " " + args
+            subprocess.check_call(cmd.split())
+        stow.adopt_as("cabal")
+
+
+INSTALL = {"nix": Nix, "pip": Pip, "cabal": Cabal}
+if PLATFORM == "ubuntu":
+    INSTALL["ubuntu"] = AptGet
+if PLATFORM == "arch":
+    INSTALL["arch"] = Yaourt
 
 
 class PackageManager(object):
@@ -67,14 +113,8 @@ class PackageManager(object):
         args:
             Additional options to pass to the package manager.
         """
-        CMD = {
-            "ubuntu": "sudo apt-get install --force-yes -y",
-            "arch": "yaourt --noconfirm --needed -Sa",
-            "nix": "nix-env -i",
-            "pip": "sudo -H pip install --upgrade",
-            "cabal": "sudo cabal install --global --force-reinstalls",
-        }
-        if manager not in CMD.keys():
+
+        if manager not in INSTALL.keys():
             raise Exception("Unsupported manager")
         if isinstance(package, list):
             p = package
@@ -82,17 +122,7 @@ class PackageManager(object):
             p = list(package)
         else:
             p = [package]
-        if manager == "cabal":
-            subprocess.check_call(["sudo", "cabal", "update"])
-            for package in p:
-                cmd = CMD[manager] + " " + package + " " + args
-                subprocess.check_call(cmd.split())
-            stow.adopt_as("cabal")
-        else:
-            cmd = CMD[manager] + " " + " ".join(p) + " " + args
-            subprocess.check_call(cmd.split())
-        if manager == "pip":
-            stow.adopt_as("pip")
+        INSTALL[manager](p, args)
 
     def install(self, package_name, verbose=False, force_reinstall=False):
         commands = self.resolve(package_name)
@@ -100,7 +130,7 @@ class PackageManager(object):
         if verbose:
             self.describe_package(package_name, merged)
         try:
-            for pm in [PLATFORM, "nix", "pip", "cabal"]:
+            for pm in INSTALL.keys():
                 if pm in merged:
                     print("[*] Install {} packages\n".format(pm.capitalize()))
                     self._install_with_package_manager(pm, merged[pm])
@@ -126,7 +156,7 @@ class PackageManager(object):
 
     def describe_package(self, package_name, merged):
         print('Package "{}" resolved into:\n'.format(package_name))
-        for pm in [PLATFORM, "nix", "pip", "cabal"]:
+        for pm in INSTALL.keys():
             if pm in merged:
                 print(" - {} packages\n".format(pm.capitalize()))
                 print("  " + ", ".join(merged[pm]))

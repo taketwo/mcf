@@ -3,7 +3,12 @@ def get_platform():
     Get platform name in lower case (e.g. 'arch' or 'ubuntu').
     """
     from platform import linux_distribution
-    return linux_distribution()[0].lower()
+
+    p = linux_distribution()[0].lower()
+    if p == "debian":
+        print("WARNING: platform was determined to be Debian, not Ubuntu")
+        return "ubunut"
+    return p
 
 
 def only(platforms):
@@ -19,11 +24,16 @@ def only(platforms):
     """
     platforms = platforms if isinstance(platforms, list) else [platforms]
     if get_platform() in platforms:
+
         def decorator(function):
             return function
+
     else:
+
         def nothing():
             pass
+
         def decorator(function):
             return nothing
+
     return decorator
