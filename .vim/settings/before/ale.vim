@@ -6,3 +6,6 @@ let g:ale_sign_style_warning = '✢'
 
 " Not sure if this is needed
 let g:airline#extensions#ale#enabled = 1
+
+nnoremap > :ALENextWrap<CR>
+nnoremap < :ALEPreviousWrap<CR>

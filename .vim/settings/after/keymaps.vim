@@ -212,11 +212,6 @@ inoremap <F9> <C-o>:MakeTarget<CR>
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
 
-" Jump to next line in location list (useful for Syntastic)
-
-nnoremap >l :lnext<CR>
-nnoremap <l :lprev<CR>
-
 " Copy short/long filename to clipboard
 
 nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
