@@ -12,7 +12,7 @@ nix: ninja
 
 # Terminal
 nix: tmux
-pip: tmuxp                             # tmux session management
+pipsi: tmuxp                           # tmux session management
 
 # Network/Internet
 openssh
@@ -26,9 +26,7 @@ git
 python-pip
 python-virtualenv
 python-urwid
-pip: pyflakes
-pip: pep8
-pip: flake8
+pipsi: flake8 flake8-bugbear
 pipsi: pygments pygments-style-solarized  # for hl command
 # pip: click
 
