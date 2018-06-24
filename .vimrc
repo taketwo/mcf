@@ -90,6 +90,16 @@
   set sidescrolloff=15
 
 " }}}
+" Mouse interactions {{{
+
+  if has('mouse')
+    set mouse=a
+    if has('mouse_sgr')
+      set ttymouse=sgr
+    endif
+  endif
+
+" }}}
 " Appearance {{{
 
   " Use Solarized color theme
