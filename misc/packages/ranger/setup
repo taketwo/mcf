@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+import argparse
+from os.path import join, split, expanduser, realpath
+
+from filesystem import link
+
+
+def setup():
+    print('Creating symlinks...')
+    home = expanduser('~')
+    # Ranger config directory
+    path, fl = split(realpath(__file__))
+    src = join(path, 'src', 'ranger')
+    tgt = join(home, '.config', 'ranger')
+    link(src, tgt, 'Ranger config directory')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Setup Ranger (symlink config folder).
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    args = parser.parse_args()
+    setup()
