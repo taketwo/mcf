@@ -184,7 +184,9 @@ class PackageManager(object):
                     print("")
         except Exception as e:
             print('Installation of "{}" failed'.format(package_name))
-            print("Error:", e)
+            print("Error: {}".format(e))
+            if hasattr(e, "output"):
+                print("       {}".format(e.output))
 
     def describe_package(self, package_name, merged):
         print('Package "{}" resolved into:\n'.format(package_name))
