@@ -51,14 +51,25 @@ class Pipsi(Install):
             entries = package.split(" ")
             if len(entries) > 1:
                 package = entries[0]
-            cmd = self.CMD + " " + package + " " + args
-            subprocess.check_call(cmd.split())
+            self.install(package, args)
             if len(entries) > 1:
                 activate = "source ~/.local/venvs/{}/bin/activate".format(package)
                 for entry in entries[1:]:
                     install = "pip install {}".format(entry)
                     cmd = "bash -c '{} && {}'".format(activate, install)
                     os.system(cmd)
+
+    def install(self, package, args):
+        """
+        Run Pipsi install, ignoring "already installed" error.
+        """
+        cmd = self.CMD + " " + package + " " + args
+        try:
+            subprocess.check_output(cmd.split())
+        except subprocess.CalledProcessError as e:
+            import re
+            if not re.findall(r'already installed', e.output):
+                raise e
 
 
 class Cabal(Install):
