@@ -202,8 +202,8 @@ nnoremap <C-J> J
 
 " Run last Vimux command with F8
 
-nnoremap <F8> :VimuxRunLastCommand<CR>
-inoremap <F8> <C-o>:VimuxRunLastCommand<CR>
+nnoremap <F8> :write<CR>:VimuxRunLastCommand<CR>
+inoremap <F8> <C-o>:write<CR><C-o>:VimuxRunLastCommand<CR>
 
 " Run make with F9
 
