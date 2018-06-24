@@ -68,7 +68,7 @@ class Pipsi(Install):
             subprocess.check_output(cmd.split())
         except subprocess.CalledProcessError as e:
             import re
-            if not re.findall(r'already installed', e.output):
+            if not re.findall(r'already installed', str(e.output)):
                 raise e
 
 
