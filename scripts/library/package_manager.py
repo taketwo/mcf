@@ -1,6 +1,5 @@
 import os
 from os.path import join, isdir
-from platform import linux_distribution
 from collections import defaultdict
 import subprocess
 
@@ -160,7 +159,7 @@ class PackageManager(object):
             if "script" in merged:
                 print("[*] Install scripts\n")
                 for s in sorted(merged["script"]):
-                    print(">", s)
+                    print("> {}".format(s))
                     cmd = [s]
                     if force_reinstall:
                         cmd.append("--reinstall")
@@ -169,7 +168,7 @@ class PackageManager(object):
             if "setup" in merged:
                 print("[*] Setup scripts\n")
                 for s in merged["setup"]:
-                    print(">", s)
+                    print("> {}".format(s))
                     subprocess.check_call([s], env=os.environ)
                     print("")
         except Exception as e:
@@ -186,12 +185,12 @@ class PackageManager(object):
         if "script" in merged:
             print(" - Custom install scripts\n")
             for s in merged["script"]:
-                print("  ", s)
+                print("  {}".format(s))
             print("")
         if "setup" in merged:
             print(" - Custom setup scripts\n")
             for s in merged["setup"]:
-                print("  ", s)
+                print("  {}".format(s))
             print("")
 
     def _merge(self, commands):
