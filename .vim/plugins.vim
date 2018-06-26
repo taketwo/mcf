@@ -51,6 +51,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'AndrewRadev/dsf.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 Plug 'tweekmonster/startuptime.vim'
+Plug 'sickill/vim-pasta'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
