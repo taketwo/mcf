@@ -52,6 +52,7 @@ Plug 'AndrewRadev/dsf.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'sickill/vim-pasta'
+Plug 'taketwo/vimux'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
@@ -67,7 +68,6 @@ Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
 Plug 'keith/tmux.vim'
-Plug 'benmills/vimux'
 Plug 'LnL7/vim-nix'
 
 " Git related
