@@ -108,7 +108,8 @@
   colorscheme solarized
 
   hi SpellBad ctermfg=red            " Adjust the color of wrongly spelled words
-  hi SignColumn ctermbg=bg           " Adjust the color of SignColumnt
+  hi Normal ctermbg=NONE             " Remove explicit background color (inherit from Tmux)
+
   set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
 
 " }}}
