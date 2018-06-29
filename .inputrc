@@ -102,9 +102,9 @@ set bind-tty-special-chars off
 # Prepends optirun to the current command and runs it
 "\eo": "\C-aoptirun \C-m"
 
-# Alt-Space
+# Ctrl-Space
 # Print the contents of the current directory
-"\e ": "ls -lah\C-m"
+"\C- ": "ls -lah\C-m"
 
 # Shift-Tab
 # Trigger fzf completion
