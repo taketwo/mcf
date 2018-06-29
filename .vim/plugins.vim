@@ -53,6 +53,7 @@ Plug 'beloglazov/vim-online-thesaurus'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'sickill/vim-pasta'
 Plug 'taketwo/vimux'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }

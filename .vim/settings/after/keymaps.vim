@@ -125,11 +125,11 @@ vnoremap <C-n> :><CR>gv
 noremap <C-w><C-n> <C-w>l
 noremap <C-w><C-c> <C-w>k
 noremap <C-w><C-t> <C-w>j
-" ... and also with Alt- prefix
-nnoremap n <C-w>l
-nnoremap c <C-w>k
-nnoremap t <C-w>j
-nnoremap h <C-w>h
+" ... and also with Alt- prefix (handled by vim-tmux-navigator plugin)
+nnoremap <silent> n :TmuxNavigateRight<CR>
+nnoremap <silent> c :TmuxNavigateUp<CR>
+nnoremap <silent> t :TmuxNavigateDown<CR>
+nnoremap <silent> h :TmuxNavigateLeft<CR>
 
 " Resize windows with Alt+arrow
 
