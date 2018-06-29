@@ -119,9 +119,15 @@ vnoremap <C-n> :><CR>gv
 
 " Move between split windows similarly to normal motion
 
+" with <C-w> prefix
 noremap <C-w><C-n> <C-w>l
 noremap <C-w><C-c> <C-w>k
 noremap <C-w><C-t> <C-w>j
+" ... and also with Alt- prefix
+nnoremap n <C-w>l
+nnoremap c <C-w>k
+nnoremap t <C-w>j
+nnoremap h <C-w>h
 
 " Resize windows with Alt+arrow
 
