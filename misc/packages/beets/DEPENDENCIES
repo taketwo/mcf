@@ -1,0 +1,5 @@
+# ReplayGain plugin uses Gstreamer, which requires pygobject to be installed into
+# the virtual environment. This, in turn, requires these other two ubuntu libs.
+ubuntu: libgirepository1.0-dev
+ubuntu: gobject-introspection
+pipsi: beets[fetchart] pygobject

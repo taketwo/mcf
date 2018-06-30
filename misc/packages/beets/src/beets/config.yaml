@@ -1,0 +1,29 @@
+directory: ~/Music
+replace:
+    '[\\/]': _
+    '^\.': _
+    '[\x00-\x1f]': _
+    '[<>:"\?\*\|]': ''
+    '\s+$': ''
+    '^\s+': ''
+    '^-': _
+asciify_paths: yes
+import:
+  write: yes
+  move: no
+  copy: yes
+  resume: ask
+paths:
+   default: $albumartist/$album%aunique{}/$title
+   singleton: $artist/Singletons/$title
+   comp: Compilations/$album%aunique{}/$title
+plugins: fetchart embedart edit lyrics replaygain scrub missing info ftintitle
+fetchart:
+  maxwidth: 500
+embedart:
+  remove_art_file: yes
+replaygain:
+  auto: no
+  backend: gstreamer
+ftintitle:
+  format: '(feat. {0})'
