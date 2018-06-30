@@ -9,8 +9,8 @@
 
 ## USER CONFIGURATION-----------------------------------------------------
 
-## Path to playlists
-playlists="$HOME/.config/mpd/playlists"
+music_dir="$HOME/Music"
+playlist_dir="$HOME/.config/mpd/playlists"
 host=${MPD_HOST:-localhost}
 
 ## END USER CONFIGURATION--------------------------------------------------
@@ -18,6 +18,15 @@ host=${MPD_HOST:-localhost}
 ## Prefix and suffix strings for the playlist file name
 pl_prefix='rating-'
 pl_suffix='.m3u'
+
+## Make an array with existing playlist files
+playlists=()
+for n in {1..5}; do
+  playlist="$playlist_dir/${pl_prefix}$n${pl_suffix}"
+  if [[ -f "$playlist" ]]; then
+    playlists+=("$playlist")
+  fi
+done
 
 ## Get current song from ncmpcpp or cmus or throw an error
 song=`mpc -h $host -f %file% current 2>/dev/null` || \
@@ -28,7 +37,7 @@ function get_song_rating()
   local filename=$1
   local n
   for n in {1..5}; do
-    local playlist="$playlists/${pl_prefix}$n${pl_suffix}"
+    local playlist="$playlist_dir/${pl_prefix}$n${pl_suffix}"
     if [[ -f "$playlist" ]]; then
       grep -qF "$filename" "$playlist"
       if [[ $? -eq 0 ]]; then
@@ -74,7 +83,23 @@ elif [[ -z "$song" ]]; then
 elif [[ "$1" == "?" ]]; then
   rating=`get_song_rating "$song"`
   echo "Rating of the current song: $rating"
+  exit 0
+elif [[ "$1" == "check" ]]; then
+  echo "Checking rating playlists for missing songs..."
+  missing=0
+  for playlist in "${playlists[@]}"; do
+    while IFS='' read -r line || [[ -n "$line" ]]; do
+      if [[ ! -f "$music_dir/$line" ]]; then
+        echo "Missing $music_dir/$line"
+        ((missing++))
+      fi
+    done < "$playlist"
+  done
+  echo "Total missing: $missing"
   exit 1
+elif [[ "$1" == "edit" ]]; then
+  echo "Opening playlist files for editing..."
+  $EDITOR ${playlists[@]}
 elif [[ "$1" -lt 0 || "$1" -gt 5 ]]; then
   echo "Rating must be between 1 and 5. Or zero to delete the current song's rating."
   exit 1
@@ -94,11 +119,11 @@ fi
 song=${song/file \///}
 
 ## Temporary file for grepping and sorting
-tmp="$playlists/tmp.m3u"
+tmp="$playlist_dir/tmp.m3u"
 
 ## Remove the song from all rating playlists
 for n in {1..5}; do
-  f="$playlists/${pl_prefix}$n${pl_suffix}"
+  f="$playlist_dir/${pl_prefix}$n${pl_suffix}"
   if [[ -f "$f" ]]; then
     grep -vF "$song" "$f" > "$tmp"
     mv -f $tmp $f
@@ -107,8 +132,8 @@ done
 
 ## Append the song to the new rating playlist
 if [[ $1 -ne 0 ]]; then
-  f="$playlists/${pl_prefix}$1${pl_suffix}"
-  mkdir -p "$playlists"
+  f="$playlist_dir/${pl_prefix}$1${pl_suffix}"
+  mkdir -p "$playlist_dir"
   echo "$song" >> "$f"
   sort -u "$f" -o "$tmp"
   mv -f $tmp $f
