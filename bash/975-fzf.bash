@@ -9,6 +9,7 @@ export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:back
 
 # Claim back Alt-c
 bind '"\ec": history-search-backward'
+bind '"\C-t": history-search-forward'
 
 #######################################################################
 #                            From FZF wiki                            #

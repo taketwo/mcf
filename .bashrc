@@ -4,6 +4,9 @@ if [[ $- != *i* ]]; then
   return
 fi
 
+# Remove Ctrl-C binding, use Ctrl-J instead
+stty intr ^j
+
 [[ $TMUX = "" ]] && export TERM='xterm-256color'
 
 BASH_TIME_STARTUP=${BASH_TIME_STARTUP:-1}

@@ -26,34 +26,34 @@ set bind-tty-special-chars off
 # Jump to the end of line
 "\e-": end-of-line
 
-# Alt-n
+# Alt-m
 # Move cursor one character forwards
-"\en": forward-char
-
-# Alt-h
-# Move cursor one character backwards
-"\eh": backward-char
-
-# Alt-f
-# Move cursor one word forward
-"\ef": forward-word
+"\em": forward-char
 
 # Alt-b
+# Move cursor one character backwards
+"\eb": backward-char
+
+# Alt-v
+# Move cursor one word forward
+"\ev": forward-word
+
+# Alt-w
 # Move cursor one word backwards
-"\eb": backward-word
+"\ew": backward-word
 
 #######################################################################
 #                Commands for manipulating the history                #
 #######################################################################
 
-# Alt-t
+# Ctrl-t
 # Search forward through the history for the string of characters
 # between the start of the current line and the current cursor position
-"\et": history-search-forward
+"\C-t": history-search-forward
 
-# Alt-c
+# Ctrl-c
 # Same as previous, but backwards
-"\ec": history-search-backward
+"\C-c": history-search-backward
 
 # Alt-.
 # Insert the last argument to the previous command
