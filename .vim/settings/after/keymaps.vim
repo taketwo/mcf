@@ -130,6 +130,7 @@ nnoremap <silent> n :TmuxNavigateRight<CR>
 nnoremap <silent> c :TmuxNavigateUp<CR>
 nnoremap <silent> t :TmuxNavigateDown<CR>
 nnoremap <silent> h :TmuxNavigateLeft<CR>
+nnoremap <silent> <Space> :TmuxNavigatePrevious<cr>
 
 " Resize windows with Alt+arrow
 
