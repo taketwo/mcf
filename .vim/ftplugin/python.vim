@@ -39,7 +39,10 @@ nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
 " Turn flake8 style errors into warnings
 let b:ale_type_map = {'flake8': {'ES': 'WS'}}
 " Flake8 configuration, as recommened by Black
-let b:ale_python_flake8_options = '--ignore=E501 --select=C,E,F,W,B,B950 --max-line-length=80'
+" Ignore
+"  * E501 - strict line length, we use bugbear's relaxed B950 instead
+"  * W503 (line break before binary operator) - this one is not compliant with PEP8
+let b:ale_python_flake8_options = '--ignore=E501,W503 --select=C,E,F,W,B,B950 --max-line-length=80'
 " Fixers
 let b:ale_fixers = [ 'black' ]
 
