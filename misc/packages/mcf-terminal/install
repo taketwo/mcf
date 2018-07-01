@@ -23,8 +23,3 @@ dconf write $profile_path/font "'Fantasque Sans Mono 12'"
 # Set 1024 lines (just in case) and unlimited scrolling
 dconf write $profile_path/scrollback-lines "1024"
 dconf write $profile_path/scrollback-unlimited "true"
-
-# Configure bash prompt (powerline-shell)
-cd $HOME/.mcf/scripts/bundle/powerline-shell
-python2 install.py
-sed -i -e 's/env python$/env python2/' powerline-shell.py

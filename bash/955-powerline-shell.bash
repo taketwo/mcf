@@ -1,6 +1,8 @@
-# Setup fancy "powerline-style" prompt
 function _update_ps1()
 {
-  export PS1="$(~/.mcf/scripts/bundle/powerline-shell/powerline-shell.py $?)"
+  export PS1="$(powerline-shell $?)"
 }
-export PROMPT_COMMAND="_update_ps1"
+
+if hash powerline-shell 2>/dev/null; then
+  export PROMPT_COMMAND="_update_ps1"
+fi
