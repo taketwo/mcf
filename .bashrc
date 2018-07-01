@@ -4,9 +4,6 @@ if [[ $- != *i* ]]; then
   return
 fi
 
-# Remove Ctrl-C binding, use Ctrl-J instead
-stty intr ^j
-
 [[ $TMUX = "" ]] && export TERM='xterm-256color'
 
 BASH_TIME_STARTUP=${BASH_TIME_STARTUP:-1}
@@ -60,3 +57,8 @@ unset sorted
 unset timed_source
 unset bash_times_file
 unset BASH_TIME_STARTUP
+
+# Remove Ctrl-C binding, use Ctrl-J instead
+# We do this in the very end of initialization sequence to avoid weird errors while
+# entering into pipenv shell, which (supposedly) sends Ctrl-J signal at some point
+stty intr ^J
