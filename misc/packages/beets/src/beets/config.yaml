@@ -21,7 +21,7 @@ plugins: fetchart embedart edit lyrics replaygain scrub missing info ftintitle
 fetchart:
   maxwidth: 500
 embedart:
-  remove_art_file: yes
+  remove_art_file: no
 replaygain:
   auto: no
   backend: gstreamer
