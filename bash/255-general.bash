@@ -47,8 +47,8 @@ HISTCONTROL=ignoredups:ignorespace
 # }}}
 # HISTSIZE {{{
 # ========
-# The number of commands to remember in the command history. The default value
-# is 500.
+# The number of commands to remember in the command history (in memory, while
+# the bash session is ongoing). The default value is 500.
 HISTSIZE=25000
 
 # }}}
