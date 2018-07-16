@@ -54,6 +54,7 @@ Plug 'tweekmonster/startuptime.vim'
 Plug 'sickill/vim-pasta'
 Plug 'taketwo/vimux'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'dyng/ctrlsf.vim'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
