@@ -272,4 +272,5 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
 " Some keys that are still free
 "
-" C-f, C-b : scroll up/down by default
+" Tab
+" $ ^
