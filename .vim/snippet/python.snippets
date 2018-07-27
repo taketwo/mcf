@@ -5,7 +5,7 @@ def insert_import(pkg, identifier=None):
     r2 = re.compile('^# -\*- coding: utf-8 -\*-$')
     # Scan the buffer to find (a) any existing imports (b) "coding" line
     # If imports exists, insert before them. If imports do not exist, insert
-    # after the "coding" line. If that does not exist either, instert in the
+    # after the "coding" line. If that does not exist either, insert in the
     # beginning of the file.
     location = 0
     for i, line in enumerate(snip.buffer):
@@ -86,13 +86,13 @@ args = parser.parse_args()
 endsnippet
 
 snippet arg "Add argument" !b
-parser.add_argument('${1:name}', help='${2:help}')$0
+parser.add_argument("${1:--name}", ${2/.+/"-/}${2:n}${2/.+/", /}${3/.+/type=/}${3:int}${3/.+/, /}${4/.+/default=/}${4:0}${4/.+/, /}help="${5:help}")$0
 endsnippet
 
 snippet argb "Add argument (boolean flag)" !b
-parser.add_argument('${1:name}', action='store_true', help='${2:help}')$0
+parser.add_argument("${1:--name}", ${2/.+/"-/}${2:n}${2/.+/", /}action="store_true", help="${3:help}")$0
 endsnippet
 
 snippet argf "Add argument (file)" !b
-parser.add_argument('${1:name}', type=argparse.FileType('${2:r}'), help='${3:help}')$0
+parser.add_argument("${1:name}", type=argparse.FileType("${2:r}"), help="${3:help}")$0
 endsnippet
