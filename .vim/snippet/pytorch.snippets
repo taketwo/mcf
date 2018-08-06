@@ -1,0 +1,7 @@
+snippet param "PyTorch parameter" b
+self.${1:param_name} = nn.parameter.Parameter(torch.Tensor(${2:d0, d1, ...}))
+endsnippet
+
+snippet xavier "PyTorch Xavier weight initialization" b
+nn.init.xavier_uniform_(self.${1:weights}, gain=nn.init.calculate_gain("relu"))
+endsnippet
