@@ -102,6 +102,10 @@ set bind-tty-special-chars off
 # Prepends optirun to the current command and runs it
 "\eo": "\C-aoptirun \C-m"
 
+# Alt-p
+# Prepends pudb3 to the current command and runs it
+"\ep": "\C-apudb3 \C-m"
+
 # Ctrl-Space
 # Print the contents of the current directory
 "\C- ": "ls -lah\C-m"
