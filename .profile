@@ -88,3 +88,5 @@ export PYENV_ROOT="${HOME}/.pyenv"
 export WORKON_HOME="${HOME}/.virtualenvs"
 mkdir -p ${WORKON_HOME}
 
+# Store Pipenv virtual environments inside project
+export PIPENV_VENV_IN_PROJECT=1
