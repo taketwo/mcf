@@ -30,6 +30,9 @@ let b:surround_101 = "enumerate(\r)"
 nnoremap <buffer> <silent> <LocalLeader>: :call AppendColon()<CR>
 inoremap <buffer> <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
 
+" Insert PUDB breakpoint after current line
+nnoremap <silent> <LocalLeader>b opudb<C-R>=UltiSnips#ExpandSnippet()<CR>
+
 " YCM mappings
 nnoremap <buffer> gd :YcmCompleter GoTo<CR>
 nnoremap <buffer> gr :YcmCompleter GoToReferences<CR>
