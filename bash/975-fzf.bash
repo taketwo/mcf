@@ -42,3 +42,11 @@ fv()
   IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'head -100 {}'))
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 }
+
+# fpkg - fuzzy dpkg (with package status preview)
+fpkg()
+{
+  local packages
+  packages=$(dpkg -l  | awk '{print $2}') &&
+  package=$(echo "$packages" | fzf --preview 'dpkg -s {}')
+}
