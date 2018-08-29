@@ -46,6 +46,8 @@ let b:ale_type_map = {'flake8': {'ES': 'WS'}}
 "  * E501 - strict line length, we use bugbear's relaxed B950 instead
 "  * W503 (line break before binary operator) - this one is not compliant with PEP8
 let b:ale_python_flake8_options = '--ignore=E501,W503 --select=C,E,F,W,B,B950 --max-line-length=80'
+" MyPy configuration, do not follow imports
+let g:ale_python_mypy_options = '--ignore-missing-imports'
 " Fixers
 let b:ale_fixers = [ 'black' ]
 
