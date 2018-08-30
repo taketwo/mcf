@@ -35,11 +35,11 @@ fkill()
   fi
 }
 
-# fv - fuzzy vim (with preview)
+# fv - fuzzy vim (with pygmentized preview)
 fv()
 {
   local files
-  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'head -100 {}'))
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'pygmentize -g -f terminal256 -P style=solarizedlight {} | head -100'))
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
