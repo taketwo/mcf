@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+# Hexdump with highlighting
+
+hexdump -C "$@" | pygmentize -l hexdump | /usr/bin/less -FiXRM

@@ -35,12 +35,6 @@ hl()
    highlight "$@" | /usr/bin/less -FiXRM
 }
 
-# Hexdump with highlighting
-hex()
-{
-  hexdump -C "$@" | pygmentize -l hexdump | /usr/bin/less -FiXRM
-}
-
 #______________________________________________________________________________
 # Check whether the argument is a runnable command: shell built-in, alias,
 # function, or file in the PATH
