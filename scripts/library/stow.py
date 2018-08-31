@@ -2,7 +2,7 @@ import locale
 from subprocess import check_call, check_output, CalledProcessError
 
 import mcf
-STOW_SRC = mcf.path('bash', '555-stow.bash')
+STOW_SRC = mcf.path('bash', '50-stow.bash')
 
 
 def show_orphans():

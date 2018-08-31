@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This implements an approach proposed by Magnus Thor Torfason
 # (see http://permalink.gmane.org/gmane.comp.gnu.stow.general/6646)
 
-STOW_DIR=/opt/stow
-STOW_TARGET=/usr/local
+export STOW_DIR="/opt/stow"
+export STOW_TARGET="/usr/local"
 
 mktouch ()
 {
@@ -26,7 +26,7 @@ stow-adopt-as ()
   fi;
   PACKAGE="$1";
   chkstow -t $STOW_TARGET -a | sed "s+^Unstowed file: $STOW_TARGET+$STOW_DIR/$PACKAGE+" | xargs -l -i bash -c 'mktouch "$@"' _ {};
-  sudo stow --adopt -t $STOW_TARGET -d $STOW_DIR -vv $PACKAGE
+  sudo stow --adopt -t $STOW_TARGET -d $STOW_DIR -vv "$PACKAGE"
 }
 
 stow-install ()
@@ -36,7 +36,7 @@ stow-install ()
     return 1;
   fi;
   PACKAGE="$1";
-  sudo stow -t $STOW_TARGET -d $STOW_DIR -vv $PACKAGE
+  sudo stow -t $STOW_TARGET -d $STOW_DIR -vv "$PACKAGE"
 }
 
 stow-delete ()
@@ -46,7 +46,7 @@ stow-delete ()
     return 1;
   fi;
   PACKAGE="$1";
-  sudo stow -t $STOW_TARGET -d $STOW_DIR -vv --delete $PACKAGE
+  sudo stow -t $STOW_TARGET -d $STOW_DIR -vv --delete "$PACKAGE"
 }
 
 stow-show-orphans ()
@@ -56,7 +56,7 @@ stow-show-orphans ()
 
 function __complete_stow ()
 {
-  packages=`ls "$STOW_DIR"`
+  packages=$(ls "$STOW_DIR")
   local current=${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=($(compgen -W "$packages" -- $current))
 }
