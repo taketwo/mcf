@@ -35,6 +35,7 @@ vim
 xsel                                   # copy to clipboard
 ctags
 xdotool                                # paste with F5
+nix: ShellCheck                        # linting for Bash
 
 # Util
 unrar
