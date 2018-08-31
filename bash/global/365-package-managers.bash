@@ -1,1 +1,0 @@
-../365-package-managers.bash
