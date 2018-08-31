@@ -8,6 +8,10 @@ let g:ycm_warning_symbol = g:ale_sign_warning
 
 let g:ycm_global_ycm_extra_conf = $MCF.'/misc/.ycm_extra_conf.py'
 
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_completion = 0
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
 function! BuildYCM(info)
     if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
         let opts = ' --clang-completer'
