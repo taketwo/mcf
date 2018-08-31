@@ -42,54 +42,6 @@ hex()
 }
 
 #______________________________________________________________________________
-#
-# Find the type of executable "thing" that the shell will use and try to
-# describe it in its output:
-#
-# For an alias, print its definition
-# For a function, print its code
-# For a shell builtin, print its help text
-# For a script, print the source
-# For a binary executable file, print nothing.
-#______________________________________________________________________________
-#
-function code()
-{
-   local type="$(builtin type -t $1)"
-   case $type in
-      alias)
-         echo "$1 is an alias"
-         builtin alias "$1" | sed 's/^[^=]\+=//'
-         ;;
-      function)
-         echo "$1 is a function"
-         find_function $1 | awk '{ printf("Defined in: %s +%d\n", $3, $2) }'
-         builtin declare -f "$1" | hl
-         ;;
-      builtin | keyword)
-         echo "$1 is a shell $type"
-         builtin help "$1"
-         ;;
-      file)
-         local path="$(which "$1")"
-         if head -1 "$path" | grep -q "^#!"; then
-            echo "$1 is a script at $path"
-            cat "$path" | hl
-         else
-            echo "$1 is a binary at $path"
-         fi
-         ;;
-      *)
-         echo "I don't know what $1 is"
-         return 1
-         ;;
-   esac
-}
-complete -c code # Complete with command names
-#______________________________________________________________________________
-
-
-#______________________________________________________________________________
 # Check whether the argument is a runnable command: shell built-in, alias,
 # function, or file in the PATH
 #______________________________________________________________________________
