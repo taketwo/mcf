@@ -11,6 +11,6 @@ nnoremap <Leader>.T :FzfTags<CR>
 nnoremap <Leader>.c :FzfBCommits<CR>
 nnoremap <Leader>.h :FzfHelptags<CR>
 nnoremap <Leader>.s :FzfSnippets<CR>
-nnoremap <Leader>.a :FzfAg<CR>
+nnoremap <Leader>.r :FzfRg<CR>
 
 nnoremap <Space> :FzfBuffers<CR>
