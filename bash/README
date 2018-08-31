@@ -13,7 +13,7 @@ Prefix consists of three digits:
 
 Groups:
 
-  1 - Basic helper functions
+  1 - Helper Bash functions
   2 - Bash and environment configuration
   3 - Aliases
   4 - Replacements or reconfigurations of commands
