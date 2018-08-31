@@ -17,7 +17,7 @@ function string_split()
     '{  for(i = 1; i <= NF; i++) {
             print $i
         }
-    }' $a_inputfile
+    }' "$a_inputfile"
 
   return $?
 }
@@ -42,7 +42,7 @@ function string_join()
     }
     END{
             print "" # Print a new line at the end.
-  }' $a_inputfile
+  }' "$a_inputfile"
   return $?
 }
 
@@ -61,7 +61,7 @@ function remove_from_list()
 
   [[ -z $a_element ]] && return 1
 
-  string_split "$a_delimiter" $a_inputfile | \
+  string_split "$a_delimiter" "$a_inputfile" | \
     grep -v "^$a_element\$" | \
     string_join "$a_delimiter"
 

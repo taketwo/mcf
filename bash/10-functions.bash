@@ -25,7 +25,7 @@ function call_if()
 # Find the location where a function has been defined
 function find_function()
 {
-   ( shopt -s extdebug; declare -F $1 )
+   ( shopt -s extdebug; declare -F "$1" )
 }
 
 # Show a pretty printed list of shell functions, sorted by file and line
@@ -36,7 +36,7 @@ function list_functions()
    shopt -s extdebug
    for f in $(declare -F | awk '{ print $3 }' )
    do
-      declare -F $f
+      declare -F "$f"
    done
    ) |
 
