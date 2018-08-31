@@ -31,3 +31,5 @@ if ! hash see 2>/dev/null; then
   alias see='xdg-open'
 fi
 
+# Use GitHub theme in bat
+export BAT_THEME="GitHub"

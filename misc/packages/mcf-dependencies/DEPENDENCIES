@@ -46,6 +46,7 @@ tree
 ranger
 nix: fd
 nix: ripgrep
+nix: bat
 
 # Misc
 xcape
