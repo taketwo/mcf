@@ -2,20 +2,25 @@
 
 # Print Bash startup timings
 
-pid=$(ps -o ppid= -p $$)
-[[ -f "/tmp/bashtimes.$pid" ]] || return 1
-awk '
-{
-   if (NR==1) {
-      first=$2
-   }
-   last=$3
-   ms = ($3 - $2) / 1000000
-   printf( "%6.2f ms %s\n", ms, $1)
-}
-END {
-   printf("Total: %6.2f ms\n",  (last-first) / 1000000 )
-}
-' "/tmp/bashtimes.$pid" |
+source "$MCF/bash/10-strings.bash"
 
-sort -k1 -n -r
+pid=$(string_trim "$(ps -o ppid= -p $$)")
+if [[ -f "/tmp/bashtimes.$pid" ]]; then
+  awk '
+  {
+     if (NR==1) {
+        first=$2
+     }
+     last=$3
+     ms = ($3 - $2) / 1000000
+     printf( "%6.2f ms %s\n", ms, $1)
+  }
+  END {
+     printf("Total: %6.2f ms\n",  (last-first) / 1000000 )
+  }
+  ' "/tmp/bashtimes.$pid" |
+
+  sort -k1 -n -r
+else
+  echo "bashtimes file for the current Bash session does not exist"
+fi
