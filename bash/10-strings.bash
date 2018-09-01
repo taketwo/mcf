@@ -67,3 +67,13 @@ function remove_from_list()
 
   return $?
 }
+
+# Trim leading and trailing white-space from a string
+# Source: https://github.com/dylanaraps/pure-bash-bible#trim-leading-and-trailing-white-space-from-string
+function string_trim()
+{
+  : "${1#"${1%%[![:space:]]*}"}"
+  : "${_%"${_##*[![:space:]]}"}"
+  printf '%s\n' "$_"
+}
+
