@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-source $MCF/.xmonad/polybar.bash
-source $MCF/.xmonad/solarized.bash
+# shellcheck source=polybar.bash
+source "$MCF/.xmonad/polybar.bash"
+# shellcheck source=solarized.bash
+source "$MCF/.xmonad/solarized.bash"
 
-case `keyboard -g` in
+case $(keyboard -g) in
   "us(dvorak)") layout="DK";;
   "ru") layout="RU";;
   "us") layout="US";;
@@ -12,10 +14,10 @@ case `keyboard -g` in
 esac
 
 StartIndicator
-Add $layout
+Add "$layout"
 Action 1 "keyboard -n"
 Action 2 "keyboard -s de"
 Action 3 "keyboard -s us"
-Color "#ffffff" $SolarizedYellow
+Color "#ffffff" "$SolarizedYellow"
 
 FlushIndicator
