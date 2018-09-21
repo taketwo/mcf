@@ -1,3 +1,13 @@
+snippet module "PyTorch module" b
+class ${1:FoobarNet}(nn.Module):
+	def __init__(self):
+		super().__init__()
+		$0
+
+	def forward(self, X):
+		return X
+endsnippet
+
 snippet param "PyTorch parameter" b
 self.${1:param_name} = nn.parameter.Parameter(torch.Tensor(${2:d0, d1, ...}))
 endsnippet
