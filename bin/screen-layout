@@ -19,11 +19,11 @@ EOF
 function set_layout()
 {
   case $1 in
-    laptop) xrandr --output $EDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output $DP1 --off --output $DP2 --off --output $DP3 --off;;
-    office-0) xrandr --output $EDP1 --off --output $DP1 --off --output $DP2 --off --output $DP3 --off;;
-    office-1) xrandr --output $EDP1 --off --output $DP1 --off --output $DP2 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP3 --off;;
-    office-2) xrandr --output $EDP1 --off --output $DP1 --mode 1680x1050 --pos 2560x0 --rotate normal --output $DP2 --mode 2560x1440 --pos 0x0 --rotate normal --output $DP3 --off;;
-    office) xrandr --output $EDP1 --off --output $DP1 --mode 1680x1050 --pos 4240x0 --rotate normal --output $DP2 --mode 2560x1440 --pos 1680x0 --rotate normal --output $DP3 --mode 1680x1050 --pos 0x0 --rotate normal;;
+    laptop) xrandr --output "$EDP1" --primary --mode "$EDP1_MODE" --pos 0x0 --rotate normal --output "$DP1" --off --output "$DP2" --off --output "$DP3" --off;;
+    office-0) xrandr --output "$EDP1" --off --output "$DP1" --off --output "$DP2" --off --output "$DP3" --off;;
+    office-1) xrandr --output "$EDP1" --off --output "$DP1" --off --output "$DP2" --mode "$DP2_MODE" --pos 0x0 --rotate normal --output "$DP3" --off;;
+    office-2) xrandr --output "$EDP1" --off --output "$DP1" --off --output "$DP2" --mode "$DP2_MODE" --pos 1680x0 --rotate normal --output "$DP3" --mode "$DP3_MODE" --pos 0x0 --rotate normal ;;
+    office) xrandr --output "$EDP1" --off --output "$DP1" --mode "$DP1_MODE" --pos 4240x0 --rotate normal --output "$DP2" --mode "$DP2_MODE" --pos 1680x0 --rotate normal --output "$DP3" --mode "$DP3_MODE" --pos 0x0 --rotate normal;;
   esac
   sleep 7
 }
@@ -43,26 +43,31 @@ done
 # Sometimes it has dashes (eDP-1), sometimes it does not (eDP1)
 # We detect the current scheme and set monitor names accordingly
 
-if [[ `xrandr | grep eDP-1-1` ]]; then
-  EDP1='eDP-1-1'
-  DP1='DP-1-2-1'
-  DP2='DP-1-2-2'
-  DP3='DP-1-2-3'
-elif [[ `xrandr | grep eDP1-1` ]]; then
-  EDP1='eDP-1'
-  DP1='DP-2-1'
-  DP2='DP-2-2'
-  DP3='DP-2-3'
+if xrandr | grep -q "eDP-1-1"; then
+  EDP1="eDP-1-1"
+  DP1="DP-1-2-1"
+  DP2="DP-1-2-2"
+  DP3="DP-1-2-3"
+elif xrandr | grep -q "eDP1-1"; then
+  EDP1="eDP-1"
+  DP1="DP-2-1"
+  DP2="DP-2-2"
+  DP3="DP-2-3"
 else
-  EDP1='eDP1'
-  DP1='DP2-1'
-  DP2='DP2-2'
-  DP3='DP2-3'
+  EDP1="eDP1"
+  DP1="DP2-1"
+  DP2="DP2-2"
+  DP3="DP2-3"
 fi
 
+EDP1_MODE="1920x1080"
+DP1_MODE="2560x1440"
+DP2_MODE="2560x1440"
+DP3_MODE="1680x1050"
+
 if [[ $layout == "" ]]; then
-  connected=`xrandr --query | grep -c " connected "`
-  active=`xrandr --query | grep -c "*"`
+  connected=$(xrandr --query | grep -c " connected ")
+  active=$(xrandr --query | grep -c "*")
   echo -n "Number of connected/active displays: $connected/$active, "
   if [[ $connected == 4 ]]; then
     if [[ $active == 1 ]]; then
