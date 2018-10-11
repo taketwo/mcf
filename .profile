@@ -67,7 +67,7 @@ fi
 [ -d "${HOME}/.local/bin" ] && PATH="${HOME}/.local/bin:${PATH}"
 
 # Nix: source config if it exists and was not sourced already
-if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] &&  [ -z ${NIX_PATH} ]; then
+if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] &&  [ -z "${NIX_PATH}" ]; then
   . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 fi
 
@@ -86,7 +86,7 @@ export PYENV_ROOT="${HOME}/.pyenv"
 
 # Python virtual environments
 export WORKON_HOME="${HOME}/.virtualenvs"
-mkdir -p ${WORKON_HOME}
+mkdir -p "${WORKON_HOME}"
 
 # Store Pipenv virtual environments inside project
 export PIPENV_VENV_IN_PROJECT=1
