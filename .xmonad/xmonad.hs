@@ -432,7 +432,7 @@ main = do
         dynamicLogWithPP (logHookPolybar dbus)
     , layoutHook         = myLayoutHook
     , handleEventHook    = myHandleEventHook
-    , startupHook        = setWMName "LG3D" <+> spawn polybarConfig
+    , startupHook        = setWMName "LG3D" <+> spawn pathPolybar
     }
     `additionalKeysP`
     myKeyBindingsTable

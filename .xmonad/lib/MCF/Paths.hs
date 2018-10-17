@@ -11,5 +11,5 @@ import System.FilePath (joinPath)
 
 pathHome = unsafePerformIO $ getHomeDirectory
 pathXmonad = joinPath [pathHome, ".xmonad/"]
-pathPolybar = joinPath [pathXmonad, "polybarrc"]
+pathPolybar = joinPath [pathXmonad, "spawn_polybar.sh"]
 pathIcons = joinPath [pathXmonad, "icons/"]

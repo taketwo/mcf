@@ -27,7 +27,7 @@ alert = ${colors/solarized.orange}
 
 [bar/primary]
 
-;monitor = ${env:MONITOR:HDMI-1}
+monitor = ${env:MONITOR:}
 width = 100%
 height = 22
 radius = 0.0
