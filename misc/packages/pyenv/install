@@ -17,6 +17,23 @@ def is_installed():
     return os.path.isdir(make_pyenv_path())
 
 
+def checkout_latest():
+    cmd = 'git describe --abbrev=0 --tags'
+    ver = subprocess.check_output(cmd.split()).strip()
+    ver = ver.decode(sys.stdout.encoding)
+    print('latest released version: {}'.format(ver))
+    cmd = 'git checkout ' + ver
+    subprocess.check_call(cmd.split())
+
+
+def update():
+    p = make_pyenv_path()
+    os.chdir(p)
+    print('fetching from the remote repository')
+    subprocess.check_call(["git", "fetch"])
+    checkout_latest()
+
+
 def install():
     p = make_pyenv_path()
     if os.path.isdir(p):
@@ -27,23 +44,24 @@ def install():
         cmd = 'git clone https://github.com/pyenv/pyenv.git ' + p
         subprocess.check_call(cmd.split())
         os.chdir(p)
-        cmd = 'git describe --abbrev=0 --tags'
-        ver = subprocess.check_output(cmd.split()).strip()
-        ver = ver.decode(sys.stdout.encoding)
-        print('latest released version: {}'.format(ver))
-        cmd = 'git checkout ' + ver
-        subprocess.check_call(cmd.split())
+        checkout_latest()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
     Install Pyenv from Git repository.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--reinstall', action='store_true',
-                        help='reinstall if already installed')
+    parser.add_argument('--update', action='store_true',
+                        help='update if already installed')
     args = parser.parse_args()
-    if not args.reinstall and is_installed():
-        print('Pyenv is already installed. '
-              'Pass --reinstall to force reinstallation.')
+    if args.update:
+        if not is_installed():
+            print("Pyenv is not installed, can not update")
+        else:
+            update()
     else:
-        install()
+        if is_installed():
+            print('Pyenv is already installed. '
+                  'Pass --update to update to the latest version.')
+        else:
+            install()
