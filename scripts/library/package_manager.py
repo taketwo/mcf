@@ -156,7 +156,7 @@ class PackageManager(object):
             p = [package]
         INSTALL[manager](p, args)
 
-    def install(self, package_name, verbose=False, force_reinstall=False):
+    def install(self, package_name, verbose=False, force_reinstall=False, update=False):
         commands = self.resolve(package_name)
         merged = self._merge(commands)
         if verbose:
@@ -174,6 +174,8 @@ class PackageManager(object):
                     cmd = [s]
                     if force_reinstall:
                         cmd.append("--reinstall")
+                    if update:
+                        cmd.append("--update")
                     subprocess.check_call(cmd, env=os.environ)
                     print("")
             if "setup" in merged:
@@ -214,6 +216,6 @@ class PackageManager(object):
         return dict(merged)
 
 
-def install(package_name, verbose=False, force_reinstall=False):
+def install(package_name, verbose=False, force_reinstall=False, update=False):
     pm = PackageManager()
-    pm.install(package_name, verbose, force_reinstall)
+    pm.install(package_name, verbose, force_reinstall, update)

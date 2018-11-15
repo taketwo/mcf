@@ -9,10 +9,11 @@ import package_manager
 @click.command()
 @click.argument('package', type=str)
 @click.option('--reinstall', help='force reinstallation', is_flag=True)
-def install(package, reinstall):
+@click.option('--update', help='update', is_flag=True)
+def install(package, reinstall, update):
     """Install a package."""
     click.echo('Package name: {}'.format(package))
-    package_manager.install(package, verbose=True, force_reinstall=reinstall)
+    package_manager.install(package, verbose=True, force_reinstall=reinstall, update=update)
 
 
 if __name__ == '__main__':
