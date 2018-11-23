@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ -d /nix ]]; then
+  echo "Nix is already installed"
+else
+  curl https://nixos.org/nix/install | sh
+fi
