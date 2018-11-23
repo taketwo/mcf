@@ -22,7 +22,6 @@ if [[ -d "$VENVS/pipsi" ]]; then
   fi
 fi
 
-# Install Pipsi with Python 3
-eval "$(pyenv init -)"
-pyenv shell 3.6.5
-curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python - --no-modify-path
+# Install Pipsi from master to avoid issues with virtualenv
+# See: https://github.com/mitsuhiko/pipsi/issues/125
+curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python3 - --no-modify-path --src=git+https://github.com/mitsuhiko/pipsi.git
