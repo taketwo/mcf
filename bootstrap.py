@@ -4,7 +4,7 @@
 import os
 import sys
 import subprocess
-from os.path import expanduser, join
+from os.path import expanduser, join, realpath
 from shutil import which
 
 if not which("git"):
@@ -34,14 +34,24 @@ except subprocess.CalledProcessError:
     os.exit("Failed to obtain MCF sources, aborting...")
 print("")
 
-print("[*] Import install script")
-library = join(dest, "scripts", "library")
-os.environ["PYTHONPATH"] = library
-sys.path.append(library)
-print("")
+if "MCF" not in os.environ:
+    print("[*] Import install script")
+    library = join(dest, "scripts", "library")
+    os.environ["PYTHONPATH"] = library
+    sys.path.append(library)
+    print("")
 
-print("[*] Install package managers")
-print("")
+    print("[*] Install package managers")
+    print("")
 
-__import__("package_manager").install("nix", verbose=True)
-__import__("package_manager").install("pipsi", verbose=True)
+    __import__("package_manager").install("nix", verbose=True)
+    __import__("package_manager").install("pipsi", verbose=True)
+
+    print("First part of bootstrapping procedure is completed.")
+    print("Now run the following command in this terminal:")
+    print("    source {} && {}".format(join(dest, ".profile"), realpath(__file__)))
+else:
+    print("[*] Install MCF")
+    print("")
+
+    __import__("package_manager").install("mcf", verbose=True)
