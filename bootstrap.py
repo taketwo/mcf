@@ -40,7 +40,8 @@ os.environ["PYTHONPATH"] = library
 sys.path.append(library)
 print("")
 
-print("[*] Install MCF")
+print("[*] Install package managers")
 print("")
 
-__import__("package_manager").install("mcf", verbose=True)
+__import__("package_manager").install("nix", verbose=True)
+__import__("package_manager").install("pipsi", verbose=True)
