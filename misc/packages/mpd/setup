@@ -1,40 +1,17 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import os
-import argparse
 from subprocess import call
-from platform import linux_distribution
-from os.path import join, split, expanduser, realpath
 
-from filesystem import link
+from install import only
 
 
-PLATFORM = linux_distribution()[0].lower()
-
-
+@only("ubuntu")
 def setup():
-    print('Creating symlinks...')
-    home = expanduser('~')
-    # MPD config directory
-    path, fl = split(realpath(__file__))
-    src = join(path, 'src', 'mpd')
-    tgt = join(home, '.config', 'mpd')
-    link(src, tgt, 'MPD config directory')
-    # Autostart item
-    src = join(path, 'src', 'mpd.desktop')
-    tgt = join(home, '.config', 'autostart', 'mpd.desktop')
-    link(src, tgt, 'MPD autostart entry')
-    if PLATFORM == 'ubuntu':
-        print('Disabling MPD system service...')
-        call(['sudo', 'service', 'mpd', 'stop'])
-        call(['sudo', 'update-rc.d', 'mpd', 'disable'])
+    print("Disabling MPD system service...")
+    call(["sudo", "service", "mpd", "stop"])
+    call(["sudo", "update-rc.d", "mpd", "disable"])
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='''
-    Setup MPD. This includes symlinking config folder and adding the
-    program to autostart.
-    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
-    args = parser.parse_args()
+if __name__ == "__main__":
     setup()

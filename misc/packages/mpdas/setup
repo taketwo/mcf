@@ -2,31 +2,18 @@
 # encoding: utf-8
 
 import os
-import hashlib
-import argparse
 from getpass import getpass
-from os.path import expanduser, split, realpath, join
-
-from filesystem import link
+from os.path import expanduser, join
 
 
 def setup():
-    home = expanduser('~')
-    path, fl = split(os.path.realpath(__file__))
-    src = join(path, 'src', 'mpdas.desktop')
-    tgt = join(home, '.config/autostart/mpdas.desktop')
-    link(src, tgt, 'MPDAS autostart entry')
     username = input("Enter Last.fm username: ")
-    passwd = getpass('Enter password: ')
-    config = join(home, '.config', 'mpdasrc')
-    with open(config, 'w') as f:
-        f.writelines('username: {}\npassword: {}'.format(username, passwd))
-    os.chmod(config, 0O600)
+    passwd = getpass("Enter password: ")
+    config = join(expanduser("~"), ".config", "mpdasrc")
+    with open(config, "w") as f:
+        f.writelines("username: {}\npassword: {}".format(username, passwd))
+    os.chmod(config, 0o600)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='''
-    Setup mpdas. This adds the program to autostart and creates a config file.
-    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
-    args = parser.parse_args()
+if __name__ == "__main__":
     setup()
