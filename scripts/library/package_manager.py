@@ -83,11 +83,15 @@ class Cabal(Install):
         stow.adopt_as("cabal")
 
 
-INSTALL = {"nix": Nix, "pip": Pip, "pipsi": Pipsi, "cabal": Cabal}
+# A dictionary mapping manager names to classes. The insertion order matters, we
+# want to install with the main system manager first and with secondary managers
+# (e.g. Cabal) last.
+INSTALL = dict()
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
 if PLATFORM == "arch":
     INSTALL["arch"] = Yaourt
+INSTALL.update({"nix": Nix, "pip": Pip, "pipsi": Pipsi, "cabal": Cabal})
 
 
 class PackageManager(object):
