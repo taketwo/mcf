@@ -21,7 +21,7 @@ class Install(object):
 
 
 class AptGet(Install):
-    CMD = "sudo apt-get install --force-yes -y"
+    CMD = "sudo apt-get install --yes"
 
 
 class Yaourt(Install):
