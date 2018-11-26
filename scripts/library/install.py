@@ -7,7 +7,7 @@ def get_platform():
     p = linux_distribution()[0].lower()
     if p == "debian":
         print("WARNING: platform was determined to be Debian, not Ubuntu")
-        return "ubunut"
+        return "ubuntu"
     return p
 
 
