@@ -23,12 +23,12 @@ w3m
 git
 
 # Python-related
-python-pip
-python-virtualenv
-python-urwid
+#python-pip
+#python-virtualenv
+#python-urwid
 pipsi: flake8 flake8-bugbear
 pipsi: pygments pygments-style-solarized  # for hl command
-# pip: click
+python3-click
 
 # Vim
 vim
