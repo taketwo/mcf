@@ -2,10 +2,12 @@ import os
 from os.path import join, isdir
 from collections import defaultdict
 import subprocess
+from pathlib import Path
 
 import stow
 import mcf
 from install import get_platform
+from filesystem import link
 
 
 PACKAGES = mcf.path("misc", "packages")
@@ -68,7 +70,8 @@ class Pipsi(Install):
             subprocess.check_output(cmd.split())
         except subprocess.CalledProcessError as e:
             import re
-            if not re.findall(r'already installed', str(e.output)):
+
+            if not re.findall(r"already installed", str(e.output)):
                 raise e
 
 
@@ -128,7 +131,28 @@ class PackageManager(object):
             setup_script = join(directory, "setup")
             if os.path.isfile(setup_script):
                 commands.append(("setup", setup_script))
+            commands.extend(self._parse_symlinks(package_name))
             return commands
+
+    def _parse_symlinks(self, package_name):
+        """
+        Parse SYMLINKS file (if exists) for a given package.
+        Return a list of commands.
+        """
+        directory = join(PACKAGES, package_name)
+        symlinks = join(directory, "SYMLINKS")
+        commands = list()
+        if os.path.isfile(symlinks):
+            for line in open(symlinks, "r"):
+                line = self._remove_comments(line).strip()
+                tokens = line.split(":")
+                if len(tokens) not in [2, 3]:
+                    raise Exception('Invalid symlink spec "{}"'.format(line))
+                src = self._resolve_path(tokens[0], directory)
+                tgt = self._resolve_path(tokens[1], mcf.HOME)
+                desc = tokens[2] if len(tokens) > 2 else ""
+                commands.append(("symlink", (src, tgt, desc)))
+        return commands
 
     def _remove_comments(self, line):
         p = line.find("#")
@@ -182,12 +206,20 @@ class PackageManager(object):
                         cmd.append("--update")
                     subprocess.check_call(cmd, env=os.environ)
                     print("")
+            if "symlink" in merged:
+                print("[*] Create symlinks\n")
+                for s in merged["symlink"]:
+                    # Resolve file paths
+                    src = self._resolve_path(s[0], os.path.join(PACKAGES, package_name))
+                    tgt = self._resolve_path(s[1], mcf.HOME)
+                    link(src, tgt, s[2])
             if "setup" in merged:
                 print("[*] Setup scripts\n")
                 for s in merged["setup"]:
                     print("> {}".format(s))
                     subprocess.check_call([s], env=os.environ)
                     print("")
+
         except Exception as e:
             print('Installation of "{}" failed'.format(package_name))
             print("Error: {}".format(e))
@@ -206,6 +238,11 @@ class PackageManager(object):
             for s in merged["script"]:
                 print("  {}".format(s))
             print("")
+        if "symlink" in merged:
+            print(" - Symlinks\n")
+            for s in merged["symlink"]:
+                print("  {}".format(s[2]))
+            print("")
         if "setup" in merged:
             print(" - Custom setup scripts\n")
             for s in merged["setup"]:
@@ -218,6 +255,13 @@ class PackageManager(object):
             if c[1] not in merged[c[0]]:
                 merged[c[0]].append(c[1])
         return dict(merged)
+
+    def _resolve_path(self, path, base):
+        p = Path(path)
+        if p.is_absolute():
+            return path
+        else:
+            return os.path.join(base, path)
 
 
 def install(package_name, verbose=False, force_reinstall=False, update=False):
