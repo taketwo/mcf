@@ -31,6 +31,11 @@ class Yaourt(Install):
 class Nix(Install):
     CMD = "nix-env -i"
 
+    def __init__(self, packages, args=""):
+        for p in packages:
+            cmd = self.CMD + " " + p + " " + args
+            subprocess.check_call(cmd.split())
+
 
 class Pip(Install):
     CMD = "sudo -H pip install --upgrade"
