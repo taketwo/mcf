@@ -4,6 +4,7 @@ htop
 stow
 arch: xorg-setxkbmap                   # keyboard layout switching
 ubuntu: xbacklight
+nix: nox
 
 # Development
 cmake                                  # also YouCompleteMe requires this
