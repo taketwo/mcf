@@ -28,19 +28,7 @@ def _link(paths, desc):
 
 _FILES = [(('',
             mcf.XMONAD),
-           'Xmonad settings folder'),
-          (('images/custom_xmonad_badge.png',
-            '/usr/share/unity-greeter'),
-           'Custom Xmonad badge for the login screen'),
-          (('entries/xsessions/xmonad.desktop',
-            '/usr/share/xsessions'),
-           'Xmonad xsession configuration'),
-          (('entries/applications/xmonad.desktop',
-            '/usr/share/applications'),
-           'Xmonad applications entry'),
-          (('entries/sessions/xmonad.session',
-            '/usr/share/gnome-session/sessions'),
-           'Xmonad GNOME session configuration')]
+           'Xmonad settings folder')]
 
 
 if __name__ == '__main__':

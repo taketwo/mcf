@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=XMonad/GNOME
+Comment=Lightweight tiling window manager
+Exec=env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=xmonad
+TryExec=xmonad
+Type=XSession

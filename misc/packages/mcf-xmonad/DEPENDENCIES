@@ -1,9 +1,11 @@
 # Common
-cabal-install
 ghc
+cabal-install
 cabal: xmonad
 cabal: xmonad-contrib
 
+# For interaction with xmonad-log and Polybar
+cabal: dbus
 # For clickable workspace names
 cabal: split
 
@@ -23,3 +25,4 @@ arch: ttf-liberation
 arch: alsa-utils
 
 kupfer
+polybar
