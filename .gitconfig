@@ -34,3 +34,6 @@
   program = gpg2
 [commit]
   gpgsign = true
+[gui]
+  fontui = -family \"Fantasque Sans Mono\" -size 6 -weight normal -slant roman -underline 0 -overstrike 0
+  fontdiff = -family \"Fantasque Sans Mono\" -size 6 -weight normal -slant roman -underline 0 -overstrike 0
