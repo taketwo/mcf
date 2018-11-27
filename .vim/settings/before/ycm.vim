@@ -18,7 +18,11 @@ function! BuildYCM(info)
         if tlib#sys#IsExecutable('npm')
             let opts = opts.' --js-completer'
         endif
-        execute '!./install.py'.opts
+        if has('python3')
+            execute '!python3 install.py'.opts
+        else
+            execute '!python install.py'.opts
+        endif
     endif
 endfunction
 
