@@ -5,10 +5,12 @@ stow
 arch: xorg-setxkbmap                   # keyboard layout switching
 ubuntu: xbacklight
 nix: nox
+net-tools                              # ifconfig
 
 # Development
 cmake                                  # also YouCompleteMe requires this
 clang
+build-essential
 nix: ninja
 
 # Terminal
@@ -38,6 +40,7 @@ vim
 xsel                                   # copy to clipboard
 ctags
 xdotool                                # paste with F5
+python3-dev                            # to build YCM
 nix: ShellCheck                        # linting for Bash
 
 # Util
