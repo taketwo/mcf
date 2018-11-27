@@ -4,7 +4,7 @@
 import os
 import sys
 import subprocess
-from os.path import expanduser, join, realpath
+from os.path import expanduser, join
 from shutil import which
 
 if not which("git"):
@@ -48,10 +48,13 @@ if "MCF" not in os.environ:
     __import__("package_manager").install("pipx", verbose=True)
 
     print("First part of bootstrapping procedure is completed.")
-    print("Now run the following command in this terminal:")
-    print("    source {} && {}".format(join(dest, ".profile"), realpath(__file__)))
+    print("Run the following command: source {}".format(join(dest, ".profile")))
+    print("Now re-run this script to complete bootstrapping.")
 else:
     print("[*] Install MCF")
     print("")
 
     __import__("package_manager").install("mcf", verbose=True)
+    print("Second part of bootstrapping procedure is completed.")
+    print("If the terminal font is screwed, relaunching will solve the issue.")
+    print("Reboot the computer to finish installation.")
