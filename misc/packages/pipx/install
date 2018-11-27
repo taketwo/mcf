@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Copied from: https://stackoverflow.com/a/4024263/1525865
+verlte()
+{
+  [ "$1" = "$(echo -e "$1\\n$2" | sort -V | head -n1)" ]
+}
+
+verlt()
+{
+  if [ "$1" = "$2" ]; then
+    return 1
+  else
+    verlte "$1" "$2"
+  fi
+}
+
+required="3.6.7"
+actual=$(python3 --version | cut -d ' ' -f2)
+
+if verlt "$actual" "$required"; then
+  # System version of Python is too old. Use pyenv.
+   eval "$(pyenv init -)"
+   pyenv shell "$required"
+fi
+
+curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3

@@ -45,7 +45,7 @@ if "MCF" not in os.environ:
     print("")
 
     __import__("package_manager").install("nix", verbose=True)
-    __import__("package_manager").install("pipsi", verbose=True)
+    __import__("package_manager").install("pipx", verbose=True)
 
     print("First part of bootstrapping procedure is completed.")
     print("Now run the following command in this terminal:")

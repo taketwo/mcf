@@ -40,22 +40,22 @@ class Pip(Install):
         stow.adopt_as("pip")
 
 
-class Pipsi(Install):
-    CMD = "pipsi install"
+class Pipx(Install):
+    CMD = "pipx install"
 
     def __init__(self, packages, args=""):
         for package in packages:
             # We support package specs with multiple entries separated by spaces.
-            # First entry is the main app that is to be installed with Pipsi.
+            # First entry is the main app that is to be installed with Pipx.
             # The remaining entries are additional packages that are to be installed
-            # into the virtual environment created by Pipsi.
+            # into the virtual environment created by Pipx.
             # Example: "pygments pygments-style-solarized"
             entries = package.split(" ")
             if len(entries) > 1:
                 package = entries[0]
             self.install(package, args)
             if len(entries) > 1:
-                activate = "source ~/.local/venvs/{}/bin/activate".format(package)
+                activate = "source ~/.local/pipx/venvs/{}/bin/activate".format(package)
                 for entry in entries[1:]:
                     install = "pip install {}".format(entry)
                     cmd = "bash -c '{} && {}'".format(activate, install)
@@ -63,7 +63,7 @@ class Pipsi(Install):
 
     def install(self, package, args):
         """
-        Run Pipsi install, ignoring "already installed" error.
+        Run Pipx install, ignoring "already installed" error.
         """
         cmd = self.CMD + " " + package + " " + args
         try:
@@ -94,7 +94,7 @@ if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
 if PLATFORM == "arch":
     INSTALL["arch"] = Yaourt
-INSTALL.update({"nix": Nix, "pip": Pip, "pipsi": Pipsi, "cabal": Cabal})
+INSTALL.update({"nix": Nix, "pip": Pip, "pipx": Pipx, "cabal": Cabal})
 
 
 class PackageManager(object):
