@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 
 def remove(dest):
@@ -35,7 +36,10 @@ def link(src, dest, description=None, verbose=False):
     path, fl = os.path.split(os.path.realpath(dest))
     if not os.path.isdir(path):
         os.makedirs(path)
-    os.symlink(src, dest)
+    try:
+        os.symlink(src, dest)
+    except PermissionError:
+        subprocess.check_call("sudo ln -s {} {}".format(src, dest).split(" "))
     if description:
         print('[+]', description)
         print('   ', dest, '->', src)
