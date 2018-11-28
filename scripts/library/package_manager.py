@@ -58,7 +58,7 @@ class Pipx(Install):
             entries = package.split(" ")
             if len(entries) > 1:
                 package = entries[0]
-            self.install(package, args)
+            package = self.install(package, args)
             if len(entries) > 1:
                 activate = "source ~/.local/pipx/venvs/{}/bin/activate".format(package)
                 for entry in entries[1:]:
@@ -68,16 +68,20 @@ class Pipx(Install):
 
     def install(self, package, args):
         """
-        Run Pipx install, ignoring "already installed" error.
+        Run Pipx install using --spec if necessary.
+        Returns package name.
         """
-        cmd = self.CMD + " " + package + " " + args
-        try:
-            subprocess.check_output(cmd.split())
-        except subprocess.CalledProcessError as e:
-            import re
-
-            if not re.findall(r"already installed", str(e.output)):
-                raise e
+        import re
+        m = re.match(r"(.*)\[.*\]", package)
+        if m is not None:
+            # Package with options, need to install using pipx --spec
+            name = m.groups()[0]
+            cmd = "{} --spec {} {} {}".format(self.CMD, package, name, args)
+        else:
+            cmd = self.CMD + " " + package + " " + args
+            name = package
+        subprocess.check_output(cmd.split())
+        return name
 
 
 class Cabal(Install):
