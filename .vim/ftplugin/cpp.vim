@@ -8,8 +8,8 @@ inoremap <buffer> .. ->
 " Select until the underscore and substitute
 nnoremap <LocalLeader>- vt_s
 
-nnoremap <LocalLeader>p :python TogglePrivate()<CR>
-python << EOF
+nnoremap <LocalLeader>p :pythonx TogglePrivate()<CR>
+pythonx << EOF
 def TogglePrivate():
     import vim
     word = vim.eval('expand("<cword>")')
@@ -17,12 +17,12 @@ def TogglePrivate():
       converted = word[:-1]
     else:
       converted = word + '_'
-    vim.command('normal! viws%s' % converted)
-    print '%s → %s' % (word, converted)
+    vim.command('normal! viws{}'.format(converted))
+    print('{} → {}'.format(word, converted))
 EOF
 
-nnoremap <LocalLeader>. :python TogglePointer()<CR>
-python << EOF
+nnoremap <LocalLeader>. :pythonx TogglePointer()<CR>
+pythonx << EOF
 def TogglePointer():
     import vim
     vim.command("let pos = getpos('.')")
@@ -32,16 +32,16 @@ def TogglePointer():
     vim.command("call setpos('.', pos)")
     if line[col] == '.':
         vim.current.buffer[row - 1] = line[:col] + '->' + line[col + 1:]
-        print '. → ->'
+        print('. → ->')
     elif line[col:col + 2] == '->':
         vim.current.buffer[row - 1] = line[:col] + '.' + line[col + 2:]
-        print '-> → .'
+        print('-> → .')
 EOF
 
 nnoremap <LocalLeader>a viwbvi&<Esc>
 
-nnoremap <LocalLeader>c :python ToggleCase()<CR>
-python << EOF
+nnoremap <LocalLeader>c :pythonx ToggleCase()<CR>
+pythonx << EOF
 def ToggleCase():
     from os.path import expanduser, join
     import sys; sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
@@ -54,8 +54,8 @@ def ToggleCase():
         converted = conversions.to_camelcase(word)
     else:
         return
-    vim.command('normal! viws%s' % converted)
-    print '%s → %s' % (word, converted)
+    vim.command('normal! viws{}'.format(converted))
+    print('{} → {}'.format(word, converted))
 EOF
 
 " Remove function call
