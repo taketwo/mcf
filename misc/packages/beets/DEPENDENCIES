@@ -2,4 +2,6 @@
 # the virtual environment. This, in turn, requires these other two ubuntu libs.
 ubuntu: libgirepository1.0-dev
 ubuntu: gobject-introspection
+# Some of the plugins needs pycairo, which in turn requires dev library.
+ubuntu: libcairo2-dev
 pipx: beets[fetchart] pygobject
