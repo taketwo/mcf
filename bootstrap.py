@@ -55,6 +55,12 @@ else:
     print("")
 
     __import__("package_manager").install("mcf", verbose=True)
+
+    print("[*] Change MCF remote to use Git")
+    print("")
+    cmd = "git remote set-url origin git@github.com:taketwo/mcf.git"
+    subprocess.check_call(cmd.split())
+
     print("Second part of bootstrapping procedure is completed.")
     print("If the terminal font is screwed, relaunching will solve the issue.")
     print("Reboot the computer to finish installation.")
