@@ -9,8 +9,8 @@ from install import only
 @only("ubuntu")
 def setup():
     print("Disabling MPD system service...")
-    call(["sudo", "service", "mpd", "stop"])
-    call(["sudo", "update-rc.d", "mpd", "disable"])
+    call(["sudo", "systemctl", "stop", "mpd.service"])
+    call(["sudo", "systemctl", "disable", "mpd.service"])
 
 
 if __name__ == "__main__":
