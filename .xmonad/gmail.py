@@ -59,7 +59,6 @@ class Gmail(object):
         Get the number of unread messages.
         Throws if connection failed.
         """
-        self.imap.select()
         uids = self.imap.uid('search', None, 'UnSeen')[1][0].decode().split()
         if not uids:
             return 0
@@ -118,4 +117,6 @@ if __name__ == '__main__':
             log.warn('Communication timeout, will wait and reconnect')
         except Exception as e:
             log.warn('Exception: {}'.format(e))
+        finally:
+            gmail.close()
         time.sleep(args.interval)
