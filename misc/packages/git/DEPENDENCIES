@@ -1,2 +1,3 @@
 arch: git
 ubuntu: git-gui
+nix: git-lfs

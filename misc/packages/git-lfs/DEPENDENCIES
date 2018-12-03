@@ -1,2 +1,0 @@
-ubuntu: debian-archive-keyring
-ubuntu: apt-transport-https
