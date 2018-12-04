@@ -9,4 +9,7 @@ if hash xrandr 2>/dev/null; then
   fi
 fi
 
+# Kill all gmail.py scripts
+pkill -f gmail.py
+
 polybar -c "$MCF/.xmonad/polybarrc" -r primary
