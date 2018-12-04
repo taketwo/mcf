@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-orphans=`chkstow -a -t /usr/local | wc -l`
+orphans=$(chkstow -a -t /usr/local | wc -l)
 if [[ $orphans -gt 0 ]]; then
   echo "There are orphans in /usr/local, please stow them first!"
   exit 1
@@ -12,8 +12,8 @@ if [[ $? -eq 2 ]]; then
   # Failed with "no rule to make target install".
   # Try to compile using Ninja. A caveat here is that we will invoke
   # with sudo, and a Nix-installed Ninja may not be in the path.
-  ninja=`which ninja`
-  sudo $ninja install
+  ninja=$(command -v ninja)
+  sudo "$ninja" install
 fi
 
-echo -e "\e[91mDo not forget to stow the newly installed files!\e[39m"
+echo -e "\\e[91mDo not forget to stow the newly installed files!\\e[39m"
