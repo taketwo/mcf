@@ -59,6 +59,7 @@ nix: bat
 xcape
 trayer
 redshift
+gnome-screensaver                      # session lock
 
 # Required in xinitrc
 arch: nitrogen

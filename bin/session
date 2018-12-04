@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-eval $(xargs -n 1 -0 < /proc/`pgrep gnome-session`/environ | grep DBUS)
+if [[ -z ${DBUS_SESSION_BUS_ADDRESS+x} ]]; then
+  eval $(xargs -n 1 -0 < /proc/`pgrep gnome-session`/environ | grep DBUS)
+fi
 
 case $1 in
   lock) gnome-screensaver-command -l;;
