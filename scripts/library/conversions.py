@@ -1,8 +1,18 @@
 import re
 
 # Regular expressions for camelcase_to_snakecase converter
-_underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
-_underscorer2 = re.compile('([a-z0-9])([A-Z])')
+_underscorer1 = re.compile(r"(.)([A-Z][a-z]+)")
+_underscorer2 = re.compile("([a-z0-9])([A-Z])")
+
+
+def _next(iterator):
+    """
+    Next item (compatibility with Python 2 and Python 3).
+    """
+    try:
+        return iterator.next()
+    except AttributeError:
+        return next(iterator)
 
 
 def to_camelcase(value):
@@ -27,17 +37,19 @@ def to_camelcase(value):
     if is_camelcase(value):
         return value
     if is_snakecase(value):
-        separator = '_'
+        separator = "_"
     elif is_kebabcase(value):
-        separator = '-'
+        separator = "-"
     else:
-        raise Exception('Unknown case')
+        raise Exception("Unknown case")
+
     def camelcase():
         yield type(value).lower
         while True:
             yield type(value).capitalize
+
     c = camelcase()
-    return ''.join(c.next()(x) if x else '' for x in value.split(separator))
+    return "".join(_next(c)(x) if x else "" for x in value.split(separator))
 
 
 def to_pascalcase(value):
@@ -62,16 +74,18 @@ def to_pascalcase(value):
     if is_camelcase(value):
         return value[0].capitalize() + value[1:]
     if is_snakecase(value):
-        separator = '_'
+        separator = "_"
     elif is_kebabcase(value):
-        separator = '-'
+        separator = "-"
     else:
-        raise Exception('Unknown case')
+        raise Exception("Unknown case")
+
     def pascalcase():
         while True:
             yield type(value).capitalize
+
     c = pascalcase()
-    return ''.join(c.next()(x) if x else '' for x in value.split(separator))
+    return "".join(_next(c)(x) if x else "" for x in value.split(separator))
 
 
 def camelcase_to_snakecase(value):
@@ -85,8 +99,8 @@ def camelcase_to_snakecase(value):
     >>> camelcase_to_snakecase('word')
     'word'
     """
-    subbed = _underscorer1.sub(r'\1_\2', value)
-    return _underscorer2.sub(r'\1_\2', subbed).lower()
+    subbed = _underscorer1.sub(r"\1_\2", value)
+    return _underscorer2.sub(r"\1_\2", subbed).lower()
 
 
 def is_camelcase(s):
@@ -108,10 +122,12 @@ def is_camelcase(s):
     >>> is_camelcase('kebab-case')
     False
     """
-    return ((s != s.lower() or s != s.upper()) and
-            s[0].islower() and
-            '_' not in s and
-            '-' not in s)
+    return (
+        (s != s.lower() or s != s.upper())
+        and s[0].islower()
+        and "_" not in s
+        and "-" not in s
+    )
 
 
 def is_pascalcase(s):
@@ -135,10 +151,12 @@ def is_pascalcase(s):
     >>> is_pascalcase('kebab-case')
     False
     """
-    return ((s != s.lower() or s != s.upper()) and
-            s[0].isupper() and
-            '_' not in s and
-            '-' not in s)
+    return (
+        (s != s.lower() or s != s.upper())
+        and s[0].isupper()
+        and "_" not in s
+        and "-" not in s
+    )
 
 
 def is_snakecase(s):
@@ -164,7 +182,7 @@ def is_snakecase(s):
     >>> is_snakecase('strange_mixed-case')
     False
     """
-    return (s == s.lower() and '-' not in s)
+    return s == s.lower() and "-" not in s
 
 
 def is_kebabcase(s):
@@ -186,9 +204,10 @@ def is_kebabcase(s):
     >>> is_kebabcase('strange_mixed-case')
     False
     """
-    return (s == s.lower() and '_' not in s)
+    return s == s.lower() and "_" not in s
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
