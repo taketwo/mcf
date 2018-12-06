@@ -71,6 +71,11 @@ if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] &&  [ -z "${NIX_PATH}" ]; 
   . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 fi
 
+# Nix: add share to XDG_DATA_DIRS such that bash completion, applications, etc are picked up
+if [ -n "${NIX_PATH}" ]; then
+  export XDG_DATA_DIRS="$HOME/.nix-profile/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+fi
+
 # Load secret configuration settings
 if [ -f "${HOME}/.secrets" ]; then
   . "${HOME}/.secrets"
