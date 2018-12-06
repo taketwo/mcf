@@ -59,6 +59,7 @@ class Gmail(object):
         Get the number of unread messages.
         Throws if connection failed.
         """
+        self.imap.select()
         uids = self.imap.uid('search', None, 'UnSeen')[1][0].decode().split()
         if not uids:
             return 0
