@@ -229,7 +229,21 @@ autocmd QuickFixCmdPost    l* nested lwindow
 nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
 nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
-" ========================== Shortcuts for plugins ========================= "
+" }}}
+" Git / version control {{{
+let g:mcf#keymaps["g"] = {
+  \   "name" : "+git/version-control"       ,
+  \   "b"    : ["Gblame"                    , "fugitive-blame"]               ,
+  \   "c"    : ["Gcommit"                   , "fugitive-commit"]              ,
+  \   "d"    : ["Gdiff"                     , "fugitive-diff"]                ,
+  \   "e"    : ["Gedit"                     , "fugitive-edit"]                ,
+  \   "l"    : ["Glog"                      , "fugitive-log"]                 ,
+  \   "r"    : ["Gread"                     , "fugitive-read"]                ,
+  \   "s"    : ["Gstatus"                   , "fugitive-status"]              ,
+  \   "w"    : ["Gwrite"                    , "fugitive-write"]               ,
+  \   "p"    : ["Git push"                  , "fugitive-push"]                ,
+  \ }
+" }}}
 
   " NERDTree
 
