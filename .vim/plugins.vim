@@ -85,7 +85,7 @@ Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-function'
 Plug 'jceb/vim-textobj-uri'
-Plug 'lucapette/vim-textobj-underscore'
+Plug 'machakann/vim-textobj-delimited'
 
 " Snippets
 Plug 'honza/vim-snippets'
