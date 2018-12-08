@@ -1,3 +1,5 @@
+let g:mcf#keymaps = {}
+
 " Enter command mode with semicolon
 
   nnoremap ; :
@@ -265,12 +267,18 @@ nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
   " Sideways
 
-  nnoremap <Leader>sh :SidewaysLeft<CR>
-  nnoremap <Leader>sn :SidewaysRight<CR>
-  nnoremap <Leader>sH :SidewaysJumpLeft<CR>
-  nnoremap <Leader>sN :SidewaysJumpRight<CR>
+  let g:mcf#keymaps["s"] = {
+    \   "name" : "+sideways"    ,
+    \   "h"    : ["SidewaysLeft"                 , 'push-left']           ,
+    \   "n"    : ["SidewaysRight"                , 'push-right']          ,
+    \   "H"    : ["SidewaysJumpLeft"             , 'jump-left']           ,
+    \   "N"    : ["SidewaysJumpRight"            , 'jump-right']          ,
+    \ }
 
 " Some keys that are still free
 "
 " Tab
 " $ ^
+
+" Create WhichKey menu
+call which_key#register(',', "g:mcf#keymaps")
