@@ -8,9 +8,20 @@ setlocal nosmartindent
 setlocal completeopt=menu,menuone,longest,preview
 autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
 
-" Remove function call
-" When on a function name, removes the name and the parens around its arguments
-nnoremap <LocalLeader>f diwds(
+" Insert PUDB breakpoint after current line
+function! InsertBreakpoint()
+    call feedkeys("opudb\<C-R>=UltiSnips#ExpandSnippet()\<CR>", "x")
+endfunction
+
+let b:keymaps =  {}
+
+let b:keymaps = {
+  \   "b" : ["InsertBreakpoint()", "insert-breakpoint"]     ,
+  \   "f" : ["normal diwds("     , "remove-function-call"]  ,
+  \   ":" : ["AppendColon()"     , "append-colon"]          ,
+  \ }
+
+call which_key#register('\', "b:keymaps")
 
 " Wrap with function call
 xmap W <Plug>VSurround
@@ -25,13 +36,6 @@ let b:surround_108 = "len(\r)"
 let b:surround_114 = "range(\r)"
 " e - enumerate
 let b:surround_101 = "enumerate(\r)"
-
-" Append colon to the end of line
-nnoremap <buffer> <silent> <LocalLeader>: :call AppendColon()<CR>
-inoremap <buffer> <silent> <LocalLeader>: <C-o>:call AppendColon()<CR>
-
-" Insert PUDB breakpoint after current line
-nnoremap <silent> <LocalLeader>b opudb<C-R>=UltiSnips#ExpandSnippet()<CR>
 
 " YCM mappings
 nnoremap <buffer> gd :YcmCompleter GoTo<CR>
