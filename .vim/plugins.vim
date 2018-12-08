@@ -8,7 +8,7 @@ endfor
 
 call plug#begin('~/.vim/bundle')
 
-Plug 'tmhedberg/matchit'
+Plug 'andymass/vim-matchup'
 Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'henrik/vim-indexed-search'
