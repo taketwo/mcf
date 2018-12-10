@@ -16,7 +16,7 @@ nnoremap <buffer> <silent> n :call <SID>RightOrNext()<CR>
 nnoremap <buffer> <silent> h :call <SID>LeftOrPrevious()<CR>
 
 function! s:StartedFromFugitive()
-    return maparg("C") == ":<C-U>Gcommit<CR>"
+    return maparg("cc") == ":<C-U>Gcommit<CR>"
 endfunction
 
 function! s:RightOrNext()
