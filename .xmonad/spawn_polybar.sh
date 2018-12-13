@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-if hash xrandr 2>/dev/null; then
-  num_monitors=$(xrandr --query | grep -c " connected [0-9]")
-  if [[ $num_monitors -eq "3" ]]; then
-    export MONITOR="DP-1-2-2"
-  else
-    export MONITOR=$(polybar -m | tail -1 | sed -e 's/:.*$//g')
-  fi
+if [[ $HOSTNAME == "ramen" ]]; then
+  export ETH_INTERFACE="enp4s0"
+elif [[ $HOSTNAME == "raccoon" ]]; then
+  export ETH_INTERFACE="enp0s25"
 fi
+
+# List all monitors sorted by horizontal position
+mapfile -t monitors < <(polybar -m | awk -F'[: x+]' '{print $5 " " $1}' | sort | awk '{print $2}')
+# Select the middle one
+index=$(((${#monitors[@]} - 1) / 2))
+export MONITOR=${monitors[$index]}
 
 # Kill all gmail.py scripts
 pkill -f gmail.py

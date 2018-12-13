@@ -131,7 +131,7 @@ label-packetloss-background = ${colors/solarized.base01}
 
 type = internal/network
 inherit = common/network
-interface = enp0s25
+interface = ${env:ETH_INTERFACE:}
 
 label-connected = "  "
 
