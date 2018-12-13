@@ -40,6 +40,12 @@ vnoremap _ ^
 noremap N :bnext<CR>
 noremap H :bprev<CR>
 
+" Jump over location list items (populated by ALE/YCM) with wrapping
+command! Lnext try | lnext | catch | try | lfirst | catch | endtry | endtry
+command! Lprev try | lprev | catch | try | llast | catch | endtry | endtry
+nnoremap > :Lnext<CR>
+nnoremap < :Lprev<CR>
+
 " }}}
 " Push text around {{{
 

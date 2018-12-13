@@ -9,6 +9,3 @@ let g:airline#extensions#ale#enabled = 1
 
 " Disable completion (YCM will do that)
 let g:ale_completion_enabled = 0
-
-nnoremap > :ALENextWrap<CR>
-nnoremap < :ALEPreviousWrap<CR>
