@@ -6,6 +6,10 @@ let g:ycm_key_detailed_diagnostics = '<Leader>D'
 let g:ycm_error_symbol = g:ale_sign_error
 let g:ycm_warning_symbol = g:ale_sign_warning
 
+" Populate location list with warnings such that >/< mapping can be used to
+" jump between them
+let g:ycm_always_populate_location_list = 1
+
 let g:ycm_global_ycm_extra_conf = $MCF.'/misc/.ycm_extra_conf.py'
 
 let g:ycm_add_preview_to_completeopt = 1
