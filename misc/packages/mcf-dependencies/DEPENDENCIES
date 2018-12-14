@@ -6,6 +6,7 @@ arch: xorg-setxkbmap                   # keyboard layout switching
 ubuntu: xbacklight
 nix: nox
 net-tools                              # ifconfig
+less
 
 # Development
 cmake                                  # also YouCompleteMe requires this

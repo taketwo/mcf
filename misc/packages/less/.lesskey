@@ -1,0 +1,8 @@
+#command
+c back-line
+t forw-line
+C back-scroll
+T forw-scroll
+#line-edit
+^C up
+^T down

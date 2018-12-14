@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+lesskey "$MCF/misc/packages/less/.lesskey"
