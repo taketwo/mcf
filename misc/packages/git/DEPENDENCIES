@@ -1,3 +1,4 @@
 arch: git
 ubuntu: git-gui
 nix: git-lfs
+nix: hub
