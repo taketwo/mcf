@@ -1,10 +1,10 @@
 [Desktop Entry]
+Name=Redshift
+Comment=Display colour temperature adjustment
 Type=Application
+Encoding=UTF-8
 Exec=redshift -l 48.1:16.3 -t 6000:4500 &
-Hidden=false
-NoDisplay=false
+StartupNotify=false
+Terminal=false
+NoDisplay=true
 X-GNOME-Autostart-enabled=true
-Name[en]=redshift
-Name=redshift
-Comment[en]=
-Comment=

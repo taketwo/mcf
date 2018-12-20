@@ -1,9 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
+Name=MPDAS
+Comment=AudioScrobbler client for MPD
 Type=Application
-Name=AudioScrobbler client for MPD
+Encoding=UTF-8
 Exec=sh -c "mpdas -c \$HOME/.config/mpdasrc"
-X-GNOME-Autostart-Delay=10
 StartupNotify=false
 Terminal=false
 NoDisplay=true
+X-GNOME-Autostart-Delay=10
