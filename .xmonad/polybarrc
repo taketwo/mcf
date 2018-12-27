@@ -204,7 +204,7 @@ type = internal/battery
 inherit = common/battery
 battery = BAT0
 adapter = AC
-full-at = 96
+full-at = 95
 
 [module/battery1]
 
@@ -212,7 +212,7 @@ type = internal/battery
 inherit = common/battery
 battery = BAT1
 adapter = AC
-full-at = 96
+full-at = 95
 
 [module/date]
 
