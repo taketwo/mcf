@@ -416,6 +416,7 @@ viewWeb = windows (W.view "web")
 
 -- desktop :: DESKTOP_SESSION -> desktop configuration
 desktop "gnome"  = gnomeConfig
+desktop "xmonad" = gnomeConfig
 desktop "plasma" = kde4Config
 desktop _        = desktopConfig
 
