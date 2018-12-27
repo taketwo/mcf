@@ -413,11 +413,6 @@ main :: IO ()
 main = do
   dbus             <- D.connectSession
   D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-  screenCount      <- countScreens
-  display          <- openDisplay $ unsafePerformIO $ getEnv "DISPLAY"
-  let screen        = defaultScreenOfDisplay display
-  let screenWidth   = read (show (widthOfScreen screen))  :: Int
-  let screenHeight  = read (show (heightOfScreen screen)) :: Int
   xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
