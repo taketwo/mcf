@@ -10,7 +10,11 @@ import XMonad.Actions.Search
 import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.UpdatePointer
+
+import XMonad.Config.Kde
 import XMonad.Config.Gnome
+import XMonad.Config.Desktop
+
 import XMonad.Core
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -45,8 +49,9 @@ import qualified XMonad.StackSet as W
 
 import Control.Monad (liftM2)
 import Data.Ratio ((%))
-import System.Environment (getEnv)
+import System.Posix.Env (getEnv)
 import System.IO.Unsafe (unsafePerformIO)
+import Data.Maybe (maybe)
 import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
 import qualified DBus.Client as D
@@ -409,21 +414,28 @@ viewWeb = windows (W.view "web")
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
 
+-- desktop :: DESKTOP_SESSION -> desktop configuration
+desktop "gnome"  = gnomeConfig
+desktop "plasma" = kde4Config
+desktop _        = desktopConfig
+
 main :: IO ()
 main = do
+  session          <- getEnv "DESKTOP_SESSION"
   dbus             <- D.connectSession
   D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-  xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig
+  let myDesktopConfig = maybe desktopConfig desktop session
+  xmonad $ withUrgencyHook NoUrgencyHook $ myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
     , borderWidth        = 1                 -- width of border around windows
     , terminal           = appTerminal       -- default terminal program
     , workspaces         = myTopicNames
-    , manageHook         = manageHook gnomeConfig <+> myManageHook
+    , manageHook         = manageHook myDesktopConfig <+> myManageHook
     , logHook            = do
         updatePointer (0.5, 0.5) (0, 0)
-        logHook gnomeConfig
+        logHook myDesktopConfig
         dynamicLogWithPP (logHookPolybar dbus)
     , layoutHook         = myLayoutHook
     , handleEventHook    = myHandleEventHook
@@ -517,7 +529,7 @@ manageWindows = composeAll . concat $
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
     doUnfloat = ask >>= doF . W.sink
-    myCFloats = ["Exe"]
+    myCFloats = ["Exe", "plasmashell", "Plasma-desktop"]
     myCUnFloats = ["Gimp", "Nautilus"]
     myTFloats = ["Downloads", "Save As...", "Export Image"]
     myRFloats = []
