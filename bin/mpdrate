@@ -29,7 +29,7 @@ for n in {1..5}; do
 done
 
 ## Get current song from ncmpcpp or cmus or throw an error
-song=`mpc -h $host -f %file% current 2>/dev/null` || \
+song=$(mpc -h "$host" -f %file% current 2>/dev/null) || \
     { echo "Error: you need mpc installed to run this script. Aborting." >&2; exit 1; }
 
 function get_song_rating()
@@ -39,8 +39,7 @@ function get_song_rating()
   for n in {1..5}; do
     local playlist="$playlist_dir/${pl_prefix}$n${pl_suffix}"
     if [[ -f "$playlist" ]]; then
-      grep -qF "$filename" "$playlist"
-      if [[ $? -eq 0 ]]; then
+      if grep -qF "$filename" "$playlist"; then
         echo "$n"
         return
       fi
@@ -53,10 +52,9 @@ function rating_as_stars()
   if [[ "$1" -lt 1 || "$1" -gt 5 ]]; then
     echo "          "
   else
-    declare -a stars=('          ' '★         ' '★ ★       ' '★ ★ ★     ' '★ ★ ★ ★   ' '★ ★ ★ ★ ★ ');
-    echo ${stars[$1]}
+    declare -a stars_lut=('          ' '★         ' '★ ★       ' '★ ★ ★     ' '★ ★ ★ ★   ' '★ ★ ★ ★ ★ ');
+    echo "${stars_lut[$1]}"
   fi
-  #echo "--$1--"
 }
 
 ## Error cases
@@ -68,8 +66,8 @@ if [[ $# -eq 0 ]]; then
   while read -a line; do
     track=${line[0]}
     filename=${line[1]}
-    rating=`get_song_rating "$filename"`
-    stars=`rating_as_stars $rating`
+    rating=$(get_song_rating "$filename")
+    stars=$(rating_as_stars "$rating")
     if [[ "$song" == "$filename" ]]; then
       track="${bold}${track}${normal}"
     fi
@@ -81,7 +79,7 @@ elif [[ -z "$song" ]]; then
   echo 'No song is playing.'
   exit 1
 elif [[ "$1" == "?" ]]; then
-  rating=`get_song_rating "$song"`
+  rating=$(get_song_rating "$song")
   echo "Rating of the current song: $rating"
   exit 0
 elif [[ "$1" == "check" ]]; then
@@ -99,7 +97,7 @@ elif [[ "$1" == "check" ]]; then
   exit 1
 elif [[ "$1" == "edit" ]]; then
   echo "Opening playlist files for editing..."
-  $EDITOR ${playlists[@]}
+  $EDITOR "${playlists[@]}"
 elif [[ "$1" -lt 0 || "$1" -gt 5 ]]; then
   echo "Rating must be between 1 and 5. Or zero to delete the current song's rating."
   exit 1
@@ -126,7 +124,7 @@ for n in {1..5}; do
   f="$playlist_dir/${pl_prefix}$n${pl_suffix}"
   if [[ -f "$f" ]]; then
     grep -vF "$song" "$f" > "$tmp"
-    mv -f $tmp $f
+    mv -f "$tmp" "$f"
   fi
 done
 
@@ -136,7 +134,7 @@ if [[ $1 -ne 0 ]]; then
   mkdir -p "$playlist_dir"
   echo "$song" >> "$f"
   sort -u "$f" -o "$tmp"
-  mv -f $tmp $f
+  mv -f "$tmp" "$f"
 fi
 
 ## The lock file will be unlocked when the script ends
