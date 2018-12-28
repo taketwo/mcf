@@ -2,11 +2,13 @@
 # encoding: utf-8
 
 import os
+from subprocess import call
 from getpass import getpass
 from os.path import expanduser, join
 
 
-def setup():
+def create_rc():
+    print("Creating mpdasrc file with user credentials...")
     username = input("Enter Last.fm username: ")
     passwd = getpass("Enter password: ")
     config = join(expanduser("~"), ".config", "mpdasrc")
@@ -15,5 +17,12 @@ def setup():
     os.chmod(config, 0o600)
 
 
+def enable_service():
+    print("Enabling MPDAS service...")
+    call(["systemctl", "--user", "daemon-reload"])
+    call(["systemctl", "--user", "enable", "mpdas.service"])
+
+
 if __name__ == "__main__":
-    setup()
+    create_rc()
+    enable_service()

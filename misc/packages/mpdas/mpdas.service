@@ -1,0 +1,11 @@
+[Unit]
+Description=AudioScrobbler client for MPD
+After=network.target mpd.service
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=%h/.nix-profile/bin/mpdas -c %h/.config/mpdasrc
+
+[Install]
+WantedBy=default.target

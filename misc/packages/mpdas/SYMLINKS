@@ -1,1 +1,1 @@
-mpdas.desktop:.config/autostart/mpdas.desktop:MPDAS autostart entry
+mpdas.service:.local/share/systemd/user/mpdas.service:MPDAS systemd unit
