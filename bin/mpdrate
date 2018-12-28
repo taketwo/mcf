@@ -135,6 +135,9 @@ if [[ $1 -ne 0 ]]; then
   echo "$song" >> "$f"
   sort -u "$f" -o "$tmp"
   mv -f "$tmp" "$f"
+  if [[ $1 -eq 5 ]]; then
+    mpc sendmessage mpdas love
+  fi
 fi
 
 ## The lock file will be unlocked when the script ends
