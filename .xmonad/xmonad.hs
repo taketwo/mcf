@@ -144,6 +144,7 @@ myTopics =
   , TI "dslam"    "~/Workspace/Projects/dslam"               (spawnShell)
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
   , ti "gimp"     ""
+  , ti "zoom"     ""
   ]
   where
     -- Make a default topic item that just spawns a shell.
@@ -525,6 +526,7 @@ manageWindows = composeAll . concat $
     , [resource  =? r --> doFloat   | r <- myRFloats]
     , [resource  =? i --> doIgnore  | i <- myIgnores]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "zoom" | x <- myZoomShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
     ]
     where
@@ -536,6 +538,7 @@ manageWindows = composeAll . concat $
     myRFloats = []
     myIgnores = []
     myGimpShifts = ["Gimp"]
+    myZoomShifts = ["zoom", "Zoom"]
     myMendeleyShifts = ["Mendeley Desktop"]
 
 -- Hint: use `xprop` to figure out window class name
