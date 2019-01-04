@@ -35,6 +35,8 @@ pipx: flake8 flake8-bugbear
 pipx: black
 pipx: pygments pygments-style-solarized  # for fv and hex commands
 python3-click
+pyenv
+pudb
 
 # Vim
 vim
