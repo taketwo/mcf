@@ -228,6 +228,10 @@ snippet "m(ax|in)el" "Max/min element" br
 ${3:result_iter} = std::m`!p snip.rv += match.group(1)`_element(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
 endsnippet
 
+snippet sort "Sort vector" b
+std::sort(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
+endsnippet
+
 #######################################################################
 #                        Operator overloading                         #
 #######################################################################
