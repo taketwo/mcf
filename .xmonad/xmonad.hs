@@ -256,6 +256,7 @@ table =
   , [bind "" "<XF86MonBrightnessDown>" brightnessDown]
   , [bind "" "<XF86MonBrightnessUp>"   brightnessUp]
   , [bind "" "<XF86Favorites>"         sendKiss]
+  , [bind "" "<Print>"                 printScreen]
   ]
   where
     k key m ms mc msc =
@@ -331,6 +332,7 @@ table =
     closeWindow             = Unbound "Close the focused window"                           (kill)
     gridSelect              = Unbound "Open GridSelect"                                    (goToSelected gridSelectConfig)
     sendKiss                = Unbound "Send kiss to Anja"                                  (spawn "kiss")
+    printScreen             = Unbound "Print screen using Flameshot"                       (spawn "flameshot gui")
     -- Keyboard control
     nextKeyboardLayout      = Unbound "Next keyboard layout"                               (spawn "keyboard -n")
     -- Audio control
