@@ -130,6 +130,13 @@ shopt -s cdspell
 shopt -s extglob
 
 # }}}
+# history expansion {{{
+# -----------------
+#
+# Disable history expansion with !
+set +H
+
+# }}}
 #############################################################################
 
 # }}}
