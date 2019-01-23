@@ -10,6 +10,8 @@ import os.path
 
 import click
 
+from filesystem import which
+
 
 class Location(object):
 
@@ -27,6 +29,8 @@ class JMTPFSLocation(object):
 
     def __init__(self, relative_path):
         self.relative_path = relative_path
+        if which("jmtpfs") is None:
+            raise Exception("jmtpfs is not available")
 
     def __enter__(self):
         self.path = tempfile.TemporaryDirectory()
