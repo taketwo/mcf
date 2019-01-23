@@ -41,11 +41,11 @@ def link(src, dest, description=None, verbose=False):
     except PermissionError:
         subprocess.check_call("sudo ln -s {} {}".format(src, dest).split(" "))
     if description:
-        print('[+]', description)
-        print('   ', dest, '->', src)
+        print("[+]", description)
+        print("   ", dest, "->", src)
     elif verbose:
-        print('[+]', dest)
-        print('   ', '->', src)
+        print("[+]", dest)
+        print("   ", "->", src)
 
 
 def get_extension(filename):
@@ -91,7 +91,7 @@ def replace_extension(filename, new_ext):
     'foo.bar'
     """
     fn, e = os.path.splitext(filename)
-    e = ('' if new_ext.startswith('.') else '.') + new_ext
+    e = ("" if new_ext.startswith(".") else ".") + new_ext
     return fn + e
 
 
@@ -111,6 +111,41 @@ def replace_stem(filename, new_stem):
     return os.path.join(p, new_stem + e)
 
 
-if __name__ == '__main__':
+def is_exe(fpath):
+    """
+    Check if a given file exists and is executable.
+
+    >>> is_exe('/bin/ls')
+    True
+    >>> is_exe('/total/nonsense')
+    False
+    """
+    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+
+def which(program):
+    """
+    Locate a given program (http://stackoverflow.com/a/377028/1525865)
+
+    >>> which('ls')
+    '/bin/ls'
+    >>> which('total-nonsense')
+    None
+    """
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+    return None
+
+
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
