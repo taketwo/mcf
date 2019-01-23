@@ -237,18 +237,20 @@ endsnippet
 #######################################################################
 
 snippet op<< "operator<< overload" b
+// Note: it is recommended that the operator is inside namespace where the type belongs
 std::ostream& operator<<(std::ostream& os, const ${1:Type}& obj)
 {
-	$0
+	${0:// Implementation}
 	return os;
 }
 endsnippet
 
 snippet op>> "operator>> overload" b
+// Note: it is recommended that the operator is inside namespace where the type belongs
 std::istream& operator>>(std::istream& is, ${1:Type}& obj)
 {
-	$2
-	if (${3: /* $1 could not be constructed */ })
+	${0:// Implementation}
+	if (false /* $1 could not be constructed */)
 		is.setstate(std::ios::failbit);
 	return is;
 }
