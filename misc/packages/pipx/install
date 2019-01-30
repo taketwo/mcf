@@ -24,4 +24,4 @@ if verlt "$actual" "$required"; then
    pyenv shell "$required"
 fi
 
-curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
+curl https://raw.githubusercontent.com/pipxproject/pipx-bootstrap/master/pipxbootstrap/main.py | python3
