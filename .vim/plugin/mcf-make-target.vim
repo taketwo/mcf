@@ -1,6 +1,6 @@
 " Add a custom command "MakeTarget" that accepts an optional argument,
 " the name of the target to make. The name is stored and will be used
-" in subsequently when "MakeTarget" is invoked without arguments.
+" subsequently when "MakeTarget" is invoked without arguments.
 
 if !exists('g:mcf_make_target')
     let g:mcf_make_target = ""
