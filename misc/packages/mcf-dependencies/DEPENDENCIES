@@ -31,6 +31,7 @@ git
 #python-virtualenv
 #python-urwid
 pipx: pipenv
+pipx: poetry
 pipx: flake8 flake8-bugbear
 pipx: black
 pipx: pygments pygments-style-solarized  # for fv command
