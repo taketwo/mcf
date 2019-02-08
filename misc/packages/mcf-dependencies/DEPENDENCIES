@@ -33,7 +33,7 @@ git
 pipx: pipenv
 pipx: flake8 flake8-bugbear
 pipx: black
-pipx: pygments pygments-style-solarized  # for fv and hex commands
+pipx: pygments pygments-style-solarized  # for fv command
 python3-click
 pyenv
 pudb
@@ -57,6 +57,7 @@ ranger
 nix: fd
 nix: ripgrep
 nix: bat
+nix: hexyl                             # for hex command
 
 # Misc
 xcape
