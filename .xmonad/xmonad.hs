@@ -143,6 +143,7 @@ myTopics =
   , TI "v4r"      "~/Workspace/Projects/v4r"                 (spawnShell)
   , TI "dslam"    "~/Workspace/Projects/dslam"               (spawnShell)
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
+  , TI "profiler" ""                                         (spawn "profiler_gui")
   , ti "gimp"     ""
   , ti "zoom"     ""
   ]
