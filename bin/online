@@ -1,21 +1,28 @@
 #!/usr/bin/env bash
 
-# Check whether we are online or not
+# Check whether we are online or not.
+# Pass --ip option to try to figure out external IP.
 
-ping -c1 8.8.8.8 >/dev/null
-if [ $? -ne 0 ] ; then
+
+if ! ping -c1 8.8.8.8 >/dev/null; then
   echo -e "\e[00;31mFailed to ping Google DNS\e[00m"
   exit 1
 fi
-ping -c1 216.58.219.206 >/dev/null
-if [ $? -ne 0 ] ; then
+
+if ! ping -c1 216.58.219.206 >/dev/null ; then
   echo -e "\e[00;31mFailed to ping Google website by IP address\e[00m"
   exit 1
 fi
-ping -c1 google.com >/dev/null
-if [ $? -ne 0 ] ; then
+
+if ! ping -c1 google.com >/dev/null ; then
   echo -e "\e[00;31mFailed to ping Google website by name\e[00m"
   exit 1
 fi
-echo -e "Seems like we are \e[00;32monline\e[00m"
+
+echo -e "Connection status: \e[00;32monline\e[00m"
+
+if [[ $# -eq 1 && $1 == "--ip" ]]; then
+  echo -e "Public IP: \e[00;32m$(curl https://ipinfo.io/ip -s)\e[00m"
+fi
+
 exit 0
