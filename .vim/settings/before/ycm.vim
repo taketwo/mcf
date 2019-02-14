@@ -30,22 +30,30 @@ function! BuildYCM(info)
     endif
 endfunction
 
-" The portion of the config below comes from:
+" The portion of the config below is inspired by:
 "    https://www.linkedin.com/pulse/can-vim-detect-pipenv-environment-vagiz-duseev
-" It's purpose is to setup YCM's python in accordance to the current pipenv.
+" Its purpose is to setup YCM's python in accordance to the current pipenv/poetry.
 
-" At first, get the output of 'pipenv --venv' command.
-let pipenv_venv_path = system('pipenv --venv')
-" The above system() call produces a non zero exit code whenever
-" a proper virtual environment has not been found.
-" So, second, we only point YCM to the virtual environment when
-" the call to 'pipenv --venv' was successful.
-" Remember, that 'pipenv --venv' only points to the root directory
-" of the virtual environment, so we have to append a full path to
-" the python executable.
-if shell_error == 0
-  let venv_path = substitute(pipenv_venv_path, '\n', '', '')
-  let g:ycm_python_binary_path = venv_path . '/bin/python'
+" At first, check for a local virtualenv directory with python inside.
+" FIXME: this does not work if vim is started not from the project root.
+if filereadable('.venv/bin/python')
+  " We are done!
+  let g:ycm_python_binary_path = '.venv/bin/python'
 else
-  let g:ycm_python_binary_path = 'python'
+  " Investigate a possibility that there is a virtualenv (somewhere) managed by pipenv.
+  " At first, get the output of 'pipenv --venv' command.
+  let pipenv_venv_path = system('pipenv --venv')
+  " The above system() call produces a non zero exit code whenever
+  " a proper virtual environment has not been found.
+  " So, second, we only point YCM to the virtual environment when
+  " the call to 'pipenv --venv' was successful.
+  " Remember, that 'pipenv --venv' only points to the root directory
+  " of the virtual environment, so we have to append a full path to
+  " the python executable.
+  if shell_error == 0
+    let venv_path = substitute(pipenv_venv_path, '\n', '', '')
+    let g:ycm_python_binary_path = venv_path . '/bin/python'
+  else
+    let g:ycm_python_binary_path = 'python'
+  endif
 endif
