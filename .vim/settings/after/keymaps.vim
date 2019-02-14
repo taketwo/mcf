@@ -283,7 +283,7 @@ let g:mcf#keymaps["g"] = {
 
   " DelimitMate
 
-  imap <C-s> <Plug>delimitMateS-Tab
+  imap <C-s> <Plug>(PearTreeJump)
 
   " Sideways
 
