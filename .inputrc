@@ -90,19 +90,19 @@ set bind-tty-special-chars off
 #                           Super commands                            #
 #######################################################################
 
-# Alt-l
+# Alt-l "less"
 # Appends pipe to `less` to the end of the current command and runs it
 "\el": "\C-e | less\C-m"
 
-# Alt-s
+# Alt-s "sudo"
 # Prepends sudo to the current command and runs it
 "\es": "\C-asudo \C-m"
 
-# Alt-o
+# Alt-o "optirun"
 # Prepends optirun to the current command and runs it
 "\eo": "\C-aoptirun \C-m"
 
-# Alt-p
+# Alt-p "pudb"
 # Prepends pudb3 to the current command and runs it
 "\ep": "\C-apudb3 \C-m"
 
