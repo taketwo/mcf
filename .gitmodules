@@ -25,3 +25,6 @@
 [submodule "texmf/tex/latex/colorbrewer"]
 	path = texmf/tex/latex/colorbrewer
 	url = https://github.com/vtraag/tikz-colorbrewer.git
+[submodule "tmux/plugins/tmux-prefix-highlight"]
+	path = tmux/plugins/tmux-prefix-highlight
+	url = https://github.com/tmux-plugins/tmux-prefix-highlight.git
