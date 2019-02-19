@@ -184,6 +184,14 @@ std::uniform_int_distribution<> ${3:dist}(${1:0}, ${2});
 $3(gen);
 endsnippet
 
+snippet shuffle "Shuffle elements of a container" b
+#include <random>
+#include <algorithm>
+std::random_device rnd;
+std::mt19937 gen(rnd());
+std::shuffle(${1:v}.begin(), $1.end(), gen)$0
+endsnippet
+
 #######################################################################
 #                           Variable types                            #
 #######################################################################
