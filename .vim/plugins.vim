@@ -11,10 +11,8 @@ call plug#begin('~/.vim/bundle')
 Plug 'andymass/vim-matchup'
 Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'henrik/vim-indexed-search'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeMirrorToggle' }
 Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeMirrorToggle' }
-Plug 'justinmk/vim-sneak'
 Plug 'skwp/vim-colors-solarized'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -31,34 +29,38 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-surround'
 Plug 'embear/vim-localvimrc'
 Plug 'qpkorr/vim-bufkill'
-Plug 'szw/vim-g'
 Plug 'AndrewRadev/sideways.vim'
 Plug 'dantler/vim-alternate'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-dispatch'
-Plug 'mileszs/ack.vim'
 Plug 'Peeja/vim-cdo'
 Plug 'terryma/vim-expand-region'
 Plug 'tpope/vim-abolish'
 Plug 'sjl/gundo.vim'
-Plug 'nelstrom/vim-visual-star-search'
 Plug 'Valloric/ListToggle'
 Plug 'xolox/vim-misc'
 Plug 'taketwo/vim-exchange'
 Plug 'janko-m/vim-test'
 Plug 'machakann/vim-highlightedyank'
 Plug 'AndrewRadev/dsf.vim'
-Plug 'beloglazov/vim-online-thesaurus'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'sickill/vim-pasta'
 Plug 'taketwo/vimux'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'dyng/ctrlsf.vim'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
+
+" Navigation
+Plug 'justinmk/vim-sneak'
+Plug 'christoomey/vim-tmux-navigator'
+
+" Search
+Plug 'henrik/vim-indexed-search'
+Plug 'nelstrom/vim-visual-star-search'
+Plug 'mileszs/ack.vim'
+Plug 'dyng/ctrlsf.vim'
+Plug 'beloglazov/vim-online-thesaurus'
 
 " Languages / frameworks
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-"Plugin 'davidhalter/jedi-vim'
 " isort is (temporary) disabled because:
 "   * do not use it that often
 "   * does not work on the Arch box
