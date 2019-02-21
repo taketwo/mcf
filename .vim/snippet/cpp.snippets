@@ -240,6 +240,10 @@ snippet sort "Sort vector" b
 std::sort(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
 endsnippet
 
+snippet remove_if "Remove vector elements" b
+${1:v}.erase(std::remove_if($1.begin(), $1.end(), [](const auto& ${2:item}){ return ${3:$2 == true;} }), $1.end())$0
+endsnippet
+
 #######################################################################
 #                        Operator overloading                         #
 #######################################################################
