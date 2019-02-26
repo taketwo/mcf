@@ -52,19 +52,14 @@ class Pipx(Install):
         for package in packages:
             # We support package specs with multiple entries separated by spaces.
             # First entry is the main app that is to be installed with Pipx.
-            # The remaining entries are additional packages that are to be installed
+            # The remaining entries are additional packages that are to be injected
             # into the virtual environment created by Pipx.
             # Example: "pygments pygments-style-solarized"
             entries = package.split(" ")
+            package = self.install(entries[0], args)
             if len(entries) > 1:
-                package = entries[0]
-            package = self.install(package, args)
-            if len(entries) > 1:
-                activate = "source ~/.local/pipx/venvs/{}/bin/activate".format(package)
                 for entry in entries[1:]:
-                    install = "pip install {}".format(entry)
-                    cmd = "bash -c '{} && {}'".format(activate, install)
-                    os.system(cmd)
+                    subprocess.check_output(["pipx", "inject", package, entry])
 
     def install(self, package, args):
         """
