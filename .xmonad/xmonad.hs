@@ -430,7 +430,7 @@ main = do
   dbus             <- D.connectSession
   D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
   let myDesktopConfig = maybe desktopConfig desktop session
-  xmonad $ withUrgencyHook NoUrgencyHook $ myDesktopConfig
+  xmonad $ withUrgencyHook NoUrgencyHook $ ED.ewmh myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
