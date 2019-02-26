@@ -113,6 +113,8 @@ interval = 1
 type = custom/script
 exec = $MCF/.xmonad/gmail.py
 tail = true
+click-left = "kill -USR1 $(pgrep --oldest --parent %pid%)"
+click-right = "kill -USR2 $(pgrep --oldest --parent %pid%)"
 
 [common/network]
 

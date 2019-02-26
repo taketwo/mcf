@@ -88,10 +88,36 @@ def load_credentials(path):
     return user, token
 
 
-def make_indicator(unread_count):
-    if unread_count:
-        return '%{{F#fdf6e3 B#cb4b16}}  {} %{{F- B-}}'.format(unread_count)
-    return ''
+class Indicator:
+    def __init__(self):
+        self.unread_count = 0
+        self.unread_count_diff = 0
+        self.mode = 'normal'
+
+    def set_normal_mode(self, signum, frame):
+        log.info("Enabled normal mode")
+        self.mode = "normal"
+
+    def set_diff_mode(self, signum, frame):
+        log.info("Enabled differential mode")
+        self.mode = "diff"
+        self.unread_count_diff = 0
+
+    def set_unread_count(self, unread_count):
+        if unread_count != self.unread_count:
+            self.unread_count_diff = max(unread_count - self.unread_count, 0)
+            self.unread_count = unread_count
+
+    def __str__(self):
+        if self.mode == "normal" and self.unread_count > 0:
+            bg = "cb4b16"
+            count = self.unread_count
+        elif self.mode == "diff":
+            bg = "6c6b65"
+            count = self.unread_count_diff or ""
+        if count != 0:
+            return '%{{F#fdf6e3 B#{}}} {}{} %{{F- B-}}'.format(bg, " " if count else "", count)
+        return ""
 
 
 if __name__ == '__main__':
@@ -109,11 +135,16 @@ if __name__ == '__main__':
         log.critical(e)
         sys.exit()
 
+    indicator = Indicator()
+    signal.signal(signal.SIGUSR1, indicator.set_normal_mode)
+    signal.signal(signal.SIGUSR2, indicator.set_diff_mode)
+
     while True:
         try:
             gmail = Gmail(user, token)
             for unread in gmail.get_unread_count_every(args.interval):
-                print(make_indicator(unread), flush=True)
+                indicator.set_unread_count(unread)
+                print(indicator, flush=True)
         except TimeoutError:
             log.warn('Communication timeout, will wait and reconnect')
         except Exception as e:
