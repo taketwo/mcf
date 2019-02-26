@@ -134,22 +134,36 @@ noremap <C-w><C-n> <C-w>l
 noremap <C-w><C-c> <C-w>k
 noremap <C-w><C-t> <C-w>j
 " ... and also with Alt- prefix (handled by vim-tmux-navigator plugin)
-nnoremap <silent> n :TmuxNavigateRight<CR>
-nnoremap <silent> c :TmuxNavigateUp<CR>
-nnoremap <silent> t :TmuxNavigateDown<CR>
-nnoremap <silent> h :TmuxNavigateLeft<CR>
-nnoremap <silent> <Space> :TmuxNavigatePrevious<cr>
+if has('nvim')
+  nnoremap <silent> <M-n> :TmuxNavigateRight<CR>
+  nnoremap <silent> <M-c> :TmuxNavigateUp<CR>
+  nnoremap <silent> <M-t> :TmuxNavigateDown<CR>
+  nnoremap <silent> <M-h> :TmuxNavigateLeft<CR>
+  nnoremap <silent> <M-Space> :TmuxNavigatePrevious<cr>
+else
+  nnoremap <silent> n :TmuxNavigateRight<CR>
+  nnoremap <silent> c :TmuxNavigateUp<CR>
+  nnoremap <silent> t :TmuxNavigateDown<CR>
+  nnoremap <silent> h :TmuxNavigateLeft<CR>
+  nnoremap <silent> <Space> :TmuxNavigatePrevious<cr>
+endif
 
 " Resize windows with Alt+arrow
-
-nnoremap <Up> <C-w>+
-nnoremap [1;3A <C-w>+
-nnoremap <Down> <C-w>-
-nnoremap [1;3B <C-w>-
-nnoremap <Right> <C-w>>
-nnoremap [1;3C <C-w>>
-nnoremap <Left> <C-w><
-nnoremap [1;3D <C-w><
+if has('nvim')
+  nnoremap <M-Up> <C-w>+
+  nnoremap <M-Down> <C-w>-
+  nnoremap <M-Right> <C-w>>
+  nnoremap <M-Left> <C-w><
+else
+  nnoremap <Up> <C-w>+
+  nnoremap [1;3A <C-w>+
+  nnoremap <Down> <C-w>-
+  nnoremap [1;3B <C-w>-
+  nnoremap <Right> <C-w>>
+  nnoremap [1;3C <C-w>>
+  nnoremap <Left> <C-w><
+  nnoremap [1;3D <C-w><
+endif
 
 " }}}
 " Search {{{
