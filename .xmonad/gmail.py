@@ -109,9 +109,10 @@ class Indicator:
             self.unread_count = unread_count
 
     def __str__(self):
-        if self.mode == "normal" and self.unread_count > 0:
-            bg = "cb4b16"
+        if self.mode == "normal":
             count = self.unread_count
+            if self.unread_count > 0:
+                bg = "cb4b16"
         elif self.mode == "diff":
             bg = "6c6b65"
             count = self.unread_count_diff or ""
