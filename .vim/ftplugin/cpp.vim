@@ -1,5 +1,7 @@
 let maplocalleader = '\'
 
+runtime! syntax/gtest.vim
+
 setlocal foldmethod=syntax
 setlocal foldlevel=100
 
