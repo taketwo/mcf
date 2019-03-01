@@ -1,6 +1,7 @@
 .vim/bundle
 .vim/session
 .vim/.netrwhist
+.vim/undo
 *.pyc
 
 # Bash
