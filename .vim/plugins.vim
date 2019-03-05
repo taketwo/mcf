@@ -75,11 +75,11 @@ Plug 'keith/tmux.vim'
 Plug 'LnL7/vim-nix'
 
 " Git related
-Plug 'gregsexton/gitv', {'on': ['Gitv']}
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-rhubarb'
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/gv.vim'
 
 " Text objects
 Plug 'michaeljsmith/vim-indent-object'
