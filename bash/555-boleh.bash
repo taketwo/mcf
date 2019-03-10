@@ -12,7 +12,7 @@ function boleh ()
                ;;
       off    ) sudo systemctl stop openvpn@*
                ;;
-      *      ) __boleh_on $1
+      *      ) __boleh_on "$1"
     esac
   fi
 }
@@ -22,16 +22,16 @@ function __boleh_import ()
 {
   archive="$HOME/Downloads/taketwo_n.zip"
   tmp=/tmp/boleh
-  rm -f $archive
-  read -p 'Download config https://users.bolehvpn.net/download/normal/6 and press ENTER'
-  unzip -o $archive -d $tmp > /dev/null
+  rm -f "$archive"
+  read -r -p 'Download config https://users.bolehvpn.net/download/normal/6 and press ENTER'
+  unzip -o "$archive" -d $tmp > /dev/null
   sudo cp /tmp/boleh/*{crt,key} /etc/openvpn
   echo "Importing Boleh fully routed configurations:"
-  for f in $tmp/FullyRouted*ovpn; do
-    country=`echo $f | awk -F'[-.]' '{print $2}'`
+  for f in "$tmp"/FullyRouted*ovpn; do
+    country=$(echo "$f" | awk -F'[-.]' '{print $2}')
     if [[ $country != 'TCP' ]]; then
       echo " * $country"
-      sudo cp $tmp/FullyRouted-$country.ovpn /etc/openvpn/$country.Boleh.conf
+      sudo cp "$tmp/FullyRouted-$country.ovpn" "/etc/openvpn/$country.Boleh.conf"
     fi
   done
 }
@@ -41,7 +41,7 @@ function __boleh_on ()
 {
   config="$1.Boleh"
   if [ -f "/etc/openvpn/$config.conf" ]; then
-    sudo systemctl start openvpn@$config.service
+    sudo systemctl start "openvpn@$config.service"
   else
     echo "Unknown connection $1"
     return 1
@@ -51,11 +51,11 @@ function __boleh_on ()
 # List active Boleh connections
 function __boleh_active ()
 {
-  connections=`systemctl status openvpn@* | grep -oP "(?<= - OpenVPN connection to )([^.]+)(?=\.Boleh)"`
+  connections=$(systemctl status openvpn@* | grep -oP "(?<= - OpenVPN connection to )([^.]+)(?=\.Boleh)")
   if [[ $connections != "" ]]; then
     for c in $connections; do
-      info=`systemctl status openvpn@$c.Boleh.service`
-      state=`grep -oP "(?<=Active: )(\w+)" <<< "$info"`
+      info=$(systemctl status "openvpn@$c.Boleh.service")
+      state=$(grep -oP "(?<=Active: )(\w+)" <<< "$info")
       if [[ $state == "active" ]]; then
         echo -n "$c "
       fi
@@ -70,11 +70,11 @@ function __boleh_status ()
   connections=$(__boleh_active)
   if [[ $connections != "" ]]; then
     for c in $connections; do
-      info=`systemctl status openvpn@$c.Boleh.service`
-      state=`grep -oP "(?<=Active: )(\w+)" <<< "$info"`
+      info=$(systemctl status "openvpn@$c.Boleh.service")
+      state=$(grep -oP "(?<=Active: )(\w+)" <<< "$info")
       echo "●  $c (state: $state)"
-      ip=`cat /etc/openvpn/$c.Boleh.conf | grep -oP -m 1 "(?<=^remote )([^ ]+)"`
-      public_ip=`curl ifconfig.me/ip 2>/dev/null`
+      ip=$(grep -oP -m 1 "(?<=^remote )([^ ]+)" "/etc/openvpn/$c.Boleh.conf")
+      public_ip=$(curl ifconfig.me/ip 2>/dev/null)
       if [[ $ip =~ $public_ip ]]; then
         echo -e "   IP: \e[00;32m$ip\e[00m"
       else
@@ -88,9 +88,9 @@ function __boleh_status ()
 
 function __complete_boleh ()
 {
-  servers=`ls /etc/openvpn/ | grep -oP "([^.]+)(?=\.Boleh\.conf)"`
+  servers=$(ls /etc/openvpn/ | grep -oP "([^.]+)(?=\.Boleh\.conf)")
   local current=${COMP_WORDS[COMP_CWORD]}
-  COMPREPLY=($(compgen -W "$servers active status import off" -- $current))
+  COMPREPLY=($(compgen -W "$servers active status import off" -- "$current"))
 }
 
 link_complete_function boleh
