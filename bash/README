@@ -5,18 +5,38 @@ in the repository, and consists of symbolic links. The latter is specific to eac
 particular host, is NOT checked in the repository, and consists of a mix of scripts
 and symbolic links.
 
-Prefix consists of three digits:
+Old naming convention:
 
-  1. Group
-  2. Subgroup
-  3. Priority
+  Prefix consists of three digits:
 
-Groups:
+    1. Group
+    2. Subgroup
+    3. Priority
 
-  1 - Helper Bash functions
-  2 - Bash and environment configuration
-  3 - Aliases
-  4 - Replacements or reconfigurations of commands
-  5 - Utility apps or collections of aliases/functions
-  6 - Frameworks configuration
-  9 - Miscellaneous low-priority
+  Groups:
+
+    1 - Helper Bash functions
+    2 - Bash and environment configuration
+    3 - Aliases
+    4 - Replacements or reconfigurations of commands
+    5 - Utility apps or collections of aliases/functions
+    6 - Frameworks configuration
+    9 - Miscellaneous low-priority
+
+New naming convention:
+
+  Prefix consists of two digigts:
+
+    1. Group
+    2. Priority within group
+
+  Groups:
+
+    1. Library of helper Bash functions
+    4. Complex utility functions (apps)
+    5. Aliases and tiny functions
+    7. Setup and initialization of apps/packages
+       * Bash completion
+       * Sourcing of init scripts
+       * Definition of small dependent functions
+    9. Miscellaneous

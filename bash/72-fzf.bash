@@ -1,11 +1,14 @@
+# Exit if fzf init script does not exist
+[ ! -f ~/.fzf.bash ] && return
+
+# shellcheck source=/dev/null
+source "$HOME/.fzf.bash"
+
 # Set ripgrep as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
 
 # Default options
 export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,alt-s:toggle-sort'
-
-# Setup fzf if exists
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Claim back Alt-c
 bind '"\ec": history-search-backward'
@@ -31,7 +34,7 @@ fkill()
   local pid
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
   if [ "x$pid" != "x" ]; then
-    echo $pid | xargs kill -${1:-9}
+    echo "$pid" | xargs kill -${1:-9}
   fi
 }
 
