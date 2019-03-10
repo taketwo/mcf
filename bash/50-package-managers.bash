@@ -16,7 +16,7 @@ if hash nix-env 2>/dev/null; then
   alias nu='nix-channel --update && nix-env -u'
   alias nr='nix-env -e'
   alias ngc='nix-collect-garbage -d'
-  alias nix-list-installed='nix-env -qs'
+  alias nli='nix-env -qs'
 fi
 
 DISTRO=$(cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)')
