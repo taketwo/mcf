@@ -10,13 +10,6 @@ if hash dpkg 2>/dev/null; then
   alias dgrep='dpkg -l | grep -i'
 fi
 
-# yaourt aliases
-if hash yaourt 2>/dev/null; then
-  alias yu='yaourt -Syua'
-  alias yi='yaourt -Sa'
-  alias yr='yaourt -Rc'
-fi
-
 # nix aliases
 if hash nix-env 2>/dev/null; then
   alias ni='nix-env -i'
