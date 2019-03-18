@@ -4,6 +4,7 @@ module MCF.Apps
   , appShell
   , appBrowse
   , appEdit
+  , appTmux
   ) where
 
 import XMonad.Core
@@ -21,3 +22,6 @@ appEdit f = spawn (appTerminal ++ " -e 'vim " ++ f ++ "'")
 
 appBrowse :: String -> X ()
 appBrowse f = spawn (appBrowser ++ " " ++ f)
+
+appTmux :: (String, String) -> X ()
+appTmux (topic, dir) = spawn $ "gnome-terminal -e 'tmux new -s " ++ topic ++ "' --working-directory " ++ dir

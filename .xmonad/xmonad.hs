@@ -51,7 +51,7 @@ import Control.Monad (liftM2)
 import Data.Ratio ((%))
 import System.Posix.Env (getEnv)
 import System.IO.Unsafe (unsafePerformIO)
-import Data.Maybe (maybe)
+import Data.Maybe (maybe, fromMaybe)
 import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
 import qualified DBus.Client as D
@@ -163,14 +163,19 @@ myTopicConfig = defaultTopicConfig
   , topicActions = M.fromList $ map (\(TI n _ a) -> (n, a)) myTopics
   }
 
-spawnShell :: X ()
-spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
+-- | Returns name and directory associated with current topic
+currentTopicDirName tg = do
+  topic <- gets (W.tag . W.workspace . W.current . windowset)
+  return (topic, fromMaybe "" . M.lookup topic $ topicDirs tg)
 
 spawnShellIn :: Dir -> X ()
 spawnShellIn dir = spawn $ appTerminal ++ " --working-directory " ++ dir
 
 spawnInShell :: String -> X ()
 spawnInShell cmd = spawn $ appTerminal ++ " -e '" ++ cmd ++ "'"
+
+spawnShell :: X ()
+spawnShell = currentTopicDirName myTopicConfig >>= appTmux
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
