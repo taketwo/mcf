@@ -1,4 +1,4 @@
-{-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE ImplicitParams, FlexibleContexts #-}
 
 import XMonad hiding ( (|||) )
 import XMonad.Actions.CycleWS
