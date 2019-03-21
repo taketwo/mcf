@@ -6,11 +6,9 @@ import sys
 import argparse
 import subprocess
 
-from filesystem import remove
-
 
 def make_pyenv_path():
-    return os.path.join(os.path.expanduser('~'), '.pyenv')
+    return os.path.join(os.path.expanduser("~"), ".pyenv")
 
 
 def is_installed():
@@ -18,50 +16,51 @@ def is_installed():
 
 
 def checkout_latest():
-    cmd = 'git describe --abbrev=0 --tags'
+    cmd = "git describe --abbrev=0 --tags"
     ver = subprocess.check_output(cmd.split()).strip()
     ver = ver.decode(sys.stdout.encoding)
-    print('latest released version: {}'.format(ver))
-    cmd = 'git checkout ' + ver
+    print("latest released version: {}".format(ver))
+    cmd = "git checkout " + ver
     subprocess.check_call(cmd.split())
-
-
-def update():
-    p = make_pyenv_path()
-    os.chdir(p)
-    print('fetching from the remote repository')
-    subprocess.check_call(["git", "fetch"])
-    checkout_latest()
 
 
 def install():
     p = make_pyenv_path()
     if os.path.isdir(p):
-        print('.pyenv folder already exists, removing first')
-        remove(p)
+        print(".pyenv folder already exists, aborting")
     else:
-        print('cloning the repository')
-        cmd = 'git clone https://github.com/pyenv/pyenv.git ' + p
+        print("cloning the repository")
+        cmd = "git clone https://github.com/pyenv/pyenv.git " + p
         subprocess.check_call(cmd.split())
         os.chdir(p)
         checkout_latest()
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='''
-    Install Pyenv from Git repository.
-    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--update', action='store_true',
-                        help='update if already installed')
-    args = parser.parse_args()
-    if args.update:
-        if not is_installed():
-            print("Pyenv is not installed, can not update")
-        else:
-            update()
+def install_plugin(name):
+    p = os.path.join(make_pyenv_path(), "plugins")
+    if not os.path.isdir(p):
+        print(".pyenv plugin folder does not exist, can not install plugin")
     else:
-        if is_installed():
-            print('Pyenv is already installed. '
-                  'Pass --update to update to the latest version.')
-        else:
-            install()
+        print("cloning the {} repository".format(name))
+        cmd = "git clone https://github.com/pyenv/pyenv-{0}.git {1}/pyenv-{0}".format(
+            name, p
+        )
+        subprocess.check_call(cmd.split())
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="""
+    Install Pyenv from Git repository.
+    """,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    args = parser.parse_args()
+    if is_installed():
+        print(
+            "Pyenv is already installed. "
+            "Run 'pyenv update' to get the latest version."
+        )
+    else:
+        install()
+        install_plugin("update")
