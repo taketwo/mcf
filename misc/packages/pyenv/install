@@ -64,3 +64,4 @@ if __name__ == "__main__":
     else:
         install()
         install_plugin("update")
+        install_plugin("virtualenv")
