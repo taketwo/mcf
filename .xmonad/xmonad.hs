@@ -230,12 +230,12 @@ table =
   , k "s"            jumpToNextScreen        jumpToPrevScreen        __                      __
   , k "t"            goDown                  swapDown                shrinkVertical          moveDown
   , k "u"            __                      __                      __                      __
-  , k "v"            gotoWorkspace           shiftToWorkspace        __                      shiftAndGoToWorkspace
+  , k "v"            __                      shiftToWorkspace        __                      shiftAndGoToWorkspace
   , k "w"            gotoWorkspace'          shiftToWorkspace'       createWorkspace         shiftAndGoToWorkspace'
   , k "x"            __                      __                      __                      deleteWorkspace
   , k "y"            __                      __                      __                      __
   , k "z"            promptZealSearch        __                      __                      __
-  , k "<Backspace>"  closeWindow             __                      __                      deleteWorkspace
+  , k "<Backspace>"  renameWorkspace         __                      __                      __
   , k "<Space>"      launchKupfer            nextKeyboardLayout      __                      __
   , k "<Tab>"        nextLayout              resetLayout             __                      __
   , k "`"            scratchTerminal         __                      __                      __
@@ -312,7 +312,6 @@ table =
     toggleMagnifier         = Unbound "Toggle magnifier"                                   (sendMessage Mag.Toggle)
     -- Workspace navigation
     gotoPrevWorkspace       = Unbound "Switch to previous workspace"                       (toggleWS' ["NSP"])
-    gotoWorkspace           = Unbound "Go to named workspace"                              (removeIfEmpty (DW.withWorkspace myXPConfig goto))
     gotoWorkspace'          = Unbound "Go to named workspace (auto-completion)"            (removeIfEmpty (DW.withWorkspace myXPConfigAutoComplete goto))
     shiftToWorkspace        = Unbound "Shift to named workspace"                           (removeIfEmpty (DW.withWorkspace myXPConfig sendX))
     shiftToWorkspace'       = Unbound "Shift to named workspace (auto-completion)"         (removeIfEmpty (DW.withWorkspace myXPConfigAutoComplete sendX))
