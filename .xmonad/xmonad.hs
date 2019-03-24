@@ -2,7 +2,6 @@
 
 import XMonad hiding ( (|||) )
 import XMonad.Actions.CycleWS
-import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
 import XMonad.Actions.PhysicalScreens
@@ -43,6 +42,7 @@ import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.WorkspaceCompare
 import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
+import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.FlexibleResize as FR
 import qualified XMonad.Hooks.EwmhDesktops as ED
 import qualified XMonad.StackSet as W
@@ -232,7 +232,7 @@ table =
   , k "u"            __                      __                      __                      __
   , k "v"            gotoWorkspace           shiftToWorkspace        __                      shiftAndGoToWorkspace
   , k "w"            gotoWorkspace'          shiftToWorkspace'       createWorkspace         shiftAndGoToWorkspace'
-  , k "x"            __                      __                      renameWorkspace'        deleteWorkspace
+  , k "x"            __                      __                      __                      deleteWorkspace
   , k "y"            __                      __                      __                      __
   , k "z"            promptZealSearch        __                      __                      __
   , k "<Backspace>"  closeWindow             __                      __                      deleteWorkspace
@@ -312,17 +312,17 @@ table =
     toggleMagnifier         = Unbound "Toggle magnifier"                                   (sendMessage Mag.Toggle)
     -- Workspace navigation
     gotoPrevWorkspace       = Unbound "Switch to previous workspace"                       (toggleWS' ["NSP"])
-    gotoWorkspace           = Unbound "Go to named workspace"                              (removeIfEmpty (withWorkspace myXPConfig goto))
-    gotoWorkspace'          = Unbound "Go to named workspace (auto-completion)"            (removeIfEmpty (withWorkspace myXPConfigAutoComplete goto))
-    shiftToWorkspace        = Unbound "Shift to named workspace"                           (removeIfEmpty (withWorkspace myXPConfig sendX))
-    shiftToWorkspace'       = Unbound "Shift to named workspace (auto-completion)"         (removeIfEmpty (withWorkspace myXPConfigAutoComplete sendX))
-    shiftAndGoToWorkspace   = Unbound "Shift and go to named workspace"                    (removeIfEmpty (withWorkspace myXPConfig takeX))
-    shiftAndGoToWorkspace'  = Unbound "Shift and go to named workspace (auto-completion)"  (removeIfEmpty (withWorkspace myXPConfigAutoComplete takeX))
+    gotoWorkspace           = Unbound "Go to named workspace"                              (removeIfEmpty (DW.withWorkspace myXPConfig goto))
+    gotoWorkspace'          = Unbound "Go to named workspace (auto-completion)"            (removeIfEmpty (DW.withWorkspace myXPConfigAutoComplete goto))
+    shiftToWorkspace        = Unbound "Shift to named workspace"                           (removeIfEmpty (DW.withWorkspace myXPConfig sendX))
+    shiftToWorkspace'       = Unbound "Shift to named workspace (auto-completion)"         (removeIfEmpty (DW.withWorkspace myXPConfigAutoComplete sendX))
+    shiftAndGoToWorkspace   = Unbound "Shift and go to named workspace"                    (removeIfEmpty (DW.withWorkspace myXPConfig takeX))
+    shiftAndGoToWorkspace'  = Unbound "Shift and go to named workspace (auto-completion)"  (removeIfEmpty (DW.withWorkspace myXPConfigAutoComplete takeX))
     nextWorkspace           = Unbound "Go to next workspace"                               (removeIfEmpty (DO.moveTo Next HiddenNonEmptyWS))
     prevWorkspace           = Unbound "Go to previous workspace"                           (removeIfEmpty (DO.moveTo Prev HiddenNonEmptyWS))
-    createWorkspace         = Unbound "Create named workspace"                             (selectWorkspace myXPConfig)
-    renameWorkspace'        = Unbound "Rename workspace"                                   (renameWorkspace myXPConfig)
-    deleteWorkspace         = Unbound "Remove workspace"                                   (removeWorkspace)
+    createWorkspace         = Unbound "Create named workspace"                             (DW.selectWorkspace myXPConfig)
+    renameWorkspace         = Unbound "Rename workspace"                                   (DW.renameWorkspace myXPConfig)
+    deleteWorkspace         = Unbound "Remove workspace"                                   (DW.removeWorkspace)
     -- Misc
     scratchTerminal         = Unbound "Open scratch terminal"                              (namedScratchpadAction myScratchPads "terminal")
     restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
@@ -361,7 +361,7 @@ gotoX = windows . W.view
 sendX = windows . W.shift
 takeX = sendX ->> gotoX
 
-removeIfEmpty = removeEmptyWorkspaceAfterExcept myTopicNames
+removeIfEmpty = DW.removeEmptyWorkspaceAfterExcept myTopicNames
 
 -- Helpers for performing multiple actions on the same entity
 infixl 1 ->>
