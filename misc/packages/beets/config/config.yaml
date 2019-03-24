@@ -23,7 +23,7 @@ fetchart:
 embedart:
   remove_art_file: no
 replaygain:
-  auto: no
+  auto: yes
   backend: gstreamer
 ftintitle:
   format: '(feat. {0})'
