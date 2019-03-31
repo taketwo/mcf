@@ -26,6 +26,27 @@ class Location(object):
         pass
 
 
+class MTPLocation(object):
+    """
+    Pre-mounted MTP location.
+    """
+
+    def __init__(self, relative_path):
+        gvfs = Path("/run/user/1000/gvfs")
+        if not gvfs.is_dir():
+            raise Exception("{} is not a directory".format(gvfs))
+        mtps = list(gvfs.iterdir())
+        if not len(mtps) == 1:
+            raise Exception("There should be a single MTP directory in {}".format(gvfs))
+        self.path = mtps[0] / relative_path
+
+    def __enter__(self):
+        return str(self.path)
+
+    def __exit__(self, type, value, traceback):
+        pass
+
+
 class JMTPFSLocation(object):
 
     def __init__(self, relative_path):
@@ -57,7 +78,7 @@ def get_music_location(host=None):
     elif host == 'pi':
         return Location(host + ':/home/pi/Music')
     elif host == 'xz1c':
-        return JMTPFSLocation('SD card/Music')
+        return MTPLocation('disk/Music')
     else:
         p = Path(host).resolve()
         if p.is_dir() and p.name == "Music":
@@ -69,6 +90,9 @@ def rsync(src, dst, delete=True):
     cmd = ['rsync',
            '-avz',
            '--size-only',
+           '--omit-dir-times',
+           '--no-perms',
+           '--no-t',
            '--progress']
     if delete:
         cmd.append('--delete')
