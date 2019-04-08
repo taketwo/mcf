@@ -248,6 +248,10 @@ snippet transform "Transform vector" b
 std::transform(${1:v}.begin(), $1.end(), std::back_inserter(${2:destination}), [](const auto& ${3:v}) { return $3; })$0
 endsnippet
 
+snippet any "Any of" b
+std::any_of(${1:v}.begin(), $1.end(), [](const auto& ${2:item}) { return ${3}; })$0
+endsnippet
+
 #######################################################################
 #                        Operator overloading                         #
 #######################################################################
