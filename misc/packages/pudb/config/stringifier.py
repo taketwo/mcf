@@ -20,7 +20,7 @@ def pudb_stringifier(obj):
         return f'Tensor {device} {_dtype(obj.dtype)} ({", ".join(map(str, obj.shape))})'
     if type(obj).__name__ == "ndarray":
         return f'ndarray {_dtype(obj.dtype)} ({", ".join(map(str, obj.shape))})'
-    if type(obj).__name__ == "int64" or type(obj).__name__ == "int32":
+    if type(obj).__name__ in ("int64", "int32", "uint64", "uint32"):
         return f'{type(obj).__name__} {obj}'
     if type(obj).__name__ == "function":
         return 'function'
