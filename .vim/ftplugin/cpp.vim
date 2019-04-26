@@ -105,7 +105,7 @@ endfor
 " Fixers
 let b:ale_fixers = [ 'clang-format' ]
 " Setup clang-format fixer (pick the newest version)
-for v in ['6.0', '5.0', '4.0', '3.8', '3.6']
+for v in ['7', 6.0', '5.0', '4.0', '3.8', '3.6']
     let e = 'clang-format-' . v
     if executable(e)
         let g:ale_c_clangformat_executable = e
