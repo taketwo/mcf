@@ -252,6 +252,10 @@ snippet any "Any of" b
 std::any_of(${1:v}.begin(), $1.end(), [](const auto& ${2:item}) { return ${3}; })$0
 endsnippet
 
+snippet insert "Insert range into vector" b
+${1:v}.insert($1.end(), ${2:source}.begin(), $2.end())$0
+endsnippet
+
 #######################################################################
 #                        Operator overloading                         #
 #######################################################################
