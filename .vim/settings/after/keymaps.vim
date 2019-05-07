@@ -286,9 +286,9 @@ let g:mcf#keymaps["g"] = {
   noremap <F6> :w<CR>:SyntasticCheck<CR>
   noremap <S-F6> :SyntasticToggleMode<CR>
 
-  " Gundo
+  " UndoTree
 
-  nnoremap <F4> :GundoToggle<CR>
+  nnoremap <F4> :UndotreeToggle<CR>
 
   " Change inside surroundings
 
