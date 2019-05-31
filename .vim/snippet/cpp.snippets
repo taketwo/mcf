@@ -256,6 +256,14 @@ snippet insert "Insert range into vector" b
 ${1:v}.insert($1.end(), ${2:source}.begin(), $2.end())$0
 endsnippet
 
+snippet sum "Sum values" b
+auto ${3:sum} = std::accumulate(${1:v}.begin(), $1.end(), ${2:0})$0
+endsnippet
+
+snippet accumulate "Accumulate values" w
+auto ${4:sum} = std::accumulate(${1:v}.begin(), $1.end(), ${2:init}, ${3:[](const auto& acc, const auto& val){ return acc + val; }})$0
+endsnippet
+
 #######################################################################
 #                        Operator overloading                         #
 #######################################################################
