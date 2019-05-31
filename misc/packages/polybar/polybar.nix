@@ -1,4 +1,4 @@
-{ cairo, cmake, fetchgit, libXdmcp, libpthreadstubs, libxcb, pcre, pkgconfig
+{ cairo, cmake, fetchFromGitHub, libXdmcp, libpthreadstubs, libxcb, pcre, pkgconfig
 , python2 , stdenv, xcbproto, xcbutil, xcbutilimage, xcbutilrenderutil
 , xcbutilwm, xcbutilxrm, fetchpatch
 
@@ -23,11 +23,12 @@ assert i3GapsSupport -> ! i3Support     && jsoncpp != null && i3-gaps != null;
 
 stdenv.mkDerivation rec {
     name = "polybar-${version}";
-    version = "3.3.0";
-    src = fetchgit {
-      url = "https://github.com/jaagr/polybar";
+    version = "3.3.1";
+    src = fetchFromGitHub {
+      owner = "jaagr";
+      repo = "polybar";
       rev = version;
-      sha256 = "18hrsbq62na2i4rlwbs2ih7v9shnayg76nw14i6az28wpf8kx4rr";
+      sha256 = "0qwi6q3qkrz2ip1jd4pxlnsrs2a9ywxyf8rgvbzyilr334rsiywh";
       fetchSubmodules = true;
     };
 
