@@ -434,7 +434,7 @@ main = do
   dbus             <- D.connectSession
   D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
   let myDesktopConfig = maybe desktopConfig desktop session
-  xmonad $ withUrgencyHook NoUrgencyHook $ ED.ewmh myDesktopConfig
+  xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ED.ewmh myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
@@ -517,13 +517,13 @@ logHookPolybar dbus = def
 -- }}}
 -- HandleEvent hook -------------------------------------------------------- {{{
 
-myHandleEventHook = ED.fullscreenEventHook <+> docksEventHook
+myHandleEventHook = ED.fullscreenEventHook
 
 -- }}}
 -- Manage hook ------------------------------------------------------------- {{{
 
 myManageHook :: ManageHook
-myManageHook = manageWindows <+> manageDocks <+> namedScratchpadManageHook myScratchPads <+> fullscreenManageHook
+myManageHook = manageWindows <+> namedScratchpadManageHook myScratchPads <+> fullscreenManageHook
 
 manageWindows = composeAll . concat $
     [ [isDialog --> doCenterFloat]
