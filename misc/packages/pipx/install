@@ -20,8 +20,10 @@ actual=$(python3 --version | cut -d ' ' -f2)
 
 if verlt "$actual" "$required"; then
   # System version of Python is too old. Use pyenv.
-   eval "$(pyenv init -)"
-   pyenv shell "$required"
+  eval "$(pyenv init -)"
+  pyenv shell "$required"
+  pip install --user pipx
+  python -m pipx install pipx
+  pip uninstall pipx  # this may remove pipx symlink from bin directory
 fi
 
-curl https://raw.githubusercontent.com/pipxproject/pipx-bootstrap/master/pipxbootstrap/main.py | python3
