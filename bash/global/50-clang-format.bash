@@ -1,0 +1,1 @@
+../50-clang-format.bash

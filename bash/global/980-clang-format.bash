@@ -1,1 +1,0 @@
-../980-clang-format.bash
