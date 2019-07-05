@@ -260,8 +260,16 @@ snippet sum "Sum values" b
 auto ${3:sum} = std::accumulate(${1:v}.begin(), $1.end(), ${2:0})$0
 endsnippet
 
-snippet accumulate "Accumulate values" w
+snippet accumulate "Accumulate values" b
 auto ${4:sum} = std::accumulate(${1:v}.begin(), $1.end(), ${2:init}, ${3:[](const auto& acc, const auto& val){ return acc + val; }})$0
+endsnippet
+
+snippet count "Count elements equal to value" b
+auto ${3:count} = std::count(${1:v}.begin(), $1.end(), ${2:target_value})$0
+endsnippet
+
+snippet count_if "Count elements for which predicate holds" b
+auto ${3:count} = std::count_if(${1:v}.begin(), $1.end(), ${2:[](const auto& v) { return v > 0; }})$0
 endsnippet
 
 #######################################################################
