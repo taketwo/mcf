@@ -1,29 +1,4 @@
-#!/usr/bin/env bash
-
-# Filename:      050-misc-config
-# Description:   Misc configuration.
-
 # Stolen from "https://github.com/jdevera/dotfiles"
-
-# Section: Apps {{{
-#############################################################################
-
-# Enable color support of ls and grep
-if [ -x /usr/bin/dircolors ]; then
-    # install dircolors for Solarized theme
-    test -r ~/.dircolors && eval `dircolors ~/.dircolors/dircolors.256dark`
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-#############################################################################
-
-# }}}
 
 # Section: History {{{
 #############################################################################

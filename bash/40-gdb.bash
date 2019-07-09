@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Relaunch the last command in gdb
 # In case of multiple commands joined by && will launch the very last one
 gdb-last-command ()
