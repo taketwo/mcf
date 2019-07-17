@@ -9,6 +9,7 @@ import signal
 import logging
 import imaplib
 import argparse
+import datetime
 from pathlib import Path
 from contextlib import contextmanager
 from systemd.journal import JournalHandler
@@ -91,34 +92,35 @@ def load_credentials(path):
 class Indicator:
     def __init__(self):
         self.unread_count = 0
-        self.unread_count_diff = 0
         self.mode = 'normal'
 
     def set_normal_mode(self, signum, frame):
         log.info("Enabled normal mode")
         self.mode = "normal"
 
-    def set_diff_mode(self, signum, frame):
-        log.info("Enabled differential mode")
-        self.mode = "diff"
-        self.unread_count_diff = 0
+    def set_deep_work_mode(self, signum, frame):
+        log.info("Enabled deep work mode")
+        self.mode = "deep"
+        self.until = datetime.datetime.now() + datetime.timedelta(minutes=30)
 
     def set_unread_count(self, unread_count):
-        if unread_count != self.unread_count:
-            self.unread_count_diff = max(unread_count - self.unread_count, 0)
-            self.unread_count = unread_count
+        self.unread_count = unread_count
 
     def __str__(self):
+        bg = "6c6b65"
+        fg = "fdf6e3"
+        count = ""
         if self.mode == "normal":
-            count = self.unread_count
+            symbol = ""
             if self.unread_count > 0:
+                count = f" {self.unread_count}"
                 bg = "cb4b16"
-        elif self.mode == "diff":
-            bg = "6c6b65"
-            count = self.unread_count_diff or ""
-        if count != 0:
-            return '%{{F#fdf6e3 B#{}}} {}{} %{{F- B-}}'.format(bg, " " if count else "", count)
-        return ""
+        elif self.mode == "deep":
+            symbol = "●"
+            bg = "859900"
+            if datetime.datetime.now() > self.until:
+                self.mode = "normal"
+        return '%{{F#{} B#{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
 
 
 if __name__ == '__main__':
@@ -138,7 +140,7 @@ if __name__ == '__main__':
 
     indicator = Indicator()
     signal.signal(signal.SIGUSR1, indicator.set_normal_mode)
-    signal.signal(signal.SIGUSR2, indicator.set_diff_mode)
+    signal.signal(signal.SIGUSR2, indicator.set_deep_work_mode)
 
     while True:
         try:
