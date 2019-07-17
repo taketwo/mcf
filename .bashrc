@@ -4,6 +4,18 @@ if [[ $- != *i* ]]; then
   return
 fi
 
+# Enable programmable completion
+# It is important to source it here:
+#   * Not from any of the scripts in bash/ because when sourced that way the
+#     variables in bash_completion that are supposed to be global become local
+#     to the timed_source() function. This leads to problems with completion.
+#     See: https://github.com/Bash-it/bash-it/issues/1245#issuecomment-441285679
+#   * Not after any of the scripts in bash/ because this may make their
+#     completions preferable to bash_completion completions.
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
 [[ $TMUX = "" ]] && export TERM='xterm-256color'
 
 BASH_TIME_STARTUP=${BASH_TIME_STARTUP:-1}
@@ -62,12 +74,3 @@ unset BASH_TIME_STARTUP
 # We do this in the very end of initialization sequence to avoid weird errors while
 # entering into pipenv shell, which (supposedly) sends Ctrl-J signal at some point
 stty intr ^J
-
-# Enable programmable completion
-# It is important to source it here and not from any of the scripts in bash/ because
-# when sourced that way the variables in bash_completion that are supposed to be global
-# become local to the timed_source() function. This leads to problems with completion.
-# See: https://github.com/Bash-it/bash-it/issues/1245#issuecomment-441285679
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
