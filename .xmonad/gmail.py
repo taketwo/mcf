@@ -113,7 +113,7 @@ class Indicator:
         if self.mode == "normal":
             symbol = ""
             if self.unread_count > 0:
-                count = f" {self.unread_count}"
+                count = " {}".format(self.unread_count)
                 bg = "cb4b16"
         elif self.mode == "deep":
             symbol = "●"
