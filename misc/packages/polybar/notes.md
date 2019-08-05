@@ -21,8 +21,9 @@ How to update to a new version
 ------------------------------
 
 Assuming there are no big changes to Polybar, updating to a newer version
-amounts to changing "version" and "sha256" fields in polybar.nix. The actual
-SHA value can be copied from the official derivation [2].
+amounts to changing "version" and "sha256" fields in `polybar.nix` and running
+`mpm polybar` to re-install the package. The actual SHA value can be copied from
+the official derivation [2].
 
 References
 ----------
