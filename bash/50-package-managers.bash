@@ -3,6 +3,7 @@ if hash apt-get 2>/dev/null; then
   alias agu='sudo apt-get update && sudo apt-get upgrade'
   alias agi='sudo apt-get install'
   alias agr='sudo apt-get remove'
+  alias aar='sudo apt autoremove'
 fi
 
 # dpkg aliases
