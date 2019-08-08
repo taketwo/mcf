@@ -60,7 +60,11 @@ Plug 'dyng/ctrlsf.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 
 " Languages / frameworks
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+if has('nvim')
+  Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM'), 'dir' : '~/.vim/bundle/YouCompleteMe-nvim' }
+else
+  Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+endif
 " isort is (temporary) disabled because:
 "   * do not use it that often
 "   * does not work on the Arch box

@@ -22,7 +22,9 @@ function! BuildYCM(info)
         if tlib#sys#IsExecutable('npm')
             let opts = opts.' --js-completer'
         endif
-        if has('python3')
+        if has('nvim')
+            execute '!'.g:python3_host_prog.' install.py'.opts
+        elseif has('python3')
             execute '!python3 install.py'.opts
         else
             execute '!python install.py'.opts
@@ -54,6 +56,10 @@ else
     let venv_path = substitute(pipenv_venv_path, '\n', '', '')
     let g:ycm_python_binary_path = venv_path . '/bin/python'
   else
-    let g:ycm_python_binary_path = 'python'
+    if has('nvim')
+        let g:ycm_python_binary_path = g:python3_host_prog
+    else
+        let g:ycm_python_binary_path = 'python'
+    endif
   endif
 endif
