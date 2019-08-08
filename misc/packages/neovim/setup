@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+PYTHON_VERSION=3.6.7
+
+# Create a Python virtualenv for Neovim as per :help python-virtualenv
+pyenv install $PYTHON_VERSION
+pyenv virtualenv $PYTHON_VERSION py3nvim
+# The command `pyenv activate py3nvim` suggested in help does not work when
+# run from the script, thus we source the activate script explicitly
+source "$PYENV_ROOT/versions/$PYTHON_VERSION/envs/py3nvim/bin/activate"
+pip install pynvim
