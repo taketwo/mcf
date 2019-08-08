@@ -13,6 +13,7 @@ cmake                                  # also YouCompleteMe requires this
 clang
 build-essential
 nix: ninja
+pipx: cmakelint
 
 # Terminal
 nix: tmux
