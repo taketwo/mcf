@@ -222,6 +222,7 @@ nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 " Pasting
 set pastetoggle=<S-F5>
 inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
+nnoremap <F5> :call PasteFromClipboard()<CR>
 
 " Close the current buffer with F11
 
