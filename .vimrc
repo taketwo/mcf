@@ -19,6 +19,7 @@
   set encoding=utf-8              " Necessary to show unicode glyphs
   set autowrite                   " Automatically save before e.g. :make
   set hidden
+  set shortmess+=c                " Do not give ins-completion-menu messages
   syntax on                       " Turn on syntax highlighting
   let mapleader=','               " Change leader to a comma
   let maplocalleader='\'          " Change local leader to a backslash
