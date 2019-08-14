@@ -22,8 +22,16 @@ if verlt "$actual" "$required"; then
   # System version of Python is too old. Use pyenv.
   eval "$(pyenv init -)"
   pyenv shell "$required"
-  pip install --user pipx
-  python -m pipx install pipx
-  pip uninstall pipx  # this may remove pipx symlink from bin directory
 fi
 
+# Install pipx via system pip
+pip3 install --user pipx
+# Install pipx via pipx
+python3 -m pipx install pipx
+# Store pipx symlink
+pipx_where=$(command -v pipx)
+pipx_pipx_location=$(readlink "$pipx_where")
+# Uninstall pipx from system pip (this removes pipx symlink installed by pipx)
+pip3 uninstall pipx
+# Recover symlink
+ln -s "$pipx_pipx_location" "$pipx_where"
