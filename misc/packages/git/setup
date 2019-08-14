@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+from getpass import getpass
+from os import chmod
+from os.path import join, realpath, dirname
+
+import mcf
+from encryption import decrypt
+
+
+_SRC = join(dirname(realpath(__file__)), "secrets")
+_TGT = join(mcf.HOME, ".git-secrets")
+
+print("Decrypting Git secrets file...")
+passwd = getpass("Enter decryption password: ")
+if decrypt(_SRC, _TGT, passwd):
+    chmod(_TGT, 0o600)
+    print("[+]", _TGT)
+else:
+    print("Decryption failed")

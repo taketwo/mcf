@@ -80,9 +80,9 @@ if [ -n "${NIX_PATH}" ]; then
   export XDG_DATA_DIRS="$HOME/.nix-profile/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 fi
 
-# Load secret configuration settings
-if [ -f "${HOME}/.secrets" ]; then
-  . "${HOME}/.secrets"
+# Load Git secrets
+if [ -f "${HOME}/.git-secrets" ]; then
+  . "${HOME}/.git-secrets"
 fi
 
 # Yarn bin directory
