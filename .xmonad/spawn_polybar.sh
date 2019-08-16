@@ -2,6 +2,8 @@
 
 if [[ $HOSTNAME == "ramen" ]]; then
   export ETH_INTERFACE="enp4s0"
+elif [[ $HOSTNAME == "alpaca" ]]; then
+  export ETH_INTERFACE="enp4s0"
 elif [[ $HOSTNAME == "raccoon" ]]; then
   export ETH_INTERFACE="enp0s25"
 fi
