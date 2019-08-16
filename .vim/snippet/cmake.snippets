@@ -143,3 +143,11 @@ macro($1)
 	$0
 endmacro()
 endsnippet
+
+snippet upper "String to upper case" b
+string(TOUPPER "\${${1:variable_in}}" ${2:variable_out})
+endsnippet
+
+snippet lower "String to lower case" b
+string(TOLOWER "\${${1:variable_in}}" ${2:variable_out})
+endsnippet
