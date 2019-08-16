@@ -9,7 +9,7 @@ if ! ping -c1 8.8.8.8 >/dev/null; then
   exit 1
 fi
 
-if ! ping -c1 216.58.219.206 >/dev/null ; then
+if ! ping -c1 216.58.210.14 >/dev/null ; then
   echo -e "\e[00;31mFailed to ping Google website by IP address\e[00m"
   exit 1
 fi
