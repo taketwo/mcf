@@ -14,7 +14,6 @@ def install():
 
 
 def _link(paths, desc):
-    home = expanduser('~')
     paths = paths if isinstance(paths, tuple) else (paths, paths)
     basename = os.path.basename(paths[0])
     src = mcf.path('.xmonad', paths[0])
