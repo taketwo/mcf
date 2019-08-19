@@ -84,6 +84,7 @@ Plug 'tpope/vim-git'
 Plug 'tpope/vim-rhubarb'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
+Plug 'whiteinge/diffconflicts'
 
 " Text objects
 Plug 'michaeljsmith/vim-indent-object'

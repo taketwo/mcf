@@ -39,3 +39,10 @@
 [gui]
   fontui = -family \"Fantasque Sans Mono\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
   fontdiff = -family \"Fantasque Sans Mono\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+[merge]
+  tool = diffconflicts
+[mergetool]
+  keepBackup = false
+[mergetool "diffconflicts"]
+  cmd = vim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+  trustExitCode = true
