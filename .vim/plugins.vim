@@ -85,6 +85,7 @@ Plug 'tpope/vim-rhubarb'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 Plug 'whiteinge/diffconflicts'
+Plug 'rhysd/git-messenger.vim'
 
 " Text objects
 Plug 'michaeljsmith/vim-indent-object'
