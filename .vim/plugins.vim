@@ -99,6 +99,7 @@ Plug 'machakann/vim-textobj-delimited'
 
 " Snippets
 Plug 'honza/vim-snippets'
+Plug 'kkoomen/vim-doge'
 
 " Misc
 Plug 'liuchengxu/vim-which-key'

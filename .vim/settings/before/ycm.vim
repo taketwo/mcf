@@ -1,7 +1,7 @@
 " Do not use S-Tab
 let g:ycm_key_list_previous_completion = ['<Up>']
 " Do not use <Leader>d
-let g:ycm_key_detailed_diagnostics = '<Leader>D'
+let g:ycm_key_detailed_diagnostics = ''
 " Use same error/warning symbols as ALE
 let g:ycm_error_symbol = g:ale_sign_error
 let g:ycm_warning_symbol = g:ale_sign_warning
