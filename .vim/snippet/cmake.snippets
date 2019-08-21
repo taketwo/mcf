@@ -151,3 +151,7 @@ endsnippet
 snippet lower "String to lower case" b
 string(TOLOWER "\${${1:variable_in}}" ${2:variable_out})
 endsnippet
+
+snippet inlist "Value is in list" w
+\${${1:value_variable}} IN_LIST ${2:list_variable}
+endsnippet
