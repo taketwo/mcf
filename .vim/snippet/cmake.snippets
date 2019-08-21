@@ -144,6 +144,12 @@ macro($1)
 endmacro()
 endsnippet
 
+snippet function "Function" b
+function($1)
+	$0
+endfunction()
+endsnippet
+
 snippet upper "String to upper case" b
 string(TOUPPER "\${${1:variable_in}}" ${2:variable_out})
 endsnippet
@@ -155,3 +161,14 @@ endsnippet
 snippet inlist "Value is in list" w
 \${${1:value_variable}} IN_LIST ${2:list_variable}
 endsnippet
+
+snippet parse "Parse arguments" b
+cmake_parse_arguments(
+	${1:PREFIX}
+	"${2:option-1 ...}"
+	"${3:one-value-arg-1 ...}"
+	"${4:multi-value-arg-1 ...}"
+	\${ARGN}
+)
+endsnippet
+
