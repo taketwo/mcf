@@ -34,6 +34,8 @@ import XMonad.Layout.Reflect
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.ComboP
+import XMonad.Layout.Column
 import XMonad.ManageHook
 import XMonad.Prompt
 import XMonad.Prompt.Input
@@ -113,6 +115,7 @@ defaultLayouts = fullscreenFull $ smartBorders $ avoidStruts $
   ||| tabbedBottom shrinkText myTabConfig
 
 myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
+layoutMsg = named "msg" (combineTwoP (Column 3.0) (tabbed shrinkText myTabConfig) (tabbedBottom shrinkText myTabConfig) (ClassName "Slack"))
 
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
@@ -120,6 +123,7 @@ myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
   onWorkspace "rviz" (myRViz) $
+  onWorkspace "msg" (layoutMsg) $
   {-$-} defaultLayouts
 
 -- }}}
@@ -144,6 +148,7 @@ myTopics =
   , TI "dslam"    "~/Workspace/Projects/dslam"               (spawnShell)
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
   , TI "profiler" ""                                         (spawn "profiler_gui")
+  , TI "msg"      ""                                         (spawn "slack" >> spawn "telegram-desktop")
   , ti "gimp"     ""
   , ti "zoom"     ""
   ]
