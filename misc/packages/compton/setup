@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
+from subprocess import call
+
+
+if __name__ == "__main__":
+    print("Enabling Compton service...")
+    call(["systemctl", "--user", "daemon-reload"])
+    call(["systemctl", "--user", "enable", "compton.service"])

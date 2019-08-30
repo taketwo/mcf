@@ -1,0 +1,10 @@
+[Unit]
+Description=Compositing manager
+After=xorg.target
+
+[Service]
+ExecStart=/usr/bin/compton
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=wm.target
