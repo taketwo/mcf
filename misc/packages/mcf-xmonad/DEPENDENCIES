@@ -26,3 +26,4 @@ arch: alsa-utils
 
 kupfer
 polybar
+compton

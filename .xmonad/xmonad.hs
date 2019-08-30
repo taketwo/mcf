@@ -247,6 +247,8 @@ table =
   , k "'"            gridSelect              __                      __                      __
   , k "/"            promptWebSearch         selectWebSearch         __                      __
   , k "0"            gotoPrevWorkspace       __                      __                      __
+  , k "]"            windowOpacityUp         __                      __                      __
+  , k "["            windowOpacityDown       __                      __                      __
   , k "<F5>"         __                      restartXMonad           __                      __
   , k "<F9>"         __                      __                      __                      lockScreen
   , k "<F10>"        __                      __                      __                      logout
@@ -355,6 +357,9 @@ table =
     -- Brightness control
     brightnessDown          = Unbound "Brightness down"                                    (spawn "xbacklight -dec 1")
     brightnessUp            = Unbound "Brightness up"                                      (spawn "xbacklight -inc 1")
+    -- Window opacity control
+    windowOpacityUp         = Unbound "Window opacity up"                                  (spawn "transset -a --inc 0.1")
+    windowOpacityDown       = Unbound "Window opacity down"                                (spawn "transset -a --dec 0.1")
 
 -- Two varieties of Action: B(ound) is aware of the key that was used to
 -- invoke it, U(nbound) is not aware of the key.
