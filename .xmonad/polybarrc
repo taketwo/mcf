@@ -104,7 +104,7 @@ label-song-ellipsis = true
 [module/keyboard]
 
 type = custom/script
-exec = $MCF/.xmonad/keyboard.sh
+exec = $MCF/.xmonad/keyboard_segment.sh
 tail = false
 interval = 1
 

@@ -13,11 +13,11 @@ case $(keyboard -g) in
      *) layout="??";;
 esac
 
-StartIndicator
+StartSegment
 Add "$layout"
 Action 1 "keyboard -n"
 Action 2 "keyboard -s de"
 Action 3 "keyboard -s us"
 Color "#ffffff" "$SolarizedYellow"
 
-FlushIndicator
+FlushSegment

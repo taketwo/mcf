@@ -1,6 +1,6 @@
-# Collection of bash helper functions to create indicators for Polybar panel
+# Collection of bash helper functions to create segments for Polybar panel
 
-StartIndicator ()
+StartSegment ()
 {
   eval "__output=' '"
 }
@@ -41,7 +41,7 @@ Add ()
   eval "__output='$__output${1//\'/^^^} '"
 }
 
-FlushIndicator ()
+FlushSegment ()
 {
   if [ "$__output" != " " ] ; then
     # Undo triple hat escape
