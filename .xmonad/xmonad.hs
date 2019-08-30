@@ -512,7 +512,7 @@ logHookPolybar dbus = def
   , ppVisible          = polybarColor colorFgPrimary "" . wrap " " " " . clickable
   , ppHidden           = clickable
   , ppHiddenNoWindows  = const ""
-  , ppTitle            = (" " ++) . polybarColor colorFgPrimary "" . shorten 80
+  , ppTitle            = (" " ++) . polybarColor colorFgPrimary "" . shorten 50
   , ppLayout           = polybarAction (xdoMod "Tab") 1 .
     (\x -> case x of
     "MouseResizableTile"        -> "[T]"
