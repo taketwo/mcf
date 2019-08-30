@@ -3,10 +3,19 @@
 from pudb.var_view import type_stringifier
 
 
+TYPE_NAME_MAP = {
+    "float32": "f32",
+    "float64": "f64",
+    "int32": "i32",
+    "int64": "i64",
+    "uint32": "u32",
+    "uint64": "u64",
+}
+
+
 def _dtype(dtype):
-    m = {"float32": "f32", "float64": "f64", "int32": "i32", "int64": "i64"}
     dtype = str(dtype)
-    for k, v in m.items():
+    for k, v in TYPE_NAME_MAP.items():
         if dtype.endswith(k):
             return v
     return dtype
@@ -20,14 +29,14 @@ def pudb_stringifier(obj):
         return f'Tensor {device} {_dtype(obj.dtype)} ({", ".join(map(str, obj.shape))})'
     if type(obj).__name__ == "ndarray":
         return f'ndarray {_dtype(obj.dtype)} ({", ".join(map(str, obj.shape))})'
-    if type(obj).__name__ in ("int64", "int32", "uint64", "uint32"):
-        return f'{type(obj).__name__} {obj}'
+    if type(obj).__name__ in TYPE_NAME_MAP.keys():
+        return f"{_dtype(type(obj).__name__)} {obj}"
     if type(obj).__name__ == "function":
-        return 'function'
+        return "function"
     if type(obj).__name__ == "module":
-        return 'module'
+        return "module"
     if type(obj).__name__ == "PosixPath":
-        return f'PosixPath {obj}'
+        return f"PosixPath {obj}"
     if type(obj) in [set, frozenset, list, tuple, dict]:
         return f"{type(obj).__name__} ({len(obj)})"
     return type_stringifier(obj)
