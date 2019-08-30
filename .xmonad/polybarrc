@@ -57,6 +57,8 @@ tray-background = ${self.background}
 
 override-redirect = true
 
+enable-ipc = true
+
 [settings]
 
 screenchange-reload = true
@@ -103,10 +105,9 @@ label-song-ellipsis = true
 
 [module/keyboard]
 
-type = custom/script
-exec = $MCF/.xmonad/keyboard_segment.sh
-tail = false
-interval = 1
+type = custom/ipc
+hook-0 = $MCF/.xmonad/keyboard_segment.sh
+initial = 1
 
 [module/gmail]
 

@@ -19,6 +19,7 @@ function get_layout
 function set_layout
 {
   setxkbmap -layout "$1"
+  polybar-msg hook keyboard 1
 }
 
 function list_layouts
