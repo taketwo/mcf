@@ -132,9 +132,9 @@ class PackageManager(object):
             install_script = join(directory, "install")
             if os.path.isfile(install_script):
                 commands.append(("script", install_script))
-            setup_script = join(directory, "setup")
-            if os.path.isfile(setup_script):
-                commands.append(("setup", setup_script))
+            post_install_script = join(directory, "post-install")
+            if os.path.isfile(post_install_script):
+                commands.append(("post-install", post_install_script))
             commands.extend(self._parse_symlinks(package_name))
             return commands
 
@@ -217,9 +217,9 @@ class PackageManager(object):
                     src = self._resolve_path(s[0], os.path.join(PACKAGES, package_name))
                     tgt = self._resolve_path(s[1], mcf.HOME)
                     link(src, tgt, s[2])
-            if "setup" in merged:
-                print("[*] Setup scripts\n")
-                for s in merged["setup"]:
+            if "post-install" in merged:
+                print("[*] Post-install scripts\n")
+                for s in merged["post-install"]:
                     print("> {}".format(s))
                     subprocess.check_call([s], env=os.environ)
                     print("")
@@ -247,9 +247,9 @@ class PackageManager(object):
             for s in merged["symlink"]:
                 print("  {}".format(s[2]))
             print("")
-        if "setup" in merged:
-            print(" - Custom setup scripts\n")
-            for s in merged["setup"]:
+        if "post-install" in merged:
+            print(" - Post-install scripts\n")
+            for s in merged["post-install"]:
                 print("  {}".format(s))
             print("")
 
