@@ -14,6 +14,11 @@ clang
 build-essential
 nix: ninja
 pipx: cmakelint
+pipx: pipenv
+pipx: poetry
+pipx: flake8 flake8-bugbear
+pipx: black
+pudb
 
 # Terminal
 nix: tmux
@@ -28,17 +33,9 @@ w3m
 git
 
 # Python-related
-#python-pip
-#python-virtualenv
-#python-urwid
-pipx: pipenv
-pipx: poetry
-pipx: flake8 flake8-bugbear
-pipx: black
 pipx: pygments pygments-style-solarized  # for fv command
 python3-click
 pyenv
-pudb
 
 # Vim
 vim
