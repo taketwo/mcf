@@ -15,8 +15,6 @@ nix: xmonad-log
 ubuntu: libx11-dev
 ubuntu: libxrandr-dev
 ubuntu: libxss-dev
-ubuntu: gnome-settings-daemon
-ubuntu: gnome-control-center
 ubuntu: libxft-dev
 ubuntu: libxinerama-dev
 

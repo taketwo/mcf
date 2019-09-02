@@ -1,3 +1,1 @@
-entries/gnome-sessions/xmonad.session:/usr/share/gnome-session/sessions/xmonad.session:XMonad GNOME session
-entries/xsessions/xmonad.desktop:/usr/share/xsessions/xmonad.desktop:XMonad X session
-entries/applications/xmonad.desktop:/usr/share/applications/xmonad.desktop:XMonad application
+set_window_manager.sh:.config/plasma-workspace/env/set_window_manager.sh:KDEWM switch
