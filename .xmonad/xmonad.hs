@@ -9,6 +9,7 @@ import XMonad.Actions.Search
 import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.UpdatePointer
+import XMonad.Actions.FloatSnap
 
 import XMonad.Config.Kde
 import XMonad.Config.Gnome
@@ -254,6 +255,10 @@ table =
   , k "<F10>"        __                      __                      __                      logout
   , k "<F11>"        __                      __                      __                      reboot
   , k "<F12>"        __                      __                      __                      shutdown
+  , k "<Left>"       (snapMoveFloat L)       (snapGrowFloat L)       __                      __
+  , k "<Right>"      (snapMoveFloat R)       (snapGrowFloat R)       __                      __
+  , k "<Up>"         (snapMoveFloat U)       (snapGrowFloat U)       __                      __
+  , k "<Down>"       (snapMoveFloat D)       (snapGrowFloat D)       __                      __
   , [bind "M1-" "<Tab>" gotoNextWindow]
   -- Multimedia keys
   , [bind "" "<XF86AudioMute>"         audioMute]
@@ -309,6 +314,8 @@ table =
     expandHorizontal        = Unbound "Expand floating window horizontally"                (withFocused (keysResizeWindow (10, 0) (1%2, 0)))
     shrinkVertical          = Unbound "Shrink floating window vertically"                  (withFocused (keysResizeWindow (0, -10) (0, 1%2)))
     shrinkHorizontal        = Unbound "Shrink floating window horizontally"                (withFocused (keysResizeWindow (-10, 0) (1%2, 0)))
+    snapMoveFloat dir       = Unbound "Snap floating window"                               (withFocused $ snapMove dir Nothing)
+    snapGrowFloat dir       = Unbound "Snap and grow floating window"                      (withFocused $ snapGrow dir Nothing)
     -- Layout management
     shrinkMaster            = Unbound "Shrink master window"                               (sendMessage Shrink)
     expandMaster            = Unbound "Expand master window"                               (sendMessage Expand)
