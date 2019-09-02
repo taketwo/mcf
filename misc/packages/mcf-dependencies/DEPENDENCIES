@@ -64,9 +64,3 @@ xcape
 redshift
 gnome-screensaver                      # session lock
 flameshot                              # screenshots with PrintScreen key
-
-# Required in xinitrc
-arch: nitrogen
-arch: xcompmgr
-arch: unclutter
-arch: xorg-xsetroot

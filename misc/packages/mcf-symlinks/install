@@ -34,7 +34,6 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
           ('.inputrc', 'Readline configuration file'),
           ('.mime.types', 'Custom MIME types'),
           ('.mailcap', 'Custom MIME type-to-program mappings'),
-          ('.xinitrc', 'X client script'),
           ('texmf', 'Latex packages'),
           ('.tmux.conf', 'Tmux configuration file')]
 
