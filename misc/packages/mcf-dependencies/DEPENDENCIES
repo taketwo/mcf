@@ -60,7 +60,6 @@ nix: hexyl                             # for hex command
 
 # Misc
 xcape
-trayer
 redshift
 gnome-screensaver                      # session lock
 flameshot                              # screenshots with PrintScreen key
