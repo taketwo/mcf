@@ -23,6 +23,7 @@ pudb
 # Terminal
 nix: tmux
 pipx: tmuxp                           # tmux session management
+powerline-shell
 
 # Network/Internet
 openssh
