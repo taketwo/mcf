@@ -27,7 +27,6 @@ powerline-shell
 # Network/Internet
 openssh
 openvpn
-w3m
 
 # Git
 git
