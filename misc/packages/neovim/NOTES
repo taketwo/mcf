@@ -1,4 +1,0 @@
-We currently use Neovim supplied through a PPA. Therefore, before installing this package one needs to execute:
-
-$ sudo add-apt-repository ppa:neovim-ppa/unstable
-$ sudo apt-get update
