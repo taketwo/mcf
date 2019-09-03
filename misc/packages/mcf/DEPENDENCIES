@@ -1,5 +1,18 @@
-mcf-dependencies
+mcf-core
 mcf-fonts
-mcf-symlinks
 mcf-wallpaper
 mcf-terminal
+
+# Network/Internet
+openssh
+openvpn
+net-tools                              # ifconfig
+
+# X11
+xcape
+redshift
+gnome-screensaver                      # session lock
+flameshot                              # screenshots with PrintScreen key
+arch: xorg-xprop
+arch: xorg-setxkbmap                   # keyboard layout switching
+ubuntu: xbacklight

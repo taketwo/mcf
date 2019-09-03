@@ -2,11 +2,12 @@
 powertop
 htop
 stow
-arch: xorg-setxkbmap                   # keyboard layout switching
-ubuntu: xbacklight
-nix: nox
-net-tools                              # ifconfig
 less
+
+# Package managers
+nix: nox
+ubuntu: apt-file
+pyenv
 
 # Development
 cmake                                  # also YouCompleteMe requires this
@@ -18,23 +19,15 @@ pipx: pipenv
 pipx: poetry
 pipx: flake8 flake8-bugbear
 pipx: black
+nix: ShellCheck                        # linting for Bash
 pudb
 
 # Terminal
 tmux
 powerline-shell
 
-# Network/Internet
-openssh
-openvpn
-
 # Git
 git
-
-# Python-related
-pipx: pygments pygments-style-solarized  # for fv command
-python3-click
-pyenv
 
 # Vim
 vim
@@ -42,12 +35,6 @@ xsel                                   # copy to clipboard
 ctags
 xdotool                                # paste with F5
 python3-dev                            # to build YCM
-nix: ShellCheck                        # linting for Bash
-
-# Util
-unrar
-ubuntu: apt-file
-arch: xorg-xprop
 
 # Filesystem navigation/search
 tree
@@ -57,8 +44,7 @@ nix: ripgrep
 nix: bat
 nix: hexyl                             # for hex command
 
-# Misc
-xcape
-redshift
-gnome-screensaver                      # session lock
-flameshot                              # screenshots with PrintScreen key
+# Util
+unrar                                    # for unpack command
+pipx: pygments pygments-style-solarized  # for fv command
+python3-click                            # for music-sync command

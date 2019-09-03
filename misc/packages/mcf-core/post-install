@@ -39,7 +39,7 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
-    Install MCF symlinks.
+    Install symlinks for MCF core.
     ''', formatter_class=argparse.RawDescriptionHelpFormatter)
     args = parser.parse_args()
     install()
