@@ -129,9 +129,12 @@ class PackageManager(object):
             nix_expression = join(directory, "default.nix")
             if os.path.isfile(nix_expression):
                 commands.append(("nix", "-f {}".format(directory)))
+            pre_install_script = join(directory, "pre-install")
+            if os.path.isfile(pre_install_script):
+                commands.append(("pre-install", pre_install_script))
             install_script = join(directory, "install")
             if os.path.isfile(install_script):
-                commands.append(("script", install_script))
+                commands.append(("install", install_script))
             post_install_script = join(directory, "post-install")
             if os.path.isfile(post_install_script):
                 commands.append(("post-install", post_install_script))
@@ -168,6 +171,12 @@ class PackageManager(object):
         """
         Install package(s) using given package manager.
 
+        Installation order:
+          1. Pre-install scripts
+          2. Package manager dependencies
+          3. Install scripts
+          4. Post-install scripts
+
         Arguments
         ---------
         manager: str
@@ -194,14 +203,20 @@ class PackageManager(object):
         if verbose:
             self.describe_package(package_name, merged)
         try:
+            if "pre-install" in merged:
+                print("[*] Pre-install scripts\n")
+                for s in merged["pre-install"]:
+                    print("> {}".format(s))
+                    subprocess.check_call([s], env=os.environ)
+                    print("")
             for pm in INSTALL.keys():
                 if pm in merged:
                     print("[*] Install {} packages\n".format(pm.capitalize()))
                     self._install_with_package_manager(pm, merged[pm])
                     print("")
-            if "script" in merged:
+            if "install" in merged:
                 print("[*] Install scripts\n")
-                for s in sorted(merged["script"]):
+                for s in sorted(merged["install"]):
                     print("> {}".format(s))
                     cmd = [s]
                     if force_reinstall:
@@ -232,14 +247,19 @@ class PackageManager(object):
 
     def describe_package(self, package_name, merged):
         print('Package "{}" resolved into:\n'.format(package_name))
+        if "pre-install" in merged:
+            print(" - Pre-install scripts\n")
+            for s in merged["pre-install"]:
+                print("  {}".format(s))
+            print("")
         for pm in INSTALL.keys():
             if pm in merged:
                 print(" - {} packages\n".format(pm.capitalize()))
                 print("  " + ", ".join(merged[pm]))
                 print("")
-        if "script" in merged:
+        if "install" in merged:
             print(" - Custom install scripts\n")
-            for s in merged["script"]:
+            for s in merged["install"]:
                 print("  {}".format(s))
             print("")
         if "symlink" in merged:
