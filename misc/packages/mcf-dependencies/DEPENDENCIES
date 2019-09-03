@@ -21,8 +21,7 @@ pipx: black
 pudb
 
 # Terminal
-nix: tmux
-pipx: tmuxp                           # tmux session management
+tmux
 powerline-shell
 
 # Network/Internet

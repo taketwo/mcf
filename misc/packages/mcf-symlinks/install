@@ -34,8 +34,7 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
           ('.inputrc', 'Readline configuration file'),
           ('.mime.types', 'Custom MIME types'),
           ('.mailcap', 'Custom MIME type-to-program mappings'),
-          ('texmf', 'Latex packages'),
-          ('.tmux.conf', 'Tmux configuration file')]
+          ('texmf', 'Latex packages')]
 
 
 if __name__ == '__main__':
