@@ -3,5 +3,5 @@
 if [[ -d /nix ]]; then
   echo "Nix is already installed"
 else
-  curl https://nixos.org/nix/install | USER=$(whoami) sh
+  curl https://nixos.org/nix/install | USER=$(whoami) LD_PRELOAD='' LD_LIBRARY_PATH='' sh
 fi
