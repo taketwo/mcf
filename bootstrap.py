@@ -3,6 +3,7 @@
 
 import os
 import sys
+import argparse
 import subprocess
 from os.path import expanduser, join
 from shutil import which
@@ -11,6 +12,12 @@ if not which("git"):
     sys.exit("Please install git before running bootstrap script")
 
 dest = join(expanduser("~"), ".mcf")
+
+parser = argparse.ArgumentParser(description='''
+Bootstrap MCF.
+''', formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("--core", action="store_true", help="Install only MCF core")
+args = parser.parse_args()
 
 print("[*] Bootstrap MCF")
 print("")
@@ -34,15 +41,14 @@ except subprocess.CalledProcessError:
     os.exit("Failed to obtain MCF sources, aborting...")
 print("")
 
+print("[*] Import MPM")
+library = join(dest, "scripts", "library")
+os.environ["PYTHONPATH"] = library
+sys.path.append(library)
 pm = __import__("package_manager")
+print("")
 
 if "MCF" not in os.environ:
-    print("[*] Import install script")
-    library = join(dest, "scripts", "library")
-    os.environ["PYTHONPATH"] = library
-    sys.path.append(library)
-    print("")
-
     print("[*] Install package managers")
     print("")
 
@@ -60,7 +66,9 @@ else:
     print("[*] Install MCF")
     print("")
 
-    if not pm.install("mcf", verbose=True):
+    mcf_package = "mcf-core" if args.core else "mcf"
+
+    if not pm.install(mcf_package, verbose=True):
         print("MCF installation failed!")
     else:
         print("[*] Change MCF remote to use Git")
