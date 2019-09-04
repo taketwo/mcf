@@ -150,6 +150,8 @@ label-connected = "  "
 
 type = internal/pulseaudio
 
+sink = ${env:PULSEAUDIO_SINK:}
+
 format-muted = <label-muted>
 label-muted = "  "
 format-muted-foreground = ${colors.alert}
