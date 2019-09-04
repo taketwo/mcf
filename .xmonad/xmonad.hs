@@ -253,7 +253,7 @@ table =
   , k "<F5>"         __                      restartXMonad           __                      __
   , k "<F9>"         __                      __                      __                      lockScreen
   , k "<F10>"        __                      __                      __                      logout
-  , k "<F11>"        __                      __                      __                      reboot
+  , k "<F11>"        toggleStruts            __                      __                      reboot
   , k "<F12>"        __                      __                      __                      shutdown
   , k "<Left>"       (snapMoveFloat L)       (snapGrowFloat L)       __                      __
   , k "<Right>"      (snapMoveFloat R)       (snapGrowFloat R)       __                      __
@@ -337,6 +337,7 @@ table =
     renameWorkspace         = Unbound "Rename workspace"                                   (DW.renameWorkspace myXPConfig)
     deleteWorkspace         = Unbound "Remove workspace"                                   (DW.removeWorkspace)
     -- Misc
+    toggleStruts            = Unbound "Toggle struts"                                      (sendMessage ToggleStruts)
     scratchTerminal         = Unbound "Open scratch terminal"                              (namedScratchpadAction myScratchPads "terminal")
     restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour W.view)
