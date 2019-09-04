@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mkdir -p "$HOME/.config/nix"
+echo "sandbox = false" > "$HOME/.config/nix/nix.conf"
