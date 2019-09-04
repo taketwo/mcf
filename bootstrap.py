@@ -34,6 +34,8 @@ except subprocess.CalledProcessError:
     os.exit("Failed to obtain MCF sources, aborting...")
 print("")
 
+pm = __import__("package_manager")
+
 if "MCF" not in os.environ:
     print("[*] Import install script")
     library = join(dest, "scripts", "library")
@@ -44,23 +46,24 @@ if "MCF" not in os.environ:
     print("[*] Install package managers")
     print("")
 
-    __import__("package_manager").install("nix", verbose=True)
-    __import__("package_manager").install("pipx", verbose=True)
-
-    print("First part of bootstrapping procedure is completed.")
-    print("Run the following command: source {}".format(join(dest, ".profile")))
-    print("Now re-run this script to complete bootstrapping.")
+    if not pm.install("nix", verbose=True) or not pm.install("pipx", verbose=True):
+        print("First part of bootstrapping procedure failed!")
+    else:
+        print("First part of bootstrapping procedure is completed.")
+        print("Run the following command: source {}".format(join(dest, ".profile")))
+        print("Now re-run this script to complete bootstrapping.")
 else:
     print("[*] Install MCF")
     print("")
 
-    __import__("package_manager").install("mcf", verbose=True)
+    if not pm.install("mcf", verbose=True):
+        print("MCF installation failed!")
+    else:
+        print("[*] Change MCF remote to use Git")
+        print("")
+        cmd = "git remote set-url origin git@github.com:taketwo/mcf.git"
+        subprocess.check_call(cmd.split())
 
-    print("[*] Change MCF remote to use Git")
-    print("")
-    cmd = "git remote set-url origin git@github.com:taketwo/mcf.git"
-    subprocess.check_call(cmd.split())
-
-    print("Second part of bootstrapping procedure is completed.")
-    print("If the terminal font is screwed, relaunching will solve the issue.")
-    print("Reboot the computer to finish installation.")
+        print("Second part of bootstrapping procedure is completed.")
+        print("If the terminal font is screwed, relaunching will solve the issue.")
+        print("Reboot the computer to finish installation.")

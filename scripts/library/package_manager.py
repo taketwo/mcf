@@ -67,6 +67,7 @@ class Pipx(Install):
         Returns package name.
         """
         import re
+
         m = re.match(r"(.*)\[.*\]", package)
         if m is not None:
             # Package with options, need to install using pipx --spec
@@ -171,12 +172,6 @@ class PackageManager(object):
         """
         Install package(s) using given package manager.
 
-        Installation order:
-          1. Pre-install scripts
-          2. Package manager dependencies
-          3. Install scripts
-          4. Post-install scripts
-
         Arguments
         ---------
         manager: str
@@ -198,6 +193,15 @@ class PackageManager(object):
         INSTALL[manager](p, args)
 
     def install(self, package_name, verbose=False, force_reinstall=False, update=False):
+        """
+        Install package with a given name.
+
+        Installation order:
+          1. Pre-install scripts
+          2. Package manager dependencies
+          3. Install scripts
+          4. Post-install scripts
+        """
         commands = self.resolve(package_name)
         merged = self._merge(commands)
         if verbose:
@@ -238,12 +242,13 @@ class PackageManager(object):
                     print("> {}".format(s))
                     subprocess.check_call([s], env=os.environ)
                     print("")
-
+            return True
         except Exception as e:
             print('Installation of "{}" failed'.format(package_name))
             print("Error: {}".format(e))
             if hasattr(e, "output"):
                 print("       {}".format(e.output))
+            return False
 
     def describe_package(self, package_name, merged):
         print('Package "{}" resolved into:\n'.format(package_name))
@@ -290,4 +295,4 @@ class PackageManager(object):
 
 def install(package_name, verbose=False, force_reinstall=False, update=False):
     pm = PackageManager()
-    pm.install(package_name, verbose, force_reinstall, update)
+    return pm.install(package_name, verbose, force_reinstall, update)
