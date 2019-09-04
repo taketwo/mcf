@@ -170,6 +170,7 @@ endif
 
 " Reset search pattern
 
+let g:mcf#keymaps["/"] = { "name" : "reset-search-pattern" }
 nnoremap <Leader>/ :let @/ = ""<CR>
 
 " Seek through search results with l/L (instead of used n/N)
@@ -247,6 +248,9 @@ autocmd QuickFixCmdPost    l* nested lwindow
 
 " Copy short/long filename to clipboard
 
+let g:mcf#keymaps.f = { "name" : "+filename" }
+let g:mcf#keymaps.f.s = "copy-short"
+let g:mcf#keymaps.f.l = "copy-long"
 nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
 nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
 
@@ -293,6 +297,9 @@ let g:mcf#keymaps["g"] = {
 
   " Change inside surroundings
 
+  let g:mcf#keymaps.k = { "name" : "+change-surrounding" }
+  let g:mcf#keymaps.k.i = "change-inside"
+  let g:mcf#keymaps.k.a = "change-around"
   nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
   nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
 
