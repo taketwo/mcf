@@ -3,5 +3,8 @@
 if [[ -d /nix ]]; then
   echo "Nix is already installed"
 else
+  if [[ -z ${USER+x} ]]; then
+    USER=$(whoami)
+  fi
   curl https://nixos.org/nix/install | sh
 fi
