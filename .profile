@@ -71,8 +71,10 @@ fi
 [ -d "${HOME}/.local/bin" ] && PATH="${HOME}/.local/bin:${PATH}"
 
 # Nix: source config if it exists and was not sourced already
+# Note that Nix config requires USER environment variable to be set
+# This may not be the case in some situations, so we explicitly set it
 if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] &&  [ -z "${NIX_PATH}" ]; then
-  . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
+  USER=$(whoami) . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 fi
 
 # Nix: add share to XDG_DATA_DIRS such that bash completion, applications, etc are picked up
