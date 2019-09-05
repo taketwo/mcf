@@ -31,6 +31,7 @@ git
 
 # Vim
 vim
+neovim
 xsel                                   # copy to clipboard
 ctags
 xdotool                                # paste with F5
