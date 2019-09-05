@@ -19,6 +19,8 @@ required="3.6.7"
 actual=$(python3 --version | cut -d ' ' -f2)
 
 if verlt "$actual" "$required"; then
+  # If pyenv is not in the PATH (happens during bootstrapping), temporary add it
+  [[ ":$PATH:" != *"pyenv"* ]] && PATH="${HOME}/.pyenv/bin:${PATH}"
   # System version of Python is too old, use pyenv
   eval "$(pyenv init -)"
   # Check if required version of Python is installed with pyenv
