@@ -46,9 +46,9 @@ module-margin-right = 0
 font-0 = FantasqueSansMono:pixelsize=10:bold:antialias=true;2
 font-1 = FontAwesome:pixelsize=10;2
 
-modules-left = xmonad speed
+modules-left = xmonad network-speed-eth network-speed-wlan
 modules-center = 
-modules-right = mpd volume keyboard eth wlan gmail battery0 battery1 date
+modules-right = mpd volume keyboard network-connectivity-eth network-connectivity-wlan gmail battery0 battery1 date
 
 tray-position = center
 tray-padding = 2
@@ -72,15 +72,25 @@ margin-bottom = 0
 ;                        Module configuration                         ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-[module/speed]
+[common/network-speed]
 
-type = internal/network
-interface = wlp3s0
 interval = 3
 accumulate-stats = true
 format-connected = "    <label-connected> "
 format-connected-foreground = ${colors.secondary}
 label-connected = %downspeed% %upspeed%
+
+[module/network-speed-eth]
+
+type = internal/network
+inherit = common/network-speed
+interface = ${env:ETH_INTERFACE:}
+
+[module/network-speed-wlan]
+
+type = internal/network
+inherit = common/network-speed
+interface = wlp3s0
 
 [module/xmonad]
 
@@ -117,7 +127,7 @@ tail = true
 click-left = "kill -USR1 $(pgrep --oldest --parent %pid%)"
 click-right = "kill -USR2 $(pgrep --oldest --parent %pid%)"
 
-[common/network]
+[common/network-connectivity]
 
 interval = 3.0
 ping-interval = 3
@@ -130,18 +140,18 @@ format-packetloss = <label-connected>
 label-packetloss-foreground = ${colors/solarized.base1}
 label-packetloss-background = ${colors/solarized.base01}
 
-[module/eth]
+[module/network-connectivity-eth]
 
 type = internal/network
-inherit = common/network
+inherit = common/network-connectivity
 interface = ${env:ETH_INTERFACE:}
 
 label-connected = "  "
 
-[module/wlan]
+[module/network-connectivity-wlan]
 
 type = internal/network
-inherit = common/network
+inherit = common/network-connectivity
 interface = wlp3s0
 
 label-connected = "  "
