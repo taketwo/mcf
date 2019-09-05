@@ -32,9 +32,12 @@ class Nix(Install):
     CMD = "nix-env -i"
 
     def __init__(self, packages, args=""):
+        # Make sure that LD variables are not set, otherwise Nix insulation from the
+        # rest of the system may be compromised
+        env = dict(os.environ, LD_LIBRARY_PATH="", LD_PRELOAD="")
         for p in packages:
             cmd = self.CMD + " " + p + " " + args
-            subprocess.check_call(cmd.split())
+            subprocess.check_call(cmd.split(), env=env)
 
 
 class Pip(Install):
