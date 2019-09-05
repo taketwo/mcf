@@ -31,13 +31,13 @@ if verlt "$actual" "$required"; then
 fi
 
 # Install pipx via system pip
-pip3 install --user pipx
+pip3 install --user --no-warn-script-location pipx
 # Install pipx via pipx (-f to force overwrite the binary installed with previous command)
 python3 -m pipx install -f pipx
 # Store pipx symlink
-pipx_where=$(command -v pipx)
-pipx_pipx_location=$(readlink "$pipx_where")
+pipx_where="$HOME/.local/bin/pipx"
+pipx_where_actual=$(readlink "$pipx_where")
 # Uninstall pipx from system pip (this removes pipx symlink installed by pipx)
 pip3 uninstall -y pipx
 # Recover symlink
-ln -s "$pipx_pipx_location" "$pipx_where"
+ln -s "$pipx_where_actual" "$pipx_where"
