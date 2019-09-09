@@ -1,6 +1,7 @@
 {
   "segments": [
     "virtual_env",
+    "~/.mcf/misc/packages/powerline-shell/docker_segment.py",
     "git",
     "ssh",
     "cwd",
