@@ -38,7 +38,7 @@ try:
         cmd = "git clone --recursive https://github.com/taketwo/mcf {}".format(dest)
         subprocess.check_call(cmd.split())
 except subprocess.CalledProcessError:
-    os.exit("Failed to obtain MCF sources, aborting...")
+    sys.exit("Failed to obtain MCF sources, aborting...")
 print("")
 
 print("[*] Import MPM")
