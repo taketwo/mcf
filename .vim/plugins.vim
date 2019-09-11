@@ -6,7 +6,14 @@ for f in split(glob('~/.vim/settings/before/*.vim'), '\n')
     exe 'source' f
 endfor
 
-call plug#begin('~/.vim/bundle')
+" Plugin location depends on whether this in Vim or Neovim and is out of .vim/ tree
+if has('nvim')
+    let bundle_path = '~/.local/share/nvim/bundle'
+else
+    let bundle_path = '~/.local/share/vim/bundle'
+endif
+
+call plug#begin(bundle_path)
 
 Plug 'andymass/vim-matchup'
 Plug 'godlygeek/tabular'
@@ -60,11 +67,7 @@ Plug 'dyng/ctrlsf.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 
 " Languages / frameworks
-if has('nvim')
-  Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM'), 'dir' : '~/.vim/bundle/YouCompleteMe-nvim' }
-else
-  Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-endif
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " isort is (temporary) disabled because:
 "   * do not use it that often
 "   * does not work on the Arch box
