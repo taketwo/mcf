@@ -1,38 +1,25 @@
-" Return 0 if Gnome version is below 3.8
-" Return 1 otherwise
-function! <SID>CheckGnomeVersion()
-    let shellcmd = 'gnome-terminal --version | grep -Po "(?<=Terminal )[0-9\.]*"'
-    let vstr = substitute(system(shellcmd), "[\n]", "", "g")
-    let vlist = split(vstr, '\.')
-    let major = str2nr(vlist[0])
-    let minor = str2nr(vlist[1])
-    if (major == 3 && minor >= 8) || major >= 4
-        return 1
-    else
-        return 0
-    endif
-endfunction
-
 " Get the name of Gnome profile
 function! <SID>GetGnomeProfile()
-    if <SID>CheckGnomeVersion()
-        let shellcmd = 'dconf list /org/gnome/terminal/legacy/profiles:/'
-    else
-        let shellcmd = 'gconftool-2 -R /apps/gnome-terminal/profiles | grep /apps/gnome-terminal/profiles | cut -d/ -f5 | cut -d: -f1'
-    endif
+    let shellcmd = 'dconf list /org/gnome/terminal/legacy/profiles:/'
     return substitute(system(shellcmd), "[\n]", "", "g")
 endfunction
 
+" Return 0 if Gnome tools needed for querying values are not available
+" Return 1 otherwise
+function! <SID>CheckGnomeTools()
+    return executable('dconf')
+endfunction
+
 " Get the value of a Gnome value
+" Returns empty string if the tools needed to query the value are not available
 function! GetGnomeValue(name)
-    let profile = <SID>GetGnomeProfile()
-    if <SID>CheckGnomeVersion()
+    if <SID>CheckGnomeTools()
+        let profile = <SID>GetGnomeProfile()
         let name = substitute(a:name, "[_]", "-", "g")
         let shellcmd = 'dconf read /org/gnome/terminal/legacy/profiles:/' . profile . name
+        let value = substitute(system(shellcmd), "[\n]", "", "g")
+        return substitute(value, "^'\\(.*\\)'$", "\\1", "")
     else
-        let name = substitute(a:name, "[-]", "_", "g")
-        let shellcmd = 'gconftool-2 --get "/apps/gnome-terminal/profiles/' . profile . '/' . name . '"'
+        return ""
     endif
-    let value = substitute(system(shellcmd), "[\n]", "", "g")
-    return substitute(value, "^'\\(.*\\)'$", "\\1", "")
 endfunction
