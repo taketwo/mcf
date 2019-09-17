@@ -119,7 +119,7 @@ Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
-let ycm_readme = expand('~/.vim/bundle/YouCompleteMe/README.md')
+let ycm_readme = expand(bundle_path . '/YouCompleteMe/README.md')
 if !filereadable(ycm_readme)
     echo "Installing Vim plugins..."
     PlugClean
