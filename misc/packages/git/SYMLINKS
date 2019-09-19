@@ -1,1 +1,2 @@
 gitconfig:.gitconfig:Git configuration file
+secrets:.git-secrets:Git secrets file
