@@ -108,7 +108,7 @@ Plug 'kkoomen/vim-doge'
 Plug 'liuchengxu/vim-which-key'
 
 " Non-vim
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all && cd ../.mcf && git checkout -- .bashrc' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 
 " Try these plugins:
