@@ -24,7 +24,7 @@
   reword = commit --amend
   amend = commit --amend --no-edit
 [core]
-  editor = vim
+  editor = nvim
 [push]
   default = tracking
 [pager]
