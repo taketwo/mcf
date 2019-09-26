@@ -115,7 +115,6 @@ defaultLayouts = fullscreenFull $ smartBorders $ avoidStruts $
   ||| windowNavigation Grid
   ||| tabbedBottom shrinkText myTabConfig
 
-myRViz = named "rviz" (smartBorders $ avoidStruts $ reflectHoriz $ withIM (2 % 3) (ClassName "Rviz") (tabbed shrinkText myTabConfig))
 layoutMsg = fullscreenFull $ named "msg" (combineTwoP (Column 3.0) (tabbed shrinkText myTabConfig) (tabbedBottom shrinkText myTabConfig) (ClassName "Slack"))
 
 -- Here we combine our default layouts with our specific, workspace-locked
@@ -123,7 +122,6 @@ layoutMsg = fullscreenFull $ named "msg" (combineTwoP (Column 3.0) (tabbed shrin
 myLayoutHook =
 -- start all workspaces in my home directory, with the ability
 -- to switch to a new working dir
-  onWorkspace "rviz" (myRViz) $
   onWorkspace "msg" (layoutMsg) $
   {-$-} defaultLayouts
 
@@ -553,6 +551,7 @@ manageWindows = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "zoom" | x <- myZoomShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "rviz" | x <- myRVizShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -565,6 +564,7 @@ manageWindows = composeAll . concat $
     myGimpShifts = ["Gimp"]
     myZoomShifts = ["zoom", "Zoom"]
     myMendeleyShifts = ["Mendeley Desktop"]
+    myRVizShifts = ["RViz"]
 
 -- Hint: use `xprop` to figure out window class name
 
