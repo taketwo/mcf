@@ -83,8 +83,8 @@ if [ -n "${NIX_PATH}" ]; then
 fi
 
 # Load Git secrets
-if [ -f "${HOME}/.git-secrets" ]; then
-  . "${HOME}/.git-secrets"
+if [ -f "${HOME}/.config/git/secrets" ]; then
+  . "${HOME}/.config/git/secrets"
 fi
 
 # Yarn bin directory
