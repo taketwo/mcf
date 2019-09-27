@@ -46,5 +46,7 @@ FlushSegment ()
   if [ "$__output" != " " ] ; then
     # Undo triple hat escape
     echo -n "${__output//^^^/\'}"
+  else
+    echo ""
   fi
 }
