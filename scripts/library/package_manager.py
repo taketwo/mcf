@@ -286,11 +286,11 @@ class PackageManager(object):
         return dict(merged)
 
     def _resolve_path(self, path, base):
-        p = Path(path)
+        p = Path(os.path.expandvars(path))
         if p.is_absolute():
-            return path
+            return str(p)
         else:
-            return os.path.join(base, path)
+            return str(Path(base) / p)
 
 
 def install(package_name, verbose=False, force_reinstall=False, update=False):
