@@ -235,10 +235,7 @@ class PackageManager(object):
             if "symlink" in merged:
                 print("[*] Create symlinks\n")
                 for s in merged["symlink"]:
-                    # Resolve file paths
-                    src = self._resolve_path(s[0], os.path.join(PACKAGES, package_name))
-                    tgt = self._resolve_path(s[1], mcf.HOME)
-                    link(src, tgt, s[2])
+                    link(*s)
             if "post-install" in merged:
                 print("[*] Post-install scripts\n")
                 for s in merged["post-install"]:
