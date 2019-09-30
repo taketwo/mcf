@@ -564,7 +564,7 @@ manageWindows = composeAll . concat $
     myGimpShifts = ["Gimp"]
     myZoomShifts = ["zoom", "Zoom"]
     myMendeleyShifts = ["Mendeley Desktop"]
-    myRVizShifts = ["RViz"]
+    myRVizShifts = ["RViz", "rviz"]
 
 -- Hint: use `xprop` to figure out window class name
 
