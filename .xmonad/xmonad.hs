@@ -198,8 +198,8 @@ myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
         role = stringProperty "WM_WINDOW_ROLE"
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
-        h = 0.5             -- height
-        w = 0.5             -- width
+        h = 0.8             -- height
+        w = 0.6             -- width
         t = (1.0 - h) / 2.0 -- centered top/bottom
         l = (1.0 - w) / 2.0 -- centered left/right
 
