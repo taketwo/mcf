@@ -3,4 +3,4 @@ ubuntu: git-gui
 nix: git-lfs
 nix: git-crypt
 nix: hub
-gnupg2
+gpg
