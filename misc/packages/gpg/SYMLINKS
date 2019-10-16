@@ -1,0 +1,2 @@
+gpg-agent.conf:.gnupg/gpg-agent.conf:GPG Agent configuration file
+sshcontrol:.gnupg/sshcontrol:GPG SSH control file
