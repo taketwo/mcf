@@ -25,6 +25,7 @@ pudb
 # Terminal
 tmux
 powerline-shell
+bash-completion
 
 # Git
 git
