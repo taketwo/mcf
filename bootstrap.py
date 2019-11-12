@@ -74,7 +74,7 @@ if "MCF" not in os.environ:
         or not pm.install("pyenv", verbose=True)
         or not pm.install("pipx", verbose=True)
     ):
-        print("First part of bootstrapping procedure failed!")
+        sys.exit("First part of bootstrapping procedure failed!")
     else:
         print("First part of bootstrapping procedure is completed.")
         print("Run the following command: source {}".format(join(dest, ".profile")))
@@ -86,7 +86,7 @@ else:
     mcf_package = "mcf-core" if args.core else "mcf"
 
     if not pm.install(mcf_package, verbose=True):
-        print("MCF installation failed!")
+        sys.exit("MCF installation failed!")
     else:
         if not args.no_git:
             print("[*] Change MCF remote to use Git")
