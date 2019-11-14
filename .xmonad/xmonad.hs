@@ -144,7 +144,7 @@ myTopics =
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
   , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnShell)
   , TI "v4r"      "~/Workspace/Projects/v4r"                 (spawnShell)
-  , TI "docker"   "~/Workspace/Projects/aeolus"              (spawnInShell "aeolus container-enter")
+  , TI "docker"   "~/Workspace/Projects/aeolus"              (spawnInShell "aeolus container-attach")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
   , TI "profiler" ""                                         (spawn "profiler_gui")
   , TI "msg"      ""                                         (spawn "slack" >> spawn "telegram-desktop")
