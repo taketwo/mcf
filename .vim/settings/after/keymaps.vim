@@ -286,10 +286,9 @@ let g:mcf#keymaps["g"] = {
 
   nnoremap <F3> :TagbarToggle<CR>
 
-  " Syntastic
+  " GitMessenger
 
-  noremap <F6> :w<CR>:SyntasticCheck<CR>
-  noremap <S-F6> :SyntasticToggleMode<CR>
+  noremap <F6> :GitMessenger<CR>
 
   " UndoTree
 
