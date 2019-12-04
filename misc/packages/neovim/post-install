@@ -3,7 +3,7 @@
 PYTHON_VERSION=3.6.9
 
 # Create a Python virtualenv for Neovim as per :help python-virtualenv
-PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_VERSION
+PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --skip-existing $PYTHON_VERSION
 pyenv virtualenv $PYTHON_VERSION py3nvim
 # The command `pyenv activate py3nvim` suggested in help does not work when
 # run from the script, thus we source the activate script explicitly
