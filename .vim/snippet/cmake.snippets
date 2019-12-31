@@ -186,3 +186,11 @@ else()
 endif()
 endsnippet
 
+snippet standard "Set CXX standard" b
+set(CMAKE_CXX_STANDARD ${1:14})
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Optional: disable extensions to link against c++$1 and not gnu++$1
+set(CMAKE_CXX_EXTENSIONS OFF)
+# Optional: export standard requirement (requires CMake 3.8)
+target_compile_features(foo PUBLIC cxx_std_$1)
+endsnippet
