@@ -116,6 +116,8 @@ class PackageManager(object):
         """
         directory = join(PACKAGES, package_name)
         if not isdir(directory):
+            if len(package_name.split(": ")) == 2:
+                return [tuple(package_name.split(": "))]
             return [(PLATFORM, package_name)]
         else:
             commands = list()
