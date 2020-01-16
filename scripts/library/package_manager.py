@@ -66,21 +66,14 @@ class Pipx(Install):
 
     def install(self, package, args):
         """
-        Run Pipx install using --spec if necessary.
-        Returns package name.
+        Run Pipx install.
+        Returns package name (without [] spec).
         """
         import re
-
-        m = re.match(r"(.*)\[.*\]", package)
-        if m is not None:
-            # Package with options, need to install using pipx --spec
-            name = m.groups()[0]
-            cmd = "{} --spec {} {} {}".format(self.CMD, package, name, args)
-        else:
-            cmd = self.CMD + " " + package + " " + args
-            name = package
+        cmd = self.CMD + " " + package + " " + args
         subprocess.check_output(cmd.split())
-        return name
+        m = re.match(r"(.*)\[.*\]", package)
+        return package if m is None else m.groups()[0]
 
 
 class Cabal(Install):
