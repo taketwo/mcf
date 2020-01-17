@@ -251,8 +251,8 @@ autocmd QuickFixCmdPost    l* nested lwindow
 let g:mcf#keymaps.f = { "name" : "+filename" }
 let g:mcf#keymaps.f.s = "copy-short"
 let g:mcf#keymaps.f.l = "copy-long"
-nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
-nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
+nnoremap <Leader>fs :let @+=expand("%")<CR>
+nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 
 " }}}
 " Git / version control {{{
