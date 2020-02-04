@@ -77,6 +77,8 @@ def get_music_location(host=None):
         return Location(host + ':/storage/0123-4567/Music')
     elif host == 'pi':
         return Location(host + ':/home/pi/Music')
+    elif host == 'sloth':
+        return Location(host + ':/data/Music')
     elif host == 'xz1c':
         return MTPLocation('disk/Music')
     else:
