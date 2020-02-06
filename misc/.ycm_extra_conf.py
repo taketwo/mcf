@@ -98,6 +98,16 @@ def get_compilation_info_for_file(dbpath, database, filename):
 
 
 def try_find_ros_compilation_database(filename):
+    build_path = find_catkin_tools_build(filename) or find_catkin_make_build(filename)
+    if build_path is not None:
+        candidate = os.path.join(build_path, 'compile_commands.json')
+        if os.path.isfile(candidate):
+            logging.info("Found ROS compilation database for " + filename + " at " + candidate)
+            return candidate
+    return None
+
+
+def find_catkin_tools_build(filename):
     try:
         from catkin_tools.metadata import find_enclosing_workspace
         from catkin_tools.context import Context
@@ -106,12 +116,23 @@ def try_find_ros_compilation_database(filename):
         ctx = Context.load(workspace, {}, {}, load_env=False)
         package = rospkg.get_package_name(filename)
         path = os.path.join(ctx.build_space_abs, package)
-        candidate = os.path.join(path, 'compile_commands.json')
-        if os.path.isfile(candidate) or os.path.isdir(candidate):
-            logging.info("Found ROS compilation database for " + filename + " at " + candidate)
-            return candidate
+        if os.path.isdir(path):
+            logging.info("Found catkin tools build directory at " + path)
+            return path
     except:
         pass
+    return None
+
+
+def find_catkin_make_build(filename):
+    from pathlib import Path
+    for p in Path(filename).parents:
+        tag = p / ".catkin_workspace"
+        if tag.is_file():
+            for b in ("build", "build_reldebug", "build_debug", "build_release"):
+                build_path = p / b
+                if build_path.is_dir():
+                    return build_path
     return None
 
 
