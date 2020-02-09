@@ -24,16 +24,22 @@ function __boleh_import ()
   tmp=/tmp/boleh
   rm -f "$archive"
   read -r -p 'Download config https://users.bolehvpn.net/download/normal/6 and press ENTER'
-  unzip -o "$archive" -d $tmp > /dev/null
-  sudo cp /tmp/boleh/*{crt,key} /etc/openvpn
-  echo "Importing Boleh fully routed configurations:"
-  for f in "$tmp"/FullyRouted*ovpn; do
-    country=$(echo "$f" | awk -F'[-.]' '{print $2}')
-    if [[ $country != 'TCP' ]]; then
-      echo " * $country"
-      sudo cp "$tmp/FullyRouted-$country.ovpn" "/etc/openvpn/$country.Boleh.conf"
-    fi
-  done
+  if [[ ! -f $archive ]]; then
+    echo "Cannot find config at expected location $archive"
+  else
+    echo "Removing old Boleh configurations"
+    sudo rm /etc/openvpn/*Boleh.conf
+    unzip -o "$archive" -d $tmp > /dev/null
+    sudo cp /tmp/boleh/*{crt,key} /etc/openvpn
+    echo "Importing Boleh fully routed configurations:"
+    for f in "$tmp"/FullyRouted*ovpn; do
+      country=$(echo "$f" | awk -F'[-.]' '{print $2}')
+      if [[ $country != 'TCP' ]]; then
+        echo " * $country"
+        sudo cp "$tmp/FullyRouted-$country.ovpn" "/etc/openvpn/$country.Boleh.conf"
+      fi
+    done
+  fi
 }
 
 # Turn on a Boleh connection
@@ -57,7 +63,7 @@ function __boleh_active ()
       info=$(systemctl status "openvpn@$c.Boleh.service")
       state=$(grep -oP "(?<=Active: )(\w+)" <<< "$info")
       if [[ $state == "active" ]]; then
-        echo -n "$c "
+        echo -n "$c"
       fi
     done
     echo ""
