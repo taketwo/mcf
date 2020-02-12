@@ -107,38 +107,40 @@ class PackageManager(object):
         Resolve package name into a list of commands to install/configure the package
         and its dependencies.
         """
-        directory = join(PACKAGES, package_name)
-        if not isdir(directory):
+        if isdir(package_name):
+            directory = package_name
+        elif isdir(join(PACKAGES, package_name)):
+            directory = join(PACKAGES, package_name)
+        else:
             if len(package_name.split(": ")) == 2:
                 return [tuple(package_name.split(": "))]
             return [(PLATFORM, package_name)]
-        else:
-            commands = list()
-            deps = join(directory, "DEPENDENCIES")
-            if os.path.isfile(deps):
-                for line in open(deps, "r"):
-                    package = self._remove_comments(line).strip()
-                    if len(package.split(": ")) == 2:
-                        commands.append(tuple(package.split(": ")))
-                    elif package:
-                        if package != package_name:
-                            commands += self.resolve(package)
-                        else:
-                            commands.append((PLATFORM, package))
-            nix_expression = join(directory, "default.nix")
-            if os.path.isfile(nix_expression):
-                commands.append(("nix", "-f {}".format(directory)))
-            pre_install_script = join(directory, "pre-install")
-            if os.path.isfile(pre_install_script):
-                commands.append(("pre-install", pre_install_script))
-            install_script = join(directory, "install")
-            if os.path.isfile(install_script):
-                commands.append(("install", install_script))
-            post_install_script = join(directory, "post-install")
-            if os.path.isfile(post_install_script):
-                commands.append(("post-install", post_install_script))
-            commands.extend(self._parse_symlinks(package_name))
-            return commands
+        commands = list()
+        deps = join(directory, "DEPENDENCIES")
+        if os.path.isfile(deps):
+            for line in open(deps, "r"):
+                package = self._remove_comments(line).strip()
+                if len(package.split(": ")) == 2:
+                    commands.append(tuple(package.split(": ")))
+                elif package:
+                    if package != package_name:
+                        commands += self.resolve(package)
+                    else:
+                        commands.append((PLATFORM, package))
+        nix_expression = join(directory, "default.nix")
+        if os.path.isfile(nix_expression):
+            commands.append(("nix", "-f {}".format(directory)))
+        pre_install_script = join(directory, "pre-install")
+        if os.path.isfile(pre_install_script):
+            commands.append(("pre-install", pre_install_script))
+        install_script = join(directory, "install")
+        if os.path.isfile(install_script):
+            commands.append(("install", install_script))
+        post_install_script = join(directory, "post-install")
+        if os.path.isfile(post_install_script):
+            commands.append(("post-install", post_install_script))
+        commands.extend(self._parse_symlinks(package_name))
+        return commands
 
     def _parse_symlinks(self, package_name):
         """

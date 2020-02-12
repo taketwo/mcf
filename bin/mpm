@@ -12,7 +12,17 @@ import package_manager
 @click.option('--reinstall', help='force reinstallation', is_flag=True)
 @click.option('--update', help='update', is_flag=True)
 def install(package, reinstall, update):
-    """Install a package."""
+    """
+    Install a package.
+
+    Package argument should be one of:
+
+      * package name of a package that exists in mcf/misc/packages or in platform manager repository
+
+      * package spec in the format "manager: package"
+
+      * full path to package
+    """
     click.echo('Package name: {}'.format(package))
     return package_manager.install(package, verbose=True, force_reinstall=reinstall, update=update)
 
