@@ -1,3 +1,2 @@
-misc/packages/mcf-aeolus/* filter=git-crypt diff=git-crypt
 misc/packages/git/secrets filter=git-crypt diff=git-crypt
 misc/packages/git/credentials filter=git-crypt diff=git-crypt
