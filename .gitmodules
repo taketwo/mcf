@@ -1,18 +1,12 @@
 [submodule "misc/gnome-terminal-colors-solarized"]
 	path = misc/gnome-terminal-colors-solarized
 	url = https://github.com/Anthony25/gnome-terminal-colors-solarized.git
-[submodule "scripts/bundle/z"]
-	path = scripts/bundle/z
-	url = https://github.com/rupa/z.git
 [submodule "scripts/bundle/timeout"]
 	path = scripts/bundle/timeout
 	url = https://github.com/pshved/timeout.git
 [submodule ".xmonad/bundle/solarized-xmonad"]
 	path = .xmonad/bundle/solarized-xmonad
 	url = https://github.com/ibotty/solarized-xmonad.git
-[submodule "scripts/bundle/diff-so-fancy"]
-	path = scripts/bundle/diff-so-fancy
-	url = https://github.com/so-fancy/diff-so-fancy.git
 [submodule "tmux/plugins/tmux-copycat"]
 	path = tmux/plugins/tmux-copycat
 	url = https://github.com/tmux-plugins/tmux-copycat
@@ -28,3 +22,9 @@
 [submodule "tmux/plugins/tmux-prefix-highlight"]
 	path = tmux/plugins/tmux-prefix-highlight
 	url = https://github.com/tmux-plugins/tmux-prefix-highlight.git
+[submodule "external/z"]
+	path = external/z
+	url = https://github.com/rupa/z.git
+[submodule "external/diff-so-fancy"]
+	path = external/diff-so-fancy
+	url = https://github.com/so-fancy/diff-so-fancy.git
