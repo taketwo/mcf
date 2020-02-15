@@ -32,21 +32,12 @@ def cli(ctx):
 
 @cli.command()
 @click.argument("host", callback=validate_id)
-@click.option(
-    "--decrypt",
-    "-d",
-    is_flag=True,
-    help="Decrypt remote host if available (will ask for password)",
-)
 @click.pass_obj
-def show(man, host, decrypt):
+def show(man, host):
     """
     Show information about host.
     """
     local, remote = man[host]
-    local_t, remote_t = None, None
-    if remote and decrypt:
-        passwd = click.prompt("Decryption password", hide_input=True)
     click.echo("Name: {}".format(host))
     click.echo("Local version: ", nl=False)
     if local:
@@ -61,15 +52,12 @@ def show(man, host, decrypt):
     if remote:
         click.secho("yes", fg="green")
         click.echo()
-        if decrypt:
-            for line in str(remote.decrypt(passwd)).strip().split("\n"):
-                click.echo("    {}".format(line))
-        else:
-            click.secho("    [encrypted]", fg="blue")
+        for line in str(remote).strip().split("\n"):
+            click.echo("    {}".format(line))
         click.echo()
     else:
         click.secho("no", fg="red")
-    if local_t and remote_t:
+    if local and remote:
         click.echo("Diff:")
         click.echo()
         if local == remote:
@@ -77,7 +65,7 @@ def show(man, host, decrypt):
             click.echo()
         else:
             d = difflib.Differ()
-            for line in d.compare(local_t.splitlines(), remote_t.splitlines()):
+            for line in d.compare(str(local).splitlines(), str(remote).splitlines()):
                 if line.startswith("-"):
                     color = "red"
                 elif line.startswith("+"):
@@ -112,20 +100,14 @@ def hosts(man):
     is_flag=True,
     help="Overwrite remote host if it exists and is different",
 )
-@click.option(
-    "--commit/--no-commit", default=False, help="Commit changes to the repository"
-)
 @click.argument("host", callback=validate_id)
 @click.pass_obj
-def push(man, host, force, commit):
+def push(man, host, force):
     """
     Push a local SSH host to remote repository.
 
     Use with `--force` flag if remote repository already has a host with the
     same name and their contents do not match.
-
-    The changes will be automatically committed to the repository with a
-    descriptive commit message. Use `--no-commit` to prevent this.
     """
     local, remote = man[host]
     if not local:
@@ -144,37 +126,9 @@ def push(man, host, force, commit):
         click.echo("Did you want to --force overwrite?", err=True)
         sys.exit(3)
     directory = os.path.expanduser("~/.mcf/ssh")
-    encrypted = os.path.join(directory, host)
-    passwd = click.prompt("Enter encryption password", hide_input=True)
-    original = encrypted + ".dec"
-    with open(original, "w") as f:
+    remote_path = os.path.join(directory, host)
+    with open(remote_path, "w") as f:
         f.write(str(local))
-    with open(os.path.join(directory, host + ".md5"), "w") as f:
-        f.write(local.md5)
-    encryption.encrypt(original, encrypted, passwd=passwd)
-    os.remove(original)
-    if commit:
-        import pygit2
-
-        try:
-            repo = pygit2.Repository(pygit2.discover_repository("."))
-            index = repo.index
-            index.read()
-            index.add("ssh/" + host)
-            index.add("ssh/" + host + ".md5")
-            index.write()
-            tree_id = index.write_tree()
-            signature = pygit2.Signature("SSH Sync", "ssh-sync@local")
-            repo.create_commit(
-                "refs/heads/master",
-                signature,
-                signature,
-                "ssh-sync: " + host,
-                tree_id,
-                [repo.head.get_object().oid],
-            )
-        except KeyError:
-            click.echo("Not in a Git repository, unable to commit changes.")
 
 
 @cli.command()
@@ -282,10 +236,9 @@ class SSHManager(object):
     def _load_remote_hosts(self):
         directory = os.path.expanduser("~/.mcf/ssh")
         for filename in os.listdir(directory):
-            encrypted = os.path.join(directory, filename)
-            md5file = encrypted + ".md5"
-            if not filename.endswith(".md5") and os.path.isfile(md5file):
-                yield EncryptedHost(filename, encrypted, open(md5file, "r").read())
+            remote_path = os.path.join(directory, filename)
+            config = open(remote_path, "r").readlines()
+            yield Host(config)
 
     def _get_config_filename(self):
         return os.path.expanduser("~/.ssh/config")
@@ -327,23 +280,6 @@ class Host(object):
         for option in self.options:
             text += "  " + option + "\n"
         return text
-
-
-class EncryptedHost(Host):
-    def __init__(self, name, encrypted, md5):
-        self.name = name
-        self.filename = encrypted
-        self._md5 = md5
-
-    def __str__(self):
-        return "{} [encrypted]".format(self.name)
-
-    def decrypt(self, passwd):
-        return Host(encryption.decrypt(self.filename, passwd=passwd))
-
-    @property
-    def md5(self):
-        return self._md5
 
 
 class Table(object):
