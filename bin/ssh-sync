@@ -8,8 +8,6 @@ import difflib
 
 import click
 
-import encryption
-
 
 def validate_id(ctx, param, value):
     try:
@@ -163,8 +161,7 @@ def pull(man, host, force):
         click.echo("Host {} is already among locals".format(host), err=True)
         click.echo("Did you want to --force overwrite?", err=True)
         sys.exit(3)
-    passwd = click.prompt("Decryption password", hide_input=True)
-    local = remote.decrypt(passwd)
+    local = remote
     man[host] = (local, remote)
     man.save_local_hosts()
 
