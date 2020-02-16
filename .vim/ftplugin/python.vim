@@ -52,6 +52,8 @@ let b:ale_type_map = {'flake8': {'ES': 'WS'}}
 let b:ale_python_flake8_options = '--ignore=E501,W503 --select=C,E,F,W,B,B950 --max-line-length=80'
 " MyPy configuration, do not follow imports
 let g:ale_python_mypy_options = '--ignore-missing-imports'
+" Linters
+let b:ale_linters = ['flake8', 'mypy']
 " Fixers
-let b:ale_fixers = [ 'black' ]
-
+" Consider enabling 'reorder-python-imports' if https://github.com/asottile/reorder_python_imports/issues/66 is solved
+let b:ale_fixers = ['black']
