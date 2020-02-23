@@ -71,12 +71,8 @@ class JMTPFSLocation(object):
 def get_music_location(host=None):
     if host is None:
         return Location(os.path.expanduser('~/Music'))
-    if host in ['precision', 'raccoon', 'ramen', 'alpaca']:
+    if host in ['raccoon', 'ramen', 'alpaca']:
         return Location(host + ':/home/sergey/Music')
-    elif host == 'z3c':
-        return Location(host + ':/storage/0123-4567/Music')
-    elif host == 'pi':
-        return Location(host + ':/home/pi/Music')
     elif host == 'sloth':
         return Location(host + ':/data/Music')
     elif host == 'xz1c':
