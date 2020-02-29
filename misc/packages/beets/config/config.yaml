@@ -27,3 +27,6 @@ replaygain:
   backend: gstreamer
 ftintitle:
   format: '(feat. {0})'
+permissions:
+  file: 664
+  dir: 775
