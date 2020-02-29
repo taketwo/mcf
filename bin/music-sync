@@ -16,11 +16,12 @@ from filesystem import which
 
 class Location(object):
 
-    def __init__(self, path):
+    def __init__(self, path, group=None):
         self.path = path
+        self.group = group
 
     def __enter__(self):
-        return self.path
+        return self
 
     def __exit__(self, type, value, traceback):
         pass
@@ -39,6 +40,7 @@ class MTPLocation(object):
         if not len(mtps) == 1:
             raise Exception("There should be a single MTP directory in {}".format(gvfs))
         self.path = mtps[0] / relative_path
+        self.group = None
 
     def __enter__(self):
         return str(self.path)
@@ -53,6 +55,7 @@ class JMTPFSLocation(object):
         self.relative_path = relative_path
         if which("jmtpfs") is None:
             raise Exception("jmtpfs is not available")
+        self.group = None
 
     def __enter__(self):
         self.path = tempfile.TemporaryDirectory()
@@ -74,7 +77,7 @@ def get_music_location(host=None):
     if host in ['raccoon', 'ramen', 'alpaca']:
         return Location(host + ':/home/sergey/Music')
     elif host == 'sloth':
-        return Location(host + ':/data/Music')
+        return Location(host + ':/data/Music', group="data")
     elif host == 'xz1c':
         return MTPLocation('disk/Music')
     else:
@@ -94,8 +97,10 @@ def rsync(src, dst, delete=True):
            '--progress']
     if delete:
         cmd.append('--delete')
-    cmd.append(src + ('' if src.endswith('/') else '/'))
-    cmd.append(dst)
+    if dst.group:
+        cmd.append("--chown=:" + dst.group)
+    cmd.append(src.path + ('' if src.path.endswith('/') else '/'))
+    cmd.append(dst.path)
     subprocess.call(cmd)
 
 
