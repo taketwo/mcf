@@ -74,7 +74,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " Plugin 'fisadev/vim-isort'
 
 Plug 'plasticboy/vim-markdown'
-Plug 'taketwo/vim-ros'
+Plug 'taketwo/vim-ros', { 'branch': 'auto-build-tool' }
 Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
