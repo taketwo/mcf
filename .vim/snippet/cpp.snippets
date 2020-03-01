@@ -232,8 +232,16 @@ endsnippet
 #                             Algorithms                              #
 #######################################################################
 
-snippet "m(ax|in)el" "Max/min element" br
-${3:result_iter} = std::m`!p snip.rv += match.group(1)`_element(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
+snippet "max" "Max element" br
+${3:result_iter} = std::max_element(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
+endsnippet
+
+snippet "min" "Min element" br
+${3:result_iter} = std::min_element(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
+endsnippet
+
+snippet "minmax" "Min/max element" br
+${3:minmax_iters} = std::minmax_element(${1:v}.begin(), $1.end()${2/.+/, /}${2:[](const auto& a, const auto& b){ return a < b; }})$0
 endsnippet
 
 snippet sort "Sort vector" b
