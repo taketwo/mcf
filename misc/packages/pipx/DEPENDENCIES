@@ -1,3 +1,4 @@
 curl
-python3-venv
 python3-pip
+# We need python3-venv package, but currently there is a problem on Bionic
+python3.6-venv=3.6.8-1~18.04.3
