@@ -15,7 +15,7 @@ verlt()
   fi
 }
 
-required="3.6.9"
+required="3.8.0"
 actual=$(python3 --version | cut -d ' ' -f2)
 
 if verlt "$actual" "$required"; then
