@@ -3,8 +3,7 @@ alias x='exit'
 alias chmox='chmod +x'
 
 # Create a directory and cd into it
-function mkd()
-{
+function mkd() {
   mkdir -p "$@" && eval cd "\"\$$#\""
 }
 

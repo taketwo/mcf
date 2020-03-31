@@ -9,8 +9,7 @@
 #   - for a shell builtin, print its help text
 #   - for a script, print the source
 #   - for a binary executable file, print nothing.
-function code()
-{
+function code() {
   local type="$(builtin type -t "$1")"
   case $type in
     alias)
@@ -42,4 +41,3 @@ function code()
   esac
 }
 complete -c code # Complete with command names
-

@@ -12,8 +12,7 @@ alias .......="cd ../../../../../.."
 alias ........="cd ../../../../../../.."
 
 # Change directory to the directory of a file
-function cdf ()
-{
+function cdf() {
   if [[ -e $1 && ! -d $1 ]]; then
     cd "$(dirname "$1")" || return
   else

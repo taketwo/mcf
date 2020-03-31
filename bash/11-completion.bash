@@ -17,18 +17,17 @@
 #      alias agi='apt-get install'
 #      make_completion_wrapper _apt_get _apt_get_install agi apt-get install
 #      complete -F _apt_get_install agi
-function make_completion_wrapper ()
-{
+function make_completion_wrapper() {
   local comp_function_name="$1"
   local function_name="$2"
   local alias_name="$3"
-  local arg_count=$(($#-4))
+  local arg_count=$(($# - 4))
   shift 3
   local args="$*"
   local function="
 function $function_name {
   COMP_LINE=\"$@\${COMP_LINE#$alias_name}\"
-  let COMP_POINT+=$((${#args}-${#alias_name}))
+  let COMP_POINT+=$((${#args} - ${#alias_name}))
   ((COMP_CWORD+=$arg_count))
   COMP_WORDS=("$@" \"\${COMP_WORDS[@]:1}\")
 
@@ -59,8 +58,6 @@ function $function_name {
 #      link_complete_function foo bar
 #
 #   will use also __complete_foo to complete bar
-function link_complete_function()
-{
+function link_complete_function() {
   eval "complete -F __complete_$1 -o default ${2:-$1}"
 }
-

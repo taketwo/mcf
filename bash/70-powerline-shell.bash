@@ -1,5 +1,4 @@
-function _update_ps1()
-{
+function _update_ps1() {
   # Replace the last character output by powerline-shell (which is a regular space) with a non-breaking space
   # This is to enable the Tmux prompt jump trick: https://www.youtube.com/watch?v=uglorjY0Ntg
   local powerline_output

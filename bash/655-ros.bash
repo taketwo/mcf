@@ -15,8 +15,8 @@ fi
 export OGRE_RTT_MODE=Copy
 export OGRE_RTT_MODE=FBO
 
-function image() { rosrun image_view image_view image:="$@" ;}
-function message() { rostopic echo -n 1 "$@" ;}
+function image() { rosrun image_view image_view image:="$@"; }
+function message() { rostopic echo -n 1 "$@"; }
 
 alias rosdr='rosrun rqt_reconfigure rqt_reconfigure'
 alias rviz='rosrun rviz rviz'

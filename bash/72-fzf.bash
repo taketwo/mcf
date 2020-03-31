@@ -21,16 +21,14 @@ bind '"\C-t": history-search-forward'
 # Integration with z
 # - like normal z when used with arguments
 # - displays an fzf prompt when used without
-unalias z 2> /dev/null
-z()
-{
+unalias z 2>/dev/null
+z() {
   [ $# -gt 0 ] && _z "$*" && return
   cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
 }
 
 # fkill - kill process
-fkill()
-{
+fkill() {
   local pid
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
   if [ "x$pid" != "x" ]; then
@@ -39,17 +37,15 @@ fkill()
 }
 
 # fv - fuzzy vim (with pygmentized preview)
-fv()
-{
+fv() {
   local files
   IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'pygmentize -g -f terminal256 -P style=solarizedlight {} | head -100'))
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
 # fpkg - fuzzy dpkg (with package status preview)
-fpkg()
-{
+fpkg() {
   local packages
-  packages=$(dpkg -l  | awk '{print $2}') &&
-  package=$(echo "$packages" | fzf --preview 'dpkg -s {}')
+  packages=$(dpkg -l | awk '{print $2}') &&
+    package=$(echo "$packages" | fzf --preview 'dpkg -s {}')
 }
