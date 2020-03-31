@@ -25,7 +25,7 @@ snippet $ "CMake variable" i
 endsnippet
 
 snippet path "Path component extraction" b
-get_filename_component(${1:variable} ${2:filename} $3`!p snip.rv = complete(t[3], ['DIRECTORY', 'NAME', 'EXT', 'NAME_WE', 'ABSOLUTE', 'REALPATH', 'PROGRAM'])`)$0
+get_filename_component(${1:output_variable} ${2:filename_string} $3`!p snip.rv = complete(t[3], ['DIRECTORY', 'NAME', 'EXT', 'NAME_WE', 'ABSOLUTE', 'REALPATH', 'PROGRAM'])`)$0
 endsnippet
 
 snippet color "Color diagnostics" b
