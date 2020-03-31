@@ -20,6 +20,7 @@ pipx: poetry
 pipx: flake8 flake8-bugbear
 pipx: black
 nix: ShellCheck                        # linting for Bash
+nix: shfmt                             # formatting for Bash
 pudb
 
 # Terminal
