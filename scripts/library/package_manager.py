@@ -59,6 +59,8 @@ class Pipx(Install):
             # into the virtual environment created by Pipx.
             # Example: "pygments pygments-style-solarized"
             entries = package.split(" ")
+            args += [e for e in entries if e.startswith("-")]
+            entries = [e for e in entries if not e.startswith("-")]
             package = self.install(entries[0], args)
             if len(entries) > 1:
                 for entry in entries[1:]:
@@ -130,6 +132,9 @@ class PackageManager(object):
         nix_expression = join(directory, "default.nix")
         if os.path.isfile(nix_expression):
             commands.append(("nix", "-f {}".format(directory)))
+        python_setup = join(directory, "setup.py")
+        if os.path.isfile(python_setup):
+            commands.append(("pipx", "{} -e".format(directory)))
         pre_install_script = join(directory, "pre-install")
         if os.path.isfile(pre_install_script):
             commands.append(("pre-install", pre_install_script))
