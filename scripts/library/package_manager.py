@@ -15,8 +15,8 @@ PLATFORM = get_platform()
 
 
 class Install(object):
-    def __init__(self, packages, args=""):
-        cmd = self.CMD + " " + " ".join(packages) + " " + args
+    def __init__(self, packages, args=[]):
+        cmd = self.CMD + " " + " ".join(packages) + " " + " ".join(args)
         subprocess.check_call(cmd.split())
 
 
@@ -31,19 +31,19 @@ class Yaourt(Install):
 class Nix(Install):
     CMD = "nix-env -i"
 
-    def __init__(self, packages, args=""):
+    def __init__(self, packages, args=[]):
         # Make sure that LD variables are not set, otherwise Nix insulation from the
         # rest of the system may be compromised
         env = dict(os.environ, LD_LIBRARY_PATH="", LD_PRELOAD="")
         for p in packages:
-            cmd = self.CMD + " " + p + " " + args
+            cmd = self.CMD + " " + p + " " + " ".join(args)
             subprocess.check_call(cmd.split(), env=env)
 
 
 class Pip(Install):
     CMD = "sudo -H pip install --upgrade"
 
-    def __init__(self, packages, args=""):
+    def __init__(self, packages, args=[]):
         super().__init__(packages, args)
         stow.adopt_as("pip")
 
@@ -51,7 +51,7 @@ class Pip(Install):
 class Pipx(Install):
     CMD = "pipx install"
 
-    def __init__(self, packages, args=""):
+    def __init__(self, packages, args=[]):
         for package in packages:
             # We support package specs with multiple entries separated by spaces.
             # First entry is the main app that is to be installed with Pipx.
@@ -70,7 +70,7 @@ class Pipx(Install):
         Returns package name (without [] spec).
         """
         import re
-        cmd = self.CMD + " " + package + " " + args
+        cmd = self.CMD + " " + package + " " + " ".join(args)
         subprocess.check_output(cmd.split())
         m = re.match(r"(.*)\[.*\]", package)
         return package if m is None else m.groups()[0]
@@ -79,10 +79,10 @@ class Pipx(Install):
 class Cabal(Install):
     CMD = "sudo cabal install --global --force-reinstalls"
 
-    def __init__(self, packages, args=""):
+    def __init__(self, packages, args=[]):
         subprocess.check_call(["sudo", "cabal", "update"])
         for package in packages:
-            cmd = self.CMD + " " + package + " " + args
+            cmd = self.CMD + " " + package + " " + " ".join(args)
             subprocess.check_call(cmd.split())
         stow.adopt_as("cabal")
 
@@ -168,7 +168,7 @@ class PackageManager(object):
             return line
         return line[:p]
 
-    def _install_with_package_manager(self, manager, package, args=""):
+    def _install_with_package_manager(self, manager, package, args=[]):
         """
         Install package(s) using given package manager.
 
