@@ -52,7 +52,6 @@ modules-right = mpd volume keyboard aeolus network-connectivity-eth network-conn
 
 tray-position = center
 tray-padding = 2
-tray-transparent = false
 tray-background = ${self.background}
 
 override-redirect = true
