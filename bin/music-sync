@@ -122,5 +122,18 @@ def push(host, delete):
             rsync(src, dst, delete=delete)
 
 
+@cli.command()
+@click.option('--delete', '-d', is_flag=True,
+              help='Delete extraneous files from destination')
+@click.argument('host')
+def pull(host, delete):
+    """
+    pull music from another host.
+    """
+    with get_music_location() as dst:
+        with get_music_location(host) as src:
+            rsync(src, dst, delete=delete)
+
+
 if __name__ == '__main__':
     cli()
