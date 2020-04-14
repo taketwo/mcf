@@ -8,6 +8,10 @@ fi
 config='/etc/systemd/system/docker.service.d/dns.conf'
 if [[ $1 == "uni" ]]; then
   dns=' --dns 128.131.4.3'
+elif [[ $1 == "cloudflare" ]]; then
+  dns=' --dns 1.1.1.1'
+elif [[ $1 == "google" ]]; then
+  dns=' --dns 8.8.8.8'
 fi
 sudo echo "[Service]
 ExecStart=
