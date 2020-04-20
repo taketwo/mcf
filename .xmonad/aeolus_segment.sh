@@ -7,10 +7,10 @@ source "$MCF/.xmonad/solarized.bash"
 
 StartSegment
 
-if aeolus vpn-is-active; then
+if ael vpn is-active; then
   Add "AEL"
   Color "#ffffff" "$SolarizedMagenta"
-  Action 3 "aeolus vpn-stop"
+  Action 3 "ael vpn stop"
 fi
 
 FlushSegment

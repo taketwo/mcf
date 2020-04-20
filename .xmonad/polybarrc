@@ -116,7 +116,7 @@ label-song-ellipsis = true
 
 type = custom/script
 exec = $MCF/.xmonad/aeolus_segment.sh
-exec-if = command -v aeolus
+exec-if = command -v ael
 interval = 10
 
 [module/keyboard]
