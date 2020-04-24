@@ -1,3 +1,4 @@
+misc/packages/gh/config/config.yml filter=git-crypt diff=git-crypt
 misc/packages/git/secrets filter=git-crypt diff=git-crypt
 misc/packages/git/credentials filter=git-crypt diff=git-crypt
 ssh/* filter=git-crypt diff=git-crypt
