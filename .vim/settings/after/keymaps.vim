@@ -1,3 +1,7 @@
+if exists('g:vimspector_enable_mappings')
+  finish
+endif
+
 let g:mcf#keymaps = {}
 
 " Enter command mode with semicolon
