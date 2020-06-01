@@ -1,0 +1,71 @@
+set nocompatible                " Use Vim settings, rather then Vi settings
+set number                      " Line numbers are good
+set history=1000                " Store lots of :cmdline history
+set showcmd                     " Show incomplete cmds down the bottom
+set showmode                    " Show current mode down the bottom
+set visualbell                  " No sounds
+set autoread                    " Reload files changed outside vim
+set laststatus=2                " Always show the statusline
+set encoding=utf-8              " Necessary to show unicode glyphs
+set autowrite                   " Automatically save before e.g. :make
+set hidden
+set lazyredraw                  " Do not redraw screen in the middle of a macro
+syntax on                       " Turn on syntax highlighting
+
+let g:vimspector_enable_mappings = 'HUMAN'
+
+" Vim plugin configuration
+
+" Load plugin settings. Some of them have to be set before
+" loading plugins, otherwise they have no effect.
+for f in split(glob('~/.vim/settings/before/*.vim'), '\n')
+  exe 'source' f
+endfor
+
+call plug#begin('~/.local/share/vimdbg/bundle')
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'puremourning/vimspector', { 'do': './install_gadget.py --enable-c' }
+call plug#end()
+
+" Indentation
+
+set autoindent
+set smartindent
+set smarttab
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+filetype plugin on
+filetype indent on
+
+" Swap files
+
+set noswapfile
+set nobackup
+set nowb
+
+" Mouse interactions
+
+if has('mouse')
+  set mouse=a
+  if has('mouse_sgr')
+    set ttymouse=sgr
+  endif
+endif
+
+" Appearance
+
+" Use Solarized color theme
+set t_Co=256
+
+colorscheme solarized
+
+hi SpellBad ctermfg=red            " Adjust the color of wrongly spelled words
+hi Normal ctermbg=NONE             " Remove explicit background color (inherit from Tmux)
+
+set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
+
+" Keymaps
+
+nnoremap ; :
+
