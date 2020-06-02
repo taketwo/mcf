@@ -220,35 +220,9 @@ nnoremap <Leader>d :t.<CR>
 
 inoremap <C-d> <BS>
 
-" Enable spell checking
-
-nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
-
-" Pasting
-set pastetoggle=<S-F5>
-inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
-nnoremap <F5> :call PasteFromClipboard()<CR>
-
-" Close the current buffer with F11
-
-nnoremap <F11> :BW<CR>
-
 " Join line (because J is used by 'vim-sneak')
 
 nnoremap <C-J> J
-
-" Run last Vimux command with F8
-
-nnoremap <F8> :write<CR>:VimuxRunLastCommand<CR>
-nnoremap <F8><F8> :write<CR>:VimuxRunLastCommand<CR>:VimuxZoomRunner<CR>
-inoremap <F8> <C-o>:write<CR><C-o>:VimuxRunLastCommand<CR>
-
-" Run make with F9
-
-nnoremap <F9> :MakeTarget<CR>
-inoremap <F9> <C-o>:MakeTarget<CR>
-autocmd QuickFixCmdPost [^l]* nested cwindow
-autocmd QuickFixCmdPost    l* nested lwindow
 
 " Copy short/long filename to clipboard
 
@@ -274,29 +248,45 @@ let g:mcf#keymaps["g"] = {
   \ }
 " }}}
 
-  " NERDTree
+" ALEFix
+nnoremap <F2> :ALEFix<CR>
 
-  noremap <F12> :NERDTreeMirrorToggle<CR>
+" Tagbar
+nnoremap <F3> :TagbarToggle<CR>
 
-  " ListToggle
+" UndoTree
+nnoremap <F4> :UndotreeToggle<CR>
 
-  nnoremap <F10> :QToggle<CR>
+" Pasting
+set pastetoggle=<S-F5>
+inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
+nnoremap <F5> :call PasteFromClipboard()<CR>
 
-  " ALEFix
+" GitMessenger
+noremap <F6> :GitMessenger<CR>
 
-  nnoremap <F2> :ALEFix<CR>
+" Enable spell checking
+nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
-  " Tagbar
+" Run last Vimux command with F8
+nnoremap <F8> :write<CR>:VimuxRunLastCommand<CR>
+nnoremap <F8><F8> :write<CR>:VimuxRunLastCommand<CR>:VimuxZoomRunner<CR>
+inoremap <F8> <C-o>:write<CR><C-o>:VimuxRunLastCommand<CR>
 
-  nnoremap <F3> :TagbarToggle<CR>
+" Run make with F9
+nnoremap <F9> :MakeTarget<CR>
+inoremap <F9> <C-o>:MakeTarget<CR>
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
 
-  " GitMessenger
+" ListToggle
+nnoremap <F10> :QToggle<CR>
 
-  noremap <F6> :GitMessenger<CR>
+" Close the current buffer with F11
+nnoremap <F11> :BW<CR>
 
-  " UndoTree
-
-  nnoremap <F4> :UndotreeToggle<CR>
+" NERDTree
+noremap <F12> :NERDTreeMirrorToggle<CR>
 
   " Change inside surroundings
 
