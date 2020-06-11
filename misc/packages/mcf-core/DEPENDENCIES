@@ -21,6 +21,7 @@ pipx: flake8 flake8-bugbear
 pipx: black
 nix: shellcheck                        # linting for Bash
 nix: shfmt                             # formatting for Bash
+nix: delta                             # syntax highlighting for diffs
 pudb
 
 # Terminal
