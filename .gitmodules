@@ -19,9 +19,6 @@
 [submodule "external/z"]
 	path = external/z
 	url = https://github.com/rupa/z.git
-[submodule "external/diff-so-fancy"]
-	path = external/diff-so-fancy
-	url = https://github.com/so-fancy/diff-so-fancy.git
 [submodule "external/forgit"]
 	path = external/forgit
 	url = https://github.com/wfxr/forgit.git
