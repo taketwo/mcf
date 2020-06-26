@@ -58,6 +58,7 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Navigation
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'pechorin/any-jump.vim'
 
 " Search
 Plug 'henrik/vim-indexed-search'

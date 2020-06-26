@@ -300,19 +300,20 @@ noremap <F12> :NERDTreeMirrorToggle<CR>
 
   imap <C-s> <Plug>(PearTreeJump)
 
-  " Sideways
+" Sideways
+let g:mcf#keymaps["s"] = {
+\   "name" : "+sideways"    ,
+\   "h"    : ["SidewaysLeft"                 , 'push-left']           ,
+\   "n"    : ["SidewaysRight"                , 'push-right']          ,
+\   "H"    : ["SidewaysJumpLeft"             , 'jump-left']           ,
+\   "N"    : ["SidewaysJumpRight"            , 'jump-right']          ,
+\ }
 
-  let g:mcf#keymaps["s"] = {
-    \   "name" : "+sideways"    ,
-    \   "h"    : ["SidewaysLeft"                 , 'push-left']           ,
-    \   "n"    : ["SidewaysRight"                , 'push-right']          ,
-    \   "H"    : ["SidewaysJumpLeft"             , 'jump-left']           ,
-    \   "N"    : ["SidewaysJumpRight"            , 'jump-right']          ,
-    \ }
+" AnyJump
+nnoremap <Tab> :AnyJump<CR>
 
 " Some keys that are still free
 "
-" Tab
 " $ ^
 
 " Create WhichKey menu
