@@ -54,6 +54,7 @@ Plug 'tweekmonster/startuptime.vim'
 Plug 'sickill/vim-pasta'
 Plug 'taketwo/vimux'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
+Plug 'rickhowe/diffchar.vim'
 
 " Navigation
 Plug 'justinmk/vim-sneak'
