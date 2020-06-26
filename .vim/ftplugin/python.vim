@@ -13,8 +13,6 @@ function! InsertBreakpoint()
     call feedkeys("opudb\<C-R>=UltiSnips#ExpandSnippet()\<CR>", "x")
 endfunction
 
-let b:keymaps =  {}
-
 let b:keymaps = {
   \   "b" : ["InsertBreakpoint()", "insert-breakpoint"]     ,
   \   "f" : ["normal diwds("     , "remove-function-call"]  ,
