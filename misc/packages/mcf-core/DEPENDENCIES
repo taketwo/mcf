@@ -47,6 +47,7 @@ nix: fd
 nix: ripgrep
 nix: bat
 nix: hexyl                             # for hex command
+ncdu
 
 # Util
 unrar                                    # for unpack command
