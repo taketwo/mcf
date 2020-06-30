@@ -64,8 +64,12 @@ def generate_corresponding_source_file_proposals(filename):
     # Generate paths for possibly correspondent source files for a given header.
     # First heuristic: same directory
     candidates = [filename]
-    # Second heuristic: "src" subtree
+    # Second heuristic: "src" subtree assuming flat library organization
     candidate, num = re.subn(r'include/[^/]*', 'src', filename)
+    if num == 1:
+        candidates.append(candidate)
+    # Third heuristic: "src" subtree assuming modularized library organization
+    candidate, num = re.subn(r'include/[^/]*/[^/]*', 'src', filename)
     if num == 1:
         candidates.append(candidate)
     for candidate in candidates:
