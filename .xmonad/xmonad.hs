@@ -338,8 +338,8 @@ table =
     toggleStruts            = Unbound "Toggle struts"                                      (sendMessage ToggleStruts)
     scratchTerminal         = Unbound "Open scratch terminal"                              (namedScratchpadAction myScratchPads "terminal")
     restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
-    jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour W.view)
-    jumpToPrevScreen        = Unbound "Jump to previous physical screen"                   (onPrevNeighbour W.view)
+    jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour def W.view)
+    jumpToPrevScreen        = Unbound "Jump to previous physical screen"                   (onPrevNeighbour def W.view)
     lockScreen              = Unbound "Lock screen"                                        (spawn "session lock")
     logout                  = Unbound "Logout"                                             (spawn "session logout")
     reboot                  = Unbound "Reboot the system"                                  (spawn "session reboot")
@@ -494,7 +494,7 @@ clickable ws = polybarAction (xdoGotoWorkspace ws) 1 ws
 polybarConfig = "polybar -c " ++ pathPolybar ++ " -r primary"
 
 myWorkspaceSorter = do
-  srt <- fmap (namedScratchpadFilterOutWorkspace.) getSortByXineramaPhysicalRule
+  srt <- fmap (namedScratchpadFilterOutWorkspace.) (getSortByXineramaPhysicalRule def)
   return srt
 
 -- Emit a DBus signal on log updates
