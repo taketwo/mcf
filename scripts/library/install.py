@@ -2,13 +2,15 @@ def get_platform():
     """
     Get platform name in lower case (e.g. 'arch' or 'ubuntu').
     """
-    from platform import linux_distribution
+    import csv
 
-    p = linux_distribution()[0].lower()
-    if p == "debian":
-        print("WARNING: platform was determined to be Debian, not Ubuntu")
-        return "ubuntu"
-    return p
+    RELEASE_DATA = dict()
+    with open("/etc/os-release") as f:
+        reader = csv.reader(f, delimiter="=")
+        for row in reader:
+            if row:
+                RELEASE_DATA[row[0]] = row[1]
+    return RELEASE_DATA["ID"]
 
 
 def only(platforms):
