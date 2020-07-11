@@ -79,14 +79,14 @@ class Pipx(Install):
 
 
 class Cabal(Install):
-    CMD = "sudo cabal install --global --force-reinstalls"
+    CMD = "cabal v2-install"
 
     def __init__(self, packages, args=[]):
-        subprocess.check_call(["sudo", "cabal", "update"])
-        for package in packages:
-            cmd = self.CMD + " " + package + " " + " ".join(args)
-            subprocess.check_call(cmd.split())
-        stow.adopt_as("cabal")
+        subprocess.check_call(["cabal", "v2-update"])
+        cmd = "LC_ALL=C {} --lib {}".format(self.CMD, ' '.join(packages))
+        subprocess.check_call(cmd, shell=True)
+        cmd = "LC_ALL=C {} {}".format(self.CMD, ' '.join(packages))
+        subprocess.check_call(cmd, shell=True)
 
 
 # A dictionary mapping manager names to classes. The insertion order matters, we

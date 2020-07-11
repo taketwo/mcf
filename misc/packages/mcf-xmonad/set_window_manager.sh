@@ -1,1 +1,1 @@
-export KDEWM=/usr/local/bin/xmonad
+export KDEWM=$HOME/.cabal/bin/xmonad

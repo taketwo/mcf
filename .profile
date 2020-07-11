@@ -90,6 +90,9 @@ fi
 # Yarn bin directory
 [ -d "${HOME}/.yarn/bin" ] && PATH="${HOME}/.yarn/bin:${PATH}"
 
+# Cabal bin directory
+[ -d "${HOME}/.cabal/bin" ] && PATH="${HOME}/.cabal/bin:${PATH}"
+
 #---------------------------------------------------------------------#
 #                               Python                                #
 #---------------------------------------------------------------------#
