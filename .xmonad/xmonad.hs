@@ -492,8 +492,6 @@ xdoGotoWorkspace ws = xdoModCtrl "w" ++ " " ++ addSpaces ws ++ " KP_Enter"
 clickable :: String -> String
 clickable ws = polybarAction (xdoGotoWorkspace ws) 1 ws
 
-polybarConfig = "polybar -c " ++ pathPolybar ++ " -r primary"
-
 myWorkspaceSorter = do
   srt <- fmap (namedScratchpadFilterOutWorkspace.) (getSortByXineramaPhysicalRule def)
   return srt
