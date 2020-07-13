@@ -4,5 +4,16 @@
 if [[ ! -f /etc/apt/sources.list ]]; then
   sudo touch /etc/apt/sources.list
 fi
+
+if [[ -f /etc/apt/preferences.d/aeolus-dev ]]; then
+  if [[ ! -f /etc/apt/preferences.d/vim ]]; then
+    sudo tee -a /etc/apt/preferences.d/vim << 'EOL'
+Package: *
+Pin: release o=LP-PPA-jonathonf-vim
+Pin-Priority: 2000
+EOL
+  fi
+fi
+
 sudo add-apt-repository ppa:jonathonf/vim -y
 sudo apt-get update
