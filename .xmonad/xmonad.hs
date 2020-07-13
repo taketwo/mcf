@@ -115,7 +115,7 @@ defaultLayouts = fullscreenFull $ smartBorders $ avoidStruts $
   ||| windowNavigation Grid
   ||| tabbedBottom shrinkText myTabConfig
 
-layoutMsg = fullscreenFull $ named "msg" (combineTwoP (Column 3.0) (tabbed shrinkText myTabConfig) (tabbedBottom shrinkText myTabConfig) (ClassName "Slack"))
+layoutMsg = fullscreenFull $ reflectVert $ named "msg" (combineTwoP (Column 3.0) (tabbed shrinkText myTabConfig) (tabbedBottom shrinkText myTabConfig) (ClassName "Slack"))
 
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
