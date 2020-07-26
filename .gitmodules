@@ -22,3 +22,6 @@
 [submodule "external/forgit"]
 	path = external/forgit
 	url = https://github.com/wfxr/forgit.git
+[submodule "external/git-fuzzy"]
+	path = external/git-fuzzy
+	url = https://github.com/bigH/git-fuzzy.git
