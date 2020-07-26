@@ -241,7 +241,7 @@ table =
   , k "y"            __                      __                      __                      __
   , k "z"            promptZealSearch        __                      __                      __
   , k "<Backspace>"  renameWorkspace         __                      __                      __
-  , k "<Space>"      launchKupfer            nextKeyboardLayout      __                      __
+  , k "<Space>"      launchRofi              nextKeyboardLayout      __                      __
   , k "<Tab>"        nextLayout              resetLayout             __                      __
   , k "`"            scratchTerminal         __                      __                      __
   , k "'"            gridSelect              __                      __                      __
@@ -291,7 +291,7 @@ table =
     -- Launch program
     launchBrowser           = Unbound "Launch browser"                                     (spawn appBrowser)
     launchTerminal          = Unbound "Launch terminal"                                    (spawn appTerminal)
-    launchKupfer            = Unbound "Launch kupfer"                                      (spawn "kupfer")
+    launchRofi              = Unbound "Launch rofi"                                        (spawn "rofi -show run")
     -- Window navigation
     gotoNextWindow          = Unbound "Switch to next window"                              (windows W.focusDown)
     gotoMaster              = Unbound "Move focus to the master window"                    (windows W.focusMaster)
