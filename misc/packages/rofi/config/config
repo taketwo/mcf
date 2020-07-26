@@ -1,2 +1,5 @@
 rofi.font: Victor Mono 14
 rofi.matching: fuzzy
+rofi.terminal: gnome-terminal
+rofi.ssh-command: {terminal} -- {ssh-client} {host} [-p {port}]
+rofi.run-shell-command: {terminal} -- {cmd}
