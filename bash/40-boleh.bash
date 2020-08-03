@@ -34,11 +34,12 @@ function __boleh_import() {
     unzip -o "$archive" -d $tmp >/dev/null
     sudo cp /tmp/boleh/*{crt,key} /etc/openvpn
     echo "Importing Boleh fully routed configurations:"
-    for f in "$tmp"/FullyRouted*ovpn; do
-      country=$(echo "$f" | awk -F'[-.]' '{print $2}')
-      if [[ $country != 'TCP' ]]; then
-        echo " * $country"
-        sudo cp "$tmp/FullyRouted-$country.ovpn" "/etc/openvpn/$country.Boleh.conf"
+    cd $tmp || return
+    for f in *TCP.ovpn; do
+      location=$(echo "$f" | awk -F'[-]' 'NF==3 {printf $1"-"$2}')
+      if [[ -n $location ]]; then
+        echo " * $location"
+        sudo cp "$f" "/etc/openvpn/$location.Boleh.conf"
       fi
     done
   fi
