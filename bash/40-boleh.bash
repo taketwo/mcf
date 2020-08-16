@@ -13,7 +13,10 @@ function boleh() {
         __boleh_import
         ;;
       off)
+        echo "Stopping all OpenVPN services"
         sudo systemctl stop openvpn@*
+        echo "Waiting 5 seconds before setting DNS address" && sleep 5
+        sudo systemd-resolve --set-dns=1.1.1.1 --interface wlp3s0
         ;;
       *) __boleh_on "$1" ;;
     esac
@@ -49,7 +52,11 @@ function __boleh_import() {
 function __boleh_on() {
   config="$1.Boleh"
   if [ -f "/etc/openvpn/$config.conf" ]; then
+    echo "Starting OpenVPN service with $config config"
     sudo systemctl start "openvpn@$config.service"
+    echo "Waiting 5 seconds before setting DNS address" && sleep 5
+    sudo systemd-resolve --set-dns=172.16.1.1 --interface wlp3s0
+    echo "Done"
   else
     echo "Unknown connection $1"
     return 1
