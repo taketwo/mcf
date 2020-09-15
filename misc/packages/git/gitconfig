@@ -24,6 +24,7 @@
   start = "!git init && git commit --allow-empty -m 'Initial commit'"
   reword = commit --amend
   amend = commit --amend --no-edit
+  sync = "!git pull && git submodule sync && git submodule update --init --recursive && git remote prune origin"
 [core]
   editor = nvim
   pager = delta --theme='Solarized (light)'
