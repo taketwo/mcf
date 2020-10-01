@@ -5,11 +5,19 @@ from subprocess import call
 
 
 def setup():
-    print("Disabling MPD system service...")
+    print("Disabling MPD system service and socket...")
     call(["sudo", "systemctl", "stop", "mpd.service"])
+    call(["sudo", "systemctl", "stop", "mpd.socket"])
     call(["sudo", "systemctl", "disable", "mpd.service"])
+    call(["sudo", "systemctl", "disable", "mpd.socket"])
+    print("Disabling global MPD user service and socket...")
+    call(["sudo", "systemctl", "--global", "stop", "mpd.service"])
+    call(["sudo", "systemctl", "--global", "stop", "mpd.socket"])
+    call(["sudo", "systemctl", "--global", "disable", "mpd.service"])
+    call(["sudo", "systemctl", "--global", "disable", "mpd.socket"])
     print("Enabling and starting MPD user service...")
     call(["systemctl", "--user", "enable", "--now", "mpd.service"])
+    call(["systemctl", "--user", "enable", "--now", "mpd.socket"])
 
 
 if __name__ == "__main__":
