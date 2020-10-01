@@ -14,7 +14,7 @@ function boleh() {
         ;;
       off)
         echo "Stopping all OpenVPN services"
-        sudo systemctl stop openvpn@*
+        sudo systemctl stop openvpn-client@*
         echo "Waiting 5 seconds before setting DNS address" && sleep 5
         sudo systemd-resolve --set-dns=1.1.1.1 --interface wlp3s0
         ;;
@@ -33,16 +33,16 @@ function __boleh_import() {
     echo "Cannot find config at expected location $archive"
   else
     echo "Removing old Boleh configurations"
-    sudo rm /etc/openvpn/*Boleh.conf
+    sudo rm /etc/openvpn/client/*Boleh.conf
     unzip -o "$archive" -d $tmp >/dev/null
-    sudo cp /tmp/boleh/*{crt,key} /etc/openvpn
+    sudo cp /tmp/boleh/*{crt,key} /etc/openvpn/client
     echo "Importing Boleh fully routed configurations:"
     cd $tmp || return
     for f in *TCP.ovpn; do
       location=$(echo "$f" | awk -F'[-]' 'NF==3 {printf $1"-"$2}')
       if [[ -n $location ]]; then
         echo " * $location"
-        sudo cp "$f" "/etc/openvpn/$location.Boleh.conf"
+        sudo cp "$f" "/etc/openvpn/client/$location.Boleh.conf"
       fi
     done
   fi
@@ -51,9 +51,9 @@ function __boleh_import() {
 # Turn on a Boleh connection
 function __boleh_on() {
   config="$1.Boleh"
-  if [ -f "/etc/openvpn/$config.conf" ]; then
+  if [ -f "/etc/openvpn/client/$config.conf" ]; then
     echo "Starting OpenVPN service with $config config"
-    sudo systemctl start "openvpn@$config.service"
+    sudo systemctl start "openvpn-client@$config.service"
     echo "Waiting 5 seconds before setting DNS address" && sleep 5
     sudo systemd-resolve --set-dns=172.16.1.1 --interface wlp3s0
     echo "Done"
@@ -65,10 +65,10 @@ function __boleh_on() {
 
 # List active Boleh connections
 function __boleh_active() {
-  connections=$(systemctl status openvpn@* | grep -oP "(?<= - OpenVPN connection to )([^.]+)(?=\.Boleh)")
+  connections=$(systemctl status openvpn-client@* | grep -oP "(?<= - OpenVPN connection to )([^.]+)(?=\.Boleh)")
   if [[ $connections != "" ]]; then
     for c in $connections; do
-      info=$(systemctl status "openvpn@$c.Boleh.service")
+      info=$(systemctl status "openvpn-client@$c.Boleh.service")
       state=$(grep -oP "(?<=Active: )(\w+)" <<<"$info")
       if [[ $state == "active" ]]; then
         echo -n "$c"
@@ -83,10 +83,10 @@ function __boleh_status() {
   connections=$(__boleh_active)
   if [[ $connections != "" ]]; then
     for c in $connections; do
-      info=$(systemctl status "openvpn@$c.Boleh.service")
+      info=$(systemctl status "openvpn-client@$c.Boleh.service")
       state=$(grep -oP "(?<=Active: )(\w+)" <<<"$info")
       echo "●  $c (state: $state)"
-      ip=$(grep -oP -m 1 "(?<=^remote )([^ ]+)" "/etc/openvpn/$c.Boleh.conf")
+      ip=$(grep -oP -m 1 "(?<=^remote )([^ ]+)" "/etc/openvpn/client/$c.Boleh.conf")
       public_ip=$(curl ifconfig.me/ip 2>/dev/null)
       if [[ $ip =~ $public_ip ]]; then
         echo -e "   IP: \e[00;32m$ip\e[00m"
@@ -100,7 +100,7 @@ function __boleh_status() {
 }
 
 function __complete_boleh() {
-  servers=$(ls /etc/openvpn/ | grep -oP "([^.]+)(?=\.Boleh\.conf)")
+  servers=$(ls /etc/openvpn/client/ | grep -oP "([^.]+)(?=\.Boleh\.conf)")
   local current=${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=($(compgen -W "$servers active status import off" -- "$current"))
 }
