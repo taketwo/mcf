@@ -547,6 +547,7 @@ manageWindows = composeAll . concat $
     , [title     =? t --> doFloat   | t <- myTFloats]
     , [resource  =? r --> doFloat   | r <- myRFloats]
     , [resource  =? i --> doIgnore  | i <- myIgnores]
+    , [className =? c --> doF W.focusDown <+> doIgnore  | c <- myCUnFocus]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "zoom" | x <- myZoomShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
@@ -555,7 +556,8 @@ manageWindows = composeAll . concat $
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
     doUnfloat = ask >>= doF . W.sink
-    myCFloats = ["Exe", "plasmashell", "Plasma-desktop"]
+    myCFloats = ["Exe", "Plasma-desktop"]
+    myCUnFocus = ["plasmashell"]
     myCUnFloats = ["Gimp", "Nautilus"]
     myTFloats = ["Downloads", "Save As...", "Export Image"]
     myRFloats = []
