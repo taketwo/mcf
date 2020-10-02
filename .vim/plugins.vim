@@ -55,7 +55,7 @@ Plug 'sickill/vim-pasta'
 Plug 'taketwo/vimux'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'rickhowe/diffchar.vim'
-Plug 'junegunn/vim-peekaboo'
+" Plug 'junegunn/vim-peekaboo'
 
 " Navigation
 Plug 'justinmk/vim-sneak'
