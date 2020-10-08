@@ -7,7 +7,7 @@ fi
 
 if [[ -f /etc/apt/preferences.d/aeolus-dev ]]; then
   if [[ ! -f /etc/apt/preferences.d/neovim ]]; then
-    sudo tee -a /etc/apt/preferences.d/vim << 'EOL'
+    sudo tee -a /etc/apt/preferences.d/neovim << 'EOL'
 Package: *
 Pin: release o=LP-PPA-neovim-ppa-unstable
 Pin-Priority: 2000
