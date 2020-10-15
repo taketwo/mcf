@@ -1,5 +1,3 @@
-# Common
-ghc
 # Need at least 2.4.1 because it contains important bugfix
 nix: cabal-install
 cabal: xmonad
