@@ -1,10 +1,12 @@
 [Unit]
 Description=Compositing manager
-After=xorg.target
+After=xorg.target dbus.service
+Requires=dbus.service
 
 [Service]
 ExecStart=/usr/bin/compton
 Environment=DISPLAY=:0
+Restart=always
 
 [Install]
 WantedBy=wm.target
