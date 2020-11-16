@@ -2,6 +2,11 @@
 # https://github.com/Valloric/ycmd/blob/master/cpp/ycm/.ycm_extra_conf.py
 # https://jonasdevlieghere.com/a-better-youcompleteme-config/
 
+# Debugging tips:
+#
+# 1. Logs go to server stderr. Toggle logs window in a running Vim instance using the
+#    :YcmToggleLogs command, then open a C++ file.
+
 import re
 import os
 import os.path
@@ -14,8 +19,8 @@ BASE_FLAGS = ['-Wall', '-std=c++14', '-xc++', '-I/usr/lib/ -I/usr/include/']
 
 
 def is_header_file(filename):
-  extension = os.path.splitext(filename)[1]
-  return extension in HEADERS
+    extension = os.path.splitext(filename)[1]
+    return extension in HEADERS
 
 
 def make_relative_paths_in_flags_absolute(flags, working_directory):
@@ -87,6 +92,8 @@ def find_catkin_tools_build(filename):
         if os.path.isdir(path):
             logging.info("Found catkin tools build directory at " + path)
             return path
+    except ImportError as e:
+        logging.warn("Failed to import modules to perform catkin tools build discovery: {}".format(e))
     except:
         pass
     return None
