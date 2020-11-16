@@ -18,7 +18,7 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 
 function! BuildYCM(info)
     if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
-        let opts = ' --clang-completer'
+        let opts = ' --clangd-completer'
         if tlib#sys#IsExecutable('npm')
             let opts = opts.' --js-completer'
         endif
