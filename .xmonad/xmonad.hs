@@ -291,7 +291,7 @@ table =
     -- Launch program
     launchBrowser           = Unbound "Launch browser"                                     (spawn appBrowser)
     launchTerminal          = Unbound "Launch terminal"                                    (spawn appTerminal)
-    launchRofi              = Unbound "Launch rofi"                                        (spawn "rofi -show run")
+    launchRofi              = Unbound "Launch rofi"                                        (spawn "rofi -show drun")
     -- Window navigation
     gotoNextWindow          = Unbound "Switch to next window"                              (windows W.focusDown)
     gotoMaster              = Unbound "Move focus to the master window"                    (windows W.focusMaster)

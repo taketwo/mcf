@@ -3,3 +3,4 @@ rofi.matching: fuzzy
 rofi.terminal: gnome-terminal
 rofi.ssh-command: {terminal} -- {ssh-client} {host} [-p {port}]
 rofi.run-shell-command: {terminal} -- {cmd}
+rofi.modi: drun,window,run,ssh
