@@ -144,15 +144,14 @@ class PackageManager(object):
         post_install_script = join(directory, "post-install")
         if os.path.isfile(post_install_script):
             commands.append(("post-install", post_install_script))
-        commands.extend(self._parse_symlinks(package_name))
+        commands.extend(self._parse_symlinks(directory))
         return commands
 
-    def _parse_symlinks(self, package_name):
+    def _parse_symlinks(self, directory):
         """
         Parse SYMLINKS file (if exists) for a given package.
         Return a list of commands.
         """
-        directory = join(PACKAGES, package_name)
         symlinks = join(directory, "SYMLINKS")
         commands = list()
         if os.path.isfile(symlinks):
@@ -290,9 +289,9 @@ class PackageManager(object):
     def _resolve_path(self, path, base):
         p = Path(os.path.expandvars(path))
         if p.is_absolute():
-            return str(p)
+            return str(p.resolve())
         else:
-            return str(Path(base) / p)
+            return str(Path(base).resolve() / p)
 
 
 def install(package_name, verbose=False, force_reinstall=False, update=False):
