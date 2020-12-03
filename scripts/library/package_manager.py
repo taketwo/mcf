@@ -289,7 +289,7 @@ class PackageManager(object):
     def _resolve_path(self, path, base):
         p = Path(os.path.expandvars(path))
         if p.is_absolute():
-            return str(p.resolve())
+            return str(p)
         else:
             return str(Path(base).resolve() / p)
 
