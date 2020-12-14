@@ -8,7 +8,7 @@
 , alsaSupport   ? true,  alsaLib       ? null
 , githubSupport ? false, curl          ? null
 , mpdSupport    ? true,  mpd_clientlib ? null
-, pulseSupport  ? false, libpulseaudio ? null
+, pulseSupport  ? true,  libpulseaudio ? null
 , iwSupport     ? false, wirelesstools ? null
 , nlSupport     ? true,  libnl         ? null
 , i3Support ? false, i3GapsSupport ? false, i3 ? null, i3-gaps ? null, jsoncpp ? null
