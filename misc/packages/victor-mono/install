@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "Victor Mono with NERD icons installer"
+
+echo "Fetching version information..."
+
+GITHUB_USER_NAME="ryanoasis"
+GITHUB_PROJECT_NAME="nerd-fonts"
+LATEST_VERSION=$(curl -s https://api.github.com/repos/$GITHUB_USER_NAME/$GITHUB_PROJECT_NAME/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+
+echo "Latest version: ${LATEST_VERSION}"
+
+DOWNLOAD_URL="https://github.com/$GITHUB_USER_NAME/$GITHUB_PROJECT_NAME/releases/download/${LATEST_VERSION}/VictorMono.zip"
+FONT_DIR="$HOME/.local/share/fonts/downloaded-fonts"
+
+echo "Downloading and unzipping..."
+
+mkdir -p "$FONT_DIR"
+curl -L "$DOWNLOAD_URL" | bsdtar -xvf - -C "$FONT_DIR"
+rm "$FONT_DIR"/*Windows*
+rm "$FONT_DIR"/*Mono.ttf
+
+echo "Updating font cache..."
+
+fc-cache --really-force
