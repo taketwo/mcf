@@ -24,6 +24,7 @@ endfor
 
 call plug#begin('~/.local/share/vimdbg/bundle')
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'skwp/vim-colors-solarized'
 Plug 'puremourning/vimspector', { 'do': './install_gadget.py --enable-c' }
 call plug#end()
 
