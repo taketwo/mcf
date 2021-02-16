@@ -262,8 +262,7 @@ set pastetoggle=<S-F5>
 inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
 nnoremap <F5> :call PasteFromClipboard()<CR>
 
-" GitMessenger
-noremap <F6> :GitMessenger<CR>
+" Floaterm <F6>, set in floaterm.vim settings file
 
 " Enable spell checking
 nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
