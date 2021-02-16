@@ -1,2 +1,1 @@
-pipx: ranger-fm
-w3m                   # used for image previews?
+pipx: ranger-fm ueberzug
