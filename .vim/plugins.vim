@@ -41,7 +41,6 @@ Plug 'dantler/vim-alternate'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-dispatch'
 Plug 'Peeja/vim-cdo'
-Plug 'terryma/vim-expand-region'
 Plug 'tpope/vim-abolish'
 Plug 'mbbill/undotree'
 Plug 'Valloric/ListToggle'
@@ -116,9 +115,12 @@ Plug 'voldikss/vim-floaterm'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 
-" NeoVim-only plugins
+" Neovim-only plugins
 if has('nvim')
     Plug 'kevinhwang91/rnvimr'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+else
+    Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
 endif
 
 " Try these plugins:
