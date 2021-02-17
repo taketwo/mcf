@@ -21,6 +21,9 @@ let b:keymaps = {
 
 call which_key#register('\', "b:keymaps")
 
+let b:match_words = '\<if\>:\<elif\>:\<else\>'
+let b:match_skip = 'R:^\s*'
+
 " Wrap with function call
 xmap W <Plug>VSurround
 
