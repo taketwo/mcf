@@ -1,5 +1,5 @@
 if has('nvim')
-    nnoremap <Leader>.. <cmd>Telescope find_files<cr>
+    nnoremap <Leader>.. <cmd>Telescope find_files find_command=rg,--ignore,--hidden,--files<cr>
     nnoremap <Leader>.b <cmd>Telescope buffers<cr>
     lua <<EOF
 local actions = require('telescope.actions')
