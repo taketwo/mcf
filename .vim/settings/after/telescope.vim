@@ -9,6 +9,7 @@ require('telescope').setup{
       i = {
         ["<A-t>"] = actions.move_selection_next,
         ["<A-c>"] = actions.move_selection_previous,
+        ["<Esc>"] = actions.close,
       },
     }
   }
