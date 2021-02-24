@@ -8,6 +8,7 @@ if !has('nvim')
     " In Neovim these are handled by telescope plugin
     nnoremap <Leader>.. :FzfFiles<CR>
     nnoremap <Leader>.b :FzfBuffers<CR>
+    nnoremap <Space> :FzfBuffers<CR>
 endif
 
 nnoremap <Leader>.t :FzfBTags<CR>
@@ -17,4 +18,3 @@ nnoremap <Leader>.h :FzfHelptags<CR>
 nnoremap <Leader>.s :FzfSnippets<CR>
 nnoremap <Leader>.r :FzfRg<CR>
 
-nnoremap <Space> :FzfBuffers<CR>
