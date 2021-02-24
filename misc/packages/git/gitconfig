@@ -37,8 +37,8 @@
 [commit]
   gpgsign = true
 [gui]
-  fontui = -family \"Victor Mono\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-  fontdiff = -family \"Victor Mono\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+  fontui = -family \"VictorMono Nerd Font\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+  fontdiff = -family \"VictorMono Nerd Font\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
 [merge]
   tool = diffconflicts
 [mergetool]

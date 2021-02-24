@@ -4,3 +4,4 @@ nix: git-lfs
 nix: git-crypt
 gh
 gpg
+victor-mono  # used in GUI
