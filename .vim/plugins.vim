@@ -121,6 +121,7 @@ if has('nvim')
     Plug 'kevinhwang91/rnvimr'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-lua/completion-nvim'
 else
     Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
 endif
