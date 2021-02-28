@@ -8,12 +8,12 @@ endfor
 
 " Plugin location depends on whether this in Vim or Neovim and is out of .vim/ tree
 if has('nvim')
-    let bundle_path = '~/.local/share/nvim/bundle'
+    let plugins_path = $HOME . '/.local/share/nvim/plugins'
 else
-    let bundle_path = '~/.local/share/vim/bundle'
+    let plugins_path = $HOME . '/.local/share/vim/plugins'
 endif
 
-call plug#begin(bundle_path)
+call plug#begin(plugins_path)
 
 Plug 'andymass/vim-matchup'
 Plug 'godlygeek/tabular'
@@ -134,8 +134,7 @@ endif
 
 call plug#end()
 
-let ycm_readme = expand(bundle_path . '/YouCompleteMe/README.md')
-if !filereadable(ycm_readme)
+if !isdirectory(plugins_path)
     echo "Installing Vim plugins..."
     PlugClean
     PlugInstall
