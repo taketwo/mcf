@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+clangd=$(apt-cache search clangd- | cut -d' ' -f1 | sort -V | tail -1)
+
+echo "Installing the most up-to-date clangd version: $clangd"
+
+sudo apt-get install -y "$clangd"
+sudo update-alternatives --install /usr/bin/clangd clangd "/usr/bin/$clangd" 100
