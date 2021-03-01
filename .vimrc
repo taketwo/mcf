@@ -121,7 +121,7 @@
   set wildmenu                         " Enable ctrl-n and ctrl-p to scroll thru matches
   set wildignore=*.o,*.obj,*.pyc,*~    " Stuff to ignore when tab completing
 
-  set completeopt=menuone,noinsert     " Complete options (disable preview scratch window)
+  set completeopt=menuone,noselect     " Complete options (disable preview scratch window)
   set pumheight=15                     " Limit popup menu height
 
   set splitbelow                       " New splits, help, scratch preview all go to the bottom
