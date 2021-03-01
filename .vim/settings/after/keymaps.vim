@@ -316,6 +316,13 @@ let g:mcf#keymaps["s"] = {
 " AnyJump
 nnoremap <Tab> :AnyJump<CR>
 
+" Completion-nvim
+" Manually trigger completion with Tab
+if has("nvim")
+    imap <Tab> <Plug>(completion_smart_tab)
+    imap <S-Tab> <Plug>(completion_smart_s_tab)
+endif
+
 " Some keys that are still free
 "
 " $ ^
