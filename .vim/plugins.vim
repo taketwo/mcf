@@ -71,7 +71,6 @@ Plug 'dyng/ctrlsf.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 
 " Languages / frameworks
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " isort is (temporary) disabled because:
 "   * do not use it that often
 "   * does not work on the Arch box
@@ -124,6 +123,7 @@ if has('nvim')
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/completion-nvim'
 else
+    Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
     Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
 endif
 
