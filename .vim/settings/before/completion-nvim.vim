@@ -14,6 +14,10 @@ if has("nvim")
     " Trigger completion after 2 characters
     let g:completion_trigger_keyword_length = 2
 
+    " Limit the width of the popup menu
+    let g:completion_menu_length = 50
+    let g:completion_abbr_length = 50
+
     " Other possibilities:
 
     " Eventually, we may enable completion-nvim in every buffer
