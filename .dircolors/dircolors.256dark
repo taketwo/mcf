@@ -1,14 +1,15 @@
+
 # Dark 256 color solarized theme for the color GNU ls utility.
 # Used and tested with dircolors (GNU coreutils) 8.5
 #
 # @author  {@link http://sebastian.tramp.name Sebastian Tramp}
-# @license http://sam.zoy.org/wtfpl/  Do What The Fuck You Want To Public License (WTFPL)
 #
 # More Information at
 # https://github.com/seebi/dircolors-solarized
 
 # Term Section
 TERM Eterm
+TERM alacritty
 TERM ansi
 TERM color-xterm
 TERM con132x25
@@ -25,17 +26,22 @@ TERM cons25
 TERM console
 TERM cygwin
 TERM dtterm
+TERM dvtm
+TERM dvtm-256color
 TERM eterm-color
+TERM fbterm
 TERM gnome
 TERM gnome-256color
 TERM jfbterm
 TERM konsole
+TERM konsole-256color
 TERM kterm
 TERM linux
 TERM linux-c
 TERM mach-color
 TERM mlterm
 TERM putty
+TERM putty-256color
 TERM rxvt
 TERM rxvt-256color
 TERM rxvt-cygwin
@@ -44,18 +50,34 @@ TERM rxvt-unicode
 TERM rxvt-unicode256
 TERM rxvt-unicode-256color
 TERM screen
+TERM screen-16color
+TERM screen-16color-bce
+TERM screen-16color-s
+TERM screen-16color-bce-s
 TERM screen-256color
 TERM screen-256color-bce
+TERM screen-256color-s
+TERM screen-256color-bce-s
+TERM screen-256color-italic
 TERM screen-bce
 TERM screen-w
 TERM screen.linux
+TERM screen.xterm-256color
+TERM st
+TERM st-meta
+TERM st-256color
+TERM st-meta-256color
+TERM tmux
+TERM tmux-256color
 TERM vt100
 TERM xterm
 TERM xterm-16color
 TERM xterm-256color
+TERM xterm-256color-italic
 TERM xterm-88color
 TERM xterm-color
 TERM xterm-debian
+TERM xterm-termite
 
 ## Documentation
 #
@@ -113,6 +135,7 @@ EXEC 01;38;5;64
 .tlz    01;38;5;61
 .txz    01;38;5;61
 .zip    01;38;5;61
+.zst    01;38;5;61
 .z      01;38;5;61
 .Z      01;38;5;61
 .dz     01;38;5;61
@@ -134,6 +157,7 @@ EXEC 01;38;5;64
 .7z     01;38;5;61
 .rz     01;38;5;61
 .apk    01;38;5;61
+.gem    01;38;5;61
 
 # Image formats (yellow)
 .jpg    00;38;5;136
@@ -150,6 +174,7 @@ EXEC 01;38;5;64
 .tif    00;38;5;136
 .tiff   00;38;5;136
 .png    00;38;5;136
+.PNG    00;38;5;136
 .svg    00;38;5;136
 .svgz   00;38;5;136
 .mng    00;38;5;136
@@ -163,6 +188,9 @@ EXEC 01;38;5;64
 .eps    00;38;5;136
 .CR2    00;38;5;136
 .ico    00;38;5;136
+.nef    00;38;5;136 # Nikon RAW format
+.NEF    00;38;5;136
+.webp   00;38;5;136 # https://en.wikipedia.org/wiki/WebP
 
 # Files of special interest (base1 + bold)
 .tex             01;38;5;245
@@ -172,8 +200,10 @@ EXEC 01;38;5;64
 .ttl             01;38;5;245
 .nt              01;38;5;245
 .torrent         01;38;5;245
+.xml             01;38;5;245
 *Makefile        01;38;5;245
 *Rakefile        01;38;5;245
+*Dockerfile      01;38;5;245
 *build.xml       01;38;5;245
 *rc              01;38;5;245
 *1               01;38;5;245
@@ -181,17 +211,33 @@ EXEC 01;38;5;64
 *README          01;38;5;245
 *README.txt      01;38;5;245
 *readme.txt      01;38;5;245
-*README.md       01;38;5;245
+.md              01;38;5;245
 *README.markdown 01;38;5;245
-*ini             01;38;5;245
-*yml             01;38;5;245
-*cfg             01;38;5;245
-*conf            01;38;5;245
+.ini             01;38;5;245
+.yml             01;38;5;245
+.cfg             01;38;5;245
+.conf            01;38;5;245
+.h               01;38;5;245
+.hpp             01;38;5;245
+.c               01;38;5;245
+.cpp             01;38;5;245
+.cxx             01;38;5;245
+.cc              01;38;5;245
+.objc            01;38;5;245
+.sqlite          01;38;5;245
+.go              01;38;5;245
+.sql             01;38;5;245
+.csv             01;38;5;245
 
 # "unimportant" files as logs and backups (base01)
 .log        00;38;5;240
 .bak        00;38;5;240
 .aux        00;38;5;240
+.lof        00;38;5;240
+.lol        00;38;5;240
+.lot        00;38;5;240
+.out        00;38;5;240
+.toc        00;38;5;240
 .bbl        00;38;5;240
 .blg        00;38;5;240
 *~          00;38;5;240
@@ -216,6 +262,7 @@ EXEC 01;38;5;64
 .mp3    00;38;5;166
 .mpc    00;38;5;166
 .ogg    00;38;5;166
+.opus   00;38;5;166
 .ra     00;38;5;166
 .wav    00;38;5;166
 .m4a    00;38;5;166
@@ -227,6 +274,7 @@ EXEC 01;38;5;64
 
 # Video formats (as audio + bold)
 .mov    01;38;5;166
+.MOV    01;38;5;166
 .mpg    01;38;5;166
 .mpeg   01;38;5;166
 .m2v    01;38;5;166
@@ -248,8 +296,11 @@ EXEC 01;38;5;64
 .flv    01;38;5;166
 .gl     01;38;5;166
 .m2ts   01;38;5;166
+.divx   01;38;5;166
+.webm   01;38;5;166
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
 .axv 01;38;5;166
 .anx 01;38;5;166
 .ogv 01;38;5;166
 .ogx 01;38;5;166
+
