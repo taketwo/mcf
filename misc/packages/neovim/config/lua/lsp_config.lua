@@ -56,7 +56,10 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-require'lspconfig'.clangd.setup{ on_attach = on_attach }
+require'lspconfig'.clangd.setup{
+    cmd = { "clangd", "--background-index", "--completion-style=detailed" },
+    on_attach = on_attach
+}
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
