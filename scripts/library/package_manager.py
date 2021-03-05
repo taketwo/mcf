@@ -49,7 +49,7 @@ class Pip(Install):
 
 
 class Pipx(Install):
-    CMD = "pipx install"
+    CMD = "pipx install --force"
 
     def __init__(self, packages, args=[]):
         for package in packages:
