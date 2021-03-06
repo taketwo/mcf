@@ -10,8 +10,8 @@ set wildmode=longest:full
 lua require('lsp_config')
 lua require('lspsaga_config')
 
-highlight LspDiagnosticsSignError ctermfg=1 ctermbg=7
-
+highlight LspDiagnosticsSignError ctermfg=160 ctermbg=7
+highlight LspDiagnosticsSignwarning ctermfg=166 ctermbg=7
 
 highlight LspReferenceRead cterm=bold
 highlight LspReferenceText cterm=bold
