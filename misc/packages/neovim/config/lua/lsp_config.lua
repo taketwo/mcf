@@ -6,6 +6,13 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
   require('completion').on_attach(client)
 
+  local format_telescope = function(picker)
+    return string.format("<cmd> lua require('telescope.builtin').%s()<CR>", picker)
+  end
+  local mapper = function(mode, key, result)
+    vim.fn.nvim_buf_set_keymap(0, mode, key, result, {noremap=true, silent=true})
+  end
+
   -- Mappings.
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -18,7 +25,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  mapper('n', 'gr',        format_telescope('lsp_references'))
+  mapper('n', 'ga',        format_telescope('lsp_code_actions'))
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '<', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', '>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
