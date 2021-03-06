@@ -8,6 +8,7 @@ source ~/.vimrc
 set wildmode=longest:full
 
 lua require('lsp_config')
+lua require('lspsaga_config')
 
 highlight LspDiagnosticsSignError ctermfg=1 ctermbg=7
 
