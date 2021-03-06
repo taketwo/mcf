@@ -110,8 +110,10 @@
 
   colorscheme solarized
 
-  hi SpellBad ctermfg=red            " Adjust the color of wrongly spelled words
-  hi Normal ctermbg=NONE             " Remove explicit background color (inherit from Tmux)
+  hi SpellBad ctermfg=red                " Adjust the color of wrongly spelled words
+  hi Normal ctermbg=NONE                 " Remove explicit background color (inherit from Tmux)
+  hi CursorLineNr cterm=bold ctermbg=7   " Show current line numbers in bold
+  hi LineNr ctermfg=14 ctermbg=7
 
   set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
 
