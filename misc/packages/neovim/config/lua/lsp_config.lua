@@ -6,6 +6,13 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
   require('completion').on_attach(client)
 
+  vim.api.nvim_exec([[
+    augroup lsp_lightbulb
+      autocmd! * <buffer>
+      autocmd CursorHold,CursorHoldI <buffer> lua require'nvim-lightbulb'.update_lightbulb{float={enabled=true}}
+    augroup END
+  ]], false)
+
   local format_telescope = function(picker)
     return string.format("<cmd> lua require('telescope.builtin').%s()<CR>", picker)
   end
@@ -91,11 +98,23 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 vim.g.completion_customize_lsp_label = {
-    Function = ' [function]',
-    Method = ' [method]',
-    Reference = ' [refrence]',
+    Function = '',
+    Method = '',
+    Constructor = '',
+    Reference = '',
     Module = '',
-    Class = '',
+    Class = '',
+    Struct = '',
+    Variable = '',
+    Constant = '',
+    Text = '',
+    UltiSnips = '',
+    Interface = '禍',
+    Operator = '洛',
+    Value = '',
+    Enum = '',
+    EnumMember = '',
+    Property = '綠',
   }
 
 vim.fn.sign_define("LspDiagnosticsSignError", { text = "", texthl = "LspDiagnosticsSignError" })
