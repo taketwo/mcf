@@ -12,17 +12,12 @@ set hidden
 set lazyredraw                  " Do not redraw screen in the middle of a macro
 syntax on                       " Turn on syntax highlighting
 
-let g:vimspector_enable_mappings = 'HUMAN'
 
 " Vim plugin configuration
+let g:tmux_navigator_no_mappings = 1
+let g:vimspector_enable_mappings = 'HUMAN'
 
-" Load plugin settings. Some of them have to be set before
-" loading plugins, otherwise they have no effect.
-for f in split(glob('~/.vim/settings/before/*.vim'), '\n')
-  exe 'source' f
-endfor
-
-call plug#begin('~/.local/share/vimdbg/bundle')
+call plug#begin('~/.local/share/vimdbg/plugins')
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'skwp/vim-colors-solarized'
 Plug 'puremourning/vimspector', { 'do': './install_gadget.py --enable-c' }
@@ -59,7 +54,11 @@ endif
 " Use Solarized color theme
 set t_Co=256
 
-colorscheme solarized
+try
+    colorscheme solarized
+catch /^Vim\%((\a\+)\)\=:E185/
+    " Do nothing
+endtry
 
 hi SpellBad ctermfg=red            " Adjust the color of wrongly spelled words
 hi Normal ctermbg=NONE             " Remove explicit background color (inherit from Tmux)
@@ -69,4 +68,8 @@ set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visuall
 " Keymaps
 
 nnoremap ; :
-
+nnoremap <silent> n :TmuxNavigateRight<CR>
+nnoremap <silent> c :TmuxNavigateUp<CR>
+nnoremap <silent> t :TmuxNavigateDown<CR>
+nnoremap <silent> h :TmuxNavigateLeft<CR>
+nnoremap <silent> <Space> :TmuxNavigatePrevious<cr>
