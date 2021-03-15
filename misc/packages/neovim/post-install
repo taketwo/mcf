@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PYTHON_VERSION=3.6.9
+PYTHON_VERSION=3.9.1
 
 # Create a Python virtualenv for Neovim as per :help python-virtualenv
 PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --skip-existing $PYTHON_VERSION
