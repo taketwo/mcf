@@ -24,6 +24,7 @@ nix: shellcheck                        # linting for Bash
 nix: shfmt                             # formatting for Bash
 nix: delta                             # syntax highlighting for diffs
 pudb
+bash-language-server
 
 # Terminal
 tmux
