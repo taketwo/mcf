@@ -551,6 +551,7 @@ manageWindows = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "zoom" | x <- myZoomShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift "rviz" | x <- myRVizShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "uvc" | x <- myUvcShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -565,6 +566,7 @@ manageWindows = composeAll . concat $
     myZoomShifts = ["zoom", "Zoom"]
     myMendeleyShifts = ["Mendeley Desktop"]
     myRVizShifts = ["RViz", "rviz", "Gazebo"]
+    myUvcShifts = ["UVC Coverage GUI"]
 
 -- Hint: use `xprop` to figure out window class name
 
