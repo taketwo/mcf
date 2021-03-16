@@ -21,9 +21,34 @@ if has("nvim")
     " Enable completion-nvim in every buffer
     autocmd BufEnter * lua require('completion').on_attach()
 
+    " Automatically skip empty sources and add keymap to cycle through them
+    let g:completion_auto_change_source = 1
+    imap <c-j> <Plug>(completion_next_source)
+    imap <c-k> <Plug>(completion_prev_source)
 
-    " Eventually, we may enable completion-nvim in every buffer
-    " autocmd BufEnter * lua require'completion'.on_attach()
+    let g:completion_chain_complete_list = {
+    \ 'cpp': [
+    \   {'complete_items': ['lsp', 'snippet']},
+    \   {'mode': 'omni'},
+    \ ],
+    \ 'gtest.cpp': [
+    \   {'complete_items': ['lsp', 'snippet']},
+    \   {'mode': 'omni'},
+    \ ],
+    \ 'sh': [
+    \   {'complete_items': ['lsp', 'snippet']},
+    \   {'mode': 'omni'},
+    \ ],
+    \ 'rosmsg' : [ {'mode': 'omni'} ],
+    \ 'rossrv' : [ {'mode': 'omni'} ],
+    \ 'rosaction' : [ {'mode': 'omni'} ],
+    \ 'roslaunch' : [ {'mode': 'omni'}, {'complete_items': ['snippet'] } ],
+    \ 'magit' : [ {'mode': '<c-n>'}, {'mode': '<c-p>'} ],
+    \ 'default' : [
+    \    {'complete_items': ['snippet', 'path'] },
+    \    {'mode': 'omni'},
+    \ ],
+    \}
 
     " Other possibilities:
 
@@ -31,5 +56,4 @@ if has("nvim")
 
     " Setup chain completion https://github.com/nvim-lua/completion-nvim/wiki/chain-complete-support
     " Customize per filetype or even syntax scope
-
 endif
