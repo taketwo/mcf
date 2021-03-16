@@ -18,10 +18,14 @@ if has("nvim")
     let g:completion_menu_length = 50
     let g:completion_abbr_length = 50
 
-    " Other possibilities:
+    " Enable completion-nvim in every buffer
+    autocmd BufEnter * lua require('completion').on_attach()
+
 
     " Eventually, we may enable completion-nvim in every buffer
     " autocmd BufEnter * lua require'completion'.on_attach()
+
+    " Other possibilities:
 
     " Setup additional sources (e.g. buffers, treesitter, tags)
 
