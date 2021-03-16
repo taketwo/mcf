@@ -73,6 +73,7 @@ if "MCF" not in os.environ:
         not pm.install("nix", verbose=True)
         or not pm.install("pyenv", verbose=True)
         or not pm.install("pipx", verbose=True)
+        or not pm.install("nvm", verbose=True)
     ):
         sys.exit("First part of bootstrapping procedure failed!")
     else:
