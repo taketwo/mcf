@@ -102,23 +102,26 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 vim.g.completion_customize_lsp_label = {
-    Function = '',
-    Method = '',
-    Constructor = '',
-    Reference = '',
-    Module = '',
     Class = '',
-    Struct = '',
-    Variable = '',
     Constant = '',
-    Text = '',
-    UltiSnips = '',
-    Interface = '禍',
-    Operator = '洛',
-    Value = '',
+    Constructor = '',
     Enum = '',
     EnumMember = '',
+    File = ''
+    Folder = ''
+    Function = '',
+    Interface = '禍',
+    Keyword: ''
+    Method = '',
+    Module = '',
+    Operator = '洛',
     Property = '綠',
+    Reference = '',
+    Struct = '',
+    Text = '',
+    UltiSnips = '',
+    Value = '',
+    Variable = '',
   }
 
 vim.fn.sign_define("LspDiagnosticsSignError", { text = "", texthl = "LspDiagnosticsSignError" })
