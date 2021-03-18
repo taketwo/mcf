@@ -51,8 +51,10 @@ if has("nvim")
     \ 'roslaunch' : [ {'mode': 'omni'}, {'complete_items': ['snippet'] } ],
     \ 'magit' : [ {'mode': '<c-n>'}, {'mode': '<c-p>'} ],
     \ 'default' : [
-    \    {'complete_items': ['snippet', 'path'] },
-    \    {'mode': 'omni'},
+    \    {'complete_items': ['lsp', 'snippet'] },
+    \    {'complete_items': ['path'], 'triggered_only': ['/'] },
+    \    {'mode': '<c-p>'},
+    \    {'mode': '<c-n>'},
     \ ],
     \}
 
