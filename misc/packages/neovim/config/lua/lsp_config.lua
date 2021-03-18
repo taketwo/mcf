@@ -107,11 +107,11 @@ vim.g.completion_customize_lsp_label = {
     Constructor = '',
     Enum = '',
     EnumMember = '',
-    File = ''
-    Folder = ''
+    File = '',
+    Folder = '',
     Function = '',
     Interface = '禍',
-    Keyword: ''
+    Keyword = '',
     Method = '',
     Module = '',
     Operator = '洛',
