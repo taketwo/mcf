@@ -27,14 +27,20 @@ if has("nvim")
     imap <c-k> <Plug>(completion_prev_source)
 
     let g:completion_chain_complete_list = {
-    \ 'cpp': [
-    \   {'complete_items': ['lsp', 'snippet']},
-    \   {'mode': 'omni'},
-    \ ],
-    \ 'gtest.cpp': [
-    \   {'complete_items': ['lsp', 'snippet']},
-    \   {'mode': 'omni'},
-    \ ],
+    \ 'cpp': {
+    \   'default': [
+    \     {'complete_items': ['lsp', 'snippet']},
+    \     {'mode': 'omni'},
+    \   ],
+    \   'comment': []
+    \ },
+    \ 'gtest.cpp': {
+    \   'default': [
+    \     {'complete_items': ['lsp', 'snippet']},
+    \     {'mode': 'omni'},
+    \   ],
+    \   'comment': []
+    \ },
     \ 'sh': [
     \   {'complete_items': ['lsp', 'snippet']},
     \   {'mode': 'omni'},
