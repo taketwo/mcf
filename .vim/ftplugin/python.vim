@@ -5,7 +5,6 @@ setlocal softtabstop=4
 setlocal shiftwidth=4
 setlocal colorcolumn=88
 setlocal nosmartindent
-setlocal completeopt=menu,menuone,longest,preview
 autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
 
 " Insert PUDB breakpoint after current line
