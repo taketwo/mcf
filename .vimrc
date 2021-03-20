@@ -114,6 +114,8 @@
   hi Normal ctermbg=NONE                 " Remove explicit background color (inherit from Tmux)
   hi CursorLineNr cterm=bold ctermbg=7   " Show current line numbers in bold
   hi LineNr ctermfg=14 ctermbg=7
+  hi Search cterm=italic,bold ctermfg=red
+  hi IncSearch cterm=italic,bold,standout ctermfg=red
 
   set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
 
