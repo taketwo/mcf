@@ -11,7 +11,6 @@ xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 highlight GitGutterAdd ctermfg=70
 highlight GitGutterChange ctermfg=69
 highlight GitGutterDelete ctermfg=124
-highlight GitGutterChangeDelete ctermfg=224
 
 " GitGutter signs should have low priority to avoid clobbering important signs (e.g. from LSP)
 let g:gitgutter_sign_priority = 1
