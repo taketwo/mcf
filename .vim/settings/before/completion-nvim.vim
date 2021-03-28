@@ -48,7 +48,7 @@ if has("nvim")
     \ 'rosmsg' : [ {'mode': 'omni'} ],
     \ 'rossrv' : [ {'mode': 'omni'} ],
     \ 'rosaction' : [ {'mode': 'omni'} ],
-    \ 'roslaunch' : [ {'mode': 'omni'}, {'complete_items': ['snippet'] } ],
+    \ 'roslaunch.xml' : [ {'mode': 'omni'}, {'complete_items': ['snippet'] } ],
     \ 'magit' : [ {'mode': '<c-n>'}, {'mode': '<c-p>'} ],
     \ 'default' : [
     \    {'complete_items': ['lsp', 'snippet'] },
