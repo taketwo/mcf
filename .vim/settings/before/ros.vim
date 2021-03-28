@@ -1,4 +1,3 @@
-let g:ros_build_system = 'catkin-tools'
 let g:ros_disable_warnings = 1
 
 if !exists('g:ycm_semantic_triggers')
