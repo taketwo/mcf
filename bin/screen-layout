@@ -5,7 +5,7 @@ function show_help() {
   Usage: ${0##*/} [-h] layout
 
   This script configures the screen layout according to predefined rules.
-  Supported layouts: laptop, office.
+  Supported layouts: laptop, office, alpaca.
 
   If layout is not given, then count the number of connected displays and
   choose between laptop and office accordingly.
@@ -24,6 +24,8 @@ function set_layout()
     office-1) xrandr --output "$EDP1" --off --output "$DP1" --off --output "$DP2" --mode "$DP2_MODE" --pos 0x0 --rotate normal --output "$DP3" --off;;
     office-2) xrandr --output "$EDP1" --off --output "$DP1" --off --output "$DP2" --mode "$DP2_MODE" --pos 1680x0 --rotate normal --output "$DP3" --mode "$DP3_MODE" --pos 0x0 --rotate normal ;;
     office) xrandr --output "$EDP1" --off --output "$DP1" --mode "$DP1_MODE" --pos 4240x0 --rotate normal --output "$DP2" --mode "$DP2_MODE" --pos 1680x0 --rotate normal --output "$DP3" --mode "$DP3_MODE" --pos 0x0 --rotate normal;;
+    alpaca-0) xrandr --output HDMI-0 --off --output DP-4 --primary --mode 2560x1440 --pos 0x0 --rotate normal;;
+    alpaca) xrandr --output HDMI-0 --mode 2560x1440 --pos 4000x0 --rotate normal --output DP-4 --primary --mode 2560x1440 --pos 1440x0 --rotate normal --output DP-2 --mode 2560x1440 --pos 0x0 --rotate left;;
   esac
   sleep 7
 }
@@ -80,6 +82,8 @@ if [[ $layout == "" ]]; then
     fi
   elif [[ $connected == 1 ]]; then
     layout='laptop'
+  elif [[ $connected == 3 ]]; then
+    layout='alpaca'
   else
     echo "unable to auto select layout"
     exit 1
@@ -94,6 +98,9 @@ elif [[ $layout == "office" ]]; then
   set_layout "office-1"
   set_layout "office-2"
   set_layout "office"
+elif [[ $layout == "alpaca" ]]; then
+  set_layout "alpaca-0"
+  set_layout "alpaca"
 else
   echo "Unknown layout '$layout'"
   exit 1
