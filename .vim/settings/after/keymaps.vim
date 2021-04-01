@@ -239,18 +239,20 @@ endif
 
 " }}}
 " Git / version control {{{
-let g:mcf#keymaps["g"] = {
-  \   "name" : "+git/version-control"       ,
-  \   "b"    : ["Gblame"                    , "fugitive-blame"]               ,
-  \   "c"    : ["Gcommit"                   , "fugitive-commit"]              ,
-  \   "d"    : ["Gdiff"                     , "fugitive-diff"]                ,
-  \   "e"    : ["Gedit"                     , "fugitive-edit"]                ,
-  \   "l"    : ["Glog"                      , "fugitive-log"]                 ,
-  \   "r"    : ["Gread"                     , "fugitive-read"]                ,
-  \   "s"    : ["Gstatus"                   , "fugitive-status"]              ,
-  \   "w"    : ["Gwrite"                    , "fugitive-write"]               ,
-  \   "p"    : ["Git push"                  , "fugitive-push"]                ,
-  \ }
+
+nnoremap <silent> <leader>gc :call magit#show_magit('v')<CR>
+nnoremap <silent> <leader>gb :Git blame<CR>
+nnoremap <silent> <leader>gl :Telescope git_bcommits<CR>
+nnoremap <silent> <leader>gL :Telescope git_commits<CR>
+nnoremap <silent> <leader>gs :Telescope git_status<CR>
+let g:mcf#keymaps.g = { 'name' : '+git/version-control' }
+let g:mcf#keymaps.g.c = 'commit'
+let g:mcf#keymaps.g.l = 'log (buffer only)'
+let g:mcf#keymaps.g.L = 'log (everything)'
+let g:mcf#keymaps.g.b = 'blame'
+let g:mcf#keymaps.g.s = 'status'
+let g:mcf#keymaps.g.m = 'view commit message'
+
 " }}}
 
 " ALEFix
