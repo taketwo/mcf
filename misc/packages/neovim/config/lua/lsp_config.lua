@@ -19,7 +19,8 @@ local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_keymap(0, mode, key, result, {noremap=true, silent=true})
   end
 
-  -- Mappings.
+  -- Keymaps
+
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
@@ -34,18 +35,24 @@ local on_attach = function(client, bufnr)
   mapper('n', 'gr',        format_telescope('lsp_references'))
   mapper('n', 'ga',        format_telescope('lsp_code_actions'))
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '<', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', '>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
-  -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
 
-  -- Set autocommands conditional on server_capabilities
+  -- Autocommands
+
+  -- Send diagnostics to the location list (without opening it)
+  vim.api.nvim_exec([[
+    augroup lsp_publish_diagnostics
+      autocmd! * <buffer>
+      autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist({open_loclist=false})
+    augroup END
+  ]], false)
+
+  -- Highlight entity under cursor
   if client.resolved_capabilities.document_highlight then
     vim.api.nvim_exec([[
       augroup lsp_document_highlight
@@ -55,7 +62,6 @@ local on_attach = function(client, bufnr)
       augroup END
     ]], false)
   end
-
 
 end
 
