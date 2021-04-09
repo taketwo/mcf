@@ -24,7 +24,6 @@ if has("nvim")
     " Automatically skip empty sources and add keymap to cycle through them
     let g:completion_auto_change_source = 1
     imap <c-j> <Plug>(completion_next_source)
-    imap <c-k> <Plug>(completion_prev_source)
 
     let g:completion_chain_complete_list = {
     \ 'cpp': {
