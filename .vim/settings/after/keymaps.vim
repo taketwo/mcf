@@ -285,9 +285,6 @@ inoremap <F9> <C-o>:MakeTarget<CR>
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
 
-" ListToggle
-nnoremap <F10> :QToggle<CR>
-
 " Close the current buffer with F11
 nnoremap <F11> :BW<CR>
 
@@ -327,7 +324,7 @@ endif
 
 " Some keys that are still free
 "
-" $ ^
+" $ ^ F10
 
 " Create WhichKey menu
 call which_key#register(',', "g:mcf#keymaps")
