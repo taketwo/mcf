@@ -254,6 +254,19 @@ let g:mcf#keymaps.g.s = 'status'
 let g:mcf#keymaps.g.m = 'view commit message'
 
 " }}}
+" LSP {{{
+
+if has('nvim')
+    nnoremap <silent> <leader>la :Lspsaga code_action<CR>
+    nnoremap <silent> <leader>lr :Lspsaga rename<CR>
+    nnoremap <silent> <leader>ld :Lspsaga preview_definition<CR>
+    let g:mcf#keymaps.l = { 'name' : '+lsp' }
+    let g:mcf#keymaps.l.a = 'actions'
+    let g:mcf#keymaps.l.r = 'rename'
+    let g:mcf#keymaps.l.d = 'definition preview'
+endif
+
+" }}}
 
 " ALEFix
 nnoremap <F2> :ALEFix<CR>
