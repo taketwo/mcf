@@ -69,16 +69,20 @@ import MCF.Polybar
 
 fontSpec             = "xft:Fantasque Sans Mono:pixelsize=14:bold"
 colorBg              = "#3c3b37"
-colorFgPrimary       = "#c7c2bb"
-colorFgSecondary     = "#6c6b65"
-colorAccent          = "#ffffff"
+colorBgAccent        = solarizedViolet
+colorFgAccent        = "#ffffff"   -- Bright foreground
+colorFgPrimary       = "#c7c2bb"   -- Normal foreground
+colorFgSecondary     = "#6c6b65"   -- Dark foreeground
 colorBorderActive    = solarizedOrange
 barHeight            = 22
 
 myTabConfig = defaultTheme
   { activeColor         = colorBorderActive
-  , activeTextColor     = colorAccent
+  , activeTextColor     = colorFgAccent
   , activeBorderColor   = colorBorderActive
+  , urgentColor         = colorBgAccent
+  , urgentTextColor     = colorFgAccent
+  , urgentBorderColor   = colorBg
   , inactiveColor       = colorBg
   , inactiveTextColor   = colorFgSecondary
   , inactiveBorderColor = colorBg
@@ -511,8 +515,8 @@ logHookPolybar dbus = def
   , ppOrder            = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep              = "   "
   , ppWsSep            = " "
-  , ppCurrent          = polybarColor "#ffffff" solarizedCyan . wrap " " " "
-  , ppUrgent           = polybarColor colorFgPrimary solarizedViolet . wrap " " " " . clickable
+  , ppCurrent          = polybarColor colorFgAccent solarizedCyan . wrap " " " "
+  , ppUrgent           = polybarColor colorFgAccent colorBgAccent . wrap " " " " . clickable
   , ppVisible          = polybarColor colorFgPrimary "" . wrap " " " " . clickable
   , ppHidden           = clickable
   , ppHiddenNoWindows  = const ""
