@@ -32,6 +32,8 @@
   default = tracking
 [user]
   signingkey = B70F82225D2CBAF4
+  name = Sergey Alexandrov
+  email = alexandrov88@gmail.com
 [gpg]
   program = gpg2
 [commit]
@@ -47,4 +49,4 @@
   cmd = nvim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
   trustExitCode = true
 [credential]
-	helper = store
+  helper = store
