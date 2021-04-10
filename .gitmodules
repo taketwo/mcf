@@ -28,3 +28,6 @@
 [submodule "misc/packages/ranger/config/plugins/ranger_devicons"]
 	path = misc/packages/ranger/config/plugins/ranger_devicons
 	url = https://github.com/alexanderjeurissen/ranger_devicons
+[submodule "external/nb"]
+	path = external/nb
+	url = https://github.com/xwmx/nb.git
