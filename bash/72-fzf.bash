@@ -4,11 +4,31 @@
 # shellcheck source=/dev/null
 source "$HOME/.fzf.bash"
 
+base03="234"
+base02="235"
+base01="240"
+base00="241"
+base0="244"
+base1="245"
+base2="254"
+base3="230"
+yellow="136"
+orange="166"
+red="160"
+magenta="125"
+violet="61"
+blue="33"
+cyan="37"
+green="64"
+
+# Colors for Solarized (light) palette
+export FZF_COLORS="--color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow"
+
 # Set ripgrep as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
 
 # Default options
-export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,alt-s:toggle-sort'
+export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,alt-s:toggle-sort '$FZF_COLORS
 
 # Claim back Alt-c
 bind '"\ec": history-search-backward'
