@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 if [[ -d /nix ]]; then
-  echo "Nix is already installed"
-else
-  curl -L https://nixos.org/nix/install | USER=$(whoami) LD_PRELOAD='' LD_LIBRARY_PATH='' sh
+  if [[ $1 != "--reinstall" ]]; then
+    echo "Nix is already installed (pass --reinstall to install again)"
+    exit 0
+  fi
+  echo "Nix is already installed, forcing reinstall"
 fi
+
+curl -L https://nixos.org/nix/install | USER=$(whoami) LD_PRELOAD='' LD_LIBRARY_PATH='' sh
