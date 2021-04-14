@@ -1,2 +1,4 @@
 $MCF/external/nb/nb:.local/bin/nb:nb app
 nbrc:.nbrc:nb configuration file
+nb-sync.service:.local/share/systemd/user/nb-sync.service:nb sync systemd unit
+nb-sync.timer:.local/share/systemd/user/nb-sync.timer:nb sync systemd timer

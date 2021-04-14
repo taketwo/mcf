@@ -1,0 +1,6 @@
+[Unit]
+Description=Run nb notebook sync
+Wants=nb-sync.timer
+
+[Service]
+ExecStart=%h/.local/bin/nb sync --all
