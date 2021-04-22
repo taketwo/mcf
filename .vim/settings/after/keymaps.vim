@@ -245,6 +245,9 @@ nnoremap <silent> <leader>gb :Git blame<CR>
 nnoremap <silent> <leader>gl :Telescope git_bcommits<CR>
 nnoremap <silent> <leader>gL :Telescope git_commits<CR>
 nnoremap <silent> <leader>gs :Telescope git_status<CR>
+nnoremap <silent> <leader>ghs :GitGutterStageHunk<CR>
+nnoremap <silent> <leader>ghu :GitGutterUndoHunk<CR>
+nnoremap <silent> <leader>ghp :GitGutterPreviewHunk<CR>
 let g:mcf#keymaps.g = { 'name' : '+git/version-control' }
 let g:mcf#keymaps.g.c = 'commit'
 let g:mcf#keymaps.g.l = 'log (buffer only)'
@@ -252,6 +255,10 @@ let g:mcf#keymaps.g.L = 'log (everything)'
 let g:mcf#keymaps.g.b = 'blame'
 let g:mcf#keymaps.g.s = 'status'
 let g:mcf#keymaps.g.m = 'view commit message'
+let g:mcf#keymaps.g.h = { 'name' : '+hunks' }
+let g:mcf#keymaps.g.h.s = 'stage'
+let g:mcf#keymaps.g.h.u = 'undo'
+let g:mcf#keymaps.g.h.p = 'preview'
 
 " }}}
 " LSP {{{
