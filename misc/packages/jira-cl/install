@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# NVM should be installed because it is a dependency, however it could be that it is not activated yet
+if ! hash nvm 2>/dev/null; then
+  source "$HOME/.nvm/nvm.sh"
+fi
+
+nvm install node
+npm i -g jira-cl
