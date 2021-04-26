@@ -5,13 +5,6 @@ local on_attach = function(client, bufnr)
 
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  vim.api.nvim_exec([[
-    augroup lsp_lightbulb
-      autocmd! * <buffer>
-      autocmd CursorHold,CursorHoldI <buffer> lua require'nvim-lightbulb'.update_lightbulb{float={enabled=true}}
-    augroup END
-  ]], false)
-
   local format_telescope = function(picker)
     return string.format("<cmd> lua require('telescope.builtin').%s()<CR>", picker)
   end
