@@ -31,3 +31,6 @@
 [submodule "external/nb"]
 	path = external/nb
 	url = https://github.com/xwmx/nb.git
+[submodule "tmux/plugins/tmux-fzf-url"]
+	path = tmux/plugins/tmux-fzf-url
+	url = https://github.com/junegunn/tmux-fzf-url
