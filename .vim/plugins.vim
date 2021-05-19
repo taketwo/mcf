@@ -122,6 +122,7 @@ if has('nvim')
     Plug 'nvim-lua/completion-nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'glepnir/lspsaga.nvim'
+    Plug 'tversteeg/registers.nvim'
 else
     Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
     Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
