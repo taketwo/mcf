@@ -49,6 +49,7 @@ if has("nvim")
     \ 'rosaction' : [ {'mode': 'omni'} ],
     \ 'roslaunch.xml' : [ {'mode': 'omni'}, {'complete_items': ['snippet'] } ],
     \ 'magit' : [ {'mode': '<c-n>'}, {'mode': '<c-p>'} ],
+    \ 'TelescopePrompt' : [ ],
     \ 'default' : [
     \    {'complete_items': ['lsp', 'snippet'] },
     \    {'complete_items': ['path'], 'triggered_only': ['/'] },
