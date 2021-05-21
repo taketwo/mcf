@@ -76,6 +76,10 @@ require'lspconfig'.bashls.setup{
   on_attach = on_attach
 }
 
+require'lspconfig'.jedi_language_server.setup{
+  on_attach = on_attach
+}
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     -- Enable underline, use default values
