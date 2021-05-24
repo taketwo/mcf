@@ -116,6 +116,7 @@
   hi LineNr ctermfg=14 ctermbg=7
   hi Search cterm=italic,bold ctermfg=red
   hi IncSearch cterm=italic,bold,standout ctermfg=red
+  hi Whitespace ctermfg=7 cterm=nocombine
 
   set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
 

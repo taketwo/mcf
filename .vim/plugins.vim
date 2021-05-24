@@ -26,7 +26,6 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'kshenoy/vim-signature'
 Plug 'briandoll/change-inside-surroundings.vim'
-Plug 'Yggdroot/indentLine'
 Plug 'majutsushi/tagbar'
 Plug 'craigemery/vim-autotag'
 Plug 'tmsvg/pear-tree'
@@ -122,9 +121,11 @@ if has('nvim')
     Plug 'neovim/nvim-lspconfig'
     Plug 'glepnir/lspsaga.nvim'
     Plug 'tversteeg/registers.nvim'
+    Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
 else
     Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
     Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
+    Plug 'Yggdroot/indentLine'         " superceded by indent-blankline in Neovim
 endif
 
 " Try these plugins:
