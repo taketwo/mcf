@@ -12,6 +12,7 @@
   cm = commit -m
   ca = !git add -A && git commit
   co = checkout
+  cob = checkout -b
   lg = log --all --graph --oneline --decorate --abbrev-commit
   rim = rebase -i master
   rimo = rebase -i origin/master
