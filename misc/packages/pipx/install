@@ -18,26 +18,36 @@ verlt()
 required="3.9.1"
 actual=$(python3 --version | cut -d ' ' -f2)
 
+echo "Pipx installation"
+echo " * Required Python version: $required"
+echo " * Default Python version: $actual"
+
 if verlt "$actual" "$required"; then
-  # If pyenv is not in the PATH (happens during bootstrapping), temporary add it
-  [[ ":$PATH:" != *"pyenv"* ]] && PATH="${HOME}/.pyenv/bin:${PATH}"
   # System version of Python is too old, use pyenv
-  eval "$(pyenv init -)"
+  # If pyenv is not in the PATH (happens during bootstrapping), temporary add it
+  if [[ ":$PATH:" != *"pyenv"* ]]; then
+    PATH="${HOME}/.pyenv/bin:${PATH}"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv init -)"
+  fi
   # Check if required version of Python is installed with pyenv
-  if pyenv versions | grep -vq "$required"; then
+  if ! pyenv versions | grep -q "$required"; then
+    echo " > Installing required Python version with Pyenv"
     PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --skip-existing "$required"
   fi
+  echo " > Enabling required Python version in current shell with Pyenv"
   pyenv shell "$required"
+  echo " * Active Python version: $(python --version)"
 fi
 
-# Install pipx via system pip
+echo " > Installing Pipx via system Pip"
 pip3 install --user --no-warn-script-location pipx
-# Install pipx via pipx (-f to force overwrite the binary installed with previous command)
-python3 -m pipx install -f pipx
+echo " > Installing Pipx via Pipx"
+python3 -m pipx install -f pipx  # -f to force overwrite the binary installed with previous command
 # Store pipx symlink
 pipx_where="$HOME/.local/bin/pipx"
 pipx_where_actual=$(readlink "$pipx_where")
-# Uninstall pipx from system pip (this removes pipx symlink installed by pipx)
-pip3 uninstall -y pipx
+echo " > Uninstalling Pipx via system Pip"
+pip3 uninstall -y pipx # This removes pipx symlink installed by pipx
 # Recover symlink
 ln -s "$pipx_where_actual" "$pipx_where"
