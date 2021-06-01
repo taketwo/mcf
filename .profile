@@ -99,7 +99,10 @@ fi
 
 # Pyenv
 export PYENV_ROOT="${HOME}/.pyenv"
-[ -d "${PYENV_ROOT}" ] && export PATH="${PYENV_ROOT}/bin:${PATH}"
+if [ -d "${PYENV_ROOT}" ]; then
+  export PATH="${PYENV_ROOT}/bin:${PATH}"
+  eval "$(pyenv init --path)"
+fi
 
 # Python virtual environments
 export WORKON_HOME="${HOME}/.virtualenvs"
