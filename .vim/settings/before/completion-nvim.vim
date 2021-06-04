@@ -41,8 +41,7 @@ if has("nvim")
     \   'comment': []
     \ },
     \ 'sh': [
-    \   {'complete_items': ['lsp', 'snippet']},
-    \   {'mode': 'omni'},
+    \   {'complete_items': ['lsp', 'snippet']}
     \ ],
     \ 'rosmsg' : [ {'mode': 'omni'} ],
     \ 'rossrv' : [ {'mode': 'omni'} ],
