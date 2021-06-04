@@ -2,6 +2,3 @@
 .vim/.netrwhist
 .vim/undo
 *.pyc
-
-# Bash
-bash/local/*
