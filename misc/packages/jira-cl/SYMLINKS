@@ -1,1 +1,2 @@
 jira-cli.json:.jira-cli.json:JIRA credentials file
+jira:.local/bin/jira:JIRA CLI
