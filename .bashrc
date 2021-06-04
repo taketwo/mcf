@@ -13,7 +13,7 @@ fi
 #   * Not after any of the scripts in bash/ because this may make their
 #     completions preferable to bash_completion completions.
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
+  . /etc/bash_completion
 fi
 
 [[ $TMUX = "" ]] && export TERM='xterm-256color'
@@ -23,23 +23,21 @@ BASH_TIME_STARTUP=${BASH_TIME_STARTUP:-1}
 if [[ $BASH_TIME_STARTUP == 1 ]]; then
   # Track the time it takes to load each configuration file
   bash_times_file="/tmp/bashtimes.$$"
-  echo -n > "$bash_times_file"
+  echo -n >"$bash_times_file"
 fi
 
-timed_source()
-{
+timed_source() {
   local file="$1"
   local before=$(date +%s%N)
   source "$file"
   local after=$(date +%s%N)
-  echo "$file $before $after" >> "$bash_times_file"
+  echo "$file $before $after" >>"$bash_times_file"
 }
 
 scripts=()
 for directory in "global" "local"; do
   dir=$MCF/bash/$directory
-  if [[ -d $dir ]]
-  then
+  if [[ -d $dir ]]; then
     for conf_file in "$dir"/*; do
       if [[ -f $conf_file ]]; then
         scripts+=($(basename $conf_file))
