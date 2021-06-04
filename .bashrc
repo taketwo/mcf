@@ -34,9 +34,11 @@ timed_source() {
   echo "$file $before $after" >>"$bash_times_file"
 }
 
+GLOBAL_DIR="$MCF/bash/global"
+LOCAL_DIR="$HOME/.local/bash"
+
 scripts=()
-for directory in "global" "local"; do
-  dir=$MCF/bash/$directory
+for dir in "$GLOBAL_DIR" "$LOCAL_DIR"; do
   if [[ -d $dir ]]; then
     for conf_file in "$dir"/*; do
       if [[ -f $conf_file ]]; then
@@ -48,7 +50,7 @@ done
 
 sorted=($(printf '%s\n' "${scripts[@]}" | sort))
 for conf_file in ${sorted[@]}; do
-  local_conf="$MCF/bash/local/$conf_file"
+  local_conf="$LOCAL_DIR/$conf_file"
   if [[ -f "$local_conf" ]]; then
     timed_source "$local_conf"
     shared_conf="$MCF/bash/$conf_file"
@@ -56,7 +58,7 @@ for conf_file in ${sorted[@]}; do
       timed_source "$shared_conf"
     fi
   fi
-  global_conf="$MCF/bash/global/$conf_file"
+  global_conf="$GLOBAL_DIR/$conf_file"
   if [[ -f "$global_conf" ]]; then
     timed_source "$global_conf"
   fi
