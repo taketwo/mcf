@@ -109,10 +109,10 @@ class PackageManager(object):
         Resolve package name into a list of commands to install/configure the package
         and its dependencies.
         """
-        if isdir(package_name):
-            directory = package_name
-        elif isdir(join(PACKAGES, package_name)):
+        if isdir(join(PACKAGES, package_name)):
             directory = join(PACKAGES, package_name)
+        elif isdir(package_name):
+            directory = package_name
         else:
             if len(package_name.split(": ")) == 2:
                 return [tuple(package_name.split(": "))]
