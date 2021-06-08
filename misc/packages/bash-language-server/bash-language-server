@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-nvm use node
-bash-language-server "$@"
+NODE_VERSION=node "$NVM_DIR/nvm-exec" bash-language-server "$@"

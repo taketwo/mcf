@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-nvm use node
-jira "$@"
+NODE_VERSION=node "$NVM_DIR/nvm-exec" jira "$@"
