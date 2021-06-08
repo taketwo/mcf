@@ -38,15 +38,6 @@ bind '"\C-t": history-search-forward'
 #                            From FZF wiki                            #
 #######################################################################
 
-# Integration with z
-# - like normal z when used with arguments
-# - displays an fzf prompt when used without
-unalias z 2>/dev/null
-z() {
-  [ $# -gt 0 ] && _z "$*" && return
-  cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
-}
-
 # fkill - kill process
 fkill() {
   local pid

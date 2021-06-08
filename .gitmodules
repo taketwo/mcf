@@ -16,9 +16,6 @@
 [submodule "tmux/plugins/tmux-prefix-highlight"]
 	path = tmux/plugins/tmux-prefix-highlight
 	url = https://github.com/tmux-plugins/tmux-prefix-highlight.git
-[submodule "external/z"]
-	path = external/z
-	url = https://github.com/rupa/z.git
 [submodule "external/forgit"]
 	path = external/forgit
 	url = https://github.com/wfxr/forgit.git
