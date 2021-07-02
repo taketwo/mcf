@@ -55,7 +55,6 @@ local on_attach = function(client, bufnr)
 
 end
 
-vim.lsp.set_log_level("debug")
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
 local servers = { "cmake" }
