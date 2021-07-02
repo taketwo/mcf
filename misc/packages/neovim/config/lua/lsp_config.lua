@@ -58,15 +58,24 @@ end
 require'lspconfig'.clangd.setup{
     cmd = { "clangd", "--background-index", "--completion-style=detailed" },
     filetypes = { "c", "cpp", "objc", "objcpp", "gtest.cpp" },
-    on_attach = on_attach
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
 }
 
 require'lspconfig'.bashls.setup{
-  on_attach = on_attach
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  }
 }
 
 require'lspconfig'.jedi_language_server.setup{
-  on_attach = on_attach
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  }
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
