@@ -55,13 +55,6 @@ local on_attach = function(client, bufnr)
 
 end
 
--- Use a loop to conveniently both setup defined servers 
--- and map buffer local keybindings when the language server attaches
-local servers = { "cmake" }
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
-end
-
 require'lspconfig'.clangd.setup{
     cmd = { "clangd", "--background-index", "--completion-style=detailed" },
     filetypes = { "c", "cpp", "objc", "objcpp", "gtest.cpp" },
