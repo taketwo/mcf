@@ -121,7 +121,7 @@ if has('nvim')
     Plug 'neovim/nvim-lspconfig'
     Plug 'glepnir/lspsaga.nvim'
     Plug 'tversteeg/registers.nvim'
-    Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
+    Plug 'lukas-reineke/indent-blankline.nvim'
 else
     Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
     Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
