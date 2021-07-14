@@ -39,4 +39,6 @@ def pudb_stringifier(obj):
         return f"PosixPath {obj}"
     if type(obj) in [set, frozenset, list, tuple, dict]:
         return f"{type(obj).__name__} ({len(obj)})"
+    if type(obj).__name__ in ("bool", "float", "int"):
+        return f"{type(obj).__name__} {obj}"
     return type_stringifier(obj)
