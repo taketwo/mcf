@@ -335,3 +335,13 @@ inline bool operator>=(const $1& lhs, const $1& rhs)
 	return !operator< (lhs, rhs);
 }
 endsnippet
+
+#######################################################################
+#                          String operations                          #
+#######################################################################
+
+snippet split "Split string into tokens" b
+#include <boost/algorithm/string.hpp>
+std::vector<std::string> ${1:tokens};
+boost::split($1, ${2:string}, boost::is_any_of("${3: }"))$0
+endsnippet 
