@@ -37,7 +37,7 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_exec([[
     augroup lsp_publish_diagnostics
       autocmd! * <buffer>
-      autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist({open_loclist=false})
+      autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist({open=false})
     augroup END
   ]], false)
 
