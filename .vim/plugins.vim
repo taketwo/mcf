@@ -117,6 +117,7 @@ if has('nvim')
     Plug 'kevinhwang91/rnvimr'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-lua/completion-nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'glepnir/lspsaga.nvim'
