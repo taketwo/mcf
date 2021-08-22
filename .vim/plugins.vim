@@ -80,6 +80,7 @@ Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
 Plug 'keith/tmux.vim'
 Plug 'LnL7/vim-nix'
+Plug 'hjson/vim-hjson'
 
 " Git related
 Plug 'tpope/vim-fugitive'
