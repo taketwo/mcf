@@ -1,0 +1,2 @@
+config:.config/broot:Broot config directory
+broot.bash:.local/bash/71-broot.bash:Broot alias
