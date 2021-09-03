@@ -57,5 +57,5 @@ ncdu
 
 # Util
 unrar                                    # for unpack command
-pipx: pygments pygments-style-solarized  # for fv command
+pipx: pygments pygments-solarized-style  # for fv command
 python3-click                            # for music-sync command
