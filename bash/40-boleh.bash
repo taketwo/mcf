@@ -65,7 +65,7 @@ function __boleh_on() {
 
 # List active Boleh connections
 function __boleh_active() {
-  connections=$(systemctl status openvpn-client@* | grep -oP "(?<= - OpenVPN connection to )([^.]+)(?=\.Boleh)")
+  connections=$(systemctl status openvpn-client@* | grep -oP "(?<= - OpenVPN tunnel for )([^.]+)(?=\.Boleh)" | tr '/' '-')
   if [[ $connections != "" ]]; then
     for c in $connections; do
       info=$(systemctl status "openvpn-client@$c.Boleh.service")
@@ -86,12 +86,15 @@ function __boleh_status() {
       info=$(systemctl status "openvpn-client@$c.Boleh.service")
       state=$(grep -oP "(?<=Active: )(\w+)" <<<"$info")
       echo "●  $c (state: $state)"
-      ip=$(grep -oP -m 1 "(?<=^remote )([^ ]+)" "/etc/openvpn/client/$c.Boleh.conf")
+      server_url=$(grep -oP -m 1 "(?<=^remote )([^ ]+)" "/etc/openvpn/client/$c.Boleh.conf")
+      server_ip="$(host "$server_url" | awk '/has.*address/{print $NF; exit}')"
       public_ip=$(curl ifconfig.me/ip 2>/dev/null)
-      if [[ $ip =~ $public_ip ]]; then
-        echo -e "   IP: \e[00;32m$ip\e[00m"
+      echo -e "   Server IP: $server_ip"
+      echo -e "   Public IP: $public_ip"
+      if [[ $server_ip =~ $public_ip ]]; then
+        echo -e "   \e[00;32mAll good\e[00m"
       else
-        echo -e "   IP: \e[00;31m$ip\e[00m"
+        echo -e "   \e[00;31mHouston, we have a problem\e[00m"
       fi
     done
   else
