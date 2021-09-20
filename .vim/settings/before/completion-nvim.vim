@@ -12,7 +12,7 @@ if has("nvim")
     let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
 
     " Trigger completion after 1 character
-    let g:completion_trigger_keyword_length = 1
+    let g:completion_trigger_keyword_length = 0
 
     " Limit the width of the popup menu
     let g:completion_menu_length = 50
