@@ -121,7 +121,7 @@ if has('nvim')
     Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-lua/completion-nvim'
     Plug 'neovim/nvim-lspconfig'
-    Plug 'glepnir/lspsaga.nvim'
+    Plug 'rinx/lspsaga.nvim'
     Plug 'tversteeg/registers.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim'
 else
