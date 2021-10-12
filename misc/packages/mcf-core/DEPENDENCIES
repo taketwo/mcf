@@ -47,6 +47,7 @@ python3-dev                            # to build YCM
 
 # Filesystem navigation/search
 tree
+broot
 ranger
 nix: fd
 nix: ripgrep
