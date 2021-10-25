@@ -138,9 +138,3 @@ endif
 "Plug 'xolox/vim-notes'
 
 call plug#end()
-
-if !isdirectory(plugins_path)
-    echo "Installing Vim plugins..."
-    PlugClean
-    PlugInstall
-endif
