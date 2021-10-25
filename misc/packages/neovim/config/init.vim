@@ -7,9 +7,13 @@ source ~/.vimrc
 " Neovim displays wildmenu completion using vertical menu, use this feature
 set wildmode=longest:full
 
-lua require('mcf.lsp')
-lua require('mcf.lspsaga')
-lua require('mcf.lspkind')
+" Do not load configs of Lua-based plugins because this will fail if plugins
+" are not installed.
+if isdirectory(g:plugins_path)
+    lua require('mcf.lsp')
+    lua require('mcf.lspsaga')
+    lua require('mcf.lspkind')
+endif
 
 highlight DiagnosticError ctermfg=160
 highlight DiagnosticWarn ctermfg=166
