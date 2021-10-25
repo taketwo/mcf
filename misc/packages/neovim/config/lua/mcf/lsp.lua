@@ -54,7 +54,8 @@ require'lspconfig'.clangd.setup{
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
-    }
+    },
+    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 }
 
 require'lspconfig'.bashls.setup{
@@ -68,7 +69,8 @@ require'lspconfig'.jedi_language_server.setup{
   on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,
-  }
+  },
+  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
