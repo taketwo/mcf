@@ -74,7 +74,7 @@ Plug 'beloglazov/vim-online-thesaurus'
 " Plugin 'fisadev/vim-isort'
 
 Plug 'plasticboy/vim-markdown'
-Plug 'taketwo/vim-ros'
+Plug 'taketwo/vim-ros', { 'branch': 'cmp' }
 Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
 Plug 'lervag/vimtex'
