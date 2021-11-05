@@ -40,7 +40,7 @@
 	# (you really should read https://dystroy.org/broot/vim_mode/
 	# before as it may not suit anybody even among vim users)
 	#
-        modal: true
+        modal: false
 
 	###############################################################
 	# Whether to mark the selected line with a triangle
@@ -198,16 +198,6 @@
 			execution: "cp -r {file} {parent}/{file-stem}-{version}{file-dot-extension}"
 		}
 
-		# This verb lets you launch a terminal on ctrl-T
-		# (on exit you'll be back in broot)
-		{
-			invocation: terminal
-			key: ctrl-t
-			execution: "$SHELL"
-			set_working_dir: true
-			leave_broot: false
-		}
-
 		# Here's an example of a shortcut bringing you to your home directory
 		# {
 		# 	invocation: home
@@ -217,21 +207,21 @@
 
 		# Shortcuts for going up and down:
 		{
-			key: c
+			key: ctrl-c
 			execution: ":line_up"
 		}
 		{
-			key: t
+			key: ctrl-t
 			execution: ":line_down"
 		}
 
                 # Shortcuts for getting in and out of a directory:
                 {
-                        key: h
+                        key: ctrl-h
                         execution: ":back"
                 }
                 {
-                        key: n
+                        key: ctrl-n
                         execution: ":focus"
                 }
 		# {
