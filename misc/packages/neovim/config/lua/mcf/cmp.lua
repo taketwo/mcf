@@ -22,6 +22,7 @@ cmp.setup({
     { name = 'ultisnips' },
     { name = 'omni' },
     { name = 'path' },
+    { name = 'rosmsg' },
     { name = 'buffer', keyword_length = 4 },
   },
   formatting = {
