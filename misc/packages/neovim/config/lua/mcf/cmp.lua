@@ -44,7 +44,6 @@ cmp.setup({
         Reference = '',
         Struct = '',
         Text = '',
-        UltiSnips = '',
         Snippet = '',
         Value = '',
         Variable = '',
