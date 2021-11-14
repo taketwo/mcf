@@ -18,7 +18,7 @@ cmp.setup({
   sources = {
     { name = 'nvim_lsp' },
     { name = 'ultisnips' },
-    { name = 'omni' },
+    -- { name = 'omni' },  disable temporarily because of slow-downs when editing gitcommit
     { name = 'path' },
     { name = 'rosmsg' },
     { name = 'buffer', keyword_length = 4 },
