@@ -12,7 +12,6 @@ set wildmode=longest:full
 if isdirectory(g:plugins_path)
     lua require('mcf.lsp')
     lua require('mcf.lspsaga')
-    lua require('mcf.lspkind')
     lua require('mcf.cmp')
 endif
 
