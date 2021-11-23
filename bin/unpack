@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Extracts an archieve if it has one of the known types
+# Extracts an archive if it has one of the known types
 function unpack() {
   if [ -f "$1" ]; then
     case $1 in
@@ -23,3 +23,5 @@ function unpack() {
     echo "'$1' is not a valid file!"
   fi
 }
+
+unpack "$@"
