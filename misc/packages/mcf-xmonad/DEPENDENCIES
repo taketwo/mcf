@@ -26,6 +26,6 @@ ubuntu: libxinerama-dev
 arch: ttf-liberation
 arch: alsa-utils
 
-kupfer
+rofi
 polybar
 compton
