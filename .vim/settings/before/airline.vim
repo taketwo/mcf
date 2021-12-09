@@ -6,3 +6,5 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#fnametruncate = 0
 let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+" This extension calls deprecated functions, disable until it is fixed
+let g:airline#extensions#nvimlsp#enabled = 0
