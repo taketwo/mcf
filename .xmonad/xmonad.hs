@@ -76,7 +76,8 @@ colorFgSecondary     = "#6c6b65"   -- Dark foreeground
 colorBorderActive    = solarizedOrange
 barHeight            = 22
 
-myTabConfig = defaultTheme
+myTabConfig :: Theme
+myTabConfig = def
   { activeColor         = colorBorderActive
   , activeTextColor     = colorFgAccent
   , activeBorderColor   = colorBorderActive
@@ -90,7 +91,7 @@ myTabConfig = defaultTheme
   }
 
 myXPConfig :: XPConfig
-myXPConfig = defaultXPConfig
+myXPConfig = def
   { font                = fontSpec
   , bgColor             = colorBg
   , fgColor             = colorFgPrimary
@@ -163,7 +164,7 @@ myTopicNames :: [Topic]
 myTopicNames = map topicName myTopics
 
 myTopicConfig :: TopicConfig
-myTopicConfig = defaultTopicConfig
+myTopicConfig = def
   { topicDirs = M.fromList $ map (\(TI n d _) -> (n, d)) myTopics
   , defaultTopicAction = const (return ())
   , defaultTopic = "web"
@@ -352,7 +353,7 @@ table =
     promptWebSearch         = Unbound "Prompt web search"                                  (submap . mySearchMap $ myPromptWebSearch)
     selectWebSearch         = Unbound "X selection web search"                             (submap . mySearchMap $ mySelectWebSearch)
     closeWindow             = Unbound "Close the focused window"                           (kill)
-    gridSelect              = Unbound "Open GridSelect"                                    (goToSelected gridSelectConfig)
+    gridSelect              = Unbound "Open GridSelect"                                    (goToSelected $ gridSelectConfig)
     sendKiss                = Unbound "Send kiss to Anja"                                  (spawn "kiss")
     printScreen             = Unbound "Print screen using Flameshot"                       (spawn "flameshot gui")
     -- Keyboard control
@@ -402,7 +403,7 @@ myNavigation = makeXEventhandler $ shadowWithKeymap navKeyMap navDefaultHandler
                            ]
 
 navDefaultHandler = const myNavigation
-gridSelectConfig = defaultGSConfig { gs_navigate = myNavigation }
+gridSelectConfig = def { gs_navigate = myNavigation }
 
 -- }}}
 -- Search ------------------------------------------------------------------ {{{
