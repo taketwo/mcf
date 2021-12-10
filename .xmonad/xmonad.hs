@@ -133,11 +133,6 @@ myLayoutHook =
 -- }}}
 -- Topics ------------------------------------------------------------------ {{{
 
-data TopicItem = TI { topicName   :: Topic
-                    , topicDir    :: Dir
-                    , topicAction :: X ()
-                    }
-
 myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
@@ -161,7 +156,7 @@ myTopics =
     ti t d = TI t d spawnShell
 
 myTopicNames :: [Topic]
-myTopicNames = map topicName myTopics
+myTopicNames = map tiName myTopics
 
 myTopicConfig :: TopicConfig
 myTopicConfig = def
