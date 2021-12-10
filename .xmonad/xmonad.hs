@@ -166,10 +166,9 @@ myTopicNames = map topicName myTopics
 myTopicConfig :: TopicConfig
 myTopicConfig = def
   { topicDirs = M.fromList $ map (\(TI n d _) -> (n, d)) myTopics
+  , topicActions = M.fromList $ map (\(TI n _ a) -> (n, a)) myTopics
   , defaultTopicAction = const (return ())
   , defaultTopic = "web"
-  , maxTopicHistory = 10
-  , topicActions = M.fromList $ map (\(TI n _ a) -> (n, a)) myTopics
   }
 
 -- | Returns name and directory associated with current topic
