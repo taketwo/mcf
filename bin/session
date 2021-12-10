@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ -z ${DBUS_SESSION_BUS_ADDRESS+x} ]]; then
-  eval $(xargs -n 1 -0 < /proc/`pgrep gnome-session`/environ | grep DBUS)
-fi
-
 case $1 in
-  lock) gnome-screensaver-command -l;;
-  logout) gnome-session-quit --logout;;
+  lock) loginctl lock-session;;
+  logout) qdbus org.kde.ksmserver /KSMServer logout 0 0 1;;
   reboot) systemctl reboot;;
-  shutdown) gnome-session-quit --power-off;;
+  shutdown) qdbus org.kde.ksmserver /KSMServer logout 0 2 2;;
 esac
