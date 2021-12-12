@@ -270,7 +270,6 @@ table =
   , [bind "" "<XF86Launch9>"           (audioRate 5)]
   , [bind "" "<XF86MonBrightnessDown>" brightnessDown]
   , [bind "" "<XF86MonBrightnessUp>"   brightnessUp]
-  , [bind "" "<XF86Favorites>"         sendKiss]
   , [bind "" "<Print>"                 printScreen]
   ]
   where
@@ -348,7 +347,6 @@ table =
     selectWebSearch         = Unbound "X selection web search"                             (submap . mySearchMap $ mySelectWebSearch)
     closeWindow             = Unbound "Close the focused window"                           (kill)
     gridSelect              = Unbound "Open GridSelect"                                    (goToSelected $ gridSelectConfig)
-    sendKiss                = Unbound "Send kiss to Anja"                                  (spawn "kiss")
     printScreen             = Unbound "Print screen using Flameshot"                       (spawn "flameshot gui")
     -- Keyboard control
     nextKeyboardLayout      = Unbound "Next keyboard layout"                               (spawn "keyboard -n")
