@@ -17,6 +17,7 @@ import XMonad.Config.Desktop
 
 import XMonad.Core
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
@@ -47,7 +48,6 @@ import XMonad.Util.WorkspaceCompare
 import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.FlexibleResize as FR
-import qualified XMonad.Hooks.EwmhDesktops as ED
 import qualified XMonad.StackSet as W
 
 import Control.Monad (liftM2)
@@ -449,7 +449,7 @@ main = do
   dbus             <- D.connectSession
   D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
   let myDesktopConfig = maybe desktopConfig desktop session
-  xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ED.ewmh myDesktopConfig
+  xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ewmhFullscreen $ ewmh myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBg           -- color of inactive border
@@ -462,7 +462,6 @@ main = do
         logHook myDesktopConfig
         dynamicLogWithPP (logHookPolybar dbus)
     , layoutHook         = myLayoutHook
-    , handleEventHook    = myHandleEventHook
     , startupHook        = setWMName "LG3D" <+> spawn pathPolybar
     }
     `additionalKeysP`
@@ -526,11 +525,6 @@ logHookPolybar dbus = def
     _ -> x
     )
   }
-
--- }}}
--- HandleEvent hook -------------------------------------------------------- {{{
-
-myHandleEventHook = ED.fullscreenEventHook
 
 -- }}}
 -- Manage hook ------------------------------------------------------------- {{{
