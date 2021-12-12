@@ -1,6 +1,6 @@
 {-# LANGUAGE ImplicitParams, FlexibleContexts #-}
 
-import XMonad hiding ( (|||) )
+import XMonad
 import XMonad.Actions.CycleWS
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
