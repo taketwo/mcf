@@ -490,7 +490,7 @@ clickable :: String -> String
 clickable ws = polybarAction (xdoGotoWorkspace ws) 1 ws
 
 myWorkspaceSorter = do
-  srt <- fmap (namedScratchpadFilterOutWorkspace.) (getSortByXineramaPhysicalRule def)
+  srt <- fmap (filterOutWs [scratchpadWorkspaceTag].) (getSortByXineramaPhysicalRule def)
   return srt
 
 -- Emit a DBus signal on log updates
