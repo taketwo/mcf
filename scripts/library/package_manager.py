@@ -79,7 +79,7 @@ class Pipx(Install):
 
 
 class Cabal(Install):
-    CMD = "cabal v2-install"
+    CMD = "cabal v2-install --overwrite-policy=always"
 
     def __init__(self, packages, args=[]):
         subprocess.check_call(["cabal", "v2-update"])
