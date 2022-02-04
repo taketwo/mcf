@@ -25,7 +25,7 @@ cmp.setup({
   },
   formatting = {
     format = require'lspkind'.cmp_format({
-      with_text = true,
+      mode = 'symbol_text',
       symbol_map = {
         Class = '',
         Constant = '',
