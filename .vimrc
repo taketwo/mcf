@@ -108,7 +108,7 @@
   " Use Solarized color theme
   set t_Co=256
 
-  colorscheme solarized
+  silent! colorscheme solarized
 
   hi SpellBad ctermfg=red                " Adjust the color of wrongly spelled words
   hi Normal ctermbg=NONE                 " Remove explicit background color (inherit from Tmux)
