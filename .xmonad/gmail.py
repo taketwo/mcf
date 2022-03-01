@@ -149,9 +149,9 @@ if __name__ == '__main__':
                 indicator.set_unread_count(unread)
                 print(indicator, flush=True)
         except TimeoutError:
-            log.warn('Communication timeout, will wait and reconnect')
+            log.warning('Communication timeout, will wait and reconnect')
         except Exception as e:
-            log.warn('Exception: {}'.format(e))
+            log.warning('Exception: {}'.format(e))
         finally:
             gmail.close()
         time.sleep(args.interval)
