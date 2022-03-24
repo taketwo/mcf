@@ -30,7 +30,7 @@
   changed-stat = "!git diff --stat $(git merge-base HEAD ${REVIEW_BASE:-master})"
 [core]
   editor = nvim
-  pager = delta --theme='Solarized (light)'
+  pager = delta
 [push]
   default = tracking
 [user]
@@ -53,3 +53,6 @@
   trustExitCode = true
 [credential]
   helper = store
+[delta]
+  navigate = true
+  syntax-theme = Solarized (light)
