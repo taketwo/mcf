@@ -101,8 +101,8 @@ tail = true
 
 type = internal/mpd
 
-format-online = " %{A1:mpc toggle:A3:mpc stop:}<label-song>%{A A} "
-format-paused = " %{A1:mpc toggle:A3:mpc stop:F#6c6b65}<label-song>%{A A F-} "
+format-online = " %{A1:mpc toggle:}%{A3:mpc stop:}<label-song>%{A}%{A} "
+format-paused = " %{A1:mpc toggle:}%{A3:mpc stop:}%{F#6c6b65}<label-song>%{A}%{A}%{F-} "
 format-stopped = <toggle>
 
 icon-play = "  "
