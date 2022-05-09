@@ -19,9 +19,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   -- buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
 
-  -- if client.resolved_capabilities.document_formatting then
+  -- if client.server_capabilities.document_formatting then
     -- buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  -- elseif client.resolved_capabilities.document_range_formatting then
+  -- elseif client.server_capabilities.document_range_formatting then
     -- buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   -- end
 
@@ -36,7 +36,7 @@ local on_attach = function(client, bufnr)
   ]], false)
 
   -- Highlight entity under cursor
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     vim.api.nvim_exec([[
       augroup lsp_document_highlight
         autocmd! * <buffer>
