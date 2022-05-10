@@ -265,7 +265,7 @@ let g:mcf#keymaps.g.s = 'status'
 
 if has('nvim')
     nnoremap <silent> <leader>lD :Lspsaga show_line_diagnostics<CR>
-    nnoremap <silent> <leader>la :Telescope lsp_code_actions<CR>
+    nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
     nnoremap <silent> <leader>ld :Lspsaga preview_definition<CR>
     nnoremap <silent> <leader>lf :Lspsaga lsp_finder<CR>
     nnoremap <silent> <leader>ln <cmd>lua vim.lsp.buf.rename()<CR>
