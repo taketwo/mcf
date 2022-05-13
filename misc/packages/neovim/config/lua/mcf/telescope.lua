@@ -1,12 +1,6 @@
-if has('nvim')
-    nnoremap <Leader>.. <cmd>Telescope find_files<cr>
-    nnoremap <Leader>.b <cmd>Telescope buffers<cr>
-    nnoremap <Leader>.g <cmd>Telescope live_grep<cr>
-    nnoremap <Leader>.s <cmd>Telescope lsp_document_symbols<cr>
-    nnoremap <Space> <cmd>Telescope buffers<cr>
-    lua <<EOF
 local actions = require('telescope.actions')
 local telescope = require('telescope')
+
 telescope.setup{
   defaults = {
     mappings = {
@@ -46,6 +40,12 @@ telescope.setup{
     }
   }
 }
+
 telescope.load_extension('ui-select')
-EOF
-endif
+
+local opts = { noremap=true, silent=true }
+vim.api.nvim_set_keymap("n", "<Leader>..", ":Telescope find_files<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>.b", ":Telescope buffers<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>.g", ":Telescope live_grep<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>.s", ":Telescope lsp_document_symbols<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Space>", ":Telescope buffers<CR>", opts)

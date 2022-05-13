@@ -13,6 +13,7 @@ if isdirectory(g:plugins_path)
     lua require('mcf.lsp')
     lua require('mcf.lspsaga')
     lua require('mcf.cmp')
+    lua require('mcf.telescope')
 endif
 
 highlight DiagnosticError ctermfg=160
