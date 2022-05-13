@@ -120,6 +120,7 @@ if has('nvim')
     Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-telescope/telescope-ui-select.nvim'
+    Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'rinx/lspsaga.nvim'
     Plug 'tversteeg/registers.nvim'
