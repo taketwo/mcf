@@ -36,7 +36,7 @@ local on_attach = function(client, bufnr)
   ]], false)
 
   -- Highlight entity under cursor
-  if client.server_capabilities.document_highlight then
+  if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_exec([[
       augroup lsp_document_highlight
         autocmd! * <buffer>
