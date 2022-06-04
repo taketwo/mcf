@@ -48,7 +48,7 @@ font-1 = FontAwesome:pixelsize=10;2
 
 modules-left = xmonad network-speed-eth network-speed-wlan
 modules-center = 
-modules-right = mpd volume keyboard aeolus network-connectivity-eth network-connectivity-wlan gmail battery0 battery1 date
+modules-right = mpd volume keyboard network-connectivity-eth network-connectivity-wlan gmail battery0 battery1 date
 
 tray-position = center
 tray-padding = 2
@@ -111,13 +111,6 @@ icon-pause = "  "
 label-song = %artist% - %title%
 label-song-maxlen = 50
 label-song-ellipsis = true
-
-[module/aeolus]
-
-type = custom/script
-exec = $MCF/.xmonad/aeolus_segment.sh
-exec-if = command -v ael
-interval = 10
 
 [module/keyboard]
 
