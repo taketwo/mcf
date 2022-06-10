@@ -122,7 +122,7 @@ if has('nvim')
     Plug 'nvim-telescope/telescope-ui-select.nvim'
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'neovim/nvim-lspconfig'
-    Plug 'rinx/lspsaga.nvim'
+    Plug 'glepnir/lspsaga.nvim'
     Plug 'tversteeg/registers.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'onsails/lspkind-nvim'
