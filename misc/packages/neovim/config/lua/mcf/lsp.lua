@@ -48,6 +48,10 @@ local on_attach = function(client, bufnr)
 
 end
 
+local cmp_capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local clangd_capabilities = cmp_capabilities
+clangd_capabilities.offsetEncoding = "utf-16"
+
 require'lspconfig'.clangd.setup{
     cmd = { "clangd", "--background-index", "--completion-style=detailed" },
     filetypes = { "c", "cpp", "objc", "objcpp", "gtest.cpp" },
@@ -55,7 +59,7 @@ require'lspconfig'.clangd.setup{
     flags = {
       debounce_text_changes = 150,
     },
-    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    capabilities = clangd_capabilities
 }
 
 -- require'lspconfig'.bashls.setup{
