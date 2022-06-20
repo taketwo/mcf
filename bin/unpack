@@ -17,11 +17,28 @@ function unpack() {
       *.Z) uncompress "$1" ;;
       *.7z) 7z x "$1" ;;
       *.deb) ar p "$1" data.tar.gz | tar zx ;;
-      *) echo "Do not know how to extract '$1'..." ;;
+      *) echo "Do not know how to extract '$1'..."; exit 2 ;;
     esac
   else
     echo "'$1' is not a valid file!"
+    exit 3
   fi
 }
 
-unpack "$@"
+if [[ $# -lt 1 ]] || [[ $# -gt 2 ]]; then
+  echo "Usage: unpack [-d|--delete] <archive>"
+  exit 1
+elif [[ $# -eq 1 ]]; then
+  unpack "$1"
+elif [[ $# -eq 2 ]]; then
+  if [[ "$1" == "-d" ]] || [[ "$1" == "--delete" ]]; then
+    if unpack "$2"; then
+      echo "Successfully unpacked, removing archive..."
+      rm "$2"
+    fi
+  else
+    echo "Usage: unpack [-d|--delete] <archive>"
+    echo "Unknown option \"$1\""
+    exit 1
+  fi
+fi
