@@ -173,8 +173,9 @@
 
                 {
                         key: enter
-                        execution: ":cd"
+                        external: "cd {directory}"
                         apply_to: directory
+                        from_shell: true
                 }
 
 		# A convenient shortcut to create new text files in
