@@ -165,9 +165,9 @@ endsnippet
 snippet parse "Parse arguments" b
 cmake_parse_arguments(
 	${1:PREFIX}
-	"${2:option-1 ...}"
-	"${3:one-value-arg-1 ...}"
-	"${4:multi-value-arg-1 ...}"
+	"${2:option-1;...}"
+	"${3:one-value-arg-1;...}"
+	"${4:multi-value-arg-1;...}"
 	\${ARGN}
 )
 endsnippet
