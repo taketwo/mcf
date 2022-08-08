@@ -4,8 +4,16 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = { -- one of "all", "maintained", or a list of languages
       "bash",
       "c",
+      "cmake",
+      "comment",
       "cpp",
-      "python"
+      "json",
+      "make",
+      "markdown",
+      "nix",
+      "python",
+      "toml",
+      "vim"
   },
   highlight = {
     enable = true,
