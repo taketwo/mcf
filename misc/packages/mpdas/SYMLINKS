@@ -1,1 +1,2 @@
 mpdas.service:.local/share/systemd/user/mpdas.service:MPDAS systemd unit
+mpdasrc:.config/mpdasrc:MPDAS config

@@ -1,20 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import os
 from subprocess import call
-from getpass import getpass
-from os.path import expanduser, join
-
-
-def create_rc():
-    print("Creating mpdasrc file with user credentials...")
-    username = input("Enter Last.fm username: ")
-    passwd = getpass("Enter password: ")
-    config = join(expanduser("~"), ".config", "mpdasrc")
-    with open(config, "w") as f:
-        f.writelines("username: {}\npassword: {}".format(username, passwd))
-    os.chmod(config, 0o600)
 
 
 def enable_service():
@@ -24,5 +11,4 @@ def enable_service():
 
 
 if __name__ == "__main__":
-    create_rc()
     enable_service()
