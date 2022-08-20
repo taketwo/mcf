@@ -33,6 +33,7 @@ pipx: jedi-language-server
 tmux
 powerline-shell
 bash-completion
+fzf
 
 # Git
 git

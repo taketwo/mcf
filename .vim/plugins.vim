@@ -110,7 +110,6 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'voldikss/vim-floaterm'
 
 " Non-vim
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 
 " Neovim-only plugins

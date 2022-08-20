@@ -1,8 +1,10 @@
-# Exit if fzf init script does not exist
-[ ! -f ~/.fzf.bash ] && return
-
-# shellcheck source=/dev/null
-source "$HOME/.fzf.bash"
+if command -v fzf-share >/dev/null; then
+  # We do not want any bindings, however we want Bash functions defined in key-bindings.bash
+  alias bind=':'  # Make bind a no-op
+  source "$(fzf-share)/key-bindings.bash"
+  unalias bind    # Restore bind
+  source "$(fzf-share)/completion.bash"
+fi
 
 base03="234"
 base02="235"
@@ -30,9 +32,8 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,node_modules
 # Default options
 export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,alt-s:toggle-sort '$FZF_COLORS
 
-# Claim back Alt-c
-bind '"\ec": history-search-backward'
-bind '"\C-t": history-search-forward'
+# CTRL-R - Paste the selected command from history into the command line
+bind -x '"\C-r": __fzf_history__'
 
 #######################################################################
 #                            From FZF wiki                            #
@@ -60,3 +61,4 @@ fpkg() {
   packages=$(dpkg -l | awk '{print $2}') &&
     package=$(echo "$packages" | fzf --preview 'dpkg -s {}')
 }
+
