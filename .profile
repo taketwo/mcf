@@ -27,6 +27,7 @@
 
 export LANGUAGE=en
 export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 export LC_NUMERIC=en_US.UTF-8
 export LC_TIME=en_US.UTF-8
 export LC_MONETARY=en_US.UTF-8
@@ -81,6 +82,9 @@ fi
 if [ -n "${NIX_PATH}" ]; then
   export XDG_DATA_DIRS="$HOME/.nix-profile/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 fi
+
+# Nix: set LOCALE_ARCHIVE to point to system's locale-archive to avoid troubles with setlocale
+export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 
 # Load Git secrets
 if [ -f "${HOME}/.config/git/secrets" ]; then
