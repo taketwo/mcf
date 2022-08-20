@@ -2,7 +2,7 @@
 	path = misc/gnome-terminal-colors-solarized
 	url = https://github.com/Anthony25/gnome-terminal-colors-solarized.git
 [submodule ".xmonad/bundle/solarized-xmonad"]
-	path = .xmonad/bundle/solarized-xmonad
+	path = misc/packages/xmonad/config/bundle/solarized-xmonad
 	url = https://github.com/ibotty/solarized-xmonad.git
 [submodule "tmux/plugins/tmux-copycat"]
 	path = tmux/plugins/tmux-copycat

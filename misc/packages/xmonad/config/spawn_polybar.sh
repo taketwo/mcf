@@ -19,4 +19,4 @@ export MONITOR=${monitors[$index]}
 # Kill all gmail.py scripts
 pkill -f gmail.py
 
-polybar -c "$MCF/.xmonad/polybarrc" -r primary
+polybar -c "$HOME/.xmonad/polybarrc" -r primary

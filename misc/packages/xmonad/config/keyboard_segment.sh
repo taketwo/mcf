@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # shellcheck source=polybar.bash
-source "$MCF/.xmonad/polybar.bash"
+source "$HOME/.xmonad/polybar.bash"
 # shellcheck source=solarized.bash
-source "$MCF/.xmonad/solarized.bash"
+source "$HOME/.xmonad/solarized.bash"
 
 case $(keyboard -g) in
   "us(dvorak)") layout="DK";;

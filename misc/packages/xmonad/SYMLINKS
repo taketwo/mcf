@@ -1,1 +1,2 @@
 set_window_manager.sh:.config/plasma-workspace/env/set_window_manager.sh:KDEWM switch
+config:.xmonad:XMonad config directory

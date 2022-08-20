@@ -115,13 +115,13 @@ label-song-ellipsis = true
 [module/keyboard]
 
 type = custom/ipc
-hook-0 = $MCF/.xmonad/keyboard_segment.sh
+hook-0 = $HOME/.xmonad/keyboard_segment.sh
 initial = 1
 
 [module/gmail]
 
 type = custom/script
-exec = $MCF/.xmonad/gmail.py
+exec = $HOME/.xmonad/gmail.py
 tail = true
 click-left = "kill -USR1 $(pgrep --oldest --parent %pid%)"
 click-right = "kill -USR2 $(pgrep --oldest --parent %pid%)"
