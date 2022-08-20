@@ -171,9 +171,6 @@ currentTopicDirName tg = do
   topic <- gets (W.tag . W.workspace . W.current . windowset)
   return (topic, fromMaybe "" . M.lookup topic $ topicDirs tg)
 
-spawnShellIn :: Dir -> X ()
-spawnShellIn dir = spawn $ appTerminal ++ " --working-directory " ++ dir
-
 spawnInShell :: String -> X ()
 spawnInShell cmd = spawn $ appTerminal ++ " -e '" ++ cmd ++ "'"
 
