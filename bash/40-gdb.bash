@@ -4,7 +4,7 @@ gdb-last-command() {
   cmd=$(fc -ln -2 -2 | sed -e 's/^[[:space:]]*//')
   cmd=$(echo "${cmd// && /$'\n'}" | tail -1)
   bin=$(cut -d ' ' -f 1 <<<"$cmd")
-  arg=$(cut -d ' ' -f 2- <<<"$cmd")
+  arg=$(cut -d ' ' -s -f 2- <<<"$cmd")
   gdb "$bin" -ex "run $arg"
 }
 
