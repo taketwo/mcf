@@ -1,10 +1,17 @@
 # Relaunch the last command in gdb
-# In case of multiple commands joined by && will launch the very last one
+#  - in case of multiple commands joined by && will launch the very last one
+#  - in case rosrun was used, will automatically resolve the path from package/executable
 gdb-last-command() {
   cmd=$(fc -ln -2 -2 | sed -e 's/^[[:space:]]*//')
   cmd=$(echo "${cmd// && /$'\n'}" | tail -1)
   bin=$(cut -d ' ' -f 1 <<<"$cmd")
   arg=$(cut -d ' ' -s -f 2- <<<"$cmd")
+  if [[ "$bin" == rosrun ]]; then
+    cmd=$($bin --debug $arg | grep -oP '(?<=\[rosrun\] Running ) .*' | sed -e 's/^[[:space:]]*//')
+    cmd=$(echo "${cmd// && /$'\n'}" | tail -1)
+    bin=$(cut -d ' ' -f 1 <<<"$cmd")
+    arg=$(cut -d ' ' -s -f 2- <<<"$cmd")
+  fi
   gdb "$bin" -ex "run $arg"
 }
 
