@@ -136,15 +136,15 @@ myLayoutHook =
 myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
-  , TI "music"    ""                                         (spawnInShell "ncmpcpp")
+  , TI "music"    ""                                         (spawnInTerminal "ncmpcpp")
   , TI "papers"   "~/Downloads/papers"                       (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
   , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , TI "zeal"     ""                                         (spawn "zeal")
-  , TI "mcf"      "~/.mcf"                                   (spawnShell)
-  , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnShell)
-  , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnShell)
-  , TI "ael"      "~/Workspace/Projects/aeolus"              (spawnShell)
-  , TI "docker"   "~/Workspace/Projects/aeolus"              (spawnInShell "ael container attach")
+  , TI "mcf"      "~/.mcf"                                   (spawnTmux)
+  , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnTmux)
+  , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnTmux)
+  , TI "ael"      "~/Workspace/Projects/aeolus"              (spawnTmux)
+  , TI "docker"   "~/Workspace/Projects/aeolus"              (spawnInTerminal "ael container attach")
   , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
   , TI "profiler" ""                                         (spawn "profiler_gui")
   , TI "msg"      ""                                         (spawn "slack" >> spawn "telegram-desktop")
@@ -153,7 +153,7 @@ myTopics =
   ]
   where
     -- Make a default topic item that just spawns a shell.
-    ti t d = TI t d spawnShell
+    ti t d = TI t d spawnTmux
 
 myTopicNames :: [Topic]
 myTopicNames = map tiName myTopics
@@ -171,11 +171,13 @@ currentTopicDirName tg = do
   topic <- gets (W.tag . W.workspace . W.current . windowset)
   return (topic, fromMaybe "" . M.lookup topic $ topicDirs tg)
 
-spawnInShell :: String -> X ()
-spawnInShell cmd = spawn $ appTerminal ++ " -e '" ++ cmd ++ "'"
+-- Spawn tmux for a given topic
+spawnTmux :: X ()
+spawnTmux = currentTopicDirName myTopicConfig >>= spawnTmuxSession
 
-spawnShell :: X ()
-spawnShell = currentTopicDirName myTopicConfig >>= appTmux
+-- Spawn tmux session in a given working directory
+spawnTmuxSession :: (String, String) -> X ()
+spawnTmuxSession (session, dir) = spawn $ appTerminal ++ " --workdir " ++ dir ++ " -e 'tmux new -s " ++ session ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
@@ -188,10 +190,8 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
   where
-    spawnTerminal  = appTerminal ++ " --role=scratchpad"
-    findTerminal   = (role =? "scratchpad")
-      where
-        role = stringProperty "WM_WINDOW_ROLE"
+    spawnTerminal  = appTerminal ++ " --name ScratchTerminal -e tmux"
+    findTerminal   = (resource =? "ScratchTerminal")
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
         h = 0.8             -- height
@@ -208,7 +208,7 @@ myKeyBindingsTable = concat $ table
 
 --    key             M-                     M-S-                    M-C-                    M-S-C-
 table =
-  [ k "<Return>"     launchTerminal          __                      __                      __
+  [ k "<Return>"     launchTmux              __                      __                      __
   , k "a"            __                      __                      __                      __
   , k "b"            __                      __                      __                      __
   , k "c"            goUp                    swapUp                  expandVertical          moveUp
@@ -284,7 +284,7 @@ table =
     -- Actions
     -- Launch program
     launchBrowser           = Unbound "Launch browser"                                     (spawn appBrowser)
-    launchTerminal          = Unbound "Launch terminal"                                    (spawn appTerminal)
+    launchTmux              = Unbound "Launch tmux"                                        (spawn appTmux)
     launchRofi              = Unbound "Launch rofi"                                        (spawn "rofi -show drun")
     -- Window navigation
     gotoNextWindow          = Unbound "Switch to next window"                              (windows W.focusDown)
