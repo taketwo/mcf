@@ -8,6 +8,9 @@ elif [[ $HOSTNAME == "alpaca" ]]; then
   export ETH_INTERFACE="enp4s0"
 elif [[ $HOSTNAME == "raccoon" ]]; then
   export ETH_INTERFACE="enp0s25"
+  export WLAN_INTERFACE="wlp3s0"
+elif [[ $HOSTNAME == "lemur" ]]; then
+  export WLAN_INTERFACE="wlp2s0"
 fi
 
 # List all monitors sorted by horizontal position

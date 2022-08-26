@@ -89,7 +89,7 @@ interface = ${env:ETH_INTERFACE:}
 
 type = internal/network
 inherit = common/network-speed
-interface = wlp3s0
+interface = ${env:WLAN_INTERFACE:}
 
 [module/xmonad]
 
@@ -151,7 +151,7 @@ label-connected = "  "
 
 type = internal/network
 inherit = common/network-connectivity
-interface = wlp3s0
+interface = ${env:WLAN_INTERFACE:}
 
 label-connected = "  "
 
