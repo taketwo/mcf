@@ -28,3 +28,4 @@ arch: alsa-utils
 rofi
 polybar
 compton
+xdotool                                # clickable workspace names

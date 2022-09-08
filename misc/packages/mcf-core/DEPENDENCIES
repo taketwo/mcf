@@ -43,7 +43,6 @@ vim
 neovim
 xsel                                   # copy to clipboard
 ctags
-xdotool                                # paste with F5
 python3-dev                            # to build YCM
 
 # Filesystem navigation/search
