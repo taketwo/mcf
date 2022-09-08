@@ -1,0 +1,14 @@
+[Desktop Entry]
+DefaultProfile=MCF.profile
+
+[KonsoleWindow]
+RememberWindowSize=false
+RemoveWindowTitleBarAndFrame=true
+
+[MainWindow]
+MenuBar=Disabled
+RestorePositionForNextInstance=false
+ToolBarsMovable=Disabled
+
+[UiSettings]
+ColorScheme=Default

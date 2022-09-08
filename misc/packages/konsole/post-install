@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cp "$MCF/misc/packages/konsole/konsolerc" "$HOME/.config/"
