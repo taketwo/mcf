@@ -1,7 +1,7 @@
 mcf-core
 mcf-fonts
 mcf-wallpaper
-mcf-terminal
+konsole
 
 # Network/Internet
 openssh
