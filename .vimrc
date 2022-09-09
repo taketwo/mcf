@@ -27,21 +27,6 @@
   set updatetime=1000             " Down from default 4 seconds
 
 " }}}
-" Background color {{{
-
-  " Set background option based on the current background color in terminal.
-  " This should be done before loading plugins as some of them may depend
-  " on the setting (e.g. vim-indent-guides).
-
-  source ~/.vim/plugin/mcf-gnome.vim
-
-  if GetGnomeValue('background-color') == "#00002B2B3636"
-    set background=dark
-  else
-    set background=light
-  endif
-
-" }}}
 " Plugin initialization {{{
 
   source ~/.vim/plugins.vim       " Load all the bundles in ~/.vim/plugins.vim
@@ -105,10 +90,10 @@
 " }}}
 " Appearance {{{
 
-  " Use Solarized color theme
-  set t_Co=256
-
-  silent! colorscheme mcf
+  " Use custom color theme that is based on Solarized light
+  set termguicolors
+  set background=light
+  autocmd vimenter * ++nested colorscheme mcf
 
   set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
 

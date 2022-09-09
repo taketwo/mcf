@@ -1,31 +1,37 @@
-runtime colors/solarized.vim
+runtime colors/solarized8.vim
 
-highlight SpellBad ctermfg=red                " Adjust the color of wrongly spelled words
-highlight Normal ctermbg=NONE                 " Remove explicit background color (inherit from Tmux)
-highlight CursorLineNr cterm=bold ctermbg=7   " Show current line numbers in bold
-highlight LineNr ctermfg=14 ctermbg=7
-highlight Search cterm=italic,bold ctermfg=red
-highlight IncSearch cterm=italic,bold,standout ctermfg=red
-highlight Whitespace ctermfg=7 cterm=nocombine
+highlight LineNr guifg=#93a1a1 guibg=#eee8d5
+highlight SignColumn guifg=#93a1a1 guibg=#eee8d5
+highlight Search gui=italic,bold guifg=#dc322f
+highlight IncSearch gui=italic,bold,standout guifg=#dc322f
+" TODO: Review and maybe enable these
+" highlight Whitespace ctermfg=7 cterm=nocombine
+" highlight SpellBad ctermfg=red                " Adjust the color of wrongly spelled words
 
-highlight DiagnosticError ctermfg=160
-highlight DiagnosticWarn ctermfg=166
+" FIXME: Does not work
+" highlight CursorLineNr guifg=#93a1a1 guibg=#eee8d5 gui=bold   " Show current line numbers in bold
 
-highlight DiagnosticSignError ctermfg=160 ctermbg=7
-highlight DiagnosticSignWarn ctermfg=166 ctermbg=7
+" Diagnostics
+" TODO: Review and maybe update colors
+highlight! link DiagnosticSignError ALEErrorSign
+highlight! link DiagnosticSignWarn ALEWarningSign
+highlight! link DiagnosticSignInfo ALEWarningInfo
+" highlight! link DiagnosticSignHint ALEWarningInfo
 
-highlight LspReferenceRead cterm=bold
-highlight LspReferenceText cterm=bold
-highlight LspReferenceWrite cterm=bold
-
-" GitGutter
-highlight GitGutterAdd ctermfg=70 ctermbg=7
-highlight GitGutterChange ctermfg=69 ctermbg=7
-highlight GitGutterDelete ctermfg=124 ctermbg=7
+highlight LspReferenceRead gui=bold
+highlight LspReferenceText gui=bold
+highlight LspReferenceWrite gui=bold
 
 " Matchup
-highlight MatchParen cterm=bold
-highlight MatchWord cterm=bold
+" TODO: Review and maybe enable this
+" highlight MatchParen cterm=bold
+" highlight MatchWord cterm=bold
+
+" GitGutter
+highlight GitGutterAdd guifg=#859900 guibg=#eee8d5
+highlight GitGutterChange guifg=#268bd2 guibg=#eee8d5
+highlight GitGutterDelete guifg=#dc322f guibg=#eee8d5
 
 " IndentBlankline
-highlight IndentBlanklineContextChar ctermfg=14 cterm=nocombine
+highlight IndentBlanklineChar guifg=#eee8d5 gui=nocombine
+highlight IndentBlanklineContextChar guifg=#ded8c5 gui=nocombine
