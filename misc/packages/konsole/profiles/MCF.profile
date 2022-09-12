@@ -8,7 +8,7 @@ Parent=FALLBACK/
 ShowTerminalSizeHint=false
 
 [Keyboard]
-KeyBindings=linux
+KeyBindings=default
 
 [Scrolling]
 HistoryMode=1
