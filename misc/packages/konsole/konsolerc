@@ -4,6 +4,7 @@ DefaultProfile=MCF.profile
 [KonsoleWindow]
 RememberWindowSize=false
 RemoveWindowTitleBarAndFrame=true
+ShowMenuBarByDefault=false
 
 [MainWindow]
 MenuBar=Disabled
