@@ -1,2 +1,2 @@
 nix: tmux
-pipx: tmuxp                           # tmux session management
+pipx: tmuxp pyyaml                         # tmux session management
