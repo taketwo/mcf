@@ -545,11 +545,11 @@ manageWindows = composeAll . concat $
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
     doUnfloat = ask >>= doF . W.sink
     myCFloats = ["Exe", "Plasma-desktop"]
-    myCUnFocus = ["plasmashell"]
+    myCUnFocus = []
     myCUnFloats = ["Gimp", "Nautilus"]
     myTFloats = ["Downloads", "Save As...", "Export Image"]
     myRFloats = []
-    myIgnores = []
+    myIgnores = ["plasmashell"]
     myGimpShifts = ["Gimp"]
     myZoomShifts = ["zoom", "Zoom"]
     myMendeleyShifts = ["Mendeley Desktop"]
