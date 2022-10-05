@@ -498,6 +498,7 @@ dbusOutput dbus str = do
     interfaceName = D.interfaceName_ "org.xmonad.Log"
     memberName = D.memberName_ "Update"
 
+logHookPolybar :: D.Client -> PP
 logHookPolybar dbus = def
   { ppOutput           = dbusOutput dbus
   , ppSort             = myWorkspaceSorter
