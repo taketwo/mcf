@@ -1,6 +1,8 @@
 [Appearance]
+AntiAliasFonts=true
 ColorScheme=SolarizedLight
 Font=VictorMono Nerd Font,11,-1,5,50,0,0,0,0,0
+UseFontLineChararacters=true
 
 [General]
 Name=MCF
