@@ -539,7 +539,7 @@ manageWindows = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "zoom" | x <- myZoomShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "rviz" | x <- myRVizShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "sim" | x <- mySimShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift "uvc" | x <- myUvcShifts]
     ]
     where
@@ -554,7 +554,7 @@ manageWindows = composeAll . concat $
     myGimpShifts = ["Gimp"]
     myZoomShifts = ["zoom", "Zoom"]
     myMendeleyShifts = ["Mendeley Desktop"]
-    myRVizShifts = ["RViz", "rviz", "Gazebo"]
+    mySimShifts = ["RViz", "rviz", "Gazebo", "aeolus_rviz_launcher"]
     myUvcShifts = ["UVC Coverage GUI"]
 
 -- Hint: use `xprop` to figure out window class name
