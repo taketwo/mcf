@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 
-clangd=$(apt-cache search clangd- | cut -d' ' -f1 | sort -V | tail -1)
+VERSION=11
 
-echo "Installing the most up-to-date clangd version: $clangd"
+if [[ -n $VERSION ]]; then
+  clangd="clangd-$VERSION"
+else
+  # Find out most up-to-date version
+  clangd=$(apt-cache search clangd- | cut -d' ' -f1 | sort -V | tail -1)
+fi
+
+echo "Installing clangd version: $clangd"
 
 sudo apt-get install -y "$clangd"
 sudo update-alternatives --install /usr/bin/clangd clangd "/usr/bin/$clangd" 100
