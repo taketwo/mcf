@@ -48,7 +48,7 @@ local on_attach = function(client, bufnr)
 
 end
 
-local cmp_capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 local clangd_capabilities = cmp_capabilities
 clangd_capabilities.offsetEncoding = "utf-16"
 
@@ -75,7 +75,7 @@ require'lspconfig'.jedi_language_server.setup{
   flags = {
     debounce_text_changes = 150,
   },
-  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  capabilities = cmp_capabilities
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
