@@ -73,7 +73,7 @@ Plug 'beloglazov/vim-online-thesaurus'
 "   * does not work on the Arch box
 " Plugin 'fisadev/vim-isort'
 
-Plug 'plasticboy/vim-markdown'
+Plug 'preservim/vim-markdown'
 Plug 'taketwo/vim-ros', { 'branch': 'cmp' }
 Plug 'tikhomirov/vim-glsl'
 Plug 'digitaltoad/vim-pug'
