@@ -9,7 +9,7 @@ require'nvim-treesitter.configs'.setup {
       "cpp",
       "json",
       "make",
-      "markdown",
+   -- "markdown",    seems to be broken
       "nix",
       "python",
       "toml",
