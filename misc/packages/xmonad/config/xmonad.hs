@@ -299,9 +299,9 @@ table =
     swapLeft                = Unbound "Swap with window to the left"                       (sendMessage $ Swap L)
     swapRight               = Unbound "Swap with window to the right"                      (sendMessage $ Swap R)
     -- Floating window manipulation
-    moveUp                  = Unbound "Move floating window up"                            (withFocused (keysMoveWindow (0, -10)))
+    moveUp                  = Unbound "Move floating window up"                            (withFocused (keysMoveWindow (0, fromIntegral(-10))))
     moveDown                = Unbound "Move floating window down"                          (withFocused (keysMoveWindow (0, 10)))
-    moveLeft                = Unbound "Move floating window left"                          (withFocused (keysMoveWindow (-10, 0)))
+    moveLeft                = Unbound "Move floating window left"                          (withFocused (keysMoveWindow (fromIntegral(-10), 0)))
     moveRight               = Unbound "Move floating window right"                         (withFocused (keysMoveWindow (10, 0)))
     expandVertical          = Unbound "Expand floating window vertically"                  (withFocused (keysResizeWindow (0, 10) (0, 1%2)))
     expandHorizontal        = Unbound "Expand floating window horizontally"                (withFocused (keysResizeWindow (10, 0) (1%2, 0)))
