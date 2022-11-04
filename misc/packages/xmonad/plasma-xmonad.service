@@ -1,0 +1,11 @@
+[Unit]
+Description=Plasma with XMonad window manager
+Before=plasma-workspace.target
+
+[Service]
+ExecStart=%h/.cabal/bin/xmonad
+Slice=session.slice
+Restart=on-failure
+
+[Install]
+WantedBy=plasma-workspace.target
