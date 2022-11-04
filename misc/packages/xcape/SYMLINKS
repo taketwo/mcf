@@ -1,1 +1,1 @@
-xcape.desktop:.config/autostart/xcape.desktop:Xcape autostart entry
+xcape.service:.local/share/systemd/user/xcape.service:Xcape systemd unit
