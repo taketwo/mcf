@@ -9,6 +9,12 @@ Name=MCF
 Parent=FALLBACK/
 ShowTerminalSizeHint=false
 
+[Interaction Options]
+AutoCopySelectedText=true
+CopyTextAsHTML=false
+TrimLeadingSpacesInSelectedText=true
+TrimTrailingSpacesInSelectedText=true
+
 [Keyboard]
 KeyBindings=default
 
