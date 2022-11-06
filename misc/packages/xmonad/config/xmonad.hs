@@ -390,7 +390,8 @@ myNavigation = makeXEventhandler $ shadowWithKeymap navKeyMap navDefaultHandler
                            ]
 
 navDefaultHandler = const myNavigation
-gridSelectConfig = def { gs_navigate = myNavigation }
+gridSelectConfig = def { gs_navigate = myNavigation
+                       , gs_font = fontSpec }
 
 -- }}}
 -- Search ------------------------------------------------------------------ {{{
