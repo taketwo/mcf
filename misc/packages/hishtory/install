@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# TODO: this modifies .bashrc and .bash_profile, need to revert that
+curl https://hishtory.dev/install.py | python3 -
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+SECRET_PATH="$SCRIPT_DIR/secret"
+hishtory init "$(cat "$SECRET_PATH")"
+
+ln -s "$HOME/.hishtory/hishtory" "$HOME/.local/bin/hishtory"
