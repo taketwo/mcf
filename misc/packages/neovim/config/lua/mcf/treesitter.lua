@@ -1,6 +1,6 @@
-if has('nvim')
-    lua <<EOF
-require'nvim-treesitter.configs'.setup {
+local treesitter_configs = require('nvim-treesitter.configs')
+
+treesitter_configs.setup {
   ensure_installed = { -- one of "all", "maintained", or a list of languages
       "bash",
       "c",
@@ -31,5 +31,3 @@ require'nvim-treesitter.configs'.setup {
     enable = false,
   }
 }
-EOF
-endif

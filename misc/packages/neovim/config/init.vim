@@ -14,6 +14,7 @@ if isdirectory(g:plugins_path)
     lua require('mcf.lspsaga')
     lua require('mcf.cmp')
     lua require('mcf.telescope')
+    lua require('mcf.treesitter')
     lua require('mcf.registers')
 endif
 
