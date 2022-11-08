@@ -35,3 +35,11 @@ highlight GitGutterDelete guifg=#dc322f guibg=#eee8d5
 " IndentBlankline
 highlight IndentBlanklineChar guifg=#eee8d5 gui=nocombine
 highlight IndentBlanklineContextChar guifg=#ded8c5 gui=nocombine
+
+" Todo-comments
+highlight TodoFgTODO guifg=#6c71c4 gui=italic,nocombine
+highlight TodoBgTODO guifg=#fdf6e3 guibg=#6c71c4 gui=bold,nocombine
+highlight TodoSignTODO guifg=#6c71c4 guibg=#eee8d5
+highlight TodoFgFIX guifg=#cb4b16 gui=italic,nocombine
+highlight TodoBgFIX guifg=#fdf6e3 guibg=#cb4b16 gui=bold,nocombine
+highlight TodoSignFIX guifg=#cb4b16 guibg=#eee8d5

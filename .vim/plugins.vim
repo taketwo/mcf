@@ -129,6 +129,7 @@ if has('nvim')
     Plug 'hrsh7th/cmp-path'
     Plug 'quangnguyen30192/cmp-nvim-ultisnips'
     Plug 'github/copilot.vim'
+    Plug 'folke/todo-comments.nvim'
 else
     Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
     Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
