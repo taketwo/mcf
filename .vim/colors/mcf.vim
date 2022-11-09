@@ -26,3 +26,6 @@ highlight GitGutterDelete ctermfg=124 ctermbg=7
 " Matchup
 highlight MatchParen cterm=bold
 highlight MatchWord cterm=bold
+
+" IndentBlankline
+highlight IndentBlanklineContextChar ctermfg=14 cterm=nocombine

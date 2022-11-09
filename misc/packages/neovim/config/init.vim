@@ -16,4 +16,5 @@ if isdirectory(g:plugins_path)
     lua require('mcf.telescope')
     lua require('mcf.treesitter')
     lua require('mcf.registers')
+    lua require('mcf.indent_blankline')
 endif
