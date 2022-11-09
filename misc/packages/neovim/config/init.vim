@@ -17,13 +17,3 @@ if isdirectory(g:plugins_path)
     lua require('mcf.treesitter')
     lua require('mcf.registers')
 endif
-
-highlight DiagnosticError ctermfg=160
-highlight DiagnosticWarn ctermfg=166
-
-highlight DiagnosticSignError ctermfg=160 ctermbg=7
-highlight DiagnosticSignWarn ctermfg=166 ctermbg=7
-
-highlight LspReferenceRead cterm=bold
-highlight LspReferenceText cterm=bold
-highlight LspReferenceWrite cterm=bold
