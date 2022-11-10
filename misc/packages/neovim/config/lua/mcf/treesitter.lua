@@ -34,3 +34,6 @@ treesitter_configs.setup {
     enable = true,
   }
 }
+
+vim.api.nvim_set_hl(0, "@text.note", { link = "Todo" })
+vim.api.nvim_set_hl(0, "@text.danger", { link = "Error" })
