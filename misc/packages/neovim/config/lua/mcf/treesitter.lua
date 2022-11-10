@@ -29,5 +29,8 @@ treesitter_configs.setup {
   },
   indent = {
     enable = false,
+  },
+  playground = {
+    enable = true,
   }
 }
