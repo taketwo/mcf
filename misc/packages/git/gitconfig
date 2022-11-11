@@ -16,6 +16,8 @@
   lg = log --all --graph --oneline --decorate --abbrev-commit
   rim = rebase -i master
   rimo = rebase -i origin/master
+  rid = rebase -i develop
+  rido = rebase -i origin/develop
   in = "!git remote update -p; git log ..@{u}"
   out = log @{u}..
   remotes = remote -v
