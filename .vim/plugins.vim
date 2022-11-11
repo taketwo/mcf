@@ -61,7 +61,6 @@ Plug 'pechorin/any-jump.vim'
 " Search
 Plug 'henrik/vim-indexed-search'
 Plug 'nelstrom/vim-visual-star-search'
-Plug 'mileszs/ack.vim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 
