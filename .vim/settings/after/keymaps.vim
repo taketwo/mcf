@@ -284,9 +284,6 @@ endif
 " ALEFix
 nnoremap <F2> :ALEFix<CR>
 
-" Tagbar
-nnoremap <F3> :TagbarToggle<CR>
-
 " UndoTree
 nnoremap <F4> :UndotreeToggle<CR>
 
@@ -343,7 +340,7 @@ nnoremap <Tab> :AnyJump<CR>
 
 " Some keys that are still free
 "
-" $ ^ F10
+" $ ^ F3 F10
 
 " Create WhichKey menu
 call which_key#register(',', "g:mcf#keymaps")

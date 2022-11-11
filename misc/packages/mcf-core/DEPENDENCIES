@@ -42,7 +42,6 @@ git
 vim
 neovim
 xsel                                   # copy to clipboard
-ctags
 python3-dev                            # to build YCM
 
 # Filesystem navigation/search
