@@ -62,7 +62,6 @@ Plug 'pechorin/any-jump.vim'
 Plug 'henrik/vim-indexed-search'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'dyng/ctrlsf.vim'
-Plug 'beloglazov/vim-online-thesaurus'
 
 " Languages / frameworks
 " isort is (temporary) disabled because:
