@@ -55,8 +55,8 @@ nnoremap < :Lprev<CR>
 
 " Move lines up/down
 
-nnoremap <C-t> :m .+1<CR>==
-nnoremap <C-c> :m .-2<CR>==
+nnoremap <C-t> :m .+1<CR>
+nnoremap <C-c> :m .-2<CR>
 inoremap <C-t> <Esc>:m .+1<CR>==gi
 inoremap <C-c> <Esc>:m .-2<CR>==gi
 vnoremap <C-t> :m '>+1<CR>gv=gv
