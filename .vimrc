@@ -1,10 +1,5 @@
 " General config {{{
 
-  " Prepare Vim for fish shell
-  if &shell =~# 'fish$'
-    set shell=sh
-  endif
-
   set nocompatible                " Use Vim settings, rather then Vi settings
   set number                      " Line numbers are good
   set relativenumber              " Relative line numbers are good
@@ -76,16 +71,6 @@
 
   set scrolloff=8         " Start scrolling when we're 8 lines away from margins
   set sidescrolloff=15
-
-" }}}
-" Mouse interactions {{{
-
-  if has('mouse')
-    set mouse=a
-    if has('mouse_sgr')
-      set ttymouse=sgr
-    endif
-  endif
 
 " }}}
 " Appearance {{{
