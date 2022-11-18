@@ -130,8 +130,6 @@ if has('nvim')
     Plug 'quangnguyen30192/cmp-nvim-ultisnips'
     Plug 'github/copilot.vim'
     Plug 'folke/todo-comments.nvim'
-else
-    Plug 'Yggdroot/indentLine'         " superceded by indent-blankline in Neovim
 endif
 
 " Try these plugins:
