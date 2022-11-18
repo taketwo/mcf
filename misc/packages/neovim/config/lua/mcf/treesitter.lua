@@ -7,13 +7,18 @@ treesitter_configs.setup {
       "cmake",
       "comment",
       "cpp",
+      "diff",
+      "haskell",
+      "hcl",           -- for Terraform files
       "json",
       "make",
    -- "markdown",    seems to be broken
       "nix",
       "python",
+      "regex",
       "toml",
-      "vim"
+      "vim",
+      "yaml"
   },
   highlight = {
     enable = true,
