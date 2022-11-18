@@ -6,8 +6,8 @@ for f in split(glob('~/.vim/settings/before/*.vim'), '\n')
     exe 'source' f
 endfor
 
-" Plugin location depends on whether this in Vim or Neovim and is out of .vim/ tree
-let plugins_path = $HOME . '/.local/share/nvim/plugins'
+" Installed plugins go to the standard data location
+let plugins_path = stdpath("data") . '/plugins'
 
 call plug#begin(plugins_path)
 
