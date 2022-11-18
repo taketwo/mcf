@@ -131,7 +131,6 @@ if has('nvim')
     Plug 'github/copilot.vim'
     Plug 'folke/todo-comments.nvim'
 else
-    Plug 'terryma/vim-expand-region'   " superceded by treesitter in Neovim
     Plug 'Yggdroot/indentLine'         " superceded by indent-blankline in Neovim
 endif
 
