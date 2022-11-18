@@ -33,7 +33,7 @@ treesitter_configs.setup {
     },
   },
   indent = {
-    enable = false,
+    enable = true,
   },
   playground = {
     enable = true,
