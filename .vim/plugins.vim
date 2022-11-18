@@ -7,11 +7,7 @@ for f in split(glob('~/.vim/settings/before/*.vim'), '\n')
 endfor
 
 " Plugin location depends on whether this in Vim or Neovim and is out of .vim/ tree
-if has('nvim')
-    let plugins_path = $HOME . '/.local/share/nvim/plugins'
-else
-    let plugins_path = $HOME . '/.local/share/vim/plugins'
-endif
+let plugins_path = $HOME . '/.local/share/nvim/plugins'
 
 call plug#begin(plugins_path)
 
@@ -108,29 +104,27 @@ Plug 'voldikss/vim-floaterm'
 " Non-vim
 Plug 'junegunn/fzf.vim'
 
-" Neovim-only plugins
-if has('nvim')
-    Plug 'kevinhwang91/rnvimr'
-    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    Plug 'nvim-treesitter/playground'
-    Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope-symbols.nvim'
-    Plug 'nvim-telescope/telescope-ui-select.nvim'
-    Plug 'nvim-telescope/telescope-file-browser.nvim'
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'glepnir/lspsaga.nvim'
-    Plug 'tversteeg/registers.nvim'
-    Plug 'lukas-reineke/indent-blankline.nvim'
-    Plug 'onsails/lspkind-nvim'
-    Plug 'hrsh7th/nvim-cmp'
-    Plug 'hrsh7th/cmp-nvim-lsp'
-    Plug 'hrsh7th/cmp-buffer' 
-    Plug 'hrsh7th/cmp-omni'
-    Plug 'hrsh7th/cmp-path'
-    Plug 'quangnguyen30192/cmp-nvim-ultisnips'
-    Plug 'github/copilot.vim'
-    Plug 'folke/todo-comments.nvim'
-endif
+" Misc unsorted
+Plug 'kevinhwang91/rnvimr'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
+Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope-symbols.nvim'
+Plug 'nvim-telescope/telescope-ui-select.nvim'
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'tversteeg/registers.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'onsails/lspkind-nvim'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer' 
+Plug 'hrsh7th/cmp-omni'
+Plug 'hrsh7th/cmp-path'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'github/copilot.vim'
+Plug 'folke/todo-comments.nvim'
 
 " Try these plugins:
 "Plug 'sjl/splice.vim'
