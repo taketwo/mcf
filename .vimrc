@@ -40,11 +40,12 @@
   set smartcase
 
 " }}}
-" Swap files {{{
+" Swap and undo files {{{
 
   set noswapfile
   set nobackup
   set nowb
+  set undofile                    " Persistent undo is good
 
 " }}}
 " Indentation {{{
