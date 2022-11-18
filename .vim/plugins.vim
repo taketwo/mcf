@@ -59,12 +59,6 @@ Plug 'henrik/vim-indexed-search'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'dyng/ctrlsf.vim'
 
-" Languages / frameworks
-" isort is (temporary) disabled because:
-"   * do not use it that often
-"   * does not work on the Arch box
-" Plugin 'fisadev/vim-isort'
-
 Plug 'preservim/vim-markdown'
 Plug 'taketwo/vim-ros', { 'branch': 'cmp' }
 Plug 'tikhomirov/vim-glsl'
@@ -125,11 +119,5 @@ Plug 'hrsh7th/cmp-path'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'github/copilot.vim'
 Plug 'folke/todo-comments.nvim'
-
-" Try these plugins:
-"Plug 'sjl/splice.vim'
-"Plug 'tpope/vim-repeat'
-"Plug 'tpope/vim-unimpaired'
-"Plug 'xolox/vim-notes'
 
 call plug#end()
