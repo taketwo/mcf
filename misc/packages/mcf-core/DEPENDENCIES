@@ -38,11 +38,9 @@ fzf
 # Git
 git
 
-# Vim
-vim
+# Neovim
 neovim
 xsel                                   # copy to clipboard
-python3-dev                            # to build YCM
 
 # Filesystem navigation/search
 tree
