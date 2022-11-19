@@ -25,7 +25,13 @@
 " Plugin initialization {{{
 
   let g:python3_host_prog = '$PYENV_ROOT/versions/py3nvim/bin/python'
-  exec 'source ' . stdpath('config') . '/plugins.vim'
+
+  " Load plugin settings that have to be set before loading plugins.
+  " This should eventually be moved to packer config.
+  for f in split(glob(stdpath('config') . '/settings/before/*.vim'), '\n')
+    exe 'source' f
+  endfor
+  lua require('plugins')
 
 " }}}
 " Search settings {{{
