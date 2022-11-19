@@ -26,7 +26,6 @@ def _link(paths, desc):
 
 
 _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
-          ('.vim', 'VIM settings/plugins folder'),
           ('.vimrc', 'VIM configuration file'),
           ('.bashrc', 'Bash configuration file'),
           ('.bash_profile', 'Bash profile'),
