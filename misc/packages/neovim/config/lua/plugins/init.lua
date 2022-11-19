@@ -111,29 +111,53 @@ require('packer').startup(function(use)
   use 'kevinhwang91/rnvimr'
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
+    run = ':TSUpdate',
+    config = function() require 'plugins.configs.treesitter' end
   }
-  use 'nvim-treesitter/playground'
+  use {
+    'nvim-treesitter/playground',
+    -- opt = true,
+    -- cmd = {'TSHighlightCapturesUnderCursor'}
+  }
   use {
     'nvim-telescope/telescope.nvim',
-    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
+    config = function() require 'plugins.configs.telescope' end
   }
   use 'nvim-telescope/telescope-symbols.nvim'
   use 'nvim-telescope/telescope-ui-select.nvim'
   use 'nvim-telescope/telescope-file-browser.nvim'
-  use 'neovim/nvim-lspconfig'
-  use 'glepnir/lspsaga.nvim'
-  use 'tversteeg/registers.nvim'
-  use 'lukas-reineke/indent-blankline.nvim'
+  use {
+    'neovim/nvim-lspconfig',
+    config = function() require 'plugins.configs.lsp' end
+  }
+  use {
+    'glepnir/lspsaga.nvim',
+    config = function() require('lspsaga').init_lsp_saga() end
+  }
+  use {
+    'tversteeg/registers.nvim',
+    config = function() require('registers').setup() end
+  }
+  use {
+    'lukas-reineke/indent-blankline.nvim',
+    config = function() require 'plugins.configs.indent_blankline' end
+  }
   use 'onsails/lspkind-nvim'
-  use 'hrsh7th/nvim-cmp'
+  use {
+    'hrsh7th/nvim-cmp',
+    config = function() require 'plugins.configs.cmp' end
+  }
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer' 
   use 'hrsh7th/cmp-omni'
   use 'hrsh7th/cmp-path'
   use 'quangnguyen30192/cmp-nvim-ultisnips'
   use 'github/copilot.vim'
-  use 'folke/todo-comments.nvim'
+  use {
+    'folke/todo-comments.nvim',
+    config = function() require 'plugins.configs.todo_comments' end
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
@@ -141,12 +165,3 @@ require('packer').startup(function(use)
     require('packer').sync()
   end
 end)
-
-require('mcf.lsp')
-require('mcf.lspsaga')
-require('mcf.cmp')
-require('mcf.telescope')
-require('mcf.todo_comments')
-require('mcf.treesitter')
-require('mcf.registers')
-require('mcf.indent_blankline')
