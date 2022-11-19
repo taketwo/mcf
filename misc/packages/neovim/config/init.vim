@@ -15,7 +15,6 @@
   set autowrite                   " Automatically save before e.g. :make
   set hidden
   set shortmess+=c                " Do not give ins-completion-menu messages
-  syntax on                       " Turn on syntax highlighting
   let mapleader=','               " Change leader to a comma
   let maplocalleader='\'          " Change local leader to a backslash
   set lazyredraw                  " Do not redraw screen in the middle of a macro
