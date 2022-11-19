@@ -24,7 +24,7 @@
 " }}}
 " Plugin initialization {{{
 
-  source ~/.vim/plugins.vim       " Load all the bundles in ~/.vim/plugins.vim
+  exec 'source ' . stdpath('config') . '/plugins.vim'
 
 " }}}
 " Search settings {{{
