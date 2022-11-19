@@ -43,11 +43,7 @@ export KEYBOARD_LAYOUTS="us(dvorak),ru"
 #                                Apps                                 #
 #---------------------------------------------------------------------#
 
-if command -v nvim >/dev/null 2>&1; then
-  export EDITOR=nvim
-else
-  export EDITOR=vim
-fi
+export EDITOR=nvim
 export BROWSER=browser
 export PAGER=less
 export MANPAGER=${PAGER}
