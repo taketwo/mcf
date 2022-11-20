@@ -14,6 +14,10 @@ local packer_bootstrap = ensure_packer()
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
+  use {"nvim-lua/plenary.nvim",
+    module = "plenary"
+  }
+
   use 'andymass/vim-matchup'
   use 'godlygeek/tabular'
   use 'AndrewRadev/splitjoin.vim'
@@ -121,7 +125,7 @@ require('packer').startup(function(use)
   }
   use {
     'nvim-telescope/telescope.nvim',
-    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
+    requires = {'nvim-lua/popup.nvim'},
     config = function() require 'plugins.configs.telescope' end
   }
   use 'nvim-telescope/telescope-symbols.nvim'
@@ -144,20 +148,21 @@ require('packer').startup(function(use)
     config = function() require 'plugins.configs.indent_blankline' end
   }
   use 'onsails/lspkind-nvim'
-  use {
-    'hrsh7th/nvim-cmp',
-    config = function() require 'plugins.configs.cmp' end
-  }
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer' 
-  use 'hrsh7th/cmp-omni'
-  use 'hrsh7th/cmp-path'
-  use 'quangnguyen30192/cmp-nvim-ultisnips'
   use 'github/copilot.vim'
   use {
     'folke/todo-comments.nvim',
     config = function() require 'plugins.configs.todo_comments' end
   }
+
+  -- Autocompletion
+  use { 'hrsh7th/nvim-cmp',
+    config = function() require 'plugins.configs.cmp' end
+  }
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-omni'
+  use 'hrsh7th/cmp-path'
+  use 'quangnguyen30192/cmp-nvim-ultisnips'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
