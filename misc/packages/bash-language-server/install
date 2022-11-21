@@ -1,10 +1,3 @@
 #!/usr/bin/env bash
 
-# NVM should be installed because it is a dependency, however it could be that it is not activated yet
-if ! hash nvm 2>/dev/null; then
-  source "$HOME/.nvm/nvm.sh" --no-use
-fi
-
-nvm install 17
-nvm use 17
-npm i -g bash-language-server
+fnm exec --using=node17 npm install --location=global bash-language-server
