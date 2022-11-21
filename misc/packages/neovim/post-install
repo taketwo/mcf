@@ -10,5 +10,3 @@ pyenv virtualenv $PYTHON_VERSION py3nvim
 source "$PYENV_ROOT/versions/$PYTHON_VERSION/envs/py3nvim/bin/activate"
 pip install --upgrade pynvim
 
-# Install plugins
-nvim +PlugInstall +qall
