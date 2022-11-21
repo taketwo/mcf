@@ -148,7 +148,6 @@ require('packer').startup(function(use)
     config = function() require 'plugins.configs.indent_blankline' end
   }
   use 'onsails/lspkind-nvim'
-  use 'github/copilot.vim'
   use {
     'folke/todo-comments.nvim',
     config = function() require 'plugins.configs.todo_comments' end
@@ -163,6 +162,27 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-omni'
   use 'hrsh7th/cmp-path'
   use 'quangnguyen30192/cmp-nvim-ultisnips'
+  use { 'zbirenbaum/copilot.lua',
+    event = 'VimEnter',
+    config = function()
+      vim.defer_fn(function()
+        require('copilot').setup({
+          suggestion = {
+            enabled = true,
+            auto_trigger = true,
+            debounce = 75,
+            keymap = {
+             accept = "<Tab>",
+             next = "<M-]>",
+             prev = "<M-[>",
+             dismiss = "<C-]>",
+            },
+          },
+          copilot_node_command = vim.fn.expand("$FNM_DIR") .. "/aliases/node17/bin/node"
+        })
+      end, 100)
+    end,
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
