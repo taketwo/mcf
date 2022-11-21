@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-NODE_VERSION=17 "$NVM_DIR/nvm-exec" jira "$@"
+fnm exec --using=node17 jira "$@"
