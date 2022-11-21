@@ -1,1 +1,2 @@
 neovim
+fnm            # For node.js provider and copilot plugin
