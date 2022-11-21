@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Install Node 17, but keep system version the default
+fnm install 17
+fnm alias 17 node17
+fnm default system
