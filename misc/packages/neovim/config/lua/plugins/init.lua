@@ -18,8 +18,6 @@ require('packer').startup({
     use 'andymass/vim-matchup'
     use 'godlygeek/tabular'
     use 'AndrewRadev/splitjoin.vim'
-    use {'scrooloose/nerdtree', opt = true, cmd = {'NERDTreeMirrorToggle'}}
-    use {'jistr/vim-nerdtree-tabs', opt = true, cmd = {'NERDTreeMirrorToggle'}}
     use 'lifepillar/vim-solarized8'
     use {
       'vim-airline/vim-airline',
@@ -54,7 +52,6 @@ require('packer').startup({
     use 'jeffkreeftmeijer/vim-numbertoggle'
     use 'taketwo/diffchar.vim'
     use 'AndrewRadev/deleft.vim'
-    use 'ryanoasis/vim-devicons'
 
     -- Navigation
     use 'justinmk/vim-sneak'
@@ -148,6 +145,12 @@ require('packer').startup({
     use {
       'folke/todo-comments.nvim',
       config = function() require 'plugins.configs.todo_comments' end
+    }
+    use { 'nvim-tree/nvim-tree.lua',
+      requires = { 'nvim-tree/nvim-web-devicons' },
+      opt = true,
+      cmd = { 'NvimTreeToggle', 'NvimTreeOpen' },
+      config = function() require('nvim-tree').setup() end
     }
 
     -- Autocompletion
