@@ -5,7 +5,6 @@ stow
 less
 
 # Package managers
-nix: nox
 ubuntu: apt-file
 pyenv
 
