@@ -6,7 +6,6 @@ less
 
 # Package managers
 ubuntu: apt-file
-pyenv
 
 # Development
 cmake                                  # also YouCompleteMe requires this
