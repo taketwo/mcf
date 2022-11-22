@@ -80,6 +80,10 @@ if "MCF" not in os.environ:
         print("Run the following command: source {}".format(join(dest, ".profile")))
         print("Now re-run this script to complete bootstrapping.")
 else:
+    print("[*] Install FNM")
+    print("")
+    pm.install("fnm", verbose=True)
+
     print("[*] Install MCF")
     print("")
 
