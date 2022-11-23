@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+
+import argparse
+from pathlib import Path
+
+
+class Document:
+    def __init__(self):
+        self.items = list()
+
+    def append_item(self, level, text):
+        self.items.append(Item(level, text))
+
+    def append_note(self, note):
+        self.items[-1].add_note(note)
+
+
+class Item:
+    def __init__(self, level, text):
+        self.level = level
+        self.text = text
+        self.note = None
+
+    def add_note(self, note):
+        self.note = note
+
+
+def get_li(line):
+    if '\\li' in line:
+        if line.endswith('li0'):
+            return 0
+        if line.endswith('li200'):
+            return 1
+        if line.endswith('li400'):
+            return 2
+        if line.endswith('li600'):
+            return 3
+        if line.endswith('li800'):
+            return 4
+    return None
+
+
+def get_fs(line):
+    return '\\fs' in line
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='''
+    Parse exported MindMeister map and generate Markdown outline.
+    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("input_path", type=Path, help="Input path")
+    args = parser.parse_args()
+
+    doc = Document()
+    for line in open(args.input_path):
+        line = line.strip()
+        if not line:
+            continue
+        li = get_li(line)
+        if li is not None:
+            level = li
+            is_note = True
+            continue
+        if get_fs(line):
+            is_note = False
+            continue
+        if line.startswith('\\') or line.startswith('{') or line.startswith('}'):
+            continue
+        if not is_note:
+            doc.append_item(level, line)
+        else:
+            doc.append_note(line)
+
+    for item in doc.items:
+        indent = " " * (2 * item.level)
+        print(f"{indent}* {item.text}")
+        if item.note is not None:
+            print(f"{indent}  {item.note}")
