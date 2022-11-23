@@ -20,7 +20,8 @@ echo "Downloading and unzipping..."
 mkdir -p "$FONT_DIR"
 curl -L "$DOWNLOAD_URL" | bsdtar -xvf - -C "$FONT_DIR"
 rm "$FONT_DIR"/*Windows*
-rm "$FONT_DIR"/*Mono.ttf
+
+echo "Victor Mono with NERD icons version: ${LATEST_VERSION}" > "$FONT_DIR"/version.txt
 
 echo "Updating font cache..."
 
