@@ -8,6 +8,7 @@ treesitter_configs.setup {
       "comment",
       "cpp",
       "diff",
+      "gitcommit",
       "haskell",
       "hcl",           -- for Terraform files
       "json",
