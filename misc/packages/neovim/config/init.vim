@@ -96,6 +96,8 @@
 
   set list listchars=tab:→\ ,trail:· " Display tabs and trailing spaces visually
 
+  au TextYankPost * silent! lua vim.highlight.on_yank {higroup="YankedRegion", timeout=300}
+
 " }}}
 " Completion {{{
 

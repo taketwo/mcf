@@ -22,6 +22,9 @@ highlight LspReferenceRead gui=bold
 highlight LspReferenceText gui=bold
 highlight LspReferenceWrite gui=bold
 
+" Yanked region
+highlight YankedRegion guifg=#fdf6e3 guibg=#cb4b16
+
 " Matchup
 " TODO: Review and maybe enable this
 " highlight MatchParen cterm=bold
