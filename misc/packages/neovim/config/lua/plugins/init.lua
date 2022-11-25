@@ -121,6 +121,7 @@ require('packer').startup({
       requires = {{'nvim-lua/popup.nvim'}, {"nvim-lua/plenary.nvim"}},
       config = function() require 'plugins.configs.telescope' end
     }
+    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
     use 'nvim-telescope/telescope-symbols.nvim'
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'nvim-telescope/telescope-file-browser.nvim'
