@@ -46,3 +46,6 @@ highlight TodoSignTODO guifg=#6c71c4 guibg=#eee8d5
 highlight TodoFgFIX guifg=#cb4b16 gui=italic,nocombine
 highlight TodoBgFIX guifg=#fdf6e3 guibg=#cb4b16 gui=bold,nocombine
 highlight TodoSignFIX guifg=#cb4b16 guibg=#eee8d5
+highlight TodoFgNOTE guifg=#d3d3d3 gui=italic,nocombine
+highlight TodoBgNOTE guifg=#586e75 guibg=#d3d3d3 gui=bold,nocombine
+highlight TodoSignNOTE guifg=#d3d3d3 guibg=#eee8d5
