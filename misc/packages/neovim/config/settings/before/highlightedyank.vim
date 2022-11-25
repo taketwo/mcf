@@ -1,1 +1,0 @@
-map y <Plug>(highlightedyank)

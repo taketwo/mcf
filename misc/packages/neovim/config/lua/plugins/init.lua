@@ -44,7 +44,6 @@ require('packer').startup({
     use 'xolox/vim-misc'
     use 'taketwo/vim-exchange'
     use 'janko-m/vim-test'
-    use 'machakann/vim-highlightedyank'
     use 'AndrewRadev/dsf.vim'
     use 'tweekmonster/startuptime.vim'
     use 'sickill/vim-pasta'
