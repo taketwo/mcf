@@ -15,6 +15,12 @@ require('packer').startup({
   function(use)
     use 'wbthomason/packer.nvim'
 
+    use { "norcalli/nvim-colorizer.lua",
+      opt = true,
+      cmd = "ColorizerToggle",
+      config = function() require("colorizer").setup() end
+    }
+
     use 'andymass/vim-matchup'
     use 'godlygeek/tabular'
     use 'AndrewRadev/splitjoin.vim'
