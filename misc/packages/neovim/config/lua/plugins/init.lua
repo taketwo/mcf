@@ -79,6 +79,10 @@ require('packer').startup({
     use 'keith/tmux.vim'
     use 'LnL7/vim-nix'
     use 'hjson/vim-hjson'
+    use { 'jkramer/vim-checkbox',
+      opt = true,
+      ft = { 'markdown' }
+    }
 
     -- Git related
     use 'tpope/vim-fugitive'
