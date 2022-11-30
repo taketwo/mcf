@@ -336,11 +336,11 @@ let g:mcf#keymaps["s"] = {
 \ }
 
 " AnyJump
-nnoremap <Tab> :AnyJump<CR>
+nnoremap <F3> :AnyJump<CR>
 
 " Some keys that are still free
 "
-" $ ^ F3 F10
+" $ ^ F10
 
 " Create WhichKey menu
 call which_key#register(',', "g:mcf#keymaps")
