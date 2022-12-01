@@ -138,36 +138,17 @@ noremap <C-w><C-n> <C-w>l
 noremap <C-w><C-c> <C-w>k
 noremap <C-w><C-t> <C-w>j
 " ... and also with Alt- prefix (handled by vim-tmux-navigator plugin)
-if has('nvim')
-  nnoremap <silent> <M-n> :TmuxNavigateRight<CR>
-  nnoremap <silent> <M-c> :TmuxNavigateUp<CR>
-  nnoremap <silent> <M-t> :TmuxNavigateDown<CR>
-  nnoremap <silent> <M-h> :TmuxNavigateLeft<CR>
-  nnoremap <silent> <M-Space> :TmuxNavigatePrevious<cr>
-else
-  nnoremap <silent> n :TmuxNavigateRight<CR>
-  nnoremap <silent> c :TmuxNavigateUp<CR>
-  nnoremap <silent> t :TmuxNavigateDown<CR>
-  nnoremap <silent> h :TmuxNavigateLeft<CR>
-  nnoremap <silent> <Space> :TmuxNavigatePrevious<cr>
-endif
+nnoremap <silent> <M-n> :TmuxNavigateRight<CR>
+nnoremap <silent> <M-c> :TmuxNavigateUp<CR>
+nnoremap <silent> <M-t> :TmuxNavigateDown<CR>
+nnoremap <silent> <M-h> :TmuxNavigateLeft<CR>
+nnoremap <silent> <M-Space> :TmuxNavigatePrevious<cr>
 
 " Resize windows with Alt+arrow
-if has('nvim')
-  nnoremap <M-Up> <C-w>+
-  nnoremap <M-Down> <C-w>-
-  nnoremap <M-Right> <C-w>>
-  nnoremap <M-Left> <C-w><
-else
-  nnoremap <Up> <C-w>+
-  nnoremap [1;3A <C-w>+
-  nnoremap <Down> <C-w>-
-  nnoremap [1;3B <C-w>-
-  nnoremap <Right> <C-w>>
-  nnoremap [1;3C <C-w>>
-  nnoremap <Left> <C-w><
-  nnoremap [1;3D <C-w><
-endif
+nnoremap <M-Up> <C-w>+
+nnoremap <M-Down> <C-w>-
+nnoremap <M-Right> <C-w>>
+nnoremap <M-Left> <C-w><
 
 " }}}
 " Search {{{
@@ -229,13 +210,8 @@ nnoremap <C-J> J
 let g:mcf#keymaps.f = { "name" : "+filename" }
 let g:mcf#keymaps.f.s = "copy-short"
 let g:mcf#keymaps.f.l = "copy-long"
-if has('nvim')
-    nnoremap <Leader>fs :let @+=expand("%")<CR>
-    nnoremap <Leader>fl :let @+=expand("%:p")<CR>
-else
-    nnoremap <Leader>fs :!xsel --clipboard <<< '%'<CR>
-    nnoremap <Leader>fl :!xsel --clipboard <<< '%:p'<CR>
-endif
+nnoremap <Leader>fs :let @+=expand("%")<CR>
+nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 
 " }}}
 " Git / version control {{{
@@ -263,21 +239,19 @@ let g:mcf#keymaps.g.s = 'status'
 " }}}
 " LSP {{{
 
-if has('nvim')
-    nnoremap <silent> <leader>lD :Lspsaga show_line_diagnostics<CR>
-    nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
-    nnoremap <silent> <leader>ld :Lspsaga peek_definition<CR>
-    nnoremap <silent> <leader>lf :Lspsaga lsp_finder<CR>
-    nnoremap <silent> <leader>ln <cmd>lua vim.lsp.buf.rename()<CR>
-    nnoremap <silent> <leader>lr :Telescope lsp_references<CR>
-    let g:mcf#keymaps.l = { 'name' : '+lsp' }
-    let g:mcf#keymaps.l.D = 'line diagnostics'
-    let g:mcf#keymaps.l.a = 'actions'
-    let g:mcf#keymaps.l.d = 'definition preview'
-    let g:mcf#keymaps.l.f = 'finder'
-    let g:mcf#keymaps.l.n = 'rename'
-    let g:mcf#keymaps.l.r = 'references'
-endif
+nnoremap <silent> <leader>lD :Lspsaga show_line_diagnostics<CR>
+nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <silent> <leader>ld :Lspsaga peek_definition<CR>
+nnoremap <silent> <leader>lf :Lspsaga lsp_finder<CR>
+nnoremap <silent> <leader>ln <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <leader>lr :Telescope lsp_references<CR>
+let g:mcf#keymaps.l = { 'name' : '+lsp' }
+let g:mcf#keymaps.l.D = 'line diagnostics'
+let g:mcf#keymaps.l.a = 'actions'
+let g:mcf#keymaps.l.d = 'definition preview'
+let g:mcf#keymaps.l.f = 'finder'
+let g:mcf#keymaps.l.n = 'rename'
+let g:mcf#keymaps.l.r = 'references'
 
 " }}}
 
