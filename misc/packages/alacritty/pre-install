@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+
+# add-apt-repository fails if sources.list file does not exist
+if [[ ! -f /etc/apt/sources.list ]]; then
+  sudo touch /etc/apt/sources.list
+fi
+
+if [[ -f /etc/apt/preferences.d/aeolus-dev ]]; then
+  if [[ ! -f /etc/apt/preferences.d/alacritty ]]; then
+    sudo tee -a /etc/apt/preferences.d/alacritty << 'EOL'
+Package: *
+Pin: release o=LP-PPA-alacritty-ppa
+Pin-Priority: 2000
+EOL
+  fi
+fi
+
+sudo add-apt-repository ppa:aslatter/ppa -y
+sudo apt-get update
