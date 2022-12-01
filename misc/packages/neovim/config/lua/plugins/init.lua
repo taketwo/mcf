@@ -111,9 +111,6 @@ require('packer').startup({
     use 'liuchengxu/vim-which-key'
     use 'voldikss/vim-floaterm'
 
-    -- Non-vim
-    use 'junegunn/fzf.vim'
-
     -- Misc unsorted
     use 'kevinhwang91/rnvimr'
     use {
