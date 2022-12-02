@@ -177,7 +177,7 @@ spawnTmux = currentTopicDirName myTopicConfig >>= spawnTmuxSession
 
 -- Spawn tmux session in a given working directory
 spawnTmuxSession :: (String, String) -> X ()
-spawnTmuxSession (session, dir) = spawn $ appTerminal ++ " --workdir " ++ dir ++ " -e 'tmux new -s " ++ session ++ "'"
+spawnTmuxSession (session, dir) = spawn $ appTerminal ++ " --working-directory " ++ dir ++ " -e 'tmux new -s " ++ session ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
@@ -190,7 +190,7 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
   where
-    spawnTerminal  = appTerminal ++ " --name ScratchTerminal -e tmux"
+    spawnTerminal  = appTerminal ++ " --class ScratchTerminal -e tmux"
     findTerminal   = (resource =? "ScratchTerminal")
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
