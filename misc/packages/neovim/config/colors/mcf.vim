@@ -8,8 +8,7 @@ highlight IncSearch gui=italic,bold,standout guifg=#dc322f
 " highlight Whitespace ctermfg=7 cterm=nocombine
 " highlight SpellBad ctermfg=red                " Adjust the color of wrongly spelled words
 
-" FIXME: Does not work
-" highlight CursorLineNr guifg=#93a1a1 guibg=#eee8d5 gui=bold   " Show current line numbers in bold
+highlight CursorLineNr guifg=#93a1a1 guibg=#eee8d5 gui=bold
 
 " Diagnostics
 " TODO: Review and maybe update colors
