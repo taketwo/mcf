@@ -158,6 +158,11 @@ nnoremap <M-Left> <C-w><
 let g:mcf#keymaps["/"] = { "name" : "reset-search-pattern" }
 nnoremap <Leader>/ :let @/ = ""<CR>
 
+" Seek through search results with Ctrl+c and Ctrl+t whilst entering search pattern
+
+cnoremap <C-t> <C-g>
+cnoremap <C-c> <C-t>
+
 " Seek through search results with l/L (instead of used n/N)
 
 nnoremap l n
