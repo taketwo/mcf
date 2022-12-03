@@ -1,13 +1,14 @@
 runtime colors/solarized8.vim
 
+highlight Search gui=bold,underline guifg=NONE
+highlight IncSearch gui=bold,underline,standout guifg=NONE
+
 " Use magenta and undercurl for the wrongly spelled words
 highlight SpellBad guifg=#d33682 guibg=#fdf6e3 guisp=#d33682 gui=undercurl
 highlight! link SpellCap SpellBad
 
 highlight LineNr guifg=#93a1a1 guibg=#eee8d5
 highlight SignColumn guifg=#93a1a1 guibg=#eee8d5
-highlight Search gui=italic,bold guifg=#dc322f
-highlight IncSearch gui=italic,bold,standout guifg=#dc322f
 highlight CursorLineNr guifg=#93a1a1 guibg=#eee8d5 gui=bold
 
 " Diagnostics
