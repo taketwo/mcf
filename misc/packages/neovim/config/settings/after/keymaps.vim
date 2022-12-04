@@ -322,4 +322,6 @@ nnoremap <F3> :AnyJump<CR>
 " $ ^ F10
 
 " Create WhichKey menu
-call which_key#register(',', "g:mcf#keymaps")
+if exists("which_key#register")
+  call which_key#register(',', "g:mcf#keymaps")
+endif

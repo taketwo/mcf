@@ -36,7 +36,7 @@
   for f in split(glob(stdpath('config') . '/settings/before/*.vim'), '\n')
     exe 'source' f
   endfor
-  lua require('plugins')
+  lua require('plugins.bootstrap')
 
 " }}}
 " Search settings {{{
