@@ -221,25 +221,32 @@ nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 " }}}
 " Git / version control {{{
 
-nnoremap <silent> <leader>gL :Telescope git_commits<CR>
 nnoremap <silent> <leader>gb :Git blame<CR>
 nnoremap <silent> <leader>gc :call magit#show_magit('v')<CR>
 nnoremap <silent> <leader>ghp :GitGutterPreviewHunk<CR>
 nnoremap <silent> <leader>ghs :GitGutterStageHunk<CR>
 nnoremap <silent> <leader>ghu :GitGutterUndoHunk<CR>
-nnoremap <silent> <leader>gl :Telescope git_bcommits<CR>
 nnoremap <silent> <leader>gs :Telescope git_status<CR>
-let g:mcf#keymaps.g = { 'name' : '+git/version-control' }
-let g:mcf#keymaps.g.L = 'log (everything)'
-let g:mcf#keymaps.g.b = 'blame'
-let g:mcf#keymaps.g.c = 'commit'
-let g:mcf#keymaps.g.h = { 'name' : '+hunks' }
-let g:mcf#keymaps.g.h.p = 'preview'
-let g:mcf#keymaps.g.h.s = 'stage'
-let g:mcf#keymaps.g.h.u = 'undo'
-let g:mcf#keymaps.g.l = 'log (buffer only)'
-let g:mcf#keymaps.g.m = 'view commit message'
-let g:mcf#keymaps.g.s = 'status'
+lua << EOF
+  local wk = require("which-key")
+  wk.register({
+  g = {
+    name = "Git",
+    L = { "<cmd>Telescope git_commits<cr>", "Log (everything)" },
+    l = { "<cmd>Telescope git_bcommits<cr>", "Log (buffer only)"},
+    m = "View commit message",
+    s = "Status",
+    b = "Blame",
+    c = "Commit",
+    h = {
+      name = "Hunks",
+      p = "Preview",
+      s = "Stage",
+      u = "Undo",
+    },
+  },
+}, { prefix = "<leader>" })
+EOF
 
 " }}}
 " LSP {{{

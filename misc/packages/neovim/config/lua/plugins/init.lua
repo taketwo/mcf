@@ -107,7 +107,16 @@ require('packer').startup({
     use 'kkoomen/vim-doge'
 
     -- Misc
-    use 'liuchengxu/vim-which-key'
+    -- use 'liuchengxu/vim-which-key'
+    use { 'folke/which-key.nvim',
+      config = function()
+        require("which-key").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+        }
+      end
+    }
     use 'voldikss/vim-floaterm'
 
     -- Misc unsorted
@@ -139,8 +148,8 @@ require('packer').startup({
       'glepnir/lspsaga.nvim',
       config = function() require('lspsaga').init_lsp_saga() end
     }
-    use {
-      'tversteeg/registers.nvim',
+    use { 'tversteeg/registers.nvim',
+      disable = true,  -- TODO: Seems like this is replaced by which-key
       config = function() require('registers').setup() end
     }
     use {
