@@ -71,7 +71,6 @@ require('packer').startup({
       ft = { 'markdown' }
     }
     use 'tikhomirov/vim-glsl'
-    use 'digitaltoad/vim-pug'
     use {
       'taketwo/vim-ros',
       -- branch = 'cmp'
