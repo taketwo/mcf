@@ -59,21 +59,30 @@ require('packer').startup({
     use 'nelstrom/vim-visual-star-search'
     use 'dyng/ctrlsf.vim'
 
-    use 'preservim/vim-markdown'
-    use {
-      'taketwo/vim-ros',
-      -- branch = 'cmp'
+    -------------------------------
+    --  Languages and filetypes  --
+    -------------------------------
+    use { 'preservim/vim-markdown',
+      opt = true,
+      ft = { 'markdown '}
     }
-    use 'tikhomirov/vim-glsl'
-    use 'digitaltoad/vim-pug'
-    use 'lervag/vimtex'
-    use 'keith/tmux.vim'
-    use 'LnL7/vim-nix'
-    use 'hjson/vim-hjson'
     use { 'jkramer/vim-checkbox',
       opt = true,
       ft = { 'markdown' }
     }
+    use 'tikhomirov/vim-glsl'
+    use 'digitaltoad/vim-pug'
+    use {
+      'taketwo/vim-ros',
+      -- branch = 'cmp'
+    }
+    use { 'lervag/vimtex',
+      opt = true,
+      ft = { 'tex' }
+    }
+    use 'keith/tmux.vim'
+    use 'LnL7/vim-nix'
+    use 'hjson/vim-hjson'
 
     -- Git related
     use 'tpope/vim-fugitive'
