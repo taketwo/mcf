@@ -1,3 +1,8 @@
+-- Neodev has to be set up before lspconfig.
+-- Normally, this should be done using Packer sequencing feature.
+-- However, in this case, asking Packer to load Neodev before lspconfig leads to issues with file discovery.
+require("neodev").setup()
+
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end

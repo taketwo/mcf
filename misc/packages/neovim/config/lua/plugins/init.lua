@@ -67,16 +67,21 @@ require('packer').startup({
       ft = { 'markdown' }
     }
     use 'tikhomirov/vim-glsl'
-    use {
-      'taketwo/vim-ros',
-      -- branch = 'cmp'
-    }
     use { 'lervag/vimtex',
       ft = { 'tex' }
     }
     use 'keith/tmux.vim'
     use 'LnL7/vim-nix'
     use 'hjson/vim-hjson'
+
+    ----------------------------------------------------------------------------
+    --                      Frameworks and environments                       --
+    ----------------------------------------------------------------------------
+
+    use { 'folke/neodev.nvim' }
+    use { 'taketwo/vim-ros',
+      -- branch = 'cmp'
+    }
 
     ------------------------
     --  Language Servers  --
@@ -97,7 +102,7 @@ require('packer').startup({
     }
 
     use { 'neovim/nvim-lspconfig',
-      after = 'mason-lspconfig.nvim',
+      after = { 'mason-lspconfig.nvim', 'neodev.nvim' },
       config = function() require 'plugins.configs.lsp' end
     }
 
