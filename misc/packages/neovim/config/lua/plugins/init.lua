@@ -176,10 +176,6 @@ require('packer').startup({
     use 'nvim-telescope/telescope-symbols.nvim'
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'nvim-telescope/telescope-file-browser.nvim'
-    use { 'tversteeg/registers.nvim',
-      disable = true,  -- TODO: Seems like this is replaced by which-key
-      config = function() require('registers').setup() end
-    }
     use {
       'lukas-reineke/indent-blankline.nvim',
       config = function() require 'plugins.configs.indent_blankline' end
