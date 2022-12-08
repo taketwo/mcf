@@ -91,11 +91,18 @@ require('packer').startup({
       config = function() require('mason').setup() end
     }
 
+    use { 'WhoIsSethDaniel/mason-tool-installer.nvim',
+      after = 'mason.nvim',
+      config = function() require 'plugins.configs.mason-tool-installer' end
+    }
+
     use { 'williamboman/mason-lspconfig.nvim',
-      config = function() require 'plugins.configs.mason-lspconfig' end
+      after = 'mason.nvim',
+      config = function() require('mason-lspconfig').setup() end
     }
 
     use { 'neovim/nvim-lspconfig',
+      after = 'mason-lspconfig.nvim',
       config = function() require 'plugins.configs.lsp' end
     }
 
