@@ -228,24 +228,26 @@ nnoremap <silent> <leader>ghs :GitGutterStageHunk<CR>
 nnoremap <silent> <leader>ghu :GitGutterUndoHunk<CR>
 nnoremap <silent> <leader>gs :Telescope git_status<CR>
 lua << EOF
-  local wk = require("which-key")
-  wk.register({
-  g = {
-    name = "Git",
-    L = { "<cmd>Telescope git_commits<cr>", "Log (everything)" },
-    l = { "<cmd>Telescope git_bcommits<cr>", "Log (buffer only)"},
-    m = "View commit message",
-    s = "Status",
-    b = "Blame",
-    c = "Commit",
-    h = {
-      name = "Hunks",
-      p = "Preview",
-      s = "Stage",
-      u = "Undo",
-    },
-  },
-}, { prefix = "<leader>" })
+  local present, wk = pcall(require, "which-key")
+  if present then
+    wk.register({
+      g = {
+        name = "Git",
+        L = { "<cmd>Telescope git_commits<cr>", "Log (everything)" },
+        l = { "<cmd>Telescope git_bcommits<cr>", "Log (buffer only)"},
+        m = "View commit message",
+        s = "Status",
+        b = "Blame",
+        c = "Commit",
+        h = {
+          name = "Hunks",
+          p = "Preview",
+          s = "Stage",
+          u = "Undo",
+        },
+      },
+    }, { prefix = "<leader>" })
+  end
 EOF
 
 " }}}
