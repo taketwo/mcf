@@ -12,8 +12,8 @@ import XMonad.Core
 -- Resolution: exec tmux in .bashrc in *interactive* mode (see https://unix.stackexchange.com/a/113768/55482)
 
 appTerminal = "WINIT_X11_SCALE_FACTOR=1 alacritty"
-appTmux = appTerminal ++ " -e 'tmux'"
+appTmux = appTerminal ++ " -e tmux"
 appBrowser  = "browser"
 
 spawnInTerminal :: String -> X ()
-spawnInTerminal cmd = spawn $ appTerminal ++ " -e '" ++ cmd ++ "'"
+spawnInTerminal cmd = spawn $ appTerminal ++ " -e " ++ cmd ++ ""

@@ -177,7 +177,7 @@ spawnTmux = currentTopicDirName myTopicConfig >>= spawnTmuxSession
 
 -- Spawn tmux session in a given working directory
 spawnTmuxSession :: (String, String) -> X ()
-spawnTmuxSession (session, dir) = spawn $ appTerminal ++ " --working-directory " ++ dir ++ " -e 'tmux new -s " ++ session ++ "'"
+spawnTmuxSession (session, dir) = spawn $ appTerminal ++ " --working-directory " ++ dir ++ " -e tmux new -s " ++ session ++ ""
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
