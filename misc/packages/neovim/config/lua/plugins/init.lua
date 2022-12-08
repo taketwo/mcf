@@ -1,13 +1,11 @@
 require('packer').startup({
   function(use)
     use { 'wbthomason/packer.nvim',
-      opt = true,
       cmd = {'PackerStatus', 'PackerSync', 'PackerInstall', 'PackerUpdate', 'PackerClean', 'PackerCompile'},
       config = function() require('plugins') end
     }
 
     use { "norcalli/nvim-colorizer.lua",
-      opt = true,
       cmd = "ColorizerToggle",
       config = function() require("colorizer").setup() end
     }
@@ -63,11 +61,9 @@ require('packer').startup({
     --  Languages and filetypes  --
     -------------------------------
     use { 'preservim/vim-markdown',
-      opt = true,
       ft = { 'markdown '}
     }
     use { 'jkramer/vim-checkbox',
-      opt = true,
       ft = { 'markdown' }
     }
     use 'tikhomirov/vim-glsl'
@@ -76,7 +72,6 @@ require('packer').startup({
       -- branch = 'cmp'
     }
     use { 'lervag/vimtex',
-      opt = true,
       ft = { 'tex' }
     }
     use 'keith/tmux.vim'
@@ -164,7 +159,6 @@ require('packer').startup({
     }
     use {
       'nvim-treesitter/playground',
-      -- opt = true,
       -- cmd = {'TSHighlightCapturesUnderCursor'}
     }
     use {
@@ -186,7 +180,6 @@ require('packer').startup({
     }
     use { 'nvim-tree/nvim-tree.lua',
       requires = { 'nvim-tree/nvim-web-devicons' },
-      opt = true,
       cmd = { 'NvimTreeToggle', 'NvimTreeOpen' },
       config = function() require('nvim-tree').setup() end
     }
