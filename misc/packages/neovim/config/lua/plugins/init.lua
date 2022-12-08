@@ -83,6 +83,28 @@ require('packer').startup({
     use 'LnL7/vim-nix'
     use 'hjson/vim-hjson'
 
+    ------------------------
+    --  Language Servers  --
+    ------------------------
+
+    use { 'williamboman/mason.nvim',
+      config = function() require('mason').setup() end
+    }
+
+    use { 'williamboman/mason-lspconfig.nvim',
+      config = function() require 'plugins.configs.mason-lspconfig' end
+    }
+
+    use { 'neovim/nvim-lspconfig',
+      config = function() require 'plugins.configs.lsp' end
+    }
+
+    use { 'glepnir/lspsaga.nvim',
+      config = function() require('lspsaga').init_lsp_saga() end
+    }
+
+    use 'onsails/lspkind-nvim'
+
     -- Git related
     use 'tpope/vim-fugitive'
     use 'tpope/vim-git'
@@ -147,14 +169,6 @@ require('packer').startup({
     use 'nvim-telescope/telescope-symbols.nvim'
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'nvim-telescope/telescope-file-browser.nvim'
-    use {
-      'neovim/nvim-lspconfig',
-      config = function() require 'plugins.configs.lsp' end
-    }
-    use {
-      'glepnir/lspsaga.nvim',
-      config = function() require('lspsaga').init_lsp_saga() end
-    }
     use { 'tversteeg/registers.nvim',
       disable = true,  -- TODO: Seems like this is replaced by which-key
       config = function() require('registers').setup() end
@@ -163,7 +177,6 @@ require('packer').startup({
       'lukas-reineke/indent-blankline.nvim',
       config = function() require 'plugins.configs.indent_blankline' end
     }
-    use 'onsails/lspkind-nvim'
     use {
       'folke/todo-comments.nvim',
       config = function() require 'plugins.configs.todo_comments' end

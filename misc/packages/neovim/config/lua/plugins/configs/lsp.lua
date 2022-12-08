@@ -78,6 +78,20 @@ require'lspconfig'.jedi_language_server.setup{
   capabilities = cmp_capabilities
 }
 
+require'lspconfig'.sumneko_lua.setup{
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Replace"
+      }
+    }
+  }
+}
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     -- Enable underline, use default values
