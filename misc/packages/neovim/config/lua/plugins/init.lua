@@ -14,8 +14,7 @@ require('packer').startup({
     use 'godlygeek/tabular'
     use 'AndrewRadev/splitjoin.vim'
     use 'lifepillar/vim-solarized8'
-    use {
-      'vim-airline/vim-airline',
+    use { 'vim-airline/vim-airline',
       requires = {'vim-airline/vim-airline-themes'}
     }
     use 'MarcWeber/vim-addon-mw-utils'
@@ -144,17 +143,14 @@ require('packer').startup({
 
     -- Misc unsorted
     use 'kevinhwang91/rnvimr'
-    use {
-      'nvim-treesitter/nvim-treesitter',
+    use { 'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
       config = function() require 'plugins.config.treesitter' end
     }
-    use {
-      'nvim-treesitter/playground',
+    use { 'nvim-treesitter/playground',
       -- cmd = {'TSHighlightCapturesUnderCursor'}
     }
-    use {
-      'nvim-telescope/telescope.nvim',
+    use { 'nvim-telescope/telescope.nvim',
       requires = {{'nvim-lua/popup.nvim'}, {"nvim-lua/plenary.nvim"}},
       config = function() require 'plugins.config.telescope' end
     }
@@ -162,12 +158,10 @@ require('packer').startup({
     use 'nvim-telescope/telescope-symbols.nvim'
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'nvim-telescope/telescope-file-browser.nvim'
-    use {
-      'lukas-reineke/indent-blankline.nvim',
+    use { 'lukas-reineke/indent-blankline.nvim',
       config = function() require 'plugins.config.indent_blankline' end
     }
-    use {
-      'folke/todo-comments.nvim',
+    use { 'folke/todo-comments.nvim',
       config = function() require 'plugins.config.todo_comments' end
     }
     use { 'nvim-tree/nvim-tree.lua',
@@ -187,24 +181,7 @@ require('packer').startup({
     use 'quangnguyen30192/cmp-nvim-ultisnips'
     use { 'zbirenbaum/copilot.lua',
       event = 'VimEnter',
-      config = function()
-        vim.defer_fn(function()
-          require('copilot').setup({
-            suggestion = {
-              enabled = true,
-              auto_trigger = true,
-              debounce = 75,
-              keymap = {
-               accept = "<Tab>",
-               next = "<M-]>",
-               prev = "<M-[>",
-               dismiss = "<C-]>",
-              },
-            },
-            copilot_node_command = vim.fn.expand("$FNM_DIR") .. "/aliases/node17/bin/node"
-          })
-        end, 100)
-      end,
+      config = function() require 'plugins.config.copilot' end
     }
   end,
   config = {
