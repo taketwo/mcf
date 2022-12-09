@@ -1,190 +1,206 @@
-require('packer').startup({
-  function(use)
-    use { 'wbthomason/packer.nvim',
+local plugins = {
+  ['wbthomason/packer.nvim'] = {
       cmd = {'PackerStatus', 'PackerSync', 'PackerInstall', 'PackerUpdate', 'PackerClean', 'PackerCompile'},
       config = function() require('plugins') end
-    }
+  },
 
-    use { "norcalli/nvim-colorizer.lua",
-      cmd = "ColorizerToggle",
-      config = function() require("colorizer").setup() end
-    }
+  ["norcalli/nvim-colorizer.lua"] = {
+    cmd = "ColorizerToggle",
+    config = function() require("colorizer").setup() end
+  },
 
-    use 'andymass/vim-matchup'
-    use 'godlygeek/tabular'
-    use 'AndrewRadev/splitjoin.vim'
-    use 'lifepillar/vim-solarized8'
-    use { 'vim-airline/vim-airline',
-      requires = {'vim-airline/vim-airline-themes'}
-    }
-    use 'MarcWeber/vim-addon-mw-utils'
-    use 'tomtom/tlib_vim'
-    use 'kshenoy/vim-signature'
-    use 'briandoll/change-inside-surroundings.vim'
-    use 'tmsvg/pear-tree'
-    use 'scrooloose/nerdcommenter'
-    use 'w0rp/ale'
-    use 'SirVer/ultisnips'
-    use 'tpope/vim-surround'
-    use 'embear/vim-localvimrc'
-    use 'qpkorr/vim-bufkill'
-    use 'AndrewRadev/sideways.vim'
-    use 'dantler/vim-alternate'
-    use 'tpope/vim-eunuch'
-    use 'tpope/vim-dispatch'
-    use 'Peeja/vim-cdo'
-    use 'tpope/vim-abolish'
-    use 'mbbill/undotree'
-    use 'xolox/vim-misc'
-    use 'taketwo/vim-exchange'
-    use 'janko-m/vim-test'
-    use 'AndrewRadev/dsf.vim'
-    use 'tweekmonster/startuptime.vim'
-    use 'sickill/vim-pasta'
-    use 'taketwo/vimux'
-    use 'jeffkreeftmeijer/vim-numbertoggle'
-    use 'taketwo/diffchar.vim'
-    use 'AndrewRadev/deleft.vim'
+  ['andymass/vim-matchup'] = {},
+  ['godlygeek/tabular'] = {},
+  ['AndrewRadev/splitjoin.vim'] = {},
+  ['lifepillar/vim-solarized8'] = {},
+  ['vim-airline/vim-airline'] = {
+    requires = {'vim-airline/vim-airline-themes'}
+  },
+  ['MarcWeber/vim-addon-mw-utils'] = {},
+  ['tomtom/tlib_vim'] = {},
+  ['kshenoy/vim-signature'] = {},
+  ['briandoll/change-inside-surroundings.vim'] = {},
+  ['tmsvg/pear-tree'] = {},
+  ['scrooloose/nerdcommenter'] = {},
+  ['w0rp/ale'] = {},
+  ['SirVer/ultisnips'] = {},
+  ['tpope/vim-surround'] = {},
+  ['embear/vim-localvimrc'] = {},
+  ['qpkorr/vim-bufkill'] = {},
+  ['AndrewRadev/sideways.vim'] = {},
+  ['dantler/vim-alternate'] = {},
+  ['tpope/vim-eunuch'] = {},
+  ['tpope/vim-dispatch'] = {},
+  ['Peeja/vim-cdo'] = {},
+  ['tpope/vim-abolish'] = {},
+  ['mbbill/undotree'] = {},
+  ['xolox/vim-misc'] = {},
+  ['taketwo/vim-exchange'] = {},
+  ['janko-m/vim-test'] = {},
+  ['AndrewRadev/dsf.vim'] = {},
+  ['tweekmonster/startuptime.vim'] = {},
+  ['sickill/vim-pasta'] = {},
+  ['taketwo/vimux'] = {},
+  ['jeffkreeftmeijer/vim-numbertoggle'] = {},
+  ['taketwo/diffchar.vim'] = {},
+  ['AndrewRadev/deleft.vim'] = {},
 
-    -- Navigation
-    use 'justinmk/vim-sneak'
-    use 'christoomey/vim-tmux-navigator'
-    use 'pechorin/any-jump.vim'
+  -- Navigation
+  ['justinmk/vim-sneak'] = {},
+  ['christoomey/vim-tmux-navigator'] = {},
+  ['pechorin/any-jump.vim'] = {},
 
-    -- Search
-    use 'henrik/vim-indexed-search'
-    use 'nelstrom/vim-visual-star-search'
-    use 'dyng/ctrlsf.vim'
+  -- Search
+  ['henrik/vim-indexed-search'] = {},
+  ['nelstrom/vim-visual-star-search'] = {},
+  ['dyng/ctrlsf.vim'] = {},
 
-    -------------------------------
-    --  Languages and filetypes  --
-    -------------------------------
-    use { 'preservim/vim-markdown',
-      ft = { 'markdown '}
-    }
-    use { 'jkramer/vim-checkbox',
-      ft = { 'markdown' }
-    }
-    use 'tikhomirov/vim-glsl'
-    use { 'lervag/vimtex',
-      ft = { 'tex' }
-    }
-    use 'keith/tmux.vim'
-    use 'LnL7/vim-nix'
-    use 'hjson/vim-hjson'
+  ------------------------------------------------------------------------------
+  --                         Languages and filetypes                          --
+  ------------------------------------------------------------------------------
 
-    ----------------------------------------------------------------------------
-    --                      Frameworks and environments                       --
-    ----------------------------------------------------------------------------
+  ['preservim/vim-markdown'] = {
+    ft = { 'markdown '}
+  },
+  ['jkramer/vim-checkbox'] = {
+    ft = { 'markdown' }
+  },
+  ['tikhomirov/vim-glsl'] = {},
+  ['lervag/vimtex'] = {
+    ft = { 'tex' }
+  },
+  ['keith/tmux.vim'] = {},
+  ['LnL7/vim-nix'] = {},
+  ['hjson/vim-hjson'] = {},
 
-    use { 'folke/neodev.nvim' }
-    use { 'taketwo/vim-ros',
-      -- branch = 'cmp'
-    }
+  ----------------------------------------------------------------------------
+  --                      Frameworks and environments                       --
+  ----------------------------------------------------------------------------
 
-    ------------------------
-    --  Language Servers  --
-    ------------------------
+  ['folke/neodev.nvim'] = {},
+  ['taketwo/vim-ros'] = {
+    -- branch = 'cmp'
+  },
 
-    use { 'williamboman/mason.nvim',
-      config = function() require('mason').setup() end
-    }
+  ------------------------------------------------------------------------------
+  --                             Language servers                             --
+  ------------------------------------------------------------------------------
 
-    use { 'WhoIsSethDaniel/mason-tool-installer.nvim',
-      after = 'mason.nvim',
-      config = function() require 'plugins.config.mason-tool-installer' end
-    }
+  ['williamboman/mason.nvim'] = {
+    config = function() require('mason').setup() end
+  },
 
-    use { 'williamboman/mason-lspconfig.nvim',
-      after = 'mason.nvim',
-      config = function() require('mason-lspconfig').setup() end
-    }
+  ['WhoIsSethDaniel/mason-tool-installer.nvim'] = {
+    after = 'mason.nvim',
+  },
 
-    use { 'neovim/nvim-lspconfig',
-      after = { 'mason-lspconfig.nvim', 'neodev.nvim' },
-      config = function() require 'plugins.config.lsp' end
-    }
+  ['williamboman/mason-lspconfig.nvim'] = {
+    after = 'mason.nvim',
+    config = function() require('mason-lspconfig').setup() end
+  },
 
-    use { 'glepnir/lspsaga.nvim',
-      config = function() require('lspsaga').init_lsp_saga() end
-    }
+  ['neovim/nvim-lspconfig'] = {
+    after = { 'mason-lspconfig.nvim', 'neodev.nvim' },
+  },
 
-    use 'onsails/lspkind-nvim'
+  ['glepnir/lspsaga.nvim'] = {
+    config = function() require('lspsaga').init_lsp_saga() end
+  },
 
-    -- Git related
-    use 'tpope/vim-fugitive'
-    use 'tpope/vim-git'
-    use 'tpope/vim-rhubarb'
-    use 'airblade/vim-gitgutter'
-    use 'junegunn/gv.vim'
-    use 'whiteinge/diffconflicts'
-    use 'rhysd/git-messenger.vim'
-    use 'jreybert/vimagit'
+  ['onsails/lspkind-nvim'] = {},
 
-    -- Text objects
-    use 'michaeljsmith/vim-indent-object'
-    use 'coderifous/textobj-word-column.vim'
-    use 'kana/vim-textobj-entire'
-    use 'kana/vim-textobj-user'
-    use 'kana/vim-textobj-function'
-    use 'jceb/vim-textobj-uri'
-    use 'machakann/vim-textobj-delimited'
+  -- Git related
+  ['tpope/vim-fugitive'] = {},
+  ['tpope/vim-git'] = {},
+  ['tpope/vim-rhubarb'] = {},
+  ['airblade/vim-gitgutter'] = {},
+  ['junegunn/gv.vim'] = {},
+  ['whiteinge/diffconflicts'] = {},
+  ['rhysd/git-messenger.vim'] = {},
+  ['jreybert/vimagit'] = {},
 
-    -- Snippets
-    use 'honza/vim-snippets'
-    use 'kkoomen/vim-doge'
+  -- Text objects
+  ['michaeljsmith/vim-indent-object'] = {},
+  ['coderifous/textobj-word-column.vim'] = {},
+  ['kana/vim-textobj-entire'] = {},
+  ['kana/vim-textobj-user'] = {},
+  ['kana/vim-textobj-function'] = {},
+  ['jceb/vim-textobj-uri'] = {},
+  ['machakann/vim-textobj-delimited'] = {},
 
-    -- Misc
-    -- use 'liuchengxu/vim-which-key'
-    use { 'folke/which-key.nvim',
-      config = function() require 'plugins.config.which-key' end
-    }
-    use 'voldikss/vim-floaterm'
+  -- Snippets
+  ['honza/vim-snippets'] = {},
+  ['kkoomen/vim-doge'] = {},
 
-    -- Misc unsorted
-    use 'kevinhwang91/rnvimr'
-    use { 'nvim-treesitter/nvim-treesitter',
-      run = ':TSUpdate',
-      config = function() require 'plugins.config.treesitter' end
-    }
-    use { 'nvim-treesitter/playground',
-      -- cmd = {'TSHighlightCapturesUnderCursor'}
-    }
-    use { 'nvim-telescope/telescope.nvim',
-      requires = {{'nvim-lua/popup.nvim'}, {"nvim-lua/plenary.nvim"}},
-      config = function() require 'plugins.config.telescope' end
-    }
-    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-    use 'nvim-telescope/telescope-symbols.nvim'
-    use 'nvim-telescope/telescope-ui-select.nvim'
-    use 'nvim-telescope/telescope-file-browser.nvim'
-    use { 'lukas-reineke/indent-blankline.nvim',
-      config = function() require 'plugins.config.indent_blankline' end
-    }
-    use { 'folke/todo-comments.nvim',
-      config = function() require 'plugins.config.todo_comments' end
-    }
-    use { 'nvim-tree/nvim-tree.lua',
-      requires = { 'nvim-tree/nvim-web-devicons' },
-      cmd = { 'NvimTreeToggle', 'NvimTreeOpen' },
-      config = function() require('nvim-tree').setup() end
-    }
+  -- Misc
+  ['folke/which-key.nvim'] = {},
+  ['voldikss/vim-floaterm'] = {},
 
-    -- Autocompletion
-    use { 'hrsh7th/nvim-cmp',
-      config = function() require 'plugins.config.cmp' end
-    }
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-omni'
-    use 'hrsh7th/cmp-path'
-    use 'quangnguyen30192/cmp-nvim-ultisnips'
-    use { 'zbirenbaum/copilot.lua',
-      event = 'VimEnter',
-      config = function() require 'plugins.config.copilot' end
-    }
-  end,
+  -- Misc unsorted
+  ['kevinhwang91/rnvimr'] = {},
+  ['nvim-treesitter/nvim-treesitter'] = {
+    run = ':TSUpdate',
+  },
+  ['nvim-treesitter/playground'] = {
+    -- cmd = {'TSHighlightCapturesUnderCursor'}
+  },
+  ['nvim-telescope/telescope.nvim'] = {
+    requires = {{'nvim-lua/popup.nvim'}, {"nvim-lua/plenary.nvim"}},
+  },
+  ['nvim-telescope/telescope-fzf-native.nvim'] = {
+    run = 'make'
+  },
+  ['nvim-telescope/telescope-symbols.nvim'] = {},
+  ['nvim-telescope/telescope-ui-select.nvim'] = {},
+  ['nvim-telescope/telescope-file-browser.nvim'] = {},
+  ['lukas-reineke/indent-blankline.nvim'] = {},
+  ['folke/todo-comments.nvim'] = {},
+  ['nvim-tree/nvim-tree.lua'] = {
+    requires = { 'nvim-tree/nvim-web-devicons' },
+    cmd = { 'NvimTreeToggle', 'NvimTreeOpen' },
+    config = function() require('nvim-tree').setup() end
+  },
+
+  -- Autocompletion
+  ['hrsh7th/nvim-cmp'] = {},
+  ['hrsh7th/cmp-nvim-lsp'] = {},
+  ['hrsh7th/cmp-buffer'] = {},
+  ['hrsh7th/cmp-omni'] = {},
+  ['hrsh7th/cmp-path'] = {},
+  ['quangnguyen30192/cmp-nvim-ultisnips'] = {},
+  ['zbirenbaum/copilot.lua'] = {
+    event = 'VimEnter',
+  }
+}
+
+local process_plugins = function(plugins)
+  local final_table = {}
+  for key, val in pairs(plugins) do
+    local plugin_name = key:match("([^/]+)$"):gsub("%-nvim$", ""):gsub("%.lua$", ""):gsub("%.nvim$", ""):gsub("%.vim$", ""):gsub("^vim%-", ""):gsub("^nvim%-", "")
+    if val and type(val) == "table" then
+      local config_dir = vim.fn.stdpath("config").."/lua/plugins/config"
+      local config_file = string.format("%s/%s.lua", config_dir, plugin_name)
+      if vim.fn.filereadable(config_file) == 1 then
+        if not val.config then
+          val.config = function(name)
+            name = name:match("([^/]+)$"):gsub("%-nvim$", ""):gsub("%.lua$", ""):gsub("%.nvim$", ""):gsub("%.vim$", ""):gsub("^vim%-", ""):gsub("^nvim%-", "")
+            require(string.format("plugins.config.%s", name))
+          end
+        else
+          print(string.format("WARNING: plugin %s has both config file and config option, the latter will be used", plugin_name))
+        end
+      end
+      plugins[key][1] = key
+      final_table[#final_table + 1] = plugins[key]
+    end
+  end
+  return final_table
+end
+
+local packer = require('packer')
+packer.init{
   config = {
     compile_path = vim.fn.stdpath('state') .. '/packer_compiled.lua',
   }
-})
+}
+packer.startup{process_plugins(plugins)}
