@@ -138,20 +138,7 @@ require('packer').startup({
     -- Misc
     -- use 'liuchengxu/vim-which-key'
     use { 'folke/which-key.nvim',
-      config = function()
-        require("which-key").setup {
-          plugins = {
-            presets = {
-              -- Temporary disable operators to avoid delay on pressing "c"
-              operators = false
-            }
-          },
-          triggers_blacklist = {
-            i = { "c", "t", "h", "n", "." },
-            v = { "c", "t", "h", "n" },
-          }
-        }
-      end
+      config = function() require 'plugins.config.which-key' end
     }
     use 'voldikss/vim-floaterm'
 

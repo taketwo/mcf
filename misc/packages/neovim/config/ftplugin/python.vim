@@ -18,7 +18,10 @@ let b:keymaps = {
   \   ":" : ["AppendColon()"     , "append-colon"]          ,
   \ }
 
-call which_key#register('\', "b:keymaps")
+if exists("which_key#register")
+    " TODO: Adapt to new Neovim which-key API
+    call which_key#register('\', "b:keymaps")
+endif
 
 let b:match_words = '\<if\>:\<elif\>:\<else\>'
 let b:match_skip = 'R:^\s*'
