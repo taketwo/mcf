@@ -11,7 +11,7 @@ import XMonad.Core
 -- Consequently, if shell is spawned not through Xmonad (ssh, non-DM login), tmux is not started
 -- Resolution: exec tmux in .bashrc in *interactive* mode (see https://unix.stackexchange.com/a/113768/55482)
 
-appTerminal = "WINIT_X11_SCALE_FACTOR=1 alacritty"
+appTerminal = "alacritty"
 appTmux = appTerminal ++ " -e tmux"
 appBrowser  = "browser"
 

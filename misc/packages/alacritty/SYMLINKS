@@ -1,1 +1,2 @@
+alacritty:.local/bin/alacritty:Alacritty executable with correct scale factor
 config:.config/alacritty:Alacritty config directory
