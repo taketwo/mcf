@@ -93,7 +93,7 @@ require('packer').startup({
 
     use { 'WhoIsSethDaniel/mason-tool-installer.nvim',
       after = 'mason.nvim',
-      config = function() require 'plugins.configs.mason-tool-installer' end
+      config = function() require 'plugins.config.mason-tool-installer' end
     }
 
     use { 'williamboman/mason-lspconfig.nvim',
@@ -103,7 +103,7 @@ require('packer').startup({
 
     use { 'neovim/nvim-lspconfig',
       after = { 'mason-lspconfig.nvim', 'neodev.nvim' },
-      config = function() require 'plugins.configs.lsp' end
+      config = function() require 'plugins.config.lsp' end
     }
 
     use { 'glepnir/lspsaga.nvim',
@@ -160,7 +160,7 @@ require('packer').startup({
     use {
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
-      config = function() require 'plugins.configs.treesitter' end
+      config = function() require 'plugins.config.treesitter' end
     }
     use {
       'nvim-treesitter/playground',
@@ -169,7 +169,7 @@ require('packer').startup({
     use {
       'nvim-telescope/telescope.nvim',
       requires = {{'nvim-lua/popup.nvim'}, {"nvim-lua/plenary.nvim"}},
-      config = function() require 'plugins.configs.telescope' end
+      config = function() require 'plugins.config.telescope' end
     }
     use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
     use 'nvim-telescope/telescope-symbols.nvim'
@@ -177,11 +177,11 @@ require('packer').startup({
     use 'nvim-telescope/telescope-file-browser.nvim'
     use {
       'lukas-reineke/indent-blankline.nvim',
-      config = function() require 'plugins.configs.indent_blankline' end
+      config = function() require 'plugins.config.indent_blankline' end
     }
     use {
       'folke/todo-comments.nvim',
-      config = function() require 'plugins.configs.todo_comments' end
+      config = function() require 'plugins.config.todo_comments' end
     }
     use { 'nvim-tree/nvim-tree.lua',
       requires = { 'nvim-tree/nvim-web-devicons' },
@@ -191,7 +191,7 @@ require('packer').startup({
 
     -- Autocompletion
     use { 'hrsh7th/nvim-cmp',
-      config = function() require 'plugins.configs.cmp' end
+      config = function() require 'plugins.config.cmp' end
     }
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-buffer'
