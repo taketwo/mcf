@@ -314,15 +314,6 @@ noremap <F12> :NvimTreeToggle<CR>
 
   imap <C-s> <Plug>(PearTreeJump)
 
-" Sideways
-let g:mcf#keymaps["s"] = {
-\   "name" : "+sideways"    ,
-\   "h"    : ["SidewaysLeft"                 , 'push-left']           ,
-\   "n"    : ["SidewaysRight"                , 'push-right']          ,
-\   "H"    : ["SidewaysJumpLeft"             , 'jump-left']           ,
-\   "N"    : ["SidewaysJumpRight"            , 'jump-right']          ,
-\ }
-
 " AnyJump
 nnoremap <F3> :AnyJump<CR>
 

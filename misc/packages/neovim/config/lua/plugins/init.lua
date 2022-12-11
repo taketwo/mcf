@@ -27,7 +27,9 @@ local plugins = {
   ['tpope/vim-surround'] = {},
   ['embear/vim-localvimrc'] = {},
   ['qpkorr/vim-bufkill'] = {},
-  ['AndrewRadev/sideways.vim'] = {},
+  ['AndrewRadev/sideways.vim'] = {
+    cmd = {'SidewaysLeft', 'SidewaysRight', 'SidewaysJumpLeft', 'SidewaysJumpRight'},
+  },
   ['dantler/vim-alternate'] = {},
   ['tpope/vim-eunuch'] = {},
   ['tpope/vim-dispatch'] = {},
