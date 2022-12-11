@@ -137,7 +137,7 @@ local plugins = {
   ['kkoomen/vim-doge'] = {},
 
   -- Misc
-  ['folke/which-key.nvim'] = {},
+  ['folke/which-key.nvim'] = { module = 'which-key' },
   ['voldikss/vim-floaterm'] = {},
 
   -- Misc unsorted

@@ -6,3 +6,6 @@ require('which-key').register{
     },
   },
 }
+
+vim.g.magit_jump_next_hunk = '>'
+vim.g.magit_jump_prev_hunk = '<'
