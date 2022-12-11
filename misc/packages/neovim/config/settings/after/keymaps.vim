@@ -292,9 +292,6 @@ autocmd QuickFixCmdPost    l* nested lwindow
 " Close the current buffer with F11
 nnoremap <F11> :BW<CR>
 
-" NvimTree
-noremap <F12> :NvimTreeToggle<CR>
-
   " Change inside surroundings
 
   let g:mcf#keymaps.k = { "name" : "+change-surrounding" }
