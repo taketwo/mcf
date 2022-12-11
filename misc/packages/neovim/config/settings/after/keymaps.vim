@@ -222,7 +222,6 @@ nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 " Git / version control {{{
 
 nnoremap <silent> <leader>gb :Git blame<CR>
-nnoremap <silent> <leader>gc :call magit#show_magit('v')<CR>
 nnoremap <silent> <leader>ghp :GitGutterPreviewHunk<CR>
 nnoremap <silent> <leader>ghs :GitGutterStageHunk<CR>
 nnoremap <silent> <leader>ghu :GitGutterUndoHunk<CR>
