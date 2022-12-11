@@ -4,6 +4,8 @@ local plugins = {
       config = function() require('plugins') end
   },
 
+  ['nvim-lua/plenary.nvim'] = { module = 'plenary' },
+
   ["norcalli/nvim-colorizer.lua"] = {
     cmd = "ColorizerToggle",
     config = function() require("colorizer").setup() end
@@ -147,7 +149,7 @@ local plugins = {
     -- cmd = {'TSHighlightCapturesUnderCursor'}
   },
   ['nvim-telescope/telescope.nvim'] = {
-    requires = {{'nvim-lua/popup.nvim'}, {"nvim-lua/plenary.nvim"}},
+    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
   },
   ['nvim-telescope/telescope-fzf-native.nvim'] = {
     run = 'make'
