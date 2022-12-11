@@ -176,15 +176,14 @@ local plugins = {
 local process_plugins = function(plugins)
   local final_table = {}
   for key, val in pairs(plugins) do
-    local plugin_name = key:match("([^/]+)$"):gsub("%-nvim$", ""):gsub("%.lua$", ""):gsub("%.nvim$", ""):gsub("%.vim$", ""):gsub("^vim%-", ""):gsub("^nvim%-", "")
+    local plugin_name = require('utils').extract_plugin_name(key)
     if val and type(val) == "table" then
       local config_dir = vim.fn.stdpath("config").."/lua/plugins/config"
       local config_file = string.format("%s/%s.lua", config_dir, plugin_name)
       if vim.fn.filereadable(config_file) == 1 then
         if not val.config then
           val.config = function(name)
-            name = name:match("([^/]+)$"):gsub("%-nvim$", ""):gsub("%.lua$", ""):gsub("%.nvim$", ""):gsub("%.vim$", ""):gsub("^vim%-", ""):gsub("^nvim%-", "")
-            require(string.format("plugins.config.%s", name))
+            require(string.format("plugins.config.%s", require('utils').extract_plugin_name(name)))
           end
         else
           print(string.format("WARNING: plugin %s has both config file and config option, the latter will be used", plugin_name))
@@ -195,8 +194,7 @@ local process_plugins = function(plugins)
       if vim.fn.filereadable(mappings_file) == 1 then
         if not val.setup then
           val.setup = function(name)
-            name = name:match("([^/]+)$"):gsub("%-nvim$", ""):gsub("%.lua$", ""):gsub("%.nvim$", ""):gsub("%.vim$", ""):gsub("^vim%-", ""):gsub("^nvim%-", "")
-            require(string.format("plugins.mappings.%s", name))
+            require(string.format("plugins.mappings.%s", require('utils').extract_plugin_name(name)))
           end
         else
           print(string.format("WARNING: plugin %s has both mappings file and setup option, the latter will be used", plugin_name))
