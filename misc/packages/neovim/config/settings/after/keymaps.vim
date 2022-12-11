@@ -226,17 +226,13 @@ nnoremap <silent> <leader>gc :call magit#show_magit('v')<CR>
 nnoremap <silent> <leader>ghp :GitGutterPreviewHunk<CR>
 nnoremap <silent> <leader>ghs :GitGutterStageHunk<CR>
 nnoremap <silent> <leader>ghu :GitGutterUndoHunk<CR>
-nnoremap <silent> <leader>gs :Telescope git_status<CR>
 lua << EOF
   local present, wk = pcall(require, "which-key")
   if present then
     wk.register({
       g = {
         name = "Git",
-        L = { "<cmd>Telescope git_commits<cr>", "Log (everything)" },
-        l = { "<cmd>Telescope git_bcommits<cr>", "Log (buffer only)"},
         m = "View commit message",
-        s = "Status",
         b = "Blame",
         c = "Commit",
         h = {
@@ -258,14 +254,12 @@ nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
 nnoremap <silent> <leader>ld :Lspsaga peek_definition<CR>
 nnoremap <silent> <leader>lf :Lspsaga lsp_finder<CR>
 nnoremap <silent> <leader>ln <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremap <silent> <leader>lr :Telescope lsp_references<CR>
 let g:mcf#keymaps.l = { 'name' : '+lsp' }
 let g:mcf#keymaps.l.D = 'line diagnostics'
 let g:mcf#keymaps.l.a = 'actions'
 let g:mcf#keymaps.l.d = 'definition preview'
 let g:mcf#keymaps.l.f = 'finder'
 let g:mcf#keymaps.l.n = 'rename'
-let g:mcf#keymaps.l.r = 'references'
 
 " }}}
 
