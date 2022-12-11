@@ -222,9 +222,6 @@ nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 " Git / version control {{{
 
 nnoremap <silent> <leader>gb :Git blame<CR>
-nnoremap <silent> <leader>ghp :GitGutterPreviewHunk<CR>
-nnoremap <silent> <leader>ghs :GitGutterStageHunk<CR>
-nnoremap <silent> <leader>ghu :GitGutterUndoHunk<CR>
 lua << EOF
   local present, wk = pcall(require, "which-key")
   if present then
@@ -234,12 +231,6 @@ lua << EOF
         m = "View commit message",
         b = "Blame",
         c = "Commit",
-        h = {
-          name = "Hunks",
-          p = "Preview",
-          s = "Stage",
-          u = "Undo",
-        },
       },
     }, { prefix = "<leader>" })
   end
