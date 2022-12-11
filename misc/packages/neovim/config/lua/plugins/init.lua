@@ -154,7 +154,6 @@ local plugins = {
   },
   ['nvim-telescope/telescope-symbols.nvim'] = {},
   ['nvim-telescope/telescope-ui-select.nvim'] = {},
-  ['nvim-telescope/telescope-file-browser.nvim'] = {},
   ['lukas-reineke/indent-blankline.nvim'] = {},
   ['folke/todo-comments.nvim'] = {},
   ['nvim-tree/nvim-tree.lua'] = {
