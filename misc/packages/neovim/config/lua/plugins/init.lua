@@ -190,15 +190,15 @@ local process_plugins = function(plugins)
           print(string.format("WARNING: plugin %s has both config file and config option, the latter will be used", plugin_name))
         end
       end
-      local mappings_dir = vim.fn.stdpath("config").."/lua/plugins/mappings"
-      local mappings_file = string.format("%s/%s.lua", mappings_dir, plugin_name)
-      if vim.fn.filereadable(mappings_file) == 1 then
+      local setup_dir = vim.fn.stdpath("config").."/lua/plugins/setup"
+      local setup_file = string.format("%s/%s.lua", setup_dir, plugin_name)
+      if vim.fn.filereadable(setup_file) == 1 then
         if not val.setup then
           val.setup = function(name)
-            require(string.format("plugins.mappings.%s", require('utils').extract_plugin_name(name)))
+            require(string.format("plugins.setup.%s", require('utils').extract_plugin_name(name)))
           end
         else
-          print(string.format("WARNING: plugin %s has both mappings file and setup option, the latter will be used", plugin_name))
+          print(string.format("WARNING: plugin %s has both setup file and setup option, the latter will be used", plugin_name))
         end
       end
       plugins[key][1] = key
