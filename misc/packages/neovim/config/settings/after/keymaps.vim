@@ -219,24 +219,6 @@ nnoremap <Leader>fs :let @+=expand("%")<CR>
 nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 
 " }}}
-" Git / version control {{{
-
-nnoremap <silent> <leader>gb :Git blame<CR>
-lua << EOF
-  local present, wk = pcall(require, "which-key")
-  if present then
-    wk.register({
-      g = {
-        name = "Git",
-        m = "View commit message",
-        b = "Blame",
-        c = "Commit",
-      },
-    }, { prefix = "<leader>" })
-  end
-EOF
-
-" }}}
 " LSP {{{
 
 nnoremap <silent> <leader>lD :Lspsaga show_line_diagnostics<CR>
