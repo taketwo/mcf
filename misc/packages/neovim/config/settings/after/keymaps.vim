@@ -238,9 +238,6 @@ let g:mcf#keymaps.l.n = 'rename'
 " ALEFix
 nnoremap <F2> :ALEFix<CR>
 
-" UndoTree
-nnoremap <F4> :UndotreeToggle<CR>
-
 " Pasting
 set pastetoggle=<S-F5>
 inoremap <F5> <C-o>:call PasteFromClipboard()<CR>

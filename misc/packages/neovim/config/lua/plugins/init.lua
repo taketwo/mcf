@@ -37,7 +37,9 @@ local plugins = {
   ['tpope/vim-dispatch'] = {},
   ['Peeja/vim-cdo'] = {},
   ['tpope/vim-abolish'] = {},
-  ['mbbill/undotree'] = {},
+  ['mbbill/undotree'] = {
+    cmd = { 'UndotreeToggle' },
+  },
   ['xolox/vim-misc'] = {},
   ['taketwo/vim-exchange'] = {},
   ['janko-m/vim-test'] = {},
