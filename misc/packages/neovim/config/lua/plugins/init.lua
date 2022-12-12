@@ -122,8 +122,12 @@ local plugins = {
   ['airblade/vim-gitgutter'] = {},
   ['junegunn/gv.vim'] = {},
   ['whiteinge/diffconflicts'] = {},
-  ['rhysd/git-messenger.vim'] = {},
-  ['jreybert/vimagit'] = {},
+  ['rhysd/git-messenger.vim'] = {
+    cmd = { 'GitMessenger' },
+  },
+  ['jreybert/vimagit'] = {
+    cmd = { 'Magit' },
+  },
 
   -- Text objects
   ['michaeljsmith/vim-indent-object'] = {},
