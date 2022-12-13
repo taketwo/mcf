@@ -35,3 +35,6 @@ fi
 
 # Use GitHub theme in bat
 export BAT_THEME="GitHub"
+
+# Open pointcloud in PCL viewer with axes displayed
+alias pax='pcl_viewer -ax 0.2'
