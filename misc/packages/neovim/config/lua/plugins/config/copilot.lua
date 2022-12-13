@@ -6,6 +6,7 @@ vim.defer_fn(function()
       debounce = 75,
       keymap = {
        accept = "<Tab>",
+       accept_word = "<S-Tab>",
        next = "<M-]>",
        prev = "<M-[>",
        dismiss = "<C-]>",
