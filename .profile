@@ -61,34 +61,35 @@ if [ -d "${HOME}/.mcf" ]; then
 fi
 
 #---------------------------------------------------------------------#
-#                                Misc                                 #
+#                                 Nix                                 #
 #---------------------------------------------------------------------#
 
-# Local bin directory
-[ -d "${HOME}/.local/bin" ] && PATH="${HOME}/.local/bin:${PATH}"
-
-# Nix: source config if it exists and was not sourced already
+# Source config if it exists and was not sourced already
 # Note that Nix config requires USER environment variable to be set
 # This may not be the case in some situations, so we explicitly set it
 if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] &&  [ -z "${NIX_PATH}" ]; then
   USER=$(whoami) . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 fi
 
-# Nix: add share to XDG_DATA_DIRS such that bash completion, applications, etc are picked up
+# Add share to XDG_DATA_DIRS such that bash completion, applications, etc are picked up
 if [ -n "${NIX_PATH}" ]; then
   export XDG_DATA_DIRS="$HOME/.nix-profile/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 fi
 
-# Nix: set LOCALE_ARCHIVE to point to system's locale-archive to avoid troubles with setlocale
+# Set LOCALE_ARCHIVE to point to system's locale-archive to avoid troubles with setlocale
 export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
+
+#---------------------------------------------------------------------#
+#                                Misc                                 #
+#---------------------------------------------------------------------#
+
+# Local bin directory
+[ -d "${HOME}/.local/bin" ] && PATH="${HOME}/.local/bin:${PATH}"
 
 # Load Git secrets
 if [ -f "${HOME}/.config/git/secrets" ]; then
   . "${HOME}/.config/git/secrets"
 fi
-
-# Yarn bin directory
-[ -d "${HOME}/.yarn/bin" ] && PATH="${HOME}/.yarn/bin:${PATH}"
 
 # Cabal bin directory
 [ -d "${HOME}/.cabal/bin" ] && PATH="${HOME}/.cabal/bin:${PATH}"
