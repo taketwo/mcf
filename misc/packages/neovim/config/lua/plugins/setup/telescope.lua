@@ -7,7 +7,6 @@ require('which-key').register{
       g = { '<cmd>Telescope live_grep<cr>', 'Live grep' },
       s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Jump to symbol' },
     },
-    ['<Space>'] = { '<cmd>Telescope buffers<cr>', 'Jump to buffer' },
     g = {
       name = 'Git',
       L = { '<cmd>Telescope git_commits<cr>', 'Log (everything)' },
@@ -22,4 +21,5 @@ require('which-key').register{
       ['='] = { '<cmd>Telescope spell_suggest<cr>', 'Spelling suggestions' },
     },
   },
+  ['<Space>'] = { '<cmd>Telescope buffers<cr>', 'Jump to buffer' },
 }
