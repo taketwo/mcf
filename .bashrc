@@ -64,16 +64,16 @@ for conf_file in ${sorted[@]}; do
   fi
 done
 
+# Source .bashrc.local, if present
+if [ -f "${HOME}/.bashrc.local" ]; then
+  timed_source "${HOME}/.bashrc.local"
+fi
+
 unset scrits
 unset sorted
 unset timed_source
 unset bash_times_file
 unset BASH_TIME_STARTUP
-
-# Source .bashrc.local, if present
-if [ -f "${HOME}/.bashrc.local" ]; then
-  . "${HOME}/.bashrc.local"
-fi
 
 # Remove Ctrl-C binding, use Ctrl-J instead
 # We do this in the very end of initialization sequence to avoid weird errors while
