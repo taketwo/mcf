@@ -180,12 +180,12 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 #draw_bold_text_with_bright_colors: false
 
-# Colors (Solarized Light)
+# Colors (One Dark Warmer)
 colors:
   # Default colors
   primary:
-    background: '0xfdf6e3'
-    foreground: '0x586e75'
+    background: '#232326'
+    foreground: '#a7aab0'
 
     # Bright and dim foreground colors
     #
@@ -278,25 +278,25 @@ colors:
 
   # Normal colors
   normal:
-    black:   '0x073642'
-    red:     '0xdc322f'
-    green:   '0x859900'
-    yellow:  '0xb58900'
-    blue:    '0x268bd2'
-    magenta: '0xd33682'
-    cyan:    '0x2aa198'
-    white:   '0xeee8d5'
+    black:   '#101012'
+    red:     '#de5d68'
+    green:   '#8fb573'
+    yellow:  '#c49060'
+    blue:    '#57a5e5'
+    magenta: '#bb70d2'
+    cyan:    '#51a8b3'
+    white:   '#5a5b5e'
 
   # Bright colors
-  bright:
-    black:   '0x002b36'
-    red:     '0xcb4b16'
-    green:   '0x586e75'
-    yellow:  '0x657b83'
-    blue:    '0x839496'
-    magenta: '0x6c71c4'
-    cyan:    '0x93a1a1'
-    white:   '0xfdf6e3'
+  # bright:
+    # black:   '#5c6370'
+    # red:     '#e06c75'
+    # green:   '#98c379'
+    # yellow:  '#d19a66'
+    # blue:    '#61afef'
+    # magenta: '#c678dd'
+    # cyan:    '#56b6c2'
+    # white:   '#ffffff'
 
   # Dim colors
   #
@@ -320,7 +320,14 @@ colors:
   # Example:
   #   `- { index: 16, color: '#ff00ff' }`
   #
-  #indexed_colors: []
+  indexed_colors:
+    - { index: 16, color: '#232326' }
+    - { index: 17, color: '#2c2d31' }
+    - { index: 18, color: '#35363b' }
+    - { index: 19, color: '#37383d' }
+    - { index: 20, color: '#1b1c1e' }
+    - { index: 21, color: '#68aee8' }
+    - { index: 22, color: '#e2c792' }
 
   # Transparent cell backgrounds
   #
