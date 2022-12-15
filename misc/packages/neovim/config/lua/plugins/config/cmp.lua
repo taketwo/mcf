@@ -1,6 +1,19 @@
-local cmp = require'cmp'
+local cmp = require('cmp')
 
-cmp.setup({
+local function border(hl_name)
+  return {
+    { "╭", hl_name },
+    { "─", hl_name },
+    { "╮", hl_name },
+    { "│", hl_name },
+    { "╯", hl_name },
+    { "─", hl_name },
+    { "╰", hl_name },
+    { "│", hl_name },
+  }
+end
+
+cmp.setup{
   snippet = {
     expand = function(args)
       vim.fn["UltiSnips#Anon"](args.body)
@@ -61,5 +74,15 @@ cmp.setup({
     native_menu = false,
     ghost_text = false,
   },
-})
+  window = {
+    completion = {
+      border = border "CmpBorder",
+      winhighlight = "Normal:CmpItemMenu,CursorLine:PmenuSel,Search:None",
+    },
+    documentation = {
+      border = border "CmpDocBorder",
+      winhighlight = "Normal:CmpItemMenu",
+    },
+  },
+}
 
