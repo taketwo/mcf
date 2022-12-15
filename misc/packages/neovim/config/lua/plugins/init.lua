@@ -14,7 +14,7 @@ local plugins = {
   ['andymass/vim-matchup'] = {},
   ['godlygeek/tabular'] = {},
   ['AndrewRadev/splitjoin.vim'] = {},
-  ['lifepillar/vim-solarized8'] = {},
+  ['navarasu/onedark.nvim'] = {},
   ['vim-airline/vim-airline'] = {
     requires = {'vim-airline/vim-airline-themes'}
   },

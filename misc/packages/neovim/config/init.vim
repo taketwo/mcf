@@ -91,10 +91,6 @@
 
   set termguicolors
 
-  " Use custom color theme that is based on Solarized light
-  set background=light
-  autocmd vimenter * ++nested colorscheme mcf
-
   " Display tabs and trailing spaces visually
   set list listchars=tab:→\ ,trail:· 
 
