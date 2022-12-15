@@ -169,6 +169,10 @@ local plugins = {
     cmd = { 'NvimTreeToggle', 'NvimTreeOpen' },
     config = function() require('nvim-tree').setup() end
   },
+  ['folke/trouble.nvim'] = {
+    requires = { 'nvim-tree/nvim-web-devicons' },
+    config = function() require("trouble").setup() end
+  },
 
   -- Autocompletion
   ['hrsh7th/nvim-cmp'] = {},
