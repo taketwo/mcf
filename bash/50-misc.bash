@@ -14,10 +14,6 @@ alias c='eval `fc -ln -2 -2 | sed -e "s/^[[:space:]]*//"`'
 # Out-of-source build with CMake
 alias osb='mkd build && cmake ..'
 
-# Background color switch
-alias dark='$MCF/misc/gnome-terminal-colors-solarized/install.sh -s dark -p Default --skip-dircolors'
-alias light='$MCF/misc/gnome-terminal-colors-solarized/install.sh -s light -p Default --skip-dircolors'
-
 # Copy and paste to clipboard
 alias cbc='xsel --clipboard --input'
 alias cbp='xsel --clipboard --output'
