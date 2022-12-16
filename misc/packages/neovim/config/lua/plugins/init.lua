@@ -15,8 +15,13 @@ local plugins = {
   ['godlygeek/tabular'] = {},
   ['AndrewRadev/splitjoin.vim'] = {},
   ['navarasu/onedark.nvim'] = {},
-  ['vim-airline/vim-airline'] = {
-    requires = {'vim-airline/vim-airline-themes'}
+  ['nvim-lualine/lualine.nvim'] = {
+    requires = { 'nvim-tree/nvim-web-devicons' },
+  },
+  -- Consider using akinsho/bufferline.nvim instead
+  ['kdheepak/tabline.nvim'] = {
+    requires = { 'nvim-lualine/lualine.nvim' },
+    config = function() require('tabline').setup{} end
   },
   ['MarcWeber/vim-addon-mw-utils'] = {},
   ['tomtom/tlib_vim'] = {},
