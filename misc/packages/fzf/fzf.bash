@@ -6,25 +6,61 @@ if command -v fzf-share >/dev/null; then
   source "$(fzf-share)/completion.bash"
 fi
 
-base03="234"
-base02="235"
-base01="240"
-base00="241"
-base0="244"
-base1="245"
-base2="254"
-base3="230"
-yellow="136"
-orange="166"
-red="160"
-magenta="125"
-violet="61"
-blue="33"
-cyan="37"
-green="64"
+black="#101012"
+bg0="#232326"
+bg1="#2c2d31"
+bg2="#35363b"
+bg3="#37383d"
+bg_d="#1b1c1e"
+bg_blue="#68aee8"
+bg_yellow="#e2c792"
+fg="#a7aab0"
+purple="#bb70d2"
+green="#8fb573"
+orange="#c49060"
+blue="#57a5e5"
+yellow="#dbb671"
+cyan="#51a8b3"
+red="#de5d68"
+grey="#5a5b5e"
+light_grey="#818387"
+dark_cyan="#2b5d63"
+dark_red="#833b3b"
+dark_yellow="#7c5c20"
+dark_purple="#79428a"
 
-# Colors for Solarized (light) palette
-export FZF_COLORS="--color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow"
+# Colors for One Dark (Warmer) palette
+#   fg           Text
+#   bg           Background
+#   preview-fg   Preview window text
+#   preview-bg   Preview window background
+#   hl           Highlighted substrings
+#   fg+          Text (current line)
+#   bg+          Background (current line)
+#   gutter       Gutter on the left (defaults to bg+)
+#   hl+          Highlighted substrings (current line)
+#   info         Info
+#   border       Border of the preview window and horizontal separators (--border)
+#   prompt       Prompt
+#   pointer      Pointer to the current line
+#   marker       Multi-select marker
+#   spinner      Streaming input indicator
+#   header       Header
+export FZF_COLORS="
+  --color fg:-1
+  --color bg:-1
+  --color hl:$blue
+  --color fg+:$black
+  --color bg+:$bg_blue
+  --color gutter:-1
+  --color hl+:$black
+  --color info:$yellow
+  --color border:$bg3
+  --color prompt:$blue
+  --color pointer:$blue
+  --color marker:$blue
+  --color spinner:$yellow
+"
 
 # Set ripgrep as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
@@ -51,7 +87,7 @@ fkill() {
 # fv - fuzzy vim (with pygmentized preview)
 fv() {
   local files
-  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'pygmentize -g -f terminal256 -P style=solarizedlight {} | head -100'))
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0 --preview 'pygmentize -g -f terminal256 -P style=one-dark {} | head -100'))
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
