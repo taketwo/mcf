@@ -29,8 +29,5 @@ if ! hash see 2>/dev/null; then
   alias see='xdg-open'
 fi
 
-# Use GitHub theme in bat
-export BAT_THEME="GitHub"
-
 # Open pointcloud in PCL viewer with axes displayed
 alias pax='pcl_viewer -ax 0.2'
