@@ -46,8 +46,11 @@
 [gui]
   fontui = -family \"VictorMono Nerd Font\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
   fontdiff = -family \"VictorMono Nerd Font\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+[diff]
+  colorMoved = default
 [merge]
   tool = diffconflicts
+  conflictstyle = diff3
 [mergetool]
   keepBackup = false
 [mergetool "diffconflicts"]
@@ -55,6 +58,8 @@
   trustExitCode = true
 [credential]
   helper = store
+[interactive]
+  diffFilter = delta --color-only
 [delta]
   navigate = true
-  syntax-theme = Solarized (light)
+  syntax-theme = TwoDark
