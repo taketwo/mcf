@@ -18,10 +18,8 @@ local plugins = {
   ['nvim-lualine/lualine.nvim'] = {
     requires = { 'nvim-tree/nvim-web-devicons' },
   },
-  -- Consider using akinsho/bufferline.nvim instead
-  ['kdheepak/tabline.nvim'] = {
-    requires = { 'nvim-lualine/lualine.nvim' },
-    config = function() require('tabline').setup{} end
+  ['romgrk/barbar.nvim'] = {
+    requires = { 'nvim-tree/nvim-web-devicons' },
   },
   ['MarcWeber/vim-addon-mw-utils'] = {},
   ['tomtom/tlib_vim'] = {},
@@ -33,7 +31,6 @@ local plugins = {
   ['SirVer/ultisnips'] = {},
   ['tpope/vim-surround'] = {},
   ['embear/vim-localvimrc'] = {},
-  ['qpkorr/vim-bufkill'] = {},
   ['AndrewRadev/sideways.vim'] = {
     cmd = {'SidewaysLeft', 'SidewaysRight', 'SidewaysJumpLeft', 'SidewaysJumpRight'},
   },

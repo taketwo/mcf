@@ -39,11 +39,6 @@ vnoremap - $
 nnoremap _ ^
 vnoremap _ ^
 
-" Navigate between buffers with N/H
-
-noremap N :bnext<CR>
-noremap H :bprev<CR>
-
 " Jump over location list items (populated by LSP/ALE/YCM) with wrapping
 command! Lnext try | lnext | catch | try | lfirst | catch | endtry | endtry
 command! Lprev try | lprev | catch | try | llast | catch | endtry | endtry
@@ -258,9 +253,6 @@ nnoremap <F9> :MakeTarget<CR>
 inoremap <F9> <C-o>:MakeTarget<CR>
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
-
-" Close the current buffer with F11
-nnoremap <F11> :BW<CR>
 
   " Change inside surroundings
 
