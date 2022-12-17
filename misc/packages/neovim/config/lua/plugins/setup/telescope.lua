@@ -5,6 +5,7 @@ require('which-key').register{
       ['.'] = { '<cmd>Telescope find_files<cr>', 'Open file' },
       b = { '<cmd>Telescope buffers<cr>', 'Jump to buffer' },
       g = { '<cmd>Telescope live_grep<cr>', 'Live grep' },
+      h = { '<cmd>Telescope help_tags<cr>', 'Open help' },
       s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Jump to symbol' },
     },
     g = {
