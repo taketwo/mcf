@@ -102,6 +102,7 @@ fi
 export PYENV_ROOT="${HOME}/.pyenv"
 if [ -d "${PYENV_ROOT}" ]; then
   export PATH="${PYENV_ROOT}/bin:${PATH}"
+  # Setup the shims path and rehash shims
   eval "$(pyenv init --path)"
 fi
 
