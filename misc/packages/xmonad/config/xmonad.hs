@@ -60,20 +60,21 @@ import qualified DBus as D
 import qualified DBus.Client as D
 import qualified Data.Map as M
 
-import Solarized
 import MCF.Apps
+import MCF.OneDark
 import MCF.Paths
 import MCF.Polybar
 
 -- Appearance -------------------------------------------------------------- {{{
 
-fontSpec             = "xft:Fantasque Sans Mono:pixelsize=14:bold"
-colorBg              = "#3c3b37"
-colorBgAccent        = solarizedViolet
-colorFgAccent        = "#ffffff"   -- Bright foreground
-colorFgPrimary       = "#c7c2bb"   -- Normal foreground
-colorFgSecondary     = "#6c6b65"   -- Dark foreeground
-colorBorderActive    = solarizedOrange
+fontSpec             = "xft:VictorMono Nerd Font:pixelsize=11:bold"
+colorBg              = oneDarkBg0
+colorBgAccent        = oneDarkPurple
+colorFgAccent        = "#ffffff"     -- Bright foreground
+colorFgPrimary       = oneDarkFg     -- Normal foreground
+colorFgSecondary     = oneDarkGrey   -- Dimmed foreeground
+colorBorder          = oneDarkBlack
+colorBorderActive    = oneDarkBg3
 barHeight            = 22
 
 myTabConfig :: Theme
@@ -446,7 +447,7 @@ main = do
   xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ewmhFullscreen $ ewmh myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
-    , normalBorderColor  = colorBg           -- color of inactive border
+    , normalBorderColor  = colorBorder       -- color of inactive border
     , borderWidth        = 1                 -- width of border around windows
     , terminal           = appTerminal       -- default terminal program
     , workspaces         = myTopicNames
@@ -504,7 +505,7 @@ logHookPolybar dbus = def
   , ppOrder            = \(ws:l:t:x) -> [ws, l, t] ++ x
   , ppSep              = "   "
   , ppWsSep            = " "
-  , ppCurrent          = polybarColor colorFgAccent solarizedCyan . wrap " " " "
+  , ppCurrent          = polybarColor oneDarkBg3 oneDarkGreen . wrap " " " "
   , ppUrgent           = polybarColor colorFgAccent colorBgAccent . wrap " " " " . clickable
   , ppVisible          = polybarColor colorFgPrimary "" . wrap " " " " . clickable
   , ppHidden           = clickable
