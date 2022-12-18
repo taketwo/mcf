@@ -24,38 +24,43 @@ cmp.setup{
     { name = 'buffer', keyword_length = 4 },
   },
   formatting = {
-    format = require'lspkind'.cmp_format({
-      mode = 'symbol_text',
-      symbol_map = {
-        Class = '',
-        Constant = '',
-        Constructor = '',
-        Enum = '',
-        EnumMember = '',
-        File = '',
-        Folder = '',
-        Function = '',
-        Interface = '禍',
-        Keyword = '',
-        Method = '',
-        Module = '',
-        Operator = '洛',
-        Property = '綠',
-        Reference = '',
-        Struct = '',
-        Text = '',
-        Snippet = '',
-        Value = '',
-        Variable = '',
-      },
-      menu = ({
-        buffer = "[Buffer]",
-        path = "[Path]",
-        omni = "[Omni]",
-        nvim_lsp = "[LSP]",
-        ultisnips = "[UltiSnips]",
-      })
-    }),
+    format = function(entry, vim_item)
+      -- At the moment 'cmp' does not support fixed-width windows, so we truncate the items
+      -- explicitly to a maximum of 50 characters.
+      vim_item.abbr = string.sub(vim_item.abbr, 1, 50)
+      return require'lspkind'.cmp_format{
+        mode = 'symbol_text',
+        symbol_map = {
+          Class = '',
+          Constant = '',
+          Constructor = '',
+          Enum = '',
+          EnumMember = '',
+          File = '',
+          Folder = '',
+          Function = '',
+          Interface = '禍',
+          Keyword = '',
+          Method = '',
+          Module = '',
+          Operator = '洛',
+          Property = '綠',
+          Reference = '',
+          Struct = '',
+          Text = '',
+          Snippet = '',
+          Value = '',
+          Variable = '',
+        },
+        menu = ({
+          buffer = "[Buffer]",
+          path = "[Path]",
+          omni = "[Omni]",
+          nvim_lsp = "[LSP]",
+          ultisnips = "[UltiSnips]",
+        })
+      }(entry, vim_item)
+    end
   },
   experimental = {
     native_menu = false,
