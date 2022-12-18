@@ -1,18 +1,5 @@
 local cmp = require('cmp')
 
-local function border(hl_name)
-  return {
-    { "╭", hl_name },
-    { "─", hl_name },
-    { "╮", hl_name },
-    { "│", hl_name },
-    { "╯", hl_name },
-    { "─", hl_name },
-    { "╰", hl_name },
-    { "│", hl_name },
-  }
-end
-
 cmp.setup{
   snippet = {
     expand = function(args)
@@ -75,14 +62,8 @@ cmp.setup{
     ghost_text = false,
   },
   window = {
-    completion = {
-      border = border "CmpBorder",
-      winhighlight = "Normal:CmpItemMenu,CursorLine:PmenuSel,Search:None",
-    },
-    documentation = {
-      border = border "CmpDocBorder",
-      winhighlight = "Normal:CmpItemMenu",
-    },
+    documentation = cmp.config.window.bordered(),
+    completion = cmp.config.window.bordered(),
   },
 }
 
