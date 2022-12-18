@@ -152,7 +152,7 @@ type = internal/network
 inherit = common/network-connectivity
 interface = ${env:ETH_INTERFACE:}
 
-label-connected = "  "
+label-connected = "   "
 
 [module/network-connectivity-wlan]
 
@@ -160,7 +160,7 @@ type = internal/network
 inherit = common/network-connectivity
 interface = ${env:WLAN_INTERFACE:}
 
-label-connected = "  "
+label-connected = "   "
 
 [module/volume]
 

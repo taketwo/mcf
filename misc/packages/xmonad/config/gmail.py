@@ -121,7 +121,7 @@ class Indicator:
             bg = "#8fb573"
             if datetime.datetime.now() > self.until:
                 self.mode = "normal"
-        return '%{{F{} B{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
+        return '%{{F{} B{}}} {}{}  %{{F- B-}}'.format(fg, bg, symbol, count)
 
 
 if __name__ == '__main__':
