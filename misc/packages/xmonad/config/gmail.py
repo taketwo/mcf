@@ -107,7 +107,7 @@ class Indicator:
         self.unread_count = unread_count
 
     def __str__(self):
-        bg = "#6c6b65"
+        bg = "#232326"
         fg = "#37383d"
         count = ""
         if self.mode == "normal":
