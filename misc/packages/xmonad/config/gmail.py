@@ -107,20 +107,21 @@ class Indicator:
         self.unread_count = unread_count
 
     def __str__(self):
-        bg = "6c6b65"
-        fg = "fdf6e3"
+        bg = "#6c6b65"
+        fg = "#37383d"
         count = ""
         if self.mode == "normal":
             symbol = ""
             if self.unread_count > 0:
                 count = " {}".format(self.unread_count)
-                bg = "cb4b16"
+                fg = "#de5d68"
+                bg = "#232326"
         elif self.mode == "deep":
             symbol = "●"
-            bg = "859900"
+            bg = "#8fb573"
             if datetime.datetime.now() > self.until:
                 self.mode = "normal"
-        return '%{{F#{} B#{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
+        return '%{{F{} B{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
 
 
 if __name__ == '__main__':
