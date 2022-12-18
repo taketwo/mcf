@@ -1,29 +1,39 @@
-[colors/solarized]
+[colors/onedark]
 
-base03 = #002b36
-base02 = #073642
-base01 = #586e75
-base00 = #657b83
-base0 = #839496
-base1 = #93a1a1
-base2 = #eee8d5
-base3 = #fdf6e3
-yellow = #b58900
-orange = #cb4b16
-red = #dc322f
-magenta = #d33682
-violet = #6c71c4
-blue = #268bd2
-cyan = #2aa198
-green = #859900
+black = #101012
+bg0 = #232326
+bg1 = #2c2d31
+bg2 = #35363b
+bg3 = #37383d
+bg_d = #1b1c1e
+bg_blue = #68aee8
+bg_yellow = #e2c792
+fg = #a7aab0
+purple = #bb70d2
+green = #8fb573
+orange = #c49060
+blue = #57a5e5
+yellow = #dbb671
+cyan = #51a8b3
+red = #de5d68
+grey = #5a5b5e
+light_grey = #818387
+dark_cyan = #2b5d63
+dark_red = #833b3b
+dark_yellow = #7c5c20
+dark_purple = #79428a
+diff_add = #282b26
+diff_delete = #2a2626
+diff_change = #1a2a37
+diff_text = #2c485f
 
 [colors]
 
-background = #3c3b37
-primary = #c7c2bb
-secondary = #6c6b65
+background = ${colors/onedark.bg0}
+primary = ${colors/onedark.fg}
+secondary = ${colors/onedark.grey}
 accent = #ffffff
-alert = ${colors/solarized.orange}
+alert = ${colors/onedark.orange}
 
 [bar/primary]
 
@@ -102,7 +112,7 @@ tail = true
 type = internal/mpd
 
 format-online = " %{A1:mpc toggle:}%{A3:mpc stop:}<label-song>%{A}%{A} "
-format-paused = " %{A1:mpc toggle:}%{A3:mpc stop:}%{F#6c6b65}<label-song>%{A}%{A}%{F-} "
+format-paused = " %{A1:mpc toggle:}%{A3:mpc stop:}%{F#5a5b5e}<label-song>%{A}%{A}%{F-} "
 format-stopped = <toggle>
 
 icon-play = "  "
@@ -132,12 +142,10 @@ interval = 3.0
 ping-interval = 3
 
 format-connected = <label-connected>
-label-connected-foreground = ${colors.accent}
-label-connected-background = ${colors/solarized.blue}
+label-connected-foreground = ${colors/onedark.blue}
 
 format-packetloss = <label-connected>
-label-packetloss-foreground = ${colors/solarized.base1}
-label-packetloss-background = ${colors/solarized.base01}
+label-packetloss-foreground = ${colors/onedark.purple}
 
 [module/network-connectivity-eth]
 
@@ -163,20 +171,19 @@ sink = ${env:PULSEAUDIO_SINK:}
 
 format-muted = <label-muted>
 label-muted = "  "
-format-muted-foreground = ${colors.alert}
-format-muted-background = ${colors/solarized.base2}
+format-muted-foreground = ${colors/onedark.red}
 
 format-volume = " <bar-volume> "
 bar-volume-width = 12
-bar-volume-foreground-0 = ${colors/solarized.cyan}
-bar-volume-foreground-1 = ${colors/solarized.cyan}
-bar-volume-foreground-2 = ${colors/solarized.cyan}
-bar-volume-foreground-3 = ${colors/solarized.cyan}
-bar-volume-foreground-4 = ${colors/solarized.cyan}
-bar-volume-foreground-5 = ${colors/solarized.yellow}
-bar-volume-foreground-6 = ${colors/solarized.orange}
+bar-volume-foreground-0 = ${colors/onedark.green}
+bar-volume-foreground-1 = ${colors/onedark.green}
+bar-volume-foreground-2 = ${colors/onedark.green}
+bar-volume-foreground-3 = ${colors/onedark.green}
+bar-volume-foreground-4 = ${colors/onedark.green}
+bar-volume-foreground-5 = ${colors/onedark.yellow}
+bar-volume-foreground-6 = ${colors/onedark.orange}
 bar-volume-gradient = false
-bar-volume-indicator-foreground = ${colors/solarized.base3}
+bar-volume-indicator-foreground = ${colors/onedark.fg}
 bar-volume-indicator = ─
 bar-volume-fill = ─
 bar-volume-empty = ─
@@ -186,30 +193,28 @@ bar-volume-empty = ─
 time-format = %-H:%M
 
 label-charging = %percentage%% %time%
-format-charging = " <animation-charging> <label-charging> "
-label-charging-foreground = ${colors.accent}
-format-charging-background = ${colors/solarized.green}
+format-charging = " <animation-charging>  <label-charging> "
+label-charging-foreground = ${colors/onedark.green}
 
 format-full =
 
 label-discharging = %percentage%% %time%
-format-discharging = " <ramp-capacity> <label-discharging> "
-label-discharging-foreground = ${colors.accent}
-format-discharging-background = ${colors/solarized.violet}
+format-discharging = " <ramp-capacity>  <label-discharging> "
+label-discharging-foreground = ${colors/onedark.purple}
 
 ramp-capacity-0 = 
 ramp-capacity-1 = 
 ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
-ramp-capacity-foreground = ${colors.accent}
+ramp-capacity-foreground = ${colors/onedark.purple}
 
 animation-charging-0 = 
 animation-charging-1 = 
 animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
-animation-charging-foreground = ${colors.accent}
+animation-charging-foreground = ${colors/onedark.green}
 animation-charging-framerate = 750
 
 [module/battery0]
@@ -232,6 +237,6 @@ full-at = 95
 
 type = internal/date
 interval = 1
-date = " %A %{F#6c6b65}%Y.%m.%{F-}%{F#2aa198}%d%{F-} %{B#2aa198 F#ffffff} %H:%M:%S %{B- F-}"
+date = " %A %{F#a7aab0}%Y.%m.%{F-}%{F#8fb573}%d%{F-} %{B#8fb573 F#37383d} %H:%M:%S %{B- F-}"
 
 ; vim:ft=dosini
