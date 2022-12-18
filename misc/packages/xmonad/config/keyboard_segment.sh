@@ -2,8 +2,8 @@
 
 # shellcheck source=polybar.bash
 source "$HOME/.xmonad/polybar.bash"
-# shellcheck source=solarized.bash
-source "$HOME/.xmonad/solarized.bash"
+# shellcheck source=onedark.bash
+source "$HOME/.xmonad/onedark.bash"
 
 case $(keyboard -g) in
   "us(dvorak)") layout="DK";;
@@ -18,6 +18,6 @@ Add "$layout"
 Action 1 "keyboard -n"
 Action 2 "keyboard -s de"
 Action 3 "keyboard -s us"
-Color "#ffffff" "$SolarizedYellow"
+Color "$OneDarkYellow" "$OneDarkBg0"
 
 FlushSegment
