@@ -170,7 +170,7 @@ sink = ${env:PULSEAUDIO_SINK:}
 
 format-muted = <label-muted>
 label-muted = "  "
-format-muted-foreground = ${colors/onedark.red}
+format-muted-foreground = ${colors/onedark.orange}
 
 format-volume = " <bar-volume> "
 bar-volume-width = 12
