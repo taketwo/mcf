@@ -10,7 +10,6 @@ ubuntu: apt-file
 # Development
 cmake                                  # also YouCompleteMe requires this
 clang
-clangd
 build-essential
 nix: ninja
 pipx: cmakelint
