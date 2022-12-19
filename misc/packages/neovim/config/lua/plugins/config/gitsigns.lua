@@ -28,12 +28,8 @@ require('gitsigns').setup{
     }
 
     -- Text object
-    -- TODO: Switch to using 'which-key'
-    local function map(mode, l, r, opts)
-      opts = opts or {}
-      opts.buffer = bufnr
-      vim.keymap.set(mode, l, r, opts)
-    end
-    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    require('which-key').register{
+      ih = { ':<C-U>Gitsigns select_hunk<CR>', 'Select hunk', mode = { 'o', 'x' }  }
+    }
   end
 }
