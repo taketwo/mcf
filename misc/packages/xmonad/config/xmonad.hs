@@ -67,7 +67,7 @@ import MCF.Polybar
 
 -- Appearance -------------------------------------------------------------- {{{
 
-fontSpec             = "xft:VictorMono Nerd Font:pixelsize=11:bold"
+fontSpec             = "xft:VictorMono Nerd Font Mono:bold:pixelsize=13"
 colorBg              = oneDarkBg0
 colorBgAccent        = oneDarkPurple
 colorFgAccent        = "#ffffff"     -- Bright foreground
