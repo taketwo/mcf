@@ -30,6 +30,12 @@
   sync = "!git pull && git submodule sync && git submodule update --init --recursive && git remote prune origin"
   changed-list = "!git diff --name-only $(git merge-base HEAD ${REVIEW_BASE:-master})"
   changed-stat = "!git diff --stat $(git merge-base HEAD ${REVIEW_BASE:-master})"
+  fa = forgit add
+  fbd = forgit branch_delete
+  fcp = forgit cherry_pick
+  fd = forgit diff
+  flog = forgit log
+  fss = forgit stash_show
 [core]
   editor = nvim
   pager = delta

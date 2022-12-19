@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# shellcheck source=/dev/null
-source "$MCF/external/forgit/forgit.plugin.sh"
-forgit::diff
