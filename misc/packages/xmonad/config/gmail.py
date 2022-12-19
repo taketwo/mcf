@@ -111,7 +111,7 @@ class Indicator:
         fg = "#37383d"
         count = ""
         if self.mode == "normal":
-            symbol = ""
+            symbol = " "
             if self.unread_count > 0:
                 count = " {}".format(self.unread_count)
                 fg = "#de5d68"
@@ -121,7 +121,7 @@ class Indicator:
             bg = "#8fb573"
             if datetime.datetime.now() > self.until:
                 self.mode = "normal"
-        return '%{{F{} B{}}} {}{}  %{{F- B-}}'.format(fg, bg, symbol, count)
+        return '%{{F{} B{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
 
 
 if __name__ == '__main__':
