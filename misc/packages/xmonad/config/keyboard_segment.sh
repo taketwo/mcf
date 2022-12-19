@@ -18,6 +18,12 @@ Add "$layout"
 Action 1 "keyboard -n"
 Action 2 "keyboard -s de"
 Action 3 "keyboard -s us"
-Color "$OneDarkYellow" "$OneDarkBg0"
+# set foreground to bg3 if the layout is dvorak. Otherwise, use yellow
+if [[ "$layout" == "DK" ]]; then
+  foreground="$OneDarkBg3"
+else
+  foreground="$OneDarkYellow"
+fi
+Color "$foreground" "$OneDarkBg0"
 
 FlushSegment
