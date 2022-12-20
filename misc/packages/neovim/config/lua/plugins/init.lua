@@ -21,7 +21,6 @@ local plugins = {
   ['romgrk/barbar.nvim'] = {
     requires = { 'nvim-tree/nvim-web-devicons' },
   },
-  ['MarcWeber/vim-addon-mw-utils'] = {},
   ['kshenoy/vim-signature'] = {},
   ['briandoll/change-inside-surroundings.vim'] = {},
   ['tmsvg/pear-tree'] = {},
