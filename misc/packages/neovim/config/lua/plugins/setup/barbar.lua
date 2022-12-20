@@ -21,6 +21,7 @@ require('which-key').register{
         l = { '<cmd>BufferOrderByLanguage<cr>', 'Sort buffers by language' },
         n = { '<cmd>BufferOrderByBufferNumber<cr>', 'Sort buffers by buffer number' },
       },
+      ['<Space>'] = { '<cmd>BufferPick<cr>', 'Jump to buffer' },
     },
   },
 }
