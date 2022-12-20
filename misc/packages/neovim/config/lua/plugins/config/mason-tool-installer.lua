@@ -3,5 +3,6 @@ require('mason-tool-installer').setup{
     'bash-language-server',
     'clangd',
     'lua-language-server',
+    'stylua',
   }
 }
