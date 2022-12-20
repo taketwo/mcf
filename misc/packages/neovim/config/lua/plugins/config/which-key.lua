@@ -1,12 +1,12 @@
-require("which-key").setup {
+require('which-key').setup({
   plugins = {
     presets = {
       -- Temporary disable operators to avoid delay on pressing "c"
-      operators = false
-    }
+      operators = false,
+    },
   },
   triggers_blacklist = {
-    i = { "c", "t", "h", "n", "." },
-    v = { "c", "t", "h", "n" },
-  }
-}
+    i = { 'c', 't', 'h', 'n', '.' },
+    v = { 'c', 't', 'h', 'n' },
+  },
+})

@@ -1,6 +1,6 @@
 local onedark = require('onedark')
 
-onedark.setup{
+onedark.setup({
   style = 'warmer',
   transparent = true,
   highlights = {
@@ -8,7 +8,7 @@ onedark.setup{
     IncSearch = { fg = 'none', bg = 'none', fmt = 'bold,underline,standout' },
     CursorLineNr = { fmt = 'bold' },
     YankedRegion = { fg = '$red' },
-  }
-}
+  },
+})
 
 onedark.load()

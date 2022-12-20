@@ -1,7 +1,6 @@
-require("trouble").setup{
+require('trouble').setup({
   action_keys = {
-    previous = "c",
-    next = "t",
+    previous = 'c',
+    next = 't',
   },
-}
-
+})

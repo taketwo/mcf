@@ -1,14 +1,14 @@
 local plugins = {
   ['wbthomason/packer.nvim'] = {
-      cmd = {'PackerStatus', 'PackerSync', 'PackerInstall', 'PackerUpdate', 'PackerClean', 'PackerCompile'},
-      config = function() require('plugins') end
+    cmd = { 'PackerStatus', 'PackerSync', 'PackerInstall', 'PackerUpdate', 'PackerClean', 'PackerCompile' },
+    config = function() require('plugins') end,
   },
 
   ['nvim-lua/plenary.nvim'] = { module = 'plenary' },
 
-  ["norcalli/nvim-colorizer.lua"] = {
-    cmd = "ColorizerToggle",
-    config = function() require("colorizer").setup() end
+  ['norcalli/nvim-colorizer.lua'] = {
+    cmd = 'ColorizerToggle',
+    config = function() require('colorizer').setup() end,
   },
 
   ['andymass/vim-matchup'] = {},
@@ -32,7 +32,7 @@ local plugins = {
   ['tpope/vim-surround'] = {},
   ['embear/vim-localvimrc'] = {},
   ['AndrewRadev/sideways.vim'] = {
-    cmd = {'SidewaysLeft', 'SidewaysRight', 'SidewaysJumpLeft', 'SidewaysJumpRight'},
+    cmd = { 'SidewaysLeft', 'SidewaysRight', 'SidewaysJumpLeft', 'SidewaysJumpRight' },
   },
   ['dantler/vim-alternate'] = {},
   ['tpope/vim-eunuch'] = {},
@@ -68,14 +68,14 @@ local plugins = {
   ------------------------------------------------------------------------------
 
   ['preservim/vim-markdown'] = {
-    ft = { 'markdown '}
+    ft = { 'markdown ' },
   },
   ['jkramer/vim-checkbox'] = {
-    ft = { 'markdown' }
+    ft = { 'markdown' },
   },
   ['tikhomirov/vim-glsl'] = {},
   ['lervag/vimtex'] = {
-    ft = { 'tex' }
+    ft = { 'tex' },
   },
   ['keith/tmux.vim'] = {},
   ['LnL7/vim-nix'] = {},
@@ -95,7 +95,7 @@ local plugins = {
   ------------------------------------------------------------------------------
 
   ['williamboman/mason.nvim'] = {
-    config = function() require('mason').setup() end
+    config = function() require('mason').setup() end,
   },
 
   ['WhoIsSethDaniel/mason-tool-installer.nvim'] = {
@@ -104,7 +104,7 @@ local plugins = {
 
   ['williamboman/mason-lspconfig.nvim'] = {
     after = 'mason.nvim',
-    config = function() require('mason-lspconfig').setup() end
+    config = function() require('mason-lspconfig').setup() end,
   },
 
   ['neovim/nvim-lspconfig'] = {
@@ -112,7 +112,7 @@ local plugins = {
   },
 
   ['glepnir/lspsaga.nvim'] = {
-    config = function() require('lspsaga').init_lsp_saga() end
+    config = function() require('lspsaga').init_lsp_saga() end,
   },
 
   ['onsails/lspkind-nvim'] = {},
@@ -157,10 +157,10 @@ local plugins = {
     -- cmd = {'TSHighlightCapturesUnderCursor'}
   },
   ['nvim-telescope/telescope.nvim'] = {
-    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
+    requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } },
   },
   ['nvim-telescope/telescope-fzf-native.nvim'] = {
-    run = 'make'
+    run = 'make',
   },
   ['nvim-telescope/telescope-symbols.nvim'] = {},
   ['nvim-telescope/telescope-ui-select.nvim'] = {},
@@ -169,10 +169,10 @@ local plugins = {
   ['nvim-tree/nvim-tree.lua'] = {
     requires = { 'nvim-tree/nvim-web-devicons' },
     cmd = { 'NvimTreeToggle', 'NvimTreeOpen' },
-    config = function() require('nvim-tree').setup() end
+    config = function() require('nvim-tree').setup() end,
   },
   ['folke/trouble.nvim'] = {
-    requires = { 'nvim-tree/nvim-web-devicons' }
+    requires = { 'nvim-tree/nvim-web-devicons' },
   },
 
   -- Autocompletion
@@ -184,34 +184,42 @@ local plugins = {
   ['quangnguyen30192/cmp-nvim-ultisnips'] = {},
   ['zbirenbaum/copilot.lua'] = {
     event = 'VimEnter',
-  }
+  },
 }
 
 local process_plugins = function(plugins)
   local final_table = {}
   for key, val in pairs(plugins) do
     local plugin_name = require('utils').extract_plugin_name(key)
-    if val and type(val) == "table" then
-      local config_dir = vim.fn.stdpath("config").."/lua/plugins/config"
-      local config_file = string.format("%s/%s.lua", config_dir, plugin_name)
+    if val and type(val) == 'table' then
+      local config_dir = vim.fn.stdpath('config') .. '/lua/plugins/config'
+      local config_file = string.format('%s/%s.lua', config_dir, plugin_name)
       if vim.fn.filereadable(config_file) == 1 then
         if not val.config then
-          val.config = function(name)
-            require(string.format("plugins.config.%s", require('utils').extract_plugin_name(name)))
-          end
+          val.config =
+            function(name) require(string.format('plugins.config.%s', require('utils').extract_plugin_name(name))) end
         else
-          print(string.format("WARNING: plugin %s has both config file and config option, the latter will be used", plugin_name))
+          print(
+            string.format(
+              'WARNING: plugin %s has both config file and config option, the latter will be used',
+              plugin_name
+            )
+          )
         end
       end
-      local setup_dir = vim.fn.stdpath("config").."/lua/plugins/setup"
-      local setup_file = string.format("%s/%s.lua", setup_dir, plugin_name)
+      local setup_dir = vim.fn.stdpath('config') .. '/lua/plugins/setup'
+      local setup_file = string.format('%s/%s.lua', setup_dir, plugin_name)
       if vim.fn.filereadable(setup_file) == 1 then
         if not val.setup then
-          val.setup = function(name)
-            require(string.format("plugins.setup.%s", require('utils').extract_plugin_name(name)))
-          end
+          val.setup =
+            function(name) require(string.format('plugins.setup.%s', require('utils').extract_plugin_name(name))) end
         else
-          print(string.format("WARNING: plugin %s has both setup file and setup option, the latter will be used", plugin_name))
+          print(
+            string.format(
+              'WARNING: plugin %s has both setup file and setup option, the latter will be used',
+              plugin_name
+            )
+          )
         end
       end
       plugins[key][1] = key
@@ -222,9 +230,9 @@ local process_plugins = function(plugins)
 end
 
 local packer = require('packer')
-packer.init{
+packer.init({
   config = {
     compile_path = vim.fn.stdpath('state') .. '/packer_compiled.lua',
-  }
-}
-packer.startup{process_plugins(plugins)}
+  },
+})
+packer.startup({ process_plugins(plugins) })

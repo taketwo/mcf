@@ -1,4 +1,4 @@
-require('which-key').register{
+require('which-key').register({
   H = { '<cmd>BufferPrevious<cr>', 'Previous buffer' },
   N = { '<cmd>BufferNext<cr>', 'Next buffer' },
   ['<F11>'] = { '<cmd>BufferClose<cr>', 'Close buffer' },
@@ -24,4 +24,4 @@ require('which-key').register{
       ['<Space>'] = { '<cmd>BufferPick<cr>', 'Jump to buffer' },
     },
   },
-}
+})

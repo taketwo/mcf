@@ -1,10 +1,8 @@
 local cmp = require('cmp')
 
-cmp.setup{
+cmp.setup({
   snippet = {
-    expand = function(args)
-      vim.fn["UltiSnips#Anon"](args.body)
-    end,
+    expand = function(args) vim.fn['UltiSnips#Anon'](args.body) end,
   },
   mapping = {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -28,7 +26,7 @@ cmp.setup{
       -- At the moment 'cmp' does not support fixed-width windows, so we truncate the items
       -- explicitly to a maximum of 50 characters.
       vim_item.abbr = string.sub(vim_item.abbr, 1, 50)
-      return require'lspkind'.cmp_format{
+      return require('lspkind').cmp_format({
         mode = 'symbol_text',
         symbol_map = {
           Class = '',
@@ -52,15 +50,15 @@ cmp.setup{
           Value = '',
           Variable = '',
         },
-        menu = ({
-          buffer = "[Buffer]",
-          path = "[Path]",
-          omni = "[Omni]",
-          nvim_lsp = "[LSP]",
-          ultisnips = "[UltiSnips]",
-        })
-      }(entry, vim_item)
-    end
+        menu = {
+          buffer = '[Buffer]',
+          path = '[Path]',
+          omni = '[Omni]',
+          nvim_lsp = '[LSP]',
+          ultisnips = '[UltiSnips]',
+        },
+      })(entry, vim_item)
+    end,
   },
   experimental = {
     native_menu = false,
@@ -70,5 +68,4 @@ cmp.setup{
     documentation = cmp.config.window.bordered(),
     completion = cmp.config.window.bordered(),
   },
-}
-
+})

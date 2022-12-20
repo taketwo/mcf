@@ -1,8 +1,8 @@
-require('mason-tool-installer').setup{
+require('mason-tool-installer').setup({
   ensure_installed = {
     'bash-language-server',
     'clangd',
     'lua-language-server',
     'stylua',
-  }
-}
+  },
+})

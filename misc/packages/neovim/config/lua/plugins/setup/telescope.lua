@@ -1,4 +1,4 @@
-require('which-key').register{
+require('which-key').register({
   ['<Leader>'] = {
     ['.'] = {
       name = 'Telescope',
@@ -23,4 +23,4 @@ require('which-key').register{
     },
   },
   ['<Space>'] = { '<cmd>Telescope buffers<cr>', 'Jump to buffer' },
-}
+})

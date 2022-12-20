@@ -1,4 +1,4 @@
-require('which-key').register{
+require('which-key').register({
   ['<Leader>s'] = {
     name = '+Sideways',
     h = { '<cmd>SidewaysLeft<cr>', 'Push left' },
@@ -6,4 +6,4 @@ require('which-key').register{
     H = { '<cmd>SidewaysJumpLeft<cr>', 'Jump left' },
     N = { '<cmd>SidewaysJumpRight<cr>', 'Jump right' },
   },
-}
+})
