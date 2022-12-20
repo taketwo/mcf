@@ -22,7 +22,6 @@ local plugins = {
     requires = { 'nvim-tree/nvim-web-devicons' },
   },
   ['MarcWeber/vim-addon-mw-utils'] = {},
-  ['tomtom/tlib_vim'] = {},
   ['kshenoy/vim-signature'] = {},
   ['briandoll/change-inside-surroundings.vim'] = {},
   ['tmsvg/pear-tree'] = {},
