@@ -172,8 +172,7 @@ local plugins = {
     config = function() require('nvim-tree').setup() end
   },
   ['folke/trouble.nvim'] = {
-    requires = { 'nvim-tree/nvim-web-devicons' },
-    config = function() require("trouble").setup() end
+    requires = { 'nvim-tree/nvim-web-devicons' }
   },
 
   -- Autocompletion
