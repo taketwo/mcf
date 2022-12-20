@@ -1,13 +1,10 @@
 require('gitsigns').setup{
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
-
-    -- TODO: Make the mappings local to the buffer
-    require('which-key').register{
+    require('which-key').register({
       ['<Leader>'] = {
         g = {
           name = 'Git',
-          b = { '<cmd>Git blame<cr>', 'Blame' },
           h = {
             name = '+hunks',
             d = { gs.diffthis, 'Diff' },
@@ -17,9 +14,9 @@ require('gitsigns').setup{
             u = { gs.undo_stage_hunk, 'Unstage' },
           },
           -- TODO: The one below is an alternative to git-messenger, consider removing one of them
-          B = { function() gs.blame_line{full=true} end, 'Blame' },
-          tb = { gs.toggle_current_line_blame, 'Toggle current line blame' },
-          td = { gs.toggle_deleted, 'Toggle deleted lines' },
+          M = { function() gs.blame_line{full=true} end, 'View commit message (gitsigns)' },
+          B = { gs.toggle_current_line_blame, 'Toggle current line blame' },
+          D = { gs.toggle_deleted, 'Toggle deleted lines' },
         },
       },
       [']h'] = { function()
@@ -32,11 +29,8 @@ require('gitsigns').setup{
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
         end, 'Previous git hunk', expr=true },
-    }
-
-    -- Text object
-    require('which-key').register{
+      -- Text object
       ih = { ':<C-U>Gitsigns select_hunk<CR>', 'Select hunk', mode = { 'o', 'x' }  }
-    }
+    }, { buffer=bufnr })
   end
 }
