@@ -32,8 +32,7 @@ diff_text = #2c485f
 background = ${colors/onedark.bg0}
 primary = ${colors/onedark.fg}
 secondary = ${colors/onedark.grey}
-accent = #ffffff
-alert = ${colors/onedark.orange}
+alert = ${colors/onedark.purple}
 
 [bar/primary]
 
@@ -182,10 +181,12 @@ bar-volume-foreground-4 = ${colors/onedark.green}
 bar-volume-foreground-5 = ${colors/onedark.yellow}
 bar-volume-foreground-6 = ${colors/onedark.orange}
 bar-volume-gradient = false
-bar-volume-indicator-foreground = ${colors/onedark.fg}
 bar-volume-indicator = ─
 bar-volume-fill = ─
 bar-volume-empty = ─
+bar-volume-indicator-foreground = ${colors.secondary}
+bar-volume-fill-foreground = ${colors.secondary}
+bar-volume-empty-foreground = ${colors.secondary}
 
 [common/battery]
 

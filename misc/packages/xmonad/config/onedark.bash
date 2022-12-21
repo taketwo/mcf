@@ -1,3 +1,4 @@
+# Palette
 OneDarkBlack="#101012"
 OneDarkBg0="#232326"
 OneDarkBg1="#2c2d31"
@@ -24,3 +25,7 @@ OneDarkDiffAdd="#282b26"
 OneDarkDiffDelete="#2a2626"
 OneDarkDiffChange="#1a2a37"
 OneDarkDiffText="#2c485f"
+# Style
+OneDarkBackground=$OneDarkBg0
+OneDarkPrimary=$OneDarkFg
+OneDarkSecondary=$OneDarkGrey

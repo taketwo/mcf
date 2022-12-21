@@ -108,17 +108,16 @@ class Indicator:
 
     def __str__(self):
         bg = "#232326"
-        fg = "#37383d"
+        fg = "#5a5b5e"
         count = ""
         if self.mode == "normal":
             symbol = " "
             if self.unread_count > 0:
                 count = " {}".format(self.unread_count)
                 fg = "#de5d68"
-                bg = "#232326"
         elif self.mode == "deep":
-            symbol = "●"
-            bg = "#8fb573"
+            fg = "#8fb573"
+            symbol = "● "
             if datetime.datetime.now() > self.until:
                 self.mode = "normal"
         return '%{{F{} B{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
