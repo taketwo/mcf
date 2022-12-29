@@ -118,7 +118,6 @@ local plugins = {
   -- Git related
   ['tpope/vim-fugitive'] = {},
   ['tpope/vim-git'] = {},
-  ['tpope/vim-rhubarb'] = {},
   ['lewis6991/gitsigns.nvim'] = {},
   ['junegunn/gv.vim'] = {},
   ['whiteinge/diffconflicts'] = {},
@@ -127,6 +126,9 @@ local plugins = {
   },
   ['jreybert/vimagit'] = {
     cmd = { 'Magit' },
+  },
+  ['ruifm/gitlinker.nvim'] = {
+    requires = { 'nvim-lua/plenary.nvim' },
   },
 
   -- Text objects
