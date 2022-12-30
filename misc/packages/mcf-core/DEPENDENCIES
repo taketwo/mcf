@@ -22,7 +22,6 @@ nix: shfmt                             # formatting for Bash
 nix: delta                             # syntax highlighting for diffs
 pipx: codespell                        # spell checking for C++
 pudb
-bash-language-server
 libxml2-utils                          # linting for XML
 pipx: jedi-language-server
 
