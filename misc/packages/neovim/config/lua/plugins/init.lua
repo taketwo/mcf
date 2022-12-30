@@ -137,7 +137,9 @@ local plugins = {
   ['kana/vim-textobj-entire'] = {},
   ['kana/vim-textobj-user'] = {},
   ['kana/vim-textobj-function'] = {},
-  ['jceb/vim-textobj-uri'] = {},
+  ['jceb/vim-textobj-uri'] = {
+    requires = { 'kana/vim-textobj-user' },
+  },
   ['machakann/vim-textobj-delimited'] = {},
 
   -- Snippets
