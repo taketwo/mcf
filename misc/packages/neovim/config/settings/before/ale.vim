@@ -7,5 +7,5 @@ let g:ale_sign_style_warning = '✢'
 " Not sure if this is needed
 let g:airline#extensions#ale#enabled = 1
 
-" Disable completion (YCM will do that)
+" Disable completion (language servers will do that)
 let g:ale_completion_enabled = 0

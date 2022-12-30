@@ -40,11 +40,6 @@ let b:surround_114 = "range(\r)"
 " e - enumerate
 let b:surround_101 = "enumerate(\r)"
 
-" YCM mappings
-nnoremap <buffer> gd :YcmCompleter GoTo<CR>
-nnoremap <buffer> gr :YcmCompleter GoToReferences<CR>
-nnoremap <silent> <LocalLeader>d :YcmCompleter GetDoc<CR>
-
 " ALE config
 " Turn flake8 style errors into warnings
 let b:ale_type_map = {'flake8': {'ES': 'WS'}}
