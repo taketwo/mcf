@@ -194,11 +194,6 @@ let g:mcf#keymaps.l.n = 'rename'
 " ALEFix
 nnoremap <F2> :ALEFix<CR>
 
-" Pasting
-set pastetoggle=<S-F5>
-inoremap <F5> <C-o>:call PasteFromClipboard()<CR>
-nnoremap <F5> :call PasteFromClipboard()<CR>
-
 " Floaterm <F6>, set in floaterm.vim settings file
 
 " Enable spell checking
@@ -232,7 +227,7 @@ nnoremap <F3> :AnyJump<CR>
 
 " Some keys that are still free
 "
-" $ ^ F10
+" $ ^ F5 F10
 
 " Create WhichKey menu
 if exists("which_key#register")
