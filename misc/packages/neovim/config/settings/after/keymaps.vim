@@ -4,28 +4,7 @@ endif
 
 let g:mcf#keymaps = {}
 
-" Enter command mode with semicolon
-
-  nnoremap ; :
-
 " Move around {{{
-
-" Left, right, up, and down
-"
-"       c
-"     h t n
-
-" Mappings for Normal mode
-
-nnoremap c k
-nnoremap t j
-nnoremap n l
-
-" Mappings for Visual (but not Select!) mode
-
-xnoremap c k
-xnoremap t j
-xnoremap n l
 
 " Accelerated up and down (scrolling)
 
@@ -144,24 +123,6 @@ nnoremap <M-Up> <C-w>+
 nnoremap <M-Down> <C-w>-
 nnoremap <M-Right> <C-w>>
 nnoremap <M-Left> <C-w><
-
-" }}}
-" Search {{{
-
-" Reset search pattern
-
-let g:mcf#keymaps["/"] = { "name" : "reset-search-pattern" }
-nnoremap <Leader>/ :let @/ = ""<CR>
-
-" Seek through search results with Ctrl+c and Ctrl+t whilst entering search pattern
-
-cnoremap <C-t> <C-g>
-cnoremap <C-c> <C-t>
-
-" Seek through search results with l/L (instead of used n/N)
-
-nnoremap l n
-nnoremap L N
 
 " }}}
 " Misc {{{
