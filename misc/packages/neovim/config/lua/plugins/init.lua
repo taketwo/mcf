@@ -140,7 +140,6 @@ local plugins = {
   ['jceb/vim-textobj-uri'] = {
     requires = { 'kana/vim-textobj-user' },
   },
-  ['machakann/vim-textobj-delimited'] = {},
 
   -- Snippets
   ['honza/vim-snippets'] = {},
