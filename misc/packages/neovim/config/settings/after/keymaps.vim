@@ -177,16 +177,10 @@ nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 " }}}
 " LSP {{{
 
-nnoremap <silent> <leader>lD :Lspsaga show_line_diagnostics<CR>
 nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
-nnoremap <silent> <leader>ld :Lspsaga peek_definition<CR>
-nnoremap <silent> <leader>lf :Lspsaga lsp_finder<CR>
 nnoremap <silent> <leader>ln <cmd>lua vim.lsp.buf.rename()<CR>
 let g:mcf#keymaps.l = { 'name' : '+lsp' }
-let g:mcf#keymaps.l.D = 'line diagnostics'
 let g:mcf#keymaps.l.a = 'actions'
-let g:mcf#keymaps.l.d = 'definition preview'
-let g:mcf#keymaps.l.f = 'finder'
 let g:mcf#keymaps.l.n = 'rename'
 
 " }}}
