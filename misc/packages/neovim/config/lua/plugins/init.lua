@@ -134,9 +134,9 @@ local plugins = {
   -- Text objects
   ['michaeljsmith/vim-indent-object'] = {},
   ['coderifous/textobj-word-column.vim'] = {},
-  ['kana/vim-textobj-entire'] = {},
-  ['kana/vim-textobj-user'] = {},
-  ['kana/vim-textobj-function'] = {},
+  ['kana/vim-textobj-entire'] = {
+    requires = { 'kana/vim-textobj-user' },
+  },
   ['jceb/vim-textobj-uri'] = {
     requires = { 'kana/vim-textobj-user' },
   },
