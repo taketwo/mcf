@@ -29,9 +29,6 @@ local plugins = {
   ['SirVer/ultisnips'] = {},
   ['tpope/vim-surround'] = {},
   ['embear/vim-localvimrc'] = {},
-  ['AndrewRadev/sideways.vim'] = {
-    cmd = { 'SidewaysLeft', 'SidewaysRight', 'SidewaysJumpLeft', 'SidewaysJumpRight' },
-  },
   ['dantler/vim-alternate'] = {},
   ['tpope/vim-eunuch'] = {},
   ['tpope/vim-dispatch'] = {},
@@ -133,13 +130,13 @@ local plugins = {
 
   -- Text objects
   ['michaeljsmith/vim-indent-object'] = {},
-  ['coderifous/textobj-word-column.vim'] = {},
   ['kana/vim-textobj-entire'] = {
     requires = { 'kana/vim-textobj-user' },
   },
   ['jceb/vim-textobj-uri'] = {
     requires = { 'kana/vim-textobj-user' },
   },
+  ['nvim-treesitter/nvim-treesitter-textobjects'] = {},
 
   -- Snippets
   ['honza/vim-snippets'] = {},

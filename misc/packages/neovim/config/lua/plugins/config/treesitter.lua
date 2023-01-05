@@ -39,4 +39,36 @@ treesitter_configs.setup({
   playground = {
     enable = true,
   },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ['af'] = { query = '@function.outer', desc = 'function' },
+        ['if'] = { query = '@function.inner', desc = 'function' },
+        ['ac'] = { query = '@class.outer', desc = 'class' },
+        ['ic'] = { query = '@class.inner', desc = 'class' },
+        ['al'] = { query = '@loop.outer', desc = 'loop' },
+        ['il'] = { query = '@loop.inner', desc = 'loop' },
+        ['as'] = { query = '@statement.outer', desc = 'statement' },
+        ['is'] = { query = '@statement.inner', desc = 'statement' },
+      },
+      selection_modes = {
+        ['@function.outer'] = 'V', -- FIXME: Does not seem to work
+      },
+    },
+    swap = {
+      enable = true,
+      swap_next = {
+        ['<leader>sn'] = { query = '@parameter.inner', desc = 'Push parameter right' },
+        ['<leader>st'] = { query = '@function.outer', desc = 'Push function down' },
+        ['<leader>sT'] = { query = '@class.outer', desc = 'Push class down' },
+      },
+      swap_previous = {
+        ['<leader>sh'] = { query = '@parameter.inner', desc = 'Push parameter left' },
+        ['<leader>sc'] = { query = '@function.outer', desc = 'Push function up' },
+        ['<leader>sC'] = { query = '@class.outer', desc = 'Push class up' },
+      },
+    },
+  },
 })
