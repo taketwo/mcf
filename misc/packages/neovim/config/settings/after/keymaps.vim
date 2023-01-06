@@ -175,15 +175,6 @@ nnoremap <Leader>fs :let @+=expand("%")<CR>
 nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 
 " }}}
-" LSP {{{
-
-nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
-nnoremap <silent> <leader>ln <cmd>lua vim.lsp.buf.rename()<CR>
-let g:mcf#keymaps.l = { 'name' : '+lsp' }
-let g:mcf#keymaps.l.a = 'actions'
-let g:mcf#keymaps.l.n = 'rename'
-
-" }}}
 
 " ALEFix
 nnoremap <F2> :ALEFix<CR>

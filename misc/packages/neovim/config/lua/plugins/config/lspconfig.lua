@@ -3,25 +3,25 @@
 -- However, in this case, asking Packer to load Neodev before lspconfig leads to issues with file discovery.
 require('neodev').setup()
 
-local nvim_lsp = require('lspconfig')
+local lspconfig = require('lspconfig')
+
 local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  local mapper =
-    function(mode, key, result) vim.api.nvim_buf_set_keymap(0, mode, key, result, { noremap = true, silent = true }) end
-
-  -- Keymaps
-
-  local opts = { noremap = true, silent = true }
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  -- buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  require('which-key').register({
+    K = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Display LSP hover information' },
+    ['<c-k>'] = { '<cmd>lua.vim.lsp.buf.signature_help()<cr>', 'Display LSP signature help' },
+    g = {
+      d = { '<cmd>lua vim.lsp.buf.definition()<cr>', 'Go to definition' },
+      D = { '<cmd>lua vim.lsp.buf.declaration()<cr>', 'Go to declaration' },
+      t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Go to type definition' },
+    },
+    ['<Leader>'] = {
+      l = {
+        name = 'LSP',
+        a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action' },
+        n = { '<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename symbol' },
+      },
+    },
+  }, { buffer = bufnr })
 
   -- if client.server_capabilities.document_formatting then
   -- buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
@@ -61,8 +61,8 @@ local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 local clangd_capabilities = cmp_capabilities
 clangd_capabilities.offsetEncoding = 'utf-16'
 
-require('lspconfig').clangd.setup({
   cmd = { 'clangd', '--background-index', '--completion-style=detailed', '--cross-file-rename' },
+lspconfig.clangd.setup({
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'gtest.cpp' },
   on_attach = on_attach,
   flags = {
@@ -71,7 +71,7 @@ require('lspconfig').clangd.setup({
   capabilities = clangd_capabilities,
 })
 
-require('lspconfig').bashls.setup({
+lspconfig.bashls.setup({
   on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,
@@ -79,7 +79,7 @@ require('lspconfig').bashls.setup({
   capabilities = cmp_capabilities,
 })
 
-require('lspconfig').jedi_language_server.setup({
+lspconfig.jedi_language_server.setup({
   on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,
@@ -87,7 +87,7 @@ require('lspconfig').jedi_language_server.setup({
   capabilities = cmp_capabilities,
 })
 
-require('lspconfig').sumneko_lua.setup({
+lspconfig.sumneko_lua.setup({
   on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,
