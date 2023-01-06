@@ -70,5 +70,27 @@ treesitter_configs.setup({
         ['<leader>sC'] = { query = '@class.outer', desc = 'Push class up' },
       },
     },
+    move = {
+      enable = true,
+      set_jumps = true,
+      goto_next_start = {
+        [']m'] = { query = '@function.outer', desc = 'Next method start' },
+        [']]'] = { query = '@class.outer', desc = 'Next class start' },
+        [']p'] = { query = '@parameter.inner', desc = 'Next parameter start' },
+      },
+      goto_next_end = {
+        [']M'] = { query = '@function.outer', desc = 'Next method end' },
+        [']['] = { query = '@class.outer', desc = 'Next class end' },
+      },
+      goto_previous_start = {
+        ['[m'] = { query = '@function.outer', desc = 'Previous method start' },
+        ['[['] = { query = '@class.outer', desc = 'Previous class start' },
+        ['[p'] = { query = '@parameter.inner', desc = 'Previous parameter start' },
+      },
+      goto_previous_end = {
+        ['[M'] = { query = '@function.outer', desc = 'Previous method end' },
+        ['[]'] = { query = '@class.outer', desc = 'Previous class end' },
+      },
+    },
   },
 })
