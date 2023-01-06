@@ -149,7 +149,7 @@ local plugins = {
   -- Misc unsorted
   ['kevinhwang91/rnvimr'] = {},
   ['nvim-treesitter/nvim-treesitter'] = {
-    run = ':TSUpdate',
+    run = function() pcall(require('nvim-treesitter.install').update({ with_sync = true })) end,
   },
   ['nvim-treesitter/playground'] = {
     -- cmd = {'TSHighlightCapturesUnderCursor'}
