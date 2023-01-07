@@ -46,63 +46,6 @@ vnoremap <C-h> :<<CR>gv
 vnoremap <C-n> :><CR>gv
 
 " }}}
-" Surroundings {{{
-
-  " Surround a word with "quotes"
-  map <Leader>" <Plug>Ysurroundiw"
-  vnoremap <Leader>" c"<C-R>""<ESC>
-
-  " Surround a word with 'single quotes'
-  map <Leader>' <Plug>Ysurroundiw'
-  vnoremap <Leader>' c'<C-R>"'<ESC>
-
-  " Surround a word with (parenthesis)
-  " Difference is where the cursor ends up after surrounding
-  map <Leader>( <Plug>Ysurroundiw)
-  map <Leader>) <Plug>Ysurroundiw)%
-  vnoremap <Leader>( c(<C-R>")<ESC>%
-  vnoremap <Leader>) c(<C-R>")<ESC>
-
-  " Surround a word with [brackets]
-  " Difference is where the cursor ends up after surrounding
-  map <Leader>[ <Plug>Ysurroundiw]
-  map <Leader>] <Plug>Ysurroundiw]%
-  vnoremap <Leader>[ c[<C-R>"]<ESC>%
-  vnoremap <Leader>] c[<C-R>"]<ESC>
-
-  " Surround a word with {braces}
-  " Difference is where the cursor ends up after surrounding
-  map <Leader>{ <Plug>Ysurroundiw}
-  map <Leader>} <Plug>Ysurroundiw}%
-  vnoremap <Leader>{ c{<C-R>"}<ESC>%
-  vnoremap <Leader>} c{<C-R>"}<ESC>
-
-  " Surround a word with <braces>
-  " Difference is where the cursor ends up after surrounding
-  map <Leader>< <Plug>Ysurroundiw>
-  map <Leader>> <Plug>Ysurroundiw>%
-  vnoremap <Leader>< c<<C-R>"><ESC>%
-  vnoremap <Leader>> c<<C-R>"><ESC>
-
-  " Surround a word with *asterisks*
-  map <Leader>* <Plug>Ysurroundiw*
-  vnoremap <Leader>* c*<C-R>"*<ESC>
-
-  " Surround a word with `backticks` (useful for Markdown)
-  map <Leader>` <Plug>Ysurroundiw`
-  vnoremap <Leader>` c`<C-R>"`<ESC>
-
-  " Surround a word with $dollars$ (useful for typesetting math in LaTeX)
-  map <Leader>$ <Plug>Ysurroundiw$
-  vnoremap <Leader>$ c$<C-R>"$<ESC>
-
-  " Delete surrounding
-  nmap ds <Plug>Dsurround
-
-  " Change surrounding
-  nmap ks <Plug>Csurround
-
-" }}}
 " Window management {{{
 
 " Move between split windows similarly to normal motion

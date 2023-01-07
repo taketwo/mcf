@@ -26,19 +26,15 @@ endif
 let b:match_words = '\<if\>:\<elif\>:\<else\>'
 let b:match_skip = 'R:^\s*'
 
-" Wrap with function call
-xmap W <Plug>VSurround
-
-" Hint: to get ASCII value put the cursor over a letter and press 'ga'
-
-" w - input function name
-let b:surround_119 = "\1Function: \1(\r)"
-" l - len
-let b:surround_108 = "len(\r)"
-" r - range
-let b:surround_114 = "range(\r)"
-" e - enumerate
-let b:surround_101 = "enumerate(\r)"
+lua << EOF
+require('nvim-surround').buffer_setup({
+  surrounds = {
+    ['e'] = { add = { 'enumerate(', ')' } },
+    ['l'] = { add = { 'len(', ')' } },
+    ['r'] = { add = { 'range(', ')' } },
+  },
+})
+EOF
 
 " ALE config
 " Turn flake8 style errors into warnings
