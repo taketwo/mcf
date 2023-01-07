@@ -22,7 +22,6 @@ nix: delta                             # syntax highlighting for diffs
 pipx: codespell                        # spell checking for C++
 pudb
 libxml2-utils                          # linting for XML
-pipx: jedi-language-server
 
 # Terminal
 tmux
