@@ -8,6 +8,7 @@ onedark.setup({
     IncSearch = { fg = 'none', bg = 'none', fmt = 'bold,underline,standout' },
     CursorLineNr = { fmt = 'bold' },
     YankedRegion = { fg = '$red' },
+    FloatBorder = { bg ='none' },
   },
 })
 
