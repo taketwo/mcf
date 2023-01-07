@@ -60,14 +60,14 @@ treesitter_configs.setup({
     swap = {
       enable = true,
       swap_next = {
-        ['<leader>sn'] = { query = '@parameter.inner', desc = 'Push parameter right' },
-        ['<leader>st'] = { query = '@function.outer', desc = 'Push function down' },
-        ['<leader>sT'] = { query = '@class.outer', desc = 'Push class down' },
+        ['<leader>sn'] = { query = '@parameter.inner', desc = 'Shift parameter right' },
+        ['<leader>st'] = { query = '@function.outer', desc = 'Shift function down' },
+        ['<leader>sT'] = { query = '@class.outer', desc = 'Shift class down' },
       },
       swap_previous = {
-        ['<leader>sh'] = { query = '@parameter.inner', desc = 'Push parameter left' },
-        ['<leader>sc'] = { query = '@function.outer', desc = 'Push function up' },
-        ['<leader>sC'] = { query = '@class.outer', desc = 'Push class up' },
+        ['<leader>sh'] = { query = '@parameter.inner', desc = 'Shift parameter left' },
+        ['<leader>sc'] = { query = '@function.outer', desc = 'Shift function up' },
+        ['<leader>sC'] = { query = '@class.outer', desc = 'Shift class up' },
       },
     },
     move = {
@@ -93,4 +93,11 @@ treesitter_configs.setup({
       },
     },
   },
+})
+
+-- Set names for prefix groups
+require('which-key').register({
+  ['<Leader>s'] = { name = "Shift object" },
+  [']'] = { name = "Jump next" },
+  ['['] = { name = "Jump previous" }
 })
