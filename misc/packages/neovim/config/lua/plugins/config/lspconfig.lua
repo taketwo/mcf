@@ -10,9 +10,10 @@ local on_attach = function(client, bufnr)
     K = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Display LSP hover information' },
     ['<c-k>'] = { '<cmd>lua.vim.lsp.buf.signature_help()<cr>', 'Display LSP signature help' },
     g = {
-      d = { '<cmd>lua vim.lsp.buf.definition()<cr>', 'Go to definition' },
+      d = { '<cmd>Trouble lsp_definitions<cr>', 'Go to definition' },
       D = { '<cmd>lua vim.lsp.buf.declaration()<cr>', 'Go to declaration' },
-      t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Go to type definition' },
+      r = { '<cmd>Trouble lsp_references<cr>', 'Go to references' },
+      t = { '<cmd>Trouble lsp_type_definitions<cr>', 'Go to type definition' },
     },
     ['<Leader>'] = {
       l = {

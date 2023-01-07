@@ -171,6 +171,8 @@ local plugins = {
   },
   ['folke/trouble.nvim'] = {
     requires = { 'nvim-tree/nvim-web-devicons' },
+    cmd = { 'TroubleToggle', 'Trouble', 'TroubleRefresh', 'TroubleClose' },
+    module = 'trouble',
   },
 
   -- Autocompletion
