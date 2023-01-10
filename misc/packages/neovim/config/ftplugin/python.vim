@@ -1,10 +1,7 @@
 let maplocalleader = '\'
 
-setlocal tabstop=4
-setlocal softtabstop=4
-setlocal shiftwidth=4
 setlocal colorcolumn=88
-setlocal nosmartindent
+setlocal nosmartindent  " TODO: Figure out whether this is a good idea
 autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
 
 " Insert PUDB breakpoint after current line
