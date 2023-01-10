@@ -9,17 +9,6 @@ function! InsertBreakpoint()
     call feedkeys("opudb\<C-R>=UltiSnips#ExpandSnippet()\<CR>", "x")
 endfunction
 
-let b:keymaps = {
-  \   "b" : ["InsertBreakpoint()", "insert-breakpoint"]     ,
-  \   "f" : ["normal diwds("     , "remove-function-call"]  ,
-  \   ":" : ["AppendColon()"     , "append-colon"]          ,
-  \ }
-
-if exists("which_key#register")
-    " TODO: Adapt to new Neovim which-key API
-    call which_key#register('\', "b:keymaps")
-endif
-
 let b:match_words = '\<if\>:\<elif\>:\<else\>'
 let b:match_skip = 'R:^\s*'
 
@@ -30,6 +19,13 @@ require('nvim-surround').buffer_setup({
     ['l'] = { add = { 'len(', ')' } },
     ['r'] = { add = { 'range(', ')' } },
   },
+})
+
+require('which-key').register({
+    ['<LocalLeader>'] = {
+        b = { '<cmd>call InsertBreakpoint()<CR>', 'Insert PuDB breakpoint' },
+        [':'] = { '<cmd>call AppendColon()<CR>', 'Append colon' },
+    },
 })
 EOF
 
