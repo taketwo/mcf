@@ -138,14 +138,6 @@ inoremap <F9> <C-o>:MakeTarget<CR>
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
 
-  " Change inside surroundings
-
-  let g:mcf#keymaps.k = { "name" : "+change-surrounding" }
-  let g:mcf#keymaps.k.i = "change-inside"
-  let g:mcf#keymaps.k.a = "change-around"
-  nnoremap <Leader>ki :ChangeInsideSurrounding<CR>
-  nnoremap <Leader>ka :ChangeAroundSurrounding<CR>
-
   " DelimitMate
 
   imap <C-s> <Plug>(PearTreeJump)
