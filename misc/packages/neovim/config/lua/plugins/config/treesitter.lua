@@ -35,6 +35,7 @@ treesitter_configs.setup({
   },
   indent = {
     enable = true,
+    disable = { "cpp", "python" }, -- currently misbehaving
   },
   playground = {
     enable = true,
