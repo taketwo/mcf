@@ -41,7 +41,9 @@ local plugins = {
   ['janko-m/vim-test'] = {},
   ['tweekmonster/startuptime.vim'] = {},
   ['sickill/vim-pasta'] = {},
-  ['taketwo/vimux'] = {},
+  ['preservim/vimux'] = {
+    cmd = { 'VimuxRunCommand', 'VimuxRunLastCommand' }
+  },
   ['jeffkreeftmeijer/vim-numbertoggle'] = {},
   ['taketwo/diffchar.vim'] = {},
   ['AndrewRadev/deleft.vim'] = {},

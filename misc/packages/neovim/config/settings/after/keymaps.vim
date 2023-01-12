@@ -127,11 +127,6 @@ nnoremap <F2> :ALEFix<CR>
 " Enable spell checking
 nnoremap <F7> :setlocal spell! spelllang=en_us<CR>
 
-" Run last Vimux command with F8
-nnoremap <F8> :write<CR>:VimuxRunLastCommand<CR>
-nnoremap <F8><F8> :write<CR>:VimuxRunLastCommand<CR>:VimuxZoomRunner<CR>
-inoremap <F8> <C-o>:write<CR><C-o>:VimuxRunLastCommand<CR>
-
 " Run make with F9
 nnoremap <F9> :MakeTarget<CR>
 inoremap <F9> <C-o>:MakeTarget<CR>
