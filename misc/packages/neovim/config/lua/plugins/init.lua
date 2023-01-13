@@ -106,9 +106,7 @@ local plugins = {
     after = { 'mason-lspconfig.nvim', 'neodev.nvim' },
   },
 
-  ['glepnir/lspsaga.nvim'] = {
-    config = function() require('lspsaga').init_lsp_saga() end,
-  },
+  ['glepnir/lspsaga.nvim'] = {},
 
   ['onsails/lspkind-nvim'] = {},
 
