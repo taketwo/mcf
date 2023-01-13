@@ -42,7 +42,7 @@ local plugins = {
   ['tweekmonster/startuptime.vim'] = {},
   ['sickill/vim-pasta'] = {},
   ['preservim/vimux'] = {
-    cmd = { 'VimuxRunCommand', 'VimuxRunLastCommand' }
+    cmd = { 'VimuxRunCommand', 'VimuxRunLastCommand' },
   },
   ['jeffkreeftmeijer/vim-numbertoggle'] = {},
   ['taketwo/diffchar.vim'] = {},
@@ -169,7 +169,6 @@ local plugins = {
   },
   ['folke/trouble.nvim'] = {
     requires = { 'nvim-tree/nvim-web-devicons' },
-    cmd = { 'TroubleToggle', 'Trouble', 'TroubleRefresh', 'TroubleClose' },
     module = 'trouble',
   },
 
