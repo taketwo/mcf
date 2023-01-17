@@ -6,11 +6,6 @@ let g:mcf#keymaps = {}
 
 " Move around {{{
 
-" Accelerated up and down (scrolling)
-
-nnoremap C <PageUp>
-nnoremap T <PageDown>
-
 " Go to the beginning and the end of line with _/-
 
 nnoremap - $
@@ -23,49 +18,6 @@ command! Lnext try | lnext | catch | try | lfirst | catch | endtry | endtry
 command! Lprev try | lprev | catch | try | llast | catch | endtry | endtry
 nnoremap > :Lnext<CR>
 nnoremap < :Lprev<CR>
-
-" }}}
-" Push text around {{{
-
-" Move lines up/down
-
-nnoremap <C-t> :m .+1<CR>
-nnoremap <C-c> :m .-2<CR>
-inoremap <C-t> <Esc>:m .+1<CR>==gi
-inoremap <C-c> <Esc>:m .-2<CR>==gi
-vnoremap <C-t> :m '>+1<CR>gv=gv
-vnoremap <C-c> :m '<-2<CR>gv=gv
-
-" Change indentation (i.e. move lines left/right)
-
-nnoremap <C-h> :<<CR>
-nnoremap <C-n> :><CR>
-inoremap <C-h> <C-d>
-inoremap <C-n> <C-t>
-vnoremap <C-h> :<<CR>gv
-vnoremap <C-n> :><CR>gv
-
-" }}}
-" Window management {{{
-
-" Move between split windows similarly to normal motion
-
-" with <C-w> prefix
-noremap <C-w><C-n> <C-w>l
-noremap <C-w><C-c> <C-w>k
-noremap <C-w><C-t> <C-w>j
-" ... and also with Alt- prefix (handled by vim-tmux-navigator plugin)
-nnoremap <silent> <M-n> :TmuxNavigateRight<CR>
-nnoremap <silent> <M-c> :TmuxNavigateUp<CR>
-nnoremap <silent> <M-t> :TmuxNavigateDown<CR>
-nnoremap <silent> <M-h> :TmuxNavigateLeft<CR>
-nnoremap <silent> <M-Space> :TmuxNavigatePrevious<cr>
-
-" Resize windows with Alt+arrow
-nnoremap <M-Up> <C-w>+
-nnoremap <M-Down> <C-w>-
-nnoremap <M-Right> <C-w>>
-nnoremap <M-Left> <C-w><
 
 " }}}
 " Misc {{{
