@@ -143,6 +143,7 @@ local plugins = {
   -- Misc
   ['folke/which-key.nvim'] = { module = 'which-key' },
   ['voldikss/vim-floaterm'] = {},
+  ['RRethy/vim-illuminate'] = { module = 'illuminate' },
 
   -- Misc unsorted
   ['kevinhwang91/rnvimr'] = {},

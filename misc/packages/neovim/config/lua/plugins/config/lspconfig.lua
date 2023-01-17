@@ -42,28 +42,14 @@ local on_attach = function(client, bufnr)
   ]],
     false
   )
-
-  -- Highlight entity under cursor
-  if client.server_capabilities.documentHighlightProvider then
-    vim.api.nvim_exec(
-      [[
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]],
-      false
-    )
-  end
 end
 
 local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 local clangd_capabilities = cmp_capabilities
 clangd_capabilities.offsetEncoding = 'utf-16'
 
-  cmd = { 'clangd', '--background-index', '--completion-style=detailed', '--cross-file-rename' },
 lspconfig.clangd.setup({
+  cmd = { 'clangd', '--background-index', '--completion-style=bundled', '--clang-tidy' },
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'gtest.cpp' },
   on_attach = on_attach,
   flags = {
