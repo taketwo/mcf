@@ -20,6 +20,7 @@ local on_attach = function(client, bufnr)
         name = 'LSP',
         a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action' },
         n = { '<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename symbol' },
+        t = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Show workspace diagnostics in Trouble' },
       },
     },
   }, { buffer = bufnr })
