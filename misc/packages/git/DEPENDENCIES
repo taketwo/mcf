@@ -1,7 +1,7 @@
-arch: git
-ubuntu: git-gui
+nix: git
 nix: git-lfs
 nix: git-crypt
+git-gui
 gh
 gpg
 victor-mono  # used in GUI
