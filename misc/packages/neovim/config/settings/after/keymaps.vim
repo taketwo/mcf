@@ -6,13 +6,6 @@ let g:mcf#keymaps = {}
 
 " Move around {{{
 
-" Go to the beginning and the end of line with _/-
-
-nnoremap - $
-vnoremap - $
-nnoremap _ ^
-vnoremap _ ^
-
 " Jump over location list items (populated by LSP/ALE) with wrapping
 command! Lnext try | lnext | catch | try | lfirst | catch | endtry | endtry
 command! Lprev try | lprev | catch | try | llast | catch | endtry | endtry
@@ -85,9 +78,9 @@ inoremap <F9> <C-o>:MakeTarget<CR>
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
 
-  " DelimitMate
+" PearTree
 
-  imap <C-s> <Plug>(PearTreeJump)
+imap <C-s> <Plug>(PearTreeJump)
 
 " AnyJump
 nnoremap <F3> :AnyJump<CR>

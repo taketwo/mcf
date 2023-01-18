@@ -16,6 +16,9 @@ wk.register({
   -- Accelerated up and down (a.k.a. scrolling)
   C = { '<PageUp>', 'Scroll window up' },
   T = { '<PageDown>', 'Scroll window down' },
+  -- Beginning and end of line
+  ['-'] = { '$', 'End of line', mode = { 'n', 'v' } },
+  ['_'] = { '^', 'Start of line (non-blank)', mode = { 'n', 'v' } },
 
   -- Search
   -- Seek through search results with l and L, centering the screen after jumps
