@@ -41,6 +41,7 @@
   pager = delta
 [push]
   default = tracking
+  autoSetupRemote = true
 [user]
   signingkey = B70F82225D2CBAF4
   name = Sergey Alexandrov
