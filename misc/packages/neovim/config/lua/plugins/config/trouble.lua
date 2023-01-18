@@ -4,4 +4,5 @@ require('trouble').setup({
     next = 't',
     open_tab = {}, -- never use tabs
   },
+  auto_close = true,
 })
