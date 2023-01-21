@@ -18,9 +18,7 @@ require('which-key').register({
       name = 'LSP',
       r = { '<cmd>Telescope lsp_references<cr>', 'References' },
     },
-    z = {
-      ['='] = { '<cmd>Telescope spell_suggest<cr>', 'Spelling suggestions' },
-    },
   },
   ['<Space>'] = { '<cmd>Telescope buffers<cr>', 'Jump to buffer' },
+  ['z='] = { '<cmd>Telescope spell_suggest<cr>', 'Spelling suggestions' },
 })
