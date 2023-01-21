@@ -49,7 +49,10 @@ local plugins = {
   ['AndrewRadev/deleft.vim'] = {},
 
   -- Navigation
-  ['justinmk/vim-sneak'] = {},
+  ['ggandor/leap.nvim'] = {},
+  ['ggandor/leap-spooky.nvim'] = {
+    requires = { 'ggandor/leap.nvim' },
+  },
   ['christoomey/vim-tmux-navigator'] = {},
   ['pechorin/any-jump.vim'] = {},
 

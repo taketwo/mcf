@@ -50,7 +50,7 @@ nnoremap <Leader>d :t.<CR>
 
 inoremap <C-d> <BS>
 
-" Join line (because J is used by 'vim-sneak')
+" Join line (because J is used by 'leap')
 
 nnoremap <C-J> J
 
