@@ -34,25 +34,9 @@ nnoremap <Leader>rw "_diwhp
 nnoremap k c
 nnoremap K C
 
-" Insert newline below, but stay on the same spot
-
-nnoremap <CR> :call append(line('.'), '')<CR>
-
-" Insert newline above, but stay on the same spot
-
-nnoremap <NL> :call append(line('.')-1, '')<CR>
-
-" Duplicate current line
-
-nnoremap <Leader>d :t.<CR>
-
 " Backspace proxy
 
 inoremap <C-d> <BS>
-
-" Join line (because J is used by 'leap')
-
-nnoremap <C-J> J
 
 " Copy short/long filename to clipboard
 

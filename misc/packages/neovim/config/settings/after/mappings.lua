@@ -41,6 +41,12 @@ wk.register({
   ['<M-Down>'] = { '<C-w>-', 'Decrease window height' },
   ['<M-Left>'] = { '<C-w><', 'Decrease window width' },
   ['<M-Right>'] = { '<C-w>>', 'Increase window width' },
+
+  -- Line operations
+  ['<cr>'] = { '<cmd>call append(line("."), "")<cr>', 'Insert new line below' },
+  ['<C-j>'] = { 'J', 'Join lines' }, -- because J is used by 'leap.nvim'
+  -- TODO: Consider using a different keymap for line duplication
+  ['<Leader>d'] = { '<cmd>t.<cr>', 'Duplicate current line' },
 })
 
 -- Move lines
