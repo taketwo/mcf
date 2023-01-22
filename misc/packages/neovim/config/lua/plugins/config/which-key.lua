@@ -1,12 +1,15 @@
 require('which-key').setup({
   plugins = {
     presets = {
-      -- Temporary disable operators to avoid delay on pressing "c"
+      -- Disable operators to avoid delay on pressing "c"
+      -- Instead, we enable them selectively under the 'operators' key
       operators = false,
     },
   },
-  triggers_blacklist = {
-    i = { 'c', 't', 'h', 'n', '.' },
-    v = { 'c', 't', 'h', 'n' },
+  operators = {
+    k = 'Change', -- does not have effect
+    y = 'Yank',
+    d = 'Delete',
+    v = 'Visual'
   },
 })
