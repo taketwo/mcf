@@ -19,12 +19,6 @@ nnoremap < :Lprev<CR>
 
 nnoremap Y y$
 
-" Copy entire word even if the cursor is halfway inside the word
-
-nmap <Leader>yw yiww
-nmap <Leader>y( yi(h%
-nmap <Leader>y" yi"h%
-
 " Replace word with what's in the yank buffer
 
 nnoremap <Leader>rw "_diwhp
