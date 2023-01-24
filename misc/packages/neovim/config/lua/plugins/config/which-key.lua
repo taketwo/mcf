@@ -10,6 +10,9 @@ require('which-key').setup({
     k = 'Change', -- does not have effect
     y = 'Yank',
     d = 'Delete',
-    v = 'Visual'
+    v = 'Visual',
+  },
+  triggers_blacklist = {
+    i = { '.' },
   },
 })
