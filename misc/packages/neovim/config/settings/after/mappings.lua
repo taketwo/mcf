@@ -1,4 +1,7 @@
-local wk = require('which-key')
+local available, wk = pcall(require, 'which-key')
+if not available then
+  return
+end
 
 wk.register({
   [';'] = { ':', 'Enter command mode', silent = false },
