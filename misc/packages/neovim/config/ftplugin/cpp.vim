@@ -5,7 +5,12 @@ runtime! syntax/gtest.vim
 setlocal foldmethod=syntax
 setlocal foldlevel=100
 
-inoremap <buffer> .. ->
+lua << EOF
+require('which-key').register({
+    ['..'] = { '->', 'which_key_ignore' },
+    ['...'] = { '...', 'which_key_ignore' },
+}, { mode = 'i', buffer = 0 })
+EOF
 
 " Select until the underscore and substitute
 nnoremap <LocalLeader>- vt_s
