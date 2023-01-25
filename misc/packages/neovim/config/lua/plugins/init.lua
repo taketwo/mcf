@@ -128,6 +128,9 @@ local plugins = {
   ['ruifm/gitlinker.nvim'] = {
     requires = { 'nvim-lua/plenary.nvim' },
   },
+  ['ldelossa/gh.nvim'] = {
+    requires = { 'ldelossa/litee.nvim' },
+  },
 
   -- Text objects
   ['michaeljsmith/vim-indent-object'] = {},
