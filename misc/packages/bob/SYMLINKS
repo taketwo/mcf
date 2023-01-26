@@ -1,0 +1,2 @@
+bin/bob:.local/bin/bob:Bob version manager
+config.json:.config/bob/config.json:Bob config file
