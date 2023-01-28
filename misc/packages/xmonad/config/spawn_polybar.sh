@@ -15,8 +15,8 @@ fi
 
 # List all monitors sorted by horizontal position
 mapfile -t monitors < <(polybar -m | awk -F'[: x+]' '{print $5 " " $1}' | sort | awk '{print $2}')
-# Select the middle one
-index=$(((${#monitors[@]}) / 2))
+# Select the middle one, round down
+index=$(((${#monitors[@]} - 1) / 2))
 export MONITOR=${monitors[$index]}
 
 # Kill all gmail.py scripts
