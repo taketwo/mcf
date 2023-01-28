@@ -12,7 +12,7 @@ LATEST_VERSION=$(curl -s https://api.github.com/repos/$GITHUB_USER_NAME/$GITHUB_
 
 echo "Latest version: ${LATEST_VERSION}"
 
-DOWNLOAD_URL="https://github.com/$GITHUB_USER_NAME/$GITHUB_PROJECT_NAME/releases/download/${LATEST_VERSION}/bob-linux-x86_64.zip"
+DOWNLOAD_URL="https://github.com/$GITHUB_USER_NAME/$GITHUB_PROJECT_NAME/releases/download/v${LATEST_VERSION}/bob-linux-x86_64.zip"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 BIN_DIR="$SCRIPT_DIR/bin"
