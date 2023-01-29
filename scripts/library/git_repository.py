@@ -66,7 +66,7 @@ def install_package(manager, package, args=''):
            'pacman': 'sudo pacman --noconfirm -S',
            'aura': 'sudo aura --noconfirm -A',
            'pip': 'sudo pip install --upgrade'}
-    if not manager in CMD.keys():
+    if manager not in CMD.keys():
         raise Exception('Unsupported manager')
     p = package if isinstance(package, list) else [package]
     print('Installing %s package%s...' % (manager, 's' if len(p) > 1 else ''))

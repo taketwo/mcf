@@ -15,7 +15,8 @@ PLATFORM = get_platform()
 
 
 class Install(object):
-    def __init__(self, packages, args=[]):
+    def __init__(self, packages, args=None):
+        args = args or []
         cmd = self.CMD + " " + " ".join(packages) + " " + " ".join(args)
         subprocess.check_call(cmd.split())
 
@@ -31,7 +32,8 @@ class Yaourt(Install):
 class Nix(Install):
     CMD = "nix-env -i"
 
-    def __init__(self, packages, args=[]):
+    def __init__(self, packages, args=None):
+        args = args or []
         # Make sure that LD variables are not set, otherwise Nix insulation from the
         # rest of the system may be compromised
         env = dict(os.environ, LD_LIBRARY_PATH="", LD_PRELOAD="")
@@ -43,7 +45,7 @@ class Nix(Install):
 class Pip(Install):
     CMD = "sudo -H pip install --upgrade"
 
-    def __init__(self, packages, args=[]):
+    def __init__(self, packages, args=None):
         super().__init__(packages, args)
         stow.adopt_as("pip")
 
@@ -51,7 +53,8 @@ class Pip(Install):
 class Pipx(Install):
     CMD = "pipx install --force"
 
-    def __init__(self, packages, args=[]):
+    def __init__(self, packages, args=None):
+        args = args or []
         for package in packages:
             # We support package specs with multiple entries separated by spaces.
             # First entry is the main app that is to be installed with Pipx.
@@ -81,7 +84,7 @@ class Pipx(Install):
 class Cabal(Install):
     CMD = "cabal v2-install --overwrite-policy=always"
 
-    def __init__(self, packages, args=[]):
+    def __init__(self, packages, args=None):
         subprocess.check_call(["cabal", "v2-update"])
         cmd = "LC_ALL=C {} --lib {}".format(self.CMD, ' '.join(packages))
         subprocess.check_call(cmd, shell=True)
@@ -172,7 +175,7 @@ class PackageManager(object):
             return line
         return line[:p]
 
-    def _install_with_package_manager(self, manager, package, args=[]):
+    def _install_with_package_manager(self, manager, package, args=None):
         """
         Install package(s) using given package manager.
 
@@ -185,7 +188,6 @@ class PackageManager(object):
         args:
             Additional options to pass to the package manager.
         """
-
         if manager not in INSTALL.keys():
             raise Exception("Unsupported manager")
         if isinstance(package, list):
@@ -194,7 +196,7 @@ class PackageManager(object):
             p = list(package)
         else:
             p = [package]
-        INSTALL[manager](p, args)
+        INSTALL[manager](p, args or [])
 
     def install(self, package_name, verbose=False, force_reinstall=False, update=False):
         """
