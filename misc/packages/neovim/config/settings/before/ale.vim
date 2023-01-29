@@ -9,3 +9,6 @@ let g:airline#extensions#ale#enabled = 1
 
 " Disable completion (language servers will do that)
 let g:ale_completion_enabled = 0
+
+" Send linter output to diagnostics API
+let g:ale_use_neovim_diagnostics_api = 1
