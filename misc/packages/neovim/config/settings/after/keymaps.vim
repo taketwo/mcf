@@ -19,10 +19,6 @@ nnoremap < :Lprev<CR>
 
 nnoremap Y y$
 
-" Replace word with what's in the yank buffer
-
-nnoremap <Leader>rw "_diwhp
-
 " Backspace proxy
 
 inoremap <C-d> <BS>

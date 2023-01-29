@@ -37,7 +37,10 @@ local plugins = {
     cmd = { 'UndotreeToggle' },
   },
   ['xolox/vim-misc'] = {},
-  ['taketwo/vim-exchange'] = {},
+  ['gbprod/substitute.nvim'] = {
+    module = 'substitute',
+    config = function() require('substitute').setup() end,
+  },
   ['janko-m/vim-test'] = {},
   ['tweekmonster/startuptime.vim'] = {},
   ['sickill/vim-pasta'] = {},
