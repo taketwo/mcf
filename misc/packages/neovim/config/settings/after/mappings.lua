@@ -1,7 +1,5 @@
 local available, wk = pcall(require, 'which-key')
-if not available then
-  return
-end
+if not available then return end
 
 wk.register({
   [';'] = { ':', 'Enter command mode', silent = false },
@@ -54,6 +52,13 @@ wk.register({
   ['<C-j>'] = { 'J', 'Join lines' }, -- because J is used by 'leap.nvim'
   -- TODO: Consider using a different keymap for line duplication
   ['<Leader>d'] = { '<cmd>t.<cr>', 'Duplicate current line' },
+
+  -- Filename operations
+  ['<Leader>f'] = {
+    name = 'Filename',
+    s = { '<cmd>let @+=expand("%")<cr>', 'Copy filename to clipboard' },
+    l = { '<cmd>let @+=expand("%:p")<cr>', 'Copy file path to clipboard' },
+  },
 })
 
 -- Move lines

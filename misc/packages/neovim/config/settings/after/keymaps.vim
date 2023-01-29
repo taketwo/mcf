@@ -2,8 +2,6 @@ if exists('g:vimspector_enable_mappings')
   finish
 endif
 
-let g:mcf#keymaps = {}
-
 " Move around {{{
 
 " Jump over location list items (populated by LSP/ALE) with wrapping
@@ -22,14 +20,6 @@ nnoremap Y y$
 " Backspace proxy
 
 inoremap <C-d> <BS>
-
-" Copy short/long filename to clipboard
-
-let g:mcf#keymaps.f = { "name" : "+filename" }
-let g:mcf#keymaps.f.s = "copy-short"
-let g:mcf#keymaps.f.l = "copy-long"
-nnoremap <Leader>fs :let @+=expand("%")<CR>
-nnoremap <Leader>fl :let @+=expand("%:p")<CR>
 
 " }}}
 
@@ -57,8 +47,3 @@ nnoremap <F3> :AnyJump<CR>
 " Some keys that are still free
 "
 " $ ^ F5 F10
-
-" Create WhichKey menu
-if exists("which_key#register")
-  call which_key#register(',', "g:mcf#keymaps")
-endif
