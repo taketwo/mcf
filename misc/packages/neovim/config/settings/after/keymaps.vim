@@ -23,11 +23,6 @@ nnoremap Y y$
 
 nnoremap <Leader>rw "_diwhp
 
-" Now that c/C are used for navigation, utilize k/K for the same purpose
-
-nnoremap k c
-nnoremap K C
-
 " Backspace proxy
 
 inoremap <C-d> <BS>

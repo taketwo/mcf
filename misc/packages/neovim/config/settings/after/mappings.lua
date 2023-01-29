@@ -23,6 +23,10 @@ wk.register({
   ['-'] = { '$', 'End of line', mode = { 'n', 'v' } },
   ['_'] = { '^', 'Start of line (non-blank)', mode = { 'n', 'v' } },
 
+  -- Change (delete-insert) mode
+  k = { 'c', 'Delete and enter insert mode', mode = { 'n', 'x' } },
+  K = { 'C', 'Delete until end of line and enter insert mode' },
+
   -- Search
   -- Seek through search results with l and L, centering the screen after jumps
   l = { 'nzz', 'Next search result' },
