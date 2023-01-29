@@ -29,3 +29,6 @@ rofi
 polybar
 compton
 xdotool                                # clickable workspace names
+
+# Gmail segment in Polybar
+ubuntu: python3-systemd
