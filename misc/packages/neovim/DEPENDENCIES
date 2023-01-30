@@ -1,2 +1,3 @@
 neovim
 fnm            # For node.js provider and copilot plugin
+xsel           # For clipboard provider
