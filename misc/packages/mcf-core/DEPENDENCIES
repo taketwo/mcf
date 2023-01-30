@@ -28,13 +28,13 @@ tmux
 powerline-shell
 bash-completion
 fzf
+xsel                                   # copy to clipboard
 
 # Git
 git
 
 # Neovim
 neovim
-xsel                                   # copy to clipboard
 
 # Filesystem navigation/search
 bat
@@ -52,3 +52,4 @@ ncdu
 unrar                                    # for unpack command
 pipx: pygments pygments-solarized-style  # for fv command
 python3-click                            # for mpm and *-sync commands
+ministat                                 # for quick statistical analysis of data
