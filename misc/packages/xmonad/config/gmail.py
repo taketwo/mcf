@@ -116,10 +116,9 @@ class Indicator:
                 count = " {}".format(self.unread_count)
                 fg = "#de5d68"
         elif self.mode == "deep":
-            fg = "#8fb573"
-            symbol = "● "
+            symbol = " "
             if datetime.datetime.now() > self.until:
-                self.mode = "normal"
+                self.set_normal_mode()
         return '%{{F{} B{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
 
 
