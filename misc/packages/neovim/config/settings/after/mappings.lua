@@ -23,7 +23,8 @@ wk.register({
 
   -- Change (delete-insert) mode
   k = { 'c', 'Delete and enter insert mode', mode = { 'n', 'x' } },
-  K = { 'C', 'Delete until end of line and enter insert mode' },
+  kk = { 'cc', 'Delete line and enter insert mode' },
+  kK = { 'C', 'Delete until end of line and enter insert mode' },
 
   -- Search
   -- Seek through search results with l and L, centering the screen after jumps
