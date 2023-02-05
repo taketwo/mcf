@@ -61,7 +61,6 @@ local plugins = {
 
   -- Search
   ['henrik/vim-indexed-search'] = {},
-  ['nelstrom/vim-visual-star-search'] = {},
   ['dyng/ctrlsf.vim'] = {},
 
   ------------------------------------------------------------------------------
