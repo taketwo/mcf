@@ -7,8 +7,10 @@ return {
       { 'S', function() require('substitute').eol() end, desc = 'Substitute to end of line' },
       { 'kx', function() require('substitute.exchange').operator() end, desc = 'Exchange with motion' },
       { 'kxx', function() require('substitute.exchange').line() end, desc = 'Exchange line' },
+      -- Visual mode
       { 's', function() require('substitute').visual() end, mode = 'x', desc = 'Substitute visual selection' },
       { 'X', function() require('substitute.exchange').visual() end, mode = 'x', desc = 'Exchange visual selection' },
     },
+    opts = {}, -- Plugin configuration fails if this is not present
   },
 }
