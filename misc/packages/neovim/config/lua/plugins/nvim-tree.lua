@@ -6,5 +6,6 @@ return {
     keys = {
       { '<F12>', '<cmd>NvimTreeToggle<cr>', 'Toggle NvimTree' },
     },
+    opts = {}, -- Plugin configuration fails if this is not present
   },
 }
