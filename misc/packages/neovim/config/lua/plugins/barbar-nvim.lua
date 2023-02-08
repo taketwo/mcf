@@ -8,6 +8,7 @@ return {
     },
     config = function(_, opts)
       require('bufferline').setup(opts)
+      -- TODO: Migrate to 'keys' option
       require('which-key').register({
         H = { '<cmd>BufferPrevious<cr>', 'Previous buffer' },
         N = { '<cmd>BufferNext<cr>', 'Next buffer' },
