@@ -32,12 +32,6 @@
   let g:loaded_netrw = 1
   let g:loaded_netrwPlugin = 1
 
-  " Load plugin settings that have to be set before loading plugins.
-  " This should eventually be moved to packer config.
-  for f in split(glob(stdpath('config') . '/settings/before/*.vim'), '\n')
-    exe 'source' f
-  endfor
-
   lua << EOF
   local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
   if not vim.loop.fs_stat(lazypath) then
