@@ -2,7 +2,7 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile' },
     opts = {
       ensure_installed = {
         'bash',

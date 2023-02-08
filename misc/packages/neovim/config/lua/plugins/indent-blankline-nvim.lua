@@ -1,7 +1,7 @@
 return {
   {
     'lukas-reineke/indent-blankline.nvim',
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile' },
     opts = {
       char_highlight_list = {},
       filetype_exclude = { 'help', 'alpha', 'dashboard', 'neo-tree', 'Trouble', 'lazy' },

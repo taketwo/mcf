@@ -1,7 +1,7 @@
 return {
   {
     'neovim/nvim-lspconfig',
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } },
       'mason.nvim',

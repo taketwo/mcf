@@ -1,7 +1,7 @@
 return {
   {
     'RRethy/vim-illuminate',
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile' },
     keys = {
       { ']]', function() require('illuminate').goto_next_reference(false) end, desc = 'Go to next reference' },
       { '[[', function() require('illuminate').goto_prev_reference(false) end, desc = 'Go to previous reference' },
