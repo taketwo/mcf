@@ -53,6 +53,7 @@ wk.register({
   ['<C-j>'] = { 'J', 'Join lines' }, -- because J is used by 'leap.nvim'
   -- TODO: Consider using a different keymap for line duplication
   ['<Leader>d'] = { '<cmd>t.<cr>', 'Duplicate current line' },
+  Y = { 'y$', 'Yank to end of line' },
 
   -- Filename operations
   ['<Leader>f'] = {
@@ -60,6 +61,14 @@ wk.register({
     s = { '<cmd>let @+=expand("%")<cr>', 'Copy filename to clipboard' },
     l = { '<cmd>let @+=expand("%:p")<cr>', 'Copy file path to clipboard' },
   },
+
+  -- Misc
+  -- TODO: This needs to be mapped to auto-pairs plugin
+  ['<C-d>'] = { '<BS>', 'Delete last entered character', mode = 'i' },
+  ['<F7>'] = { '<cmd>setlocal spell! spelllang=en_us<cr>', 'Enable spellcheck' },
+  ['<F9>'] = { '<cmd>MakeTarget<cr>', 'Run make', mode = { 'n', 'i' } },
+
+  -- NOTE: Some keys that are still free: $ ^ F5 F10
 })
 
 -- Move lines
