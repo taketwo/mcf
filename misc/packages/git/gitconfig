@@ -33,6 +33,7 @@
   fa = forgit add
   fbd = forgit branch_delete
   fcp = forgit cherry_pick
+  fcpb = forgit cherry_pick_from_branch
   fd = forgit diff
   flog = forgit log
   fss = forgit stash_show
