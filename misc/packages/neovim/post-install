@@ -12,3 +12,6 @@ pip install --upgrade pynvim
 
 # Node.js provider
 fnm exec --using=node17 npm install --location=global neovim
+
+# Ensure that plugins are installed
+nvim --headless "+Lazy! sync" +qa
