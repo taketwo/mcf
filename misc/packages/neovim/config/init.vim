@@ -85,9 +85,6 @@
   " Display tabs and trailing spaces visually
   set list listchars=tab:→\ ,trail:· 
 
-  " Highlight yanked region
-  au TextYankPost * silent! lua vim.highlight.on_yank {higroup="YankedRegion", timeout=300}
-
   " Together with CursorLineNr highlight group this makes the current line number bold
   set cursorline
   set cursorlineopt=number
@@ -116,3 +113,4 @@
 " }}}
 
 lua require("config.keymaps")
+lua require("config.autocmds")
