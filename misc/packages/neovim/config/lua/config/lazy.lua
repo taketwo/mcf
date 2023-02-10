@@ -11,4 +11,27 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("plugins")
+require('lazy').setup('plugins', {
+  diff = {
+    cmd = 'git', -- May replace with "diffview.nvim" later
+  },
+  change_detection = {
+    notify = false,
+  },
+  performance = {
+    rtp = {
+      -- Disable some rtp plugins
+      disabled_plugins = {
+        'gzip',
+        -- "matchit",
+        -- "matchparen",
+        'netrw',
+        'netrwPlugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
+      },
+    },
+  },
+})

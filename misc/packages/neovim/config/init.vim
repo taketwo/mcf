@@ -27,11 +27,6 @@
   let g:python3_host_prog = '$PYENV_ROOT/versions/py3nvim/bin/python'
   let g:node_host_prog = '$FNM_DIR/aliases/node17/bin/neovim-node-host'
 
-  " Disable standard netrw plugin
-  " TODO: Disable other plugins and move to a separate section
-  let g:loaded_netrw = 1
-  let g:loaded_netrwPlugin = 1
-
   lua require("config.lazy")
 
 " }}}
