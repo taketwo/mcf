@@ -1,11 +1,11 @@
 [Unit]
-Description=Run nb notebook sync every 20 minutes
+Description=Run nb notebook sync every 10 minutes
 Requires=nb-sync.service
 
 [Timer]
 Unit=nb-sync.service
-OnUnitInactiveSec=20m
-RandomizedDelaySec=5m
+OnUnitInactiveSec=10m
+RandomizedDelaySec=2m
 AccuracySec=1s
 
 [Install]
