@@ -1,6 +1,6 @@
 return {
   {
-    'w0rp/ale',
+    'dense-analysis/ale',
     lazy = false,
     keys = {
       { '<F2>', '<cmd>ALEFix<cr>', desc = 'Apply ALE fixers' },
