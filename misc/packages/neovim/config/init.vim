@@ -114,3 +114,5 @@
   abbr eg e.g.
 
 " }}}
+
+lua require("config.keymaps")
