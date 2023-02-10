@@ -32,8 +32,7 @@
   let g:loaded_netrw = 1
   let g:loaded_netrwPlugin = 1
 
-  lua require("config.bootstrap")
-  lua require("lazy").setup("plugins")
+  lua require("config.lazy")
 
 " }}}
 " Search settings {{{
