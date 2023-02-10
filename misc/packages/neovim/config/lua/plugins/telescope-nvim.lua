@@ -6,7 +6,6 @@ return {
       'nvim-lua/popup.nvim',
       {'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
       'nvim-telescope/telescope-symbols.nvim',
-      'nvim-telescope/telescope-ui-select.nvim',
     },
     cmd = { 'Telescope' },
     keys = {
@@ -51,14 +50,11 @@ return {
       },
       extensions = {
         ['fzf'] = {},
-        -- TODO: Double-check whether this is working
-        ['ui-select'] = { function(...) return require('telescope.themes').get_dropdown(...) end },
       },
     },
     config = function(_, opts)
       require('telescope').setup(opts)
       require('telescope').load_extension('fzf')
-      require('telescope').load_extension('ui-select')
     end,
   },
 }
