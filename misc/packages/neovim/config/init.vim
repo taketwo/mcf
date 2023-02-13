@@ -22,14 +22,6 @@
   set updatetime=1000             " Down from default 4 seconds
 
 " }}}
-" Plugin initialization {{{
-
-  let g:python3_host_prog = '$PYENV_ROOT/versions/py3nvim/bin/python'
-  let g:node_host_prog = '$FNM_DIR/aliases/node17/bin/neovim-node-host'
-
-  lua require("config.lazy")
-
-" }}}
 " Search settings {{{
 
   set incsearch                   " Find the next match as we type the search
@@ -109,6 +101,14 @@
   cabbr <expr> %% expand('%:p:h')
   abbr ie i.e.
   abbr eg e.g.
+
+" }}}
+" Plugin initialization {{{
+
+  let g:python3_host_prog = '$PYENV_ROOT/versions/py3nvim/bin/python'
+  let g:node_host_prog = '$FNM_DIR/aliases/node17/bin/neovim-node-host'
+
+  lua require("config.lazy")
 
 " }}}
 
