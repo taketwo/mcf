@@ -65,7 +65,7 @@ wk.register({
   -- Misc
   -- TODO: This needs to be mapped to auto-pairs plugin
   ['<C-d>'] = { '<BS>', 'Delete last entered character', mode = 'i' },
-  ['<F7>'] = { '<cmd>setlocal spell! spelllang=en_us<cr>', 'Enable spellcheck' },
+  ['<F7>'] = { '<cmd>setlocal spell!<cr>', 'Enable spellcheck' },
   ['<F9>'] = { '<cmd>MakeTarget<cr>', 'Run make', mode = { 'n', 'i' } },
 
   -- NOTE: Some keys that are still free: $ ^ F5 F10
