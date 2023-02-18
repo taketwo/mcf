@@ -76,6 +76,11 @@ map('v', '<C-n>', ':><cr>gv', { desc = 'Increase lines indentation' })
 map('n', '<Leader>fs', '<cmd>let @+=expand("%")<cr>', { desc = 'Copy filename to clipboard' })
 map('n', '<Leader>fl', '<cmd>let @+=expand("%:p")<cr>', { desc = 'Copy file path to clipboard' })
 
+-- Add undo breakpoints
+map('i', ',', ',<c-g>u', { desc = 'Insert , and add undo breakpoint' })
+map('i', '.', '.<c-g>u', { desc = 'Insert . and add undo breakpoint' })
+map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
+
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
