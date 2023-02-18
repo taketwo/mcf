@@ -1,3 +1,5 @@
+local Util = require('utils')
+
 local function map(mode, lhs, rhs, opts)
   opts = opts or {}
   opts.silent = opts.silent == nil and true or opts.silent
@@ -81,10 +83,27 @@ map('i', ',', ',<c-g>u', { desc = 'Insert , and add undo breakpoint' })
 map('i', '.', '.<c-g>u', { desc = 'Insert . and add undo breakpoint' })
 map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 
+-- Toggle buffer options
+map('n', '<Leader>us', function() Util.toggle('spell') end, { desc = 'Toggle spellchecking' })
+map('n', '<Leader>uw', function() Util.toggle('wrap') end, { desc = 'Toggle word wraping' })
+map('n', '<Leader>ul', function()
+  Util.toggle('relativenumber', true)
+  Util.toggle('number')
+end, { desc = 'Toggle line numbers' })
+local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
+map(
+  'n',
+  '<Leader>uc',
+  function() Util.toggle('conceallevel', false, { 0, conceallevel }) end,
+  { desc = 'Toggle concealing' }
+)
+-- TODO: Consider enabling these:
+-- map("n", "<leader>ud", Util.toggle_diagnostics, { desc = "Toggle Diagnostics" })
+-- map("n", "<leader>uf", require("lazyvim.plugins.lsp.format").toggle, { desc = "Toggle format on Save" })
+
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
-map('n', '<F7>', '<cmd>setlocal spell!<cr>', { desc = 'Enable spellcheck' })
 map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = false })
 
 -- NOTE: Some keys that are still free: $ ^ F5 F10
@@ -92,5 +111,8 @@ map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = f
 local available, wk = pcall(require, 'which-key')
 if not available then return end
 wk.register({
-  ['<Leader>f'] = { name = 'Filename' },
+  ['<Leader>'] = {
+    f = { name = 'Filename' },
+    u = { name = 'Toggle buffer options' },
+  },
 })
