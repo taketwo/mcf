@@ -5,7 +5,6 @@ return {
     event = 'InsertEnter',
     init = function()
       vim.g.UltiSnipsExpandTrigger = '<C-b>'
-      vim.g.UltiSnipsListSnippets = '<Leader>u'
       vim.g.UltiSnipsJumpForwardTrigger = '<C-b>'
       vim.g.UltiSnipsJumpBackwardTrigger = ''
       vim.g.UltiSnipsEditSplit = 'vertical'
