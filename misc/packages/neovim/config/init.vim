@@ -1,12 +1,5 @@
-" Completion {{{
-
-  set wildmode=longest:full
-  set wildignore=*.o,*.obj,*.pyc,*~    " Stuff to ignore when tab completing
-
-" }}}
 " Misc {{{
 
-  set matchpairs+=<:>     " Show matching <> (html mainly) as well
   " %% expands to the full path of the directory that contains the current file
   cabbr <expr> %% expand('%:p:h')
   abbr ie i.e.
