@@ -1,94 +1,91 @@
-local available, wk = pcall(require, 'which-key')
-if not available then return end
+local function map(mode, lhs, rhs, opts)
+  opts = opts or {}
+  opts.silent = opts.silent == nil and true or opts.silent
+  vim.keymap.set(mode, lhs, rhs, opts)
+end
 
-wk.register({
-  [';'] = { ':', 'Enter command mode', silent = false },
+map('n', ';', ':', { desc = 'Enter command mode', silent = false })
 
-  -- Move around in normal and visual (but not select) modes
-  -- The up and down motions take into account line wrapping
-  --
-  --       c
-  --     h t n
-  --
-  h = { 'h', 'Left', mode = { 'n', 'x' } },
-  n = { 'l', 'Right', mode = { 'n', 'x' } },
-  c = { 'v:count == 0 ? "gk" : "k"', 'Up', mode = { 'n', 'x' }, expr = true },
-  t = { 'v:count == 0 ? "gj" : "j"', 'Down', mode = { 'n', 'x' }, expr = true },
-  -- Accelerated up and down (a.k.a. scrolling)
-  C = { '<PageUp>', 'Scroll window up' },
-  T = { '<PageDown>', 'Scroll window down' },
-  -- Beginning and end of line
-  ['-'] = { '$', 'End of line', mode = { 'n', 'v' } },
-  ['_'] = { '^', 'Start of line (non-blank)', mode = { 'n', 'v' } },
+-- Move around in normal and visual (but not select) modes
+-- The up and down motions take into account line wrapping
+--
+--       c
+--     h t n
+--
+map({ 'n', 'x' }, 'h', 'h', { desc = 'Left' })
+map({ 'n', 'x' }, 'n', 'l', { desc = 'Right' })
+map({ 'n', 'x' }, 'c', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
+map({ 'n', 'x' }, 't', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true })
+-- -- Accelerated up and down (a.k.a. scrolling)
+map('n', 'C', '<PageUp>', { desc = 'Scroll window up' })
+map('n', 'T', '<PageDown>', { desc = 'Scroll window down' })
+-- -- Beginning and end of line
+map({ 'n', 'v' }, '-', '$', { desc = 'End of line' })
+map({ 'n', 'v' }, '_', '^', { desc = 'Start of line (non-blank)' })
 
-  -- Change (delete-insert) mode
-  k = { 'c', 'Delete and enter insert mode', mode = { 'n', 'x' } },
-  kk = { 'cc', 'Delete line and enter insert mode' },
-  kK = { 'C', 'Delete until end of line and enter insert mode' },
+-- Change (delete-insert) mode
+map({ 'n', 'x' }, 'k', 'c', { desc = 'Delete and enter insert mode' })
+map('n', 'kk', 'cc', { desc = 'Delete line and enter insert mode' })
+map('n', 'kK', 'C', { desc = 'Delete until end of line and enter insert mode' })
 
-  -- Search
-  -- Seek through search results with l and L, centering the screen after jumps
-  l = { 'nzz', 'Next search result' },
-  L = { 'Nzz', 'Previous search result' },
-  -- Seek through search results with Ctrl+c and Ctrl+t whilst entering search pattern
-  ['<C-c>'] = { '<C-t>', 'Next search result', mode = 'c', silent = false },
-  ['<C-t>'] = { '<C-g>', 'Previous search result', mode = 'c', silent = false },
-  ['<Esc>'] = { ':nohlsearch<Bar>:echo<CR>', 'Clear search highlight' },
+-- Search
+-- Seek through search results with l and L, centering the screen after jumps
+map('n', 'l', 'nzz', { desc = 'Next search result' })
+map('n', 'L', 'Nzz', { desc = 'Previous search result' })
+-- Seek through search results with Ctrl+c and Ctrl+t whilst entering search pattern
+map('c', '<C-c>', '<C-t>', { desc = 'Next search result', silent = false })
+map('c', '<C-t>', '<C-g>', { desc = 'Previous search result', silent = false })
+-- Clear search highlight
+map('n', '<Esc>', ':nohlsearch<Bar>:echo<CR>', { desc = 'Clear search highlight' })
 
-  -- Window management
-  -- Move between windows without releasing Ctrl
-  -- Additional mappings with Alt prefix are created in vim-tmux-navigator plugin
-  ['<C-w><C-h>'] = { '<C-w>h', 'Go to left window' },
-  ['<C-w><C-n>'] = { '<C-w>l', 'Go to right window' },
-  ['<C-w><C-c>'] = { '<C-w>k', 'Go to upper window' },
-  ['<C-w><C-t>'] = { '<C-w>j', 'Go to lower window' },
-  -- Resize windows with Alt+arrow
-  ['<M-Up>'] = { '<C-w>+', 'Increase window height' },
-  ['<M-Down>'] = { '<C-w>-', 'Decrease window height' },
-  ['<M-Left>'] = { '<C-w><', 'Decrease window width' },
-  ['<M-Right>'] = { '<C-w>>', 'Increase window width' },
+-- Window management
+-- Move between windows without releasing Ctrl
+-- Additional mappings with Alt prefix are created in vim-tmux-navigator plugin
+map('n', '<C-w><C-h>', '<C-w>h', { desc = 'Go to left window' })
+map('n', '<C-w><C-n>', '<C-w>l', { desc = 'Go to right window' })
+map('n', '<C-w><C-c>', '<C-w>k', { desc = 'Go to upper window' })
+map('n', '<C-w><C-t>', '<C-w>j', { desc = 'Go to lower window' })
+-- Resize windows with Alt+arrow
+map('n', '<M-Up>', '<C-w>+', { desc = 'Increase window height' })
+map('n', '<M-Down>', '<C-w>-', { desc = 'Decrease window height' })
+map('n', '<M-Left>', '<C-w><', { desc = 'Decrease window width' })
+map('n', '<M-Right>', '<C-w>>', { desc = 'Increase window width' })
 
-  -- Line operations
-  ['<cr>'] = { '<cmd>call append(line("."), "")<cr>', 'Insert new line below' },
-  ['<C-j>'] = { 'J', 'Join lines' }, -- because J is used by 'leap.nvim'
-  -- TODO: Consider using a different keymap for line duplication
-  ['<Leader>d'] = { '<cmd>t.<cr>', 'Duplicate current line' },
-  Y = { 'y$', 'Yank to end of line' },
-
-  -- Filename operations
-  ['<Leader>f'] = {
-    name = 'Filename',
-    s = { '<cmd>let @+=expand("%")<cr>', 'Copy filename to clipboard' },
-    l = { '<cmd>let @+=expand("%:p")<cr>', 'Copy file path to clipboard' },
-  },
-
-  -- Misc
-  -- TODO: This needs to be mapped to auto-pairs plugin
-  ['<C-d>'] = { '<BS>', 'Delete last entered character', mode = 'i' },
-  ['<F7>'] = { '<cmd>setlocal spell!<cr>', 'Enable spellcheck' },
-  ['<F9>'] = { '<cmd>MakeTarget<cr>', 'Run make', mode = { 'n', 'i' } },
-
-  -- NOTE: Some keys that are still free: $ ^ F5 F10
-})
+-- Line operations
+map('n', '<cr>', '<cmd>call append(line("."), "")<cr>', { desc = 'Insert new line below' })
+map('n', '<C-j>', 'J', { desc = 'Join lines' }) -- because J is used by 'leap.nvim'
+-- TODO: Consider using a different keymap for line duplication
+map('n', '<Leader>d', '<cmd>t.<cr>', { desc = 'Duplicate current line' })
+map('n', 'Y', 'y$', { desc = 'Yank to end of line' })
 
 -- Move lines
--- Use separate register() calls because while the keys and the descriptions are the same for
--- different modes, the implementations are different
+map('n', '<C-c>', '<cmd>m .-2<cr>', { desc = 'Move line up' })
+map('n', '<C-t>', '<cmd>m .+1<cr>', { desc = 'Move line down' })
+map('n', '<C-h>', '<cmd><<cr>', { desc = 'Decrease line indentation' })
+map('n', '<C-n>', '<cmd>><cr>', { desc = 'Increase line indentation' })
+map('i', '<C-c>', '<Esc>:m .-2<cr>==gi', { desc = 'Move line up' })
+map('i', '<C-t>', '<Esc>:m .+1<cr>==gi', { desc = 'Move line down' })
+map('i', '<C-h>', '<C-d>', { desc = 'Decrease line indentation' })
+map('i', '<C-n>', '<C-t>', { desc = 'Increase line indentation' })
+map('v', '<C-c>', ":m '<-2<cr>gv", { desc = 'Move lines up' })
+map('v', '<C-t>', ":m '>+1<cr>gv", { desc = 'Move lines down' })
+map('v', '<C-h>', ':<<cr>gv', { desc = 'Decrease lines indentation' })
+map('v', '<C-n>', ':><cr>gv', { desc = 'Increase lines indentation' })
+
+-- Filename operations
+map('n', '<Leader>fs', '<cmd>let @+=expand("%")<cr>', { desc = 'Copy filename to clipboard' })
+map('n', '<Leader>fl', '<cmd>let @+=expand("%:p")<cr>', { desc = 'Copy file path to clipboard' })
+
+-- Misc
+-- TODO: This needs to be mapped to auto-pairs plugin
+map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
+map('n', '<F7>', '<cmd>setlocal spell!<cr>', { desc = 'Enable spellcheck' })
+map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = false })
+
+-- NOTE: Some keys that are still free: $ ^ F5 F10
+
+local available, wk = pcall(require, 'which-key')
+if not available then return end
 wk.register({
-  ['<C-c>'] = { '<cmd>m .-2<cr>', 'Move line up' },
-  ['<C-t>'] = { '<cmd>m .+1<cr>', 'Move line down' },
-  ['<C-h>'] = { '<cmd><<cr>', 'Decrease line indentation' },
-  ['<C-n>'] = { '<cmd>><cr>', 'Increase line indentation' },
-}, { mode = 'n' })
-wk.register({
-  ['<C-c>'] = { '<Esc>:m .-2<cr>==gi', 'Move line up' },
-  ['<C-t>'] = { '<Esc>:m .+1<cr>==gi', 'Move line down' },
-  ['<C-h>'] = { '<C-d>', 'Decrease line indentation' },
-  ['<C-n>'] = { '<C-t>', 'Increase line indentation' },
-}, { mode = 'i' })
-wk.register({
-  ['<C-c>'] = { ":m '<-2<cr>gv", 'Move lines up' },
-  ['<C-t>'] = { ":m '>+1<cr>gv", 'Move lines down' },
-  ['<C-h>'] = { ':<<cr>gv', 'Decrease lines indentation' },
-  ['<C-n>'] = { ':><cr>gv', 'Increase lines indentation' },
-}, { mode = 'v' })
+  ['<Leader>f'] = { name = 'Filename' },
+})
