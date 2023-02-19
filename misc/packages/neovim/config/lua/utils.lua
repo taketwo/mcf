@@ -38,4 +38,14 @@ function M.toggle(option, silent, values)
   end
 end
 
+function M.toggle_diagnostics()
+  if vim.diagnostic.is_disabled() then
+    vim.diagnostic.enable()
+    Util.info('Enabled diagnostics', { title = 'Diagnostics' })
+  else
+    vim.diagnostic.disable()
+    Util.warn('Disabled diagnostics', { title = 'Diagnostics' })
+  end
+end
+
 return M

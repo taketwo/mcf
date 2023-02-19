@@ -97,8 +97,8 @@ map(
   function() Util.toggle('conceallevel', false, { 0, conceallevel }) end,
   { desc = 'Toggle concealing' }
 )
--- TODO: Consider enabling these:
--- map("n", "<leader>ud", Util.toggle_diagnostics, { desc = "Toggle Diagnostics" })
+map('n', '<Leader>ud', Util.toggle_diagnostics, { desc = 'Toggle diagnostics' })
+-- TODO: Consider enabling this:
 -- map("n", "<leader>uf", require("lazyvim.plugins.lsp.format").toggle, { desc = "Toggle format on Save" })
 
 -- Misc
