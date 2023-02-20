@@ -24,21 +24,21 @@ return {
       wk.setup(opts)
       wk.register({
         ['<Leader>'] = {
-          ['.'] = {
-            name = 'Telescope',
-          },
-          g = {
-            name = 'Git',
-          },
-          l = {
-            name = 'LSP',
-          },
-          s = {
-            name = 'Shift object',
-          },
+          ['.'] = { name = 'Telescope' },
+          g = { name = 'Git' },
+          l = { name = 'LSP' },
+          s = { name = 'Shift object' },
         },
         [']'] = { name = 'Jump next' },
         ['['] = { name = 'Jump previous' },
+        g = { name = 'Go to' },
+        z = { name = 'Folds and spelling' },
+        -- Same as default, but with capitalized name
+        ['"'] = { name = 'Registers' },
+        ['@'] = { name = 'Registers' },
+        ["'"] = { name = 'Marks' },
+        ['`'] = { name = 'Marks' },
+        ['<C-w>'] = { name = 'Window' },
       })
     end,
   },
