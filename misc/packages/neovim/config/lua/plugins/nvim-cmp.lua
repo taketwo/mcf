@@ -28,14 +28,16 @@ return {
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
           { name = 'ultisnips' },
+          -- TODO: Double-check if the problem is still there
           -- { name = 'omni' },  disable temporarily because of slow-downs when editing gitcommit
           { name = 'path' },
           { name = 'rosmsg' },
           { name = 'buffer', keyword_length = 4 },
         }),
-        -- completion = {
-        -- completeopt = 'menu,menuone,noinsert',
-        -- },
+        completion = {
+          -- TODO: Do we neee this?
+          -- completeopt = 'menu,menuone,noinsert',
+        },
         formatting = {
           format = function(entry, vim_item)
             -- At the moment 'cmp' does not support fixed-width windows, so we truncate the items
