@@ -32,19 +32,6 @@ return {
           ['>'] = { vim.diagnostic.goto_next, 'Go to next diagnostic' },
           ['<'] = { vim.diagnostic.goto_prev, 'Go to previous diagnostic' },
         }, { buffer = bufnr })
-
-        -- Autocommands
-        -- Send diagnostics to the location list (without opening it)
-        -- TODO: Use vim.api.nvim_create_autocmd
-        vim.api.nvim_exec(
-          [[
-    augroup lsp_publish_diagnostics
-      autocmd! * <buffer>
-      autocmd DiagnosticChanged * lua vim.diagnostic.setloclist({open=false})
-    augroup END
-]],
-          false
-        )
       end
 
       vim.diagnostic.config({
