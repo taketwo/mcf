@@ -2,7 +2,7 @@ let maplocalleader = '\'
 
 setlocal textwidth=80
 setlocal colorcolumn=80
-setlocal conceallevel=2
+setlocal conceallevel=0
 
 " Turn the current line into header
 nnoremap <LocalLeader>1 :t.<CR>Vr=k

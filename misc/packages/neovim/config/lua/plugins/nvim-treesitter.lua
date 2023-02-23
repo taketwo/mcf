@@ -20,8 +20,8 @@ return {
         'json',
         'lua',
         'make',
-        -- "markdown",    seems to be broken
-        -- "markdown_inline",    seems to be broken
+        "markdown",
+        "markdown_inline",
         'nix',
         'python',
         'regex',
