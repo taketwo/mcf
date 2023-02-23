@@ -10,28 +10,45 @@ return {
     },
     config = function()
       -- TODO: Implement auto-formatting support
-      -- TODO: Setup keymaps based on server capabilities (see LazyVim for an example)
-      local on_attach = function(_, bufnr)
-        require('which-key').register({
-          K = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Display LSP hover information' },
-          ['<c-k>'] = { '<cmd>lua.vim.lsp.buf.signature_help()<cr>', 'Display LSP signature help' },
-          g = {
-            d = { '<cmd>lua vim.lsp.buf.definition()<cr>', 'Go to definition' },
-            D = { '<cmd>lua vim.lsp.buf.declaration()<cr>', 'Go to declaration' },
-            r = { '<cmd>Trouble lsp_references<cr>', 'Go to references' },
-            t = { '<cmd>Trouble lsp_type_definitions<cr>', 'Go to type definition' },
+      local on_attach = function(client, buffer)
+        local Keys = {
+          { '<', vim.diagnostic.goto_prev, desc = 'Go to previous diagnostic' },
+          { '>', vim.diagnostic.goto_next, desc = 'Go to next diagnostic' },
+          {
+            '<C-k>',
+            vim.lsp.buf.signature_help,
+            mode = 'i',
+            desc = 'Display LSP signature help',
+            has = 'signatureHelp',
           },
-          ['<Leader>'] = {
-            l = {
-              name = 'LSP',
-              a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code action' },
-              n = { '<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename symbol' },
-              t = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Show workspace diagnostics in Trouble' },
-            },
+          { '<Leader>lD', '<cmd>Lspsaga show_line_diagnostics<cr>', desc = 'Line diagnostics' },
+          { '<Leader>lf', '<cmd>Lspsaga lsp_finder<cr>', desc = 'Finder' },
+          { '<Leader>ld', '<cmd>Lspsaga peek_definition<cr>', desc = 'Definition preview' },
+          { '<Leader>li', '<cmd>LspInfo<cr>', desc = 'Show info' },
+          { '<Leader>ls', vim.lsp.buf.signature_help, desc = 'Signature help', has = 'signatureHelp' },
+          {
+            '<Leader>lt',
+            '<cmd>TroubleToggle workspace_diagnostics<cr>',
+            desc = 'Show workspace diagnostics in Trouble',
           },
-          ['>'] = { vim.diagnostic.goto_next, 'Go to next diagnostic' },
-          ['<'] = { vim.diagnostic.goto_prev, 'Go to previous diagnostic' },
-        }, { buffer = bufnr })
+          { '<leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
+          { '<leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
+          { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
+          { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration' },
+          { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation' },
+          { 'gd', '<cmd>Telescope lsp_definitions<cr>', desc = 'Goto to definition' }, -- TODO: Or use Trouble?
+          { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references' },
+          { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition' },
+        }
+        for _, keys in ipairs(Keys) do
+          if not keys.has or client.server_capabilities[keys.has .. 'Provider'] then
+            local opts = require('lazy.core.handler.keys').opts(keys)
+            opts.has = nil
+            opts.silent = true
+            opts.buffer = buffer
+            vim.keymap.set(keys.mode or 'n', keys[1], keys[2], opts)
+          end
+        end
       end
 
       vim.diagnostic.config({
