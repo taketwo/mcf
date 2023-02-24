@@ -12,8 +12,8 @@ return {
       -- TODO: Implement auto-formatting support
       local on_attach = function(client, buffer)
         local Keys = {
-          { '<', vim.diagnostic.goto_prev, desc = 'Go to previous diagnostic' },
-          { '>', vim.diagnostic.goto_next, desc = 'Go to next diagnostic' },
+          { '<', '<cmd>Lspsaga diagnostic_jump_prev<cr>', desc = 'Go to previous diagnostic' },
+          { '>', '<cmd>Lspsaga diagnostic_jump_next<cr>', desc = 'Go to next diagnostic' },
           {
             '<C-k>',
             vim.lsp.buf.signature_help,
