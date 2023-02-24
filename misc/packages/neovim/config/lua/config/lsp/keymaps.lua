@@ -1,0 +1,45 @@
+local M = {}
+
+M._keys = {
+  { '<', '<cmd>Lspsaga diagnostic_jump_prev<cr>', desc = 'Go to previous diagnostic' },
+  { '>', '<cmd>Lspsaga diagnostic_jump_next<cr>', desc = 'Go to next diagnostic' },
+  {
+    '<C-k>',
+    vim.lsp.buf.signature_help,
+    mode = 'i',
+    desc = 'Display LSP signature help',
+    has = 'signatureHelp',
+  },
+  { '<Leader>lD', '<cmd>Lspsaga show_line_diagnostics<cr>', desc = 'Line diagnostics' },
+  { '<Leader>lf', '<cmd>Lspsaga lsp_finder<cr>', desc = 'Finder' },
+  { '<Leader>ld', '<cmd>Lspsaga peek_definition<cr>', desc = 'Definition preview' },
+  { '<Leader>li', '<cmd>LspInfo<cr>', desc = 'Show info' },
+  { '<Leader>ls', vim.lsp.buf.signature_help, desc = 'Signature help', has = 'signatureHelp' },
+  {
+    '<Leader>lt',
+    '<cmd>TroubleToggle workspace_diagnostics<cr>',
+    desc = 'Show workspace diagnostics in Trouble',
+  },
+  { '<leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
+  { '<leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
+  { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
+  { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration' },
+  { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation' },
+  { 'gd', '<cmd>Telescope lsp_definitions<cr>', desc = 'Goto to definition' }, -- TODO: Or use Trouble?
+  { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references' },
+  { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition' },
+}
+
+function M.on_attach(client, buffer)
+  for _, keys in ipairs(M._keys) do
+    if not keys.has or client.server_capabilities[keys.has .. 'Provider'] then
+      local opts = require('lazy.core.handler.keys').opts(keys)
+      opts.has = nil
+      opts.silent = true
+      opts.buffer = buffer
+      vim.keymap.set(keys.mode or 'n', keys[1], keys[2], opts)
+    end
+  end
+end
+
+return M
