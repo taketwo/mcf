@@ -12,6 +12,7 @@ return {
       -- TODO: Implement auto-formatting support
       local on_attach = function(client, buffer)
         require('config.lsp.keymaps').on_attach(client, buffer)
+        require("lsp-inlayhints").on_attach(client, buffer)
       end
 
       vim.diagnostic.config({
@@ -44,6 +45,9 @@ return {
               },
               completion = {
                 callSnippet = 'Replace',
+              },
+              hint = {
+                enable = true,
               },
             },
           },

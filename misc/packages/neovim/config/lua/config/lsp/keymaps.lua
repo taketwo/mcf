@@ -28,6 +28,12 @@ M._keys = {
   { 'gd', '<cmd>Telescope lsp_definitions<cr>', desc = 'Goto to definition', has = 'definition' }, -- TODO: Or use Trouble?
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
+  {
+    '<Leader>ui',
+    function() require('lsp-inlayhints').toggle() end,
+    desc = 'Toggle inlay hints',
+    has = 'inlayHint',
+  },
 }
 
 function M.on_attach(client, buffer)
