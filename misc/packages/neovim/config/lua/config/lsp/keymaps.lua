@@ -4,7 +4,7 @@ M._keys = {
   { '<', '<cmd>Lspsaga diagnostic_jump_prev<cr>', desc = 'Go to previous diagnostic' },
   { '>', '<cmd>Lspsaga diagnostic_jump_next<cr>', desc = 'Go to next diagnostic' },
   {
-    '<C-k>',
+    '<F5>',
     vim.lsp.buf.signature_help,
     mode = 'i',
     desc = 'Display LSP signature help',
