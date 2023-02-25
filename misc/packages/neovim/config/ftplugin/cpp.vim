@@ -97,13 +97,3 @@ for v in ['5.0', '4.0', '3.8', '3.6']
         break
     endif
 endfor
-" Fixers
-let b:ale_fixers = [ 'clang-format' ]
-" Setup clang-format fixer (pick the newest version)
-for v in ['9.0', '8.0', '7.0', '6.0', '5.0', '4.0', '3.8', '3.6']
-    let e = 'clang-format-' . v
-    if executable(e)
-        let g:ale_c_clangformat_executable = e
-        break
-    endif
-endfor

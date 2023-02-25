@@ -9,12 +9,6 @@ return {
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
-      -- TODO: Implement auto-formatting support
-      local on_attach = function(client, buffer)
-        require('config.lsp.keymaps').on_attach(client, buffer)
-        require("lsp-inlayhints").on_attach(client, buffer)
-      end
-
       vim.diagnostic.config({
         underline = true,
         update_in_insert = false,
@@ -51,6 +45,9 @@ return {
               },
             },
           },
+          capabilities = {
+            documentFormattingProvider = false,
+          },
         },
       }
 
@@ -59,7 +56,7 @@ return {
       local function setup(server)
         local server_opts = servers[server] or {}
         server_opts.capabilities = vim.tbl_deep_extend('force', capabilities, server_opts.capabilities or {})
-        server_opts.on_attach = on_attach
+        server_opts.on_attach = require('config.lsp').on_attach
         require('lspconfig')[server].setup(server_opts)
       end
 

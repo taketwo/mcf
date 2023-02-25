@@ -20,8 +20,8 @@ M._keys = {
     '<cmd>TroubleToggle workspace_diagnostics<cr>',
     desc = 'Show workspace diagnostics in Trouble',
   },
-  { '<leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
-  { '<leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
+  { '<Leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
+  { '<Leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
   { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
   { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration', has = 'declaration' },
   { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
@@ -34,6 +34,8 @@ M._keys = {
     desc = 'Toggle inlay hints',
     has = 'inlayHint',
   },
+  { '<F2>', require('config.lsp.format').format, desc = 'Format document', has = 'documentFormatting' },
+  { '<F2>', require('config.lsp.format').format, desc = 'Format range', mode = 'v', has = 'documentRangeFormatting' },
 }
 
 function M.on_attach(client, buffer)
