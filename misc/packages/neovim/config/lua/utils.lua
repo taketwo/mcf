@@ -48,4 +48,7 @@ function M.toggle_diagnostics()
   end
 end
 
+M.info = Util.info
+M.warn = Util.warn
+
 return M

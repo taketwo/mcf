@@ -1,12 +1,25 @@
+local Util = require('utils')
+
 local M = {}
 
 M.autoformat = true
 
 function M._is_capability_disabled(client, capability)
-  return
-    client.config
-    and client.config.capabilities
-    and client.config.capabilities[capability] == false
+  return client.config and client.config.capabilities and client.config.capabilities[capability] == false
+end
+
+function M.toggle()
+  if vim.b.autoformat == false then
+    vim.b.autoformat = nil
+    M.autoformat = true
+  else
+    M.autoformat = not M.autoformat
+  end
+  if M.autoformat then
+    Util.info('Enabled format on save', { title = 'Format' })
+  else
+    Util.warn('Disabled format on save', { title = 'Format' })
+  end
 end
 
 function M.format()

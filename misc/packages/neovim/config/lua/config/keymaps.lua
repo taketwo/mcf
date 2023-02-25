@@ -98,8 +98,7 @@ map(
   { desc = 'Toggle concealing' }
 )
 map('n', '<Leader>ud', Util.toggle_diagnostics, { desc = 'Toggle diagnostics' })
--- TODO: Consider enabling this:
--- map("n", "<leader>uf", require("lazyvim.plugins.lsp.format").toggle, { desc = "Toggle format on Save" })
+map("n", "<Leader>uf", require("config.lsp.format").toggle, { desc = "Toggle format on save" })
 
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
