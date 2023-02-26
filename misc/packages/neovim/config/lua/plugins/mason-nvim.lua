@@ -4,8 +4,10 @@ return {
     cmd = 'Mason',
     opts = {
       ensure_installed = {
+        'bash-debug-adapter',
         'bash-language-server',
         'clangd',
+        'cpptools',
         'jedi-language-server',
         'lua-language-server',
         'shellcheck',
