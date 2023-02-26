@@ -56,8 +56,7 @@ map('n', '<M-Right>', '<C-w>>', { desc = 'Increase window width' })
 -- Line operations
 map('n', '<cr>', '<cmd>call append(line("."), "")<cr>', { desc = 'Insert new line below' })
 map('n', '<C-j>', 'J', { desc = 'Join lines' }) -- because J is used by 'leap.nvim'
--- TODO: Consider using a different keymap for line duplication
-map('n', '<Leader>d', '<cmd>t.<cr>', { desc = 'Duplicate current line' })
+map('n', '<C-d>', '<cmd>t.<cr>', { desc = 'Duplicate current line' })
 map('n', 'Y', 'y$', { desc = 'Yank to end of line' })
 
 -- Move lines
