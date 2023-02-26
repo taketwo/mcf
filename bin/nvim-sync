@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Synchronize the state of Neovim plugins
+
+LOCK_REPO_NAME="mcf-nvim-lock"
+LOCK_REPO_URI="git@gitlab.com:taketwo/$LOCK_REPO_NAME.git"
+LOCK_REPO_PATH="$MCF/external/$LOCK_REPO_NAME"
+
+# Clone or pull the external repository
+if [ ! -d "$LOCK_REPO_PATH" ]; then
+  git clone "$LOCK_REPO_URI" "$LOCK_REPO_PATH"
+else
+  git -C "$LOCK_REPO_PATH" pull
+fi
+
+# Copy the lock file to the local repository
+LAZY_LOCK_FILE_NAME="lazy-lock.json"
+LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
+LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
+cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
+
+# Restore the plugin state from the lock file in Neovim headless mode
+nvim --headless "+Lazy! restore" +qa
+
+if [ "$1" = "--update" ]; then
+  # TODO: Figure out how to run "Lazy sync" automatically with UI
+  nvim
+  cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
+  git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
+  git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME"
+  git -C "$LOCK_REPO_PATH" push
+fi
