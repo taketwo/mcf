@@ -17,7 +17,6 @@ pipx: pipenv
 pipx: poetry
 pipx: flake8 flake8-bugbear
 pipx: black
-nix: shfmt                             # formatting for Bash
 nix: delta                             # syntax highlighting for diffs
 pipx: codespell                        # spell checking for C++
 pudb

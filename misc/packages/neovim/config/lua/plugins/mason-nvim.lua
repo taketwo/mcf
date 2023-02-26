@@ -6,9 +6,10 @@ return {
       ensure_installed = {
         'bash-language-server',
         'clangd',
-        'lua-language-server',
         'jedi-language-server',
+        'lua-language-server',
         'shellcheck',
+        'shfmt',
         'stylua',
       },
     },

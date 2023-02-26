@@ -7,6 +7,9 @@ return {
       local nls = require('null-ls')
       return {
         sources = {
+          nls.builtins.formatting.shfmt.with({
+            extra_args = { '-i', '2', '-ci' },
+          }),
           nls.builtins.formatting.stylua.with({
             extra_args = { '--config-path', vim.fn.stdpath('config') .. '/extras/stylua.toml' },
           }),
