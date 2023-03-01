@@ -1,6 +1,7 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
@@ -47,23 +48,7 @@ return {
         },
       },
       textobjects = {
-        select = {
-          enable = true,
-          lookahead = true,
-          keymaps = {
-            ['af'] = { query = '@function.outer', desc = 'function' },
-            ['if'] = { query = '@function.inner', desc = 'function' },
-            ['ac'] = { query = '@class.outer', desc = 'class' },
-            ['ic'] = { query = '@class.inner', desc = 'class' },
-            ['al'] = { query = '@loop.outer', desc = 'loop' },
-            ['il'] = { query = '@loop.inner', desc = 'loop' },
-            ['as'] = { query = '@statement.outer', desc = 'statement' },
-            ['is'] = { query = '@statement.inner', desc = 'statement' },
-          },
-          selection_modes = {
-            ['@function.outer'] = 'V', -- FIXME: Does not seem to work
-          },
-        },
+        select = { enable = false },
         swap = {
           enable = true,
           swap_next = {
