@@ -22,6 +22,7 @@ vim.api.nvim_create_autocmd({ 'VimResized' }, {
 })
 
 -- Go to last loc when opening a buffer
+-- FIXME: This does not respect +linenumber argument
 vim.api.nvim_create_autocmd('BufReadPost', {
   group = augroup('last_loc'),
   callback = function()
