@@ -42,7 +42,7 @@ return {
             expr = true,
           },
           -- Text object
-          ih = { ':<C-U>Gitsigns select_hunk<CR>', 'Select hunk', mode = { 'o', 'x' } },
+          ih = { ':<C-U>Gitsigns select_hunk<CR>', 'Git hunk', mode = { 'o', 'x' } },
         }, { buffer = bufnr })
       end,
     },

@@ -3,8 +3,8 @@ return {
     'kana/vim-textobj-entire',
     dependencies = { 'kana/vim-textobj-user' },
     keys = {
-      { 'ie', mode = { 'o', 'x' }, desc = 'entire buffer (without empty lines)' },
-      { 'ae', mode = { 'o', 'x' }, desc = 'entire buffer' },
+      { 'ie', mode = { 'o', 'x' }, desc = 'Entire buffer excluding empty lines' },
+      { 'ae', mode = { 'o', 'x' }, desc = 'Entire buffer' },
     },
   },
 }
