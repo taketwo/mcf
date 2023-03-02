@@ -19,7 +19,7 @@ return {
       { '<Leader>lr', '<cmd>Telescope lsp_references<cr>', desc = 'References' },
       { '<Leader>gl', '<cmd>Telescope git_bcommits<cr>', desc = 'Log (buffer only)' },
       { '<Leader>gL', '<cmd>Telescope git_commits<cr>', desc = 'Log (everything)' },
-      { '<Leader>gs', '<cmd>Telescope git_status<cr>', desc = 'Status' },
+      { '<Leader>gS', '<cmd>Telescope git_status<cr>', desc = 'Status' },
       { '<space>', '<cmd>Telescope buffers show_all_buffers=true<cr>', desc = 'Jump to buffer' },
       { 'z=', '<cmd>Telescope spell_suggest<cr>', desc = 'Spelling suggestions' },
     },

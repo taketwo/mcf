@@ -9,18 +9,21 @@ return {
           ['<Leader>'] = {
             g = {
               name = 'Git',
+              d = { gs.toggle_deleted, 'Toggle deleted lines' },
               h = {
-                name = '+hunks',
+                name = '+Hunks',
                 d = { gs.diffthis, 'Diff' },
                 p = { gs.preview_hunk, 'Preview' },
-                r = { '<cmd>Gitsigns reset_hunk<cr>', 'Reset' },
-                s = { '<cmd>Gitsigns stage_hunk<cr>', 'Stage' },
+                r = { gs.reset_hunk, 'Reset' },
+                s = { gs.stage_hunk, 'Stage' },
                 u = { gs.undo_stage_hunk, 'Unstage' },
               },
               -- TODO: The one below is an alternative to git-messenger, consider removing one of them
               M = { function() gs.blame_line({ full = true }) end, 'View commit message (gitsigns)' },
-              B = { gs.toggle_current_line_blame, 'Toggle current line blame' },
-              D = { gs.toggle_deleted, 'Toggle deleted lines' },
+              s = { gs.stage_buffer, 'Stage buffer' },
+            },
+            u = {
+              b = { gs.toggle_current_line_blame, 'Toggle current line blame' },
             },
           },
           [']h'] = {
