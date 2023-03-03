@@ -8,8 +8,10 @@ LOCK_REPO_PATH="$MCF/external/$LOCK_REPO_NAME"
 
 # Clone or pull the external repository
 if [ ! -d "$LOCK_REPO_PATH" ]; then
+  echo "Lock repository not found, cloning"
   git clone "$LOCK_REPO_URI" "$LOCK_REPO_PATH"
 else
+  echo "Lock repository found, pulling latest changes"
   git -C "$LOCK_REPO_PATH" pull
 fi
 
@@ -19,14 +21,21 @@ LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME
 LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
 
-# Restore the plugin state from the lock file in Neovim headless mode
+echo "Restoring the state of Neovim plugins"
 nvim --headless "+Lazy! restore" +qa
 
 if [ "$1" = "--update" ]; then
+  echo "Launching Neovim to update plugins"
   # TODO: Figure out how to run "Lazy sync" automatically with UI
   nvim
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
-  git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
-  git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME"
-  git -C "$LOCK_REPO_PATH" push
+  # Check if the lock file has changed
+  if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
+    echo "Lock file has changed, committing and pushing changes"
+    git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
+    git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME"
+    git -C "$LOCK_REPO_PATH" push
+  else
+    echo "Lock file has not changed"
+  fi
 fi
