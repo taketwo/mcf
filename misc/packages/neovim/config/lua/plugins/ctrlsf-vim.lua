@@ -2,8 +2,8 @@ return {
   {
     'dyng/ctrlsf.vim',
     keys = {
-      { '<C-f>', '<Plug>CtrlSFPrompt' },
-      { '<C-f>', '<Plug>CtrlSFVwordExec', mode = 'x' },
+      { '<C-f>', '<Plug>CtrlSFPrompt', desc = 'CtrlSF prompt' },
+      { '<C-f>', '<Plug>CtrlSFVwordExec', desc = 'CtrlSF selection', mode = 'x' },
     },
     init = function()
       vim.g.ctrlsf_auto_focus = {
