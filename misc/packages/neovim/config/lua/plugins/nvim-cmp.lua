@@ -17,13 +17,13 @@ return {
           expand = function(args) vim.fn['UltiSnips#Anon'](args.body) end,
         },
         mapping = {
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<C-c>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
           ['<C-d>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-h>'] = cmp.mapping.close(),
           ['<C-n>'] = cmp.mapping.confirm({ select = true }),
           ['<C-t>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          ['<C-c>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
         },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
