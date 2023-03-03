@@ -76,6 +76,7 @@ map('v', '<C-n>', ':><cr>gv', { desc = 'Increase lines indentation' })
 -- Filename operations
 map('n', '<Leader>fs', '<cmd>let @+=expand("%")<cr>', { desc = 'Copy filename to clipboard' })
 map('n', '<Leader>fl', '<cmd>let @+=expand("%:p")<cr>', { desc = 'Copy file path to clipboard' })
+map('n', '<Leader>fp', '<C-g>', { desc = 'Print file path and status' })
 
 -- Add undo breakpoints
 map('i', ',', ',<c-g>u', { desc = 'Insert , and add undo breakpoint' })
@@ -97,7 +98,7 @@ map(
   { desc = 'Toggle concealing' }
 )
 map('n', '<Leader>ud', Util.toggle_diagnostics, { desc = 'Toggle diagnostics' })
-map("n", "<Leader>uf", require("config.lsp.format").toggle, { desc = "Toggle format on save" })
+map('n', '<Leader>uf', require('config.lsp.format').toggle, { desc = 'Toggle format on save' })
 
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
