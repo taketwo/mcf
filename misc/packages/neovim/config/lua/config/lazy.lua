@@ -34,4 +34,9 @@ require('lazy').setup('plugins', {
       },
     },
   },
+  dev = {
+    path = vim.fn.expand('$MCF') .. '/external/neovim-plugins',
+    patterns = { 'taketwo' },
+    fallback = true,
+  },
 })
