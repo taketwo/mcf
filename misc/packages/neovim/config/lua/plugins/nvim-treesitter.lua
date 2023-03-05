@@ -21,6 +21,7 @@ return {
         'json',
         'jsonc',
         'lua',
+        'luap',
         'make',
         'markdown',
         'markdown_inline',
