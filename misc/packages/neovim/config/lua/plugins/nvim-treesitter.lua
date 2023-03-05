@@ -19,6 +19,7 @@ return {
         'help',
         -- 'hjson', seems to be broken, using a plugin instead
         'json',
+        'jsonc',
         'lua',
         'make',
         'markdown',

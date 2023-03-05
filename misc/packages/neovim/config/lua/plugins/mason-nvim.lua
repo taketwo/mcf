@@ -9,6 +9,7 @@ return {
         'clangd',
         'cpptools',
         'jedi-language-server',
+        'json-lsp',
         'lua-language-server',
         'shellcheck',
         'shfmt',
