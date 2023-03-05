@@ -11,9 +11,9 @@ function M.setup()
   local dapui = require('dapui')
   -- TODO: Investigate what else is possible with dap-ui
   dapui.setup()
-  dap.listeners.after.event_initialized['dapui_config'] = function() dapui.open() end
-  dap.listeners.before.event_terminated['dapui_config'] = function() dapui.close() end
-  dap.listeners.before.event_exited['dapui_config'] = function() dapui.close() end
+  dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+  dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+  dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
   -- Setup debuggers
   require('config.dap.bash').setup()
