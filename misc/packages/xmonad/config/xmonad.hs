@@ -52,8 +52,9 @@ import qualified XMonad.StackSet as W
 
 import Control.Monad (liftM2)
 import Data.Ratio ((%))
-import System.Posix.Env (getEnv)
+import System.Directory
 import System.IO.Unsafe (unsafePerformIO)
+import System.Posix.Env (getEnv)
 import Data.Maybe (maybe, fromMaybe)
 import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
@@ -177,9 +178,17 @@ currentTopicDirName tg = do
 spawnTmux :: X ()
 spawnTmux = currentTopicDirName myTopicConfig >>= spawnTmuxSession
 
--- Spawn tmux session in a given working directory
+-- Spawn tmux session in a given working directory.
+-- If corresponding session file exists in $MCF/tmux/sessions/, load it.
 spawnTmuxSession :: (String, String) -> X ()
-spawnTmuxSession (session, dir) = spawn $ appTerminal ++ " --working-directory " ++ dir ++ " -e tmux new -s " ++ session ++ ""
+spawnTmuxSession (session, dir) = do
+  let sessionFile = pathMCF ++ "/tmux/sessions/" ++ session ++ ".yaml"
+  exists <- io $ doesFileExist sessionFile
+  let command = if exists
+                then "tmuxp load " ++ sessionFile
+                else "tmux new -s " ++ session
+  spawn $ appTerminal ++ " --working-directory " ++ dir ++ " -e " ++ command
+
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
