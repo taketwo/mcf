@@ -1,8 +1,12 @@
+# Some (most) of the color codes are not used in the theme, but are kept here for reference.
+# The directive below disables the shellcheck warning for unused variables.
+# shellcheck disable=2034
+
 if command -v fzf-share >/dev/null; then
   # We do not want any bindings, however we want Bash functions defined in key-bindings.bash
-  alias bind=':'  # Make bind a no-op
+  alias bind=':' # Make bind a no-op
   source "$(fzf-share)/key-bindings.bash"
-  unalias bind    # Restore bind
+  unalias bind # Restore bind
   source "$(fzf-share)/completion.bash"
 fi
 
@@ -80,7 +84,7 @@ fkill() {
   local pid
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
   if [ "x$pid" != "x" ]; then
-    echo "$pid" | xargs kill -${1:-9}
+    echo "$pid" | xargs kill -"${1:-9}"
   fi
 }
 
@@ -97,4 +101,3 @@ fpkg() {
   packages=$(dpkg -l | awk '{print $2}') &&
     package=$(echo "$packages" | fzf --preview 'dpkg -s {}')
 }
-
