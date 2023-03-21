@@ -1,5 +1,48 @@
 #!/usr/bin/env bash
 
+function print_help {
+  echo "Usage: $0 [OPTIONS] ARCHIVE_PATH"
+  echo ""
+  echo "Unpack an archive file using the appropriate decompression tool."
+  echo ""
+  echo "Options:"
+  echo "  -d, --delete     Delete the archive file after unpacking."
+  echo "  -c, --clipboard  Use the path contained in the system clipboard instead of ARCHIVE_PATH."
+  echo "  -h, --help       Print this help message and exit."
+}
+
+# Parse command line options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -d | --delete)
+      DELETE_ARCHIVE=true
+      shift
+      ;;
+    -c | --clipboard)
+      if [ -n "${ARCHIVE_PATH}" ]; then
+        echo "Error: cannot use both ARCHIVE_PATH and --clipboard options"
+        print_help
+        exit 1
+      fi
+      ARCHIVE_PATH=$(xsel --clipboard --output)
+      shift
+      ;;
+    -h | --help)
+      print_help
+      exit 0
+      ;;
+    *)
+      if [ -n "${ARCHIVE_PATH}" ]; then
+        echo "Error: only one ARCHIVE_PATH can be provided"
+        print_help
+        exit 1
+      fi
+      ARCHIVE_PATH="$1"
+      shift
+      ;;
+  esac
+done
+
 # Extracts an archive if it has one of the known types
 function unpack() {
   if [ -f "$1" ]; then
@@ -17,7 +60,10 @@ function unpack() {
       *.Z) uncompress "$1" ;;
       *.7z) 7z x "$1" ;;
       *.deb) ar p "$1" data.tar.gz | tar zx ;;
-      *) echo "Do not know how to extract '$1'..."; exit 2 ;;
+      *)
+        echo "Do not know how to extract '$1'..."
+        exit 2
+        ;;
     esac
   else
     echo "'$1' is not a valid file!"
@@ -25,20 +71,22 @@ function unpack() {
   fi
 }
 
-if [[ $# -lt 1 ]] || [[ $# -gt 2 ]]; then
-  echo "Usage: unpack [-d|--delete] <archive>"
+# Check if an archive file path was provided
+if [ -z "${ARCHIVE_PATH}" ]; then
+  echo "Error: no archive file path provided"
+  print_help
   exit 1
-elif [[ $# -eq 1 ]]; then
-  unpack "$1"
-elif [[ $# -eq 2 ]]; then
-  if [[ "$1" == "-d" ]] || [[ "$1" == "--delete" ]]; then
-    if unpack "$2"; then
-      echo "Successfully unpacked, removing archive..."
-      rm "$2"
-    fi
-  else
-    echo "Usage: unpack [-d|--delete] <archive>"
-    echo "Unknown option \"$1\""
-    exit 1
+fi
+
+# Check if the archive file exists
+if [ ! -f "${ARCHIVE_PATH}" ]; then
+  echo "Error: ${ARCHIVE_PATH} does not exist"
+  exit 1
+fi
+
+if unpack "$ARCHIVE_PATH"; then
+  if [ -n "${DELETE_ARCHIVE}" ]; then
+    echo "Successfully unpacked, removing archive..."
+    rm "$ARCHIVE_PATH"
   fi
 fi
