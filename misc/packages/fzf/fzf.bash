@@ -54,10 +54,10 @@ export FZF_COLORS="
   --color fg:-1
   --color bg:-1
   --color hl:$blue
-  --color fg+:$black
-  --color bg+:$bg_blue
+  --color fg+:-1
+  --color bg+:$bg3
   --color gutter:-1
-  --color hl+:$black
+  --color hl+:$blue
   --color info:$yellow
   --color border:$bg3
   --color prompt:$blue
