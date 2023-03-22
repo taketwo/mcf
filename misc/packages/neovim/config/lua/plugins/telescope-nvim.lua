@@ -33,6 +33,8 @@ return {
             ['<A-c>'] = function(...) return require('telescope.actions').move_selection_previous(...) end,
             ['<A-n>'] = function(...) return require('telescope.actions').preview_scrolling_down(...) end,
             ['<A-h>'] = function(...) return require('telescope.actions').preview_scrolling_up(...) end,
+            ['<A-]>'] = function(...) return require('telescope.actions').cycle_previewers_next(...) end,
+            ['<A-[>'] = function(...) return require('telescope.actions').cycle_previewers_prev(...) end,
             ['<Esc>'] = function(...) return require('telescope.actions').close(...) end,
             ['<C-t>'] = function(...) return require('trouble.providers.telescope').open_with_trouble(...) end,
             -- TODO: Consider adding keymaps similar to the following
