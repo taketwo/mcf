@@ -62,6 +62,28 @@ function M.setup()
         },
       },
     },
+    {
+      name = 'Attach to gdbserver :1234',
+      type = 'cppdbg',
+      request = 'launch',
+      MIMode = 'gdb',
+      miDebuggerServerAddress = 'localhost:1234',
+      miDebuggerPath = '/usr/bin/gdb',
+      cwd = '${workspaceFolder}',
+      program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
+      filterStderr = true,
+      filterStdout = true,
+      logging = {
+        programOutput = true,
+      },
+    },
+    {
+      name = 'Attach to process',
+      type = 'cppdbg',
+      request = 'attach',
+      program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
+      processId = require('dap.utils').pick_process,
+    },
   }
   dap.adapters.cppdbg = {
     type = 'executable',
