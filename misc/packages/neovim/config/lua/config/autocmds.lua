@@ -62,3 +62,10 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.spell = true
   end,
 })
+
+-- Set filetype to sh for buffers opened through edit-and-execute-command
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = augroup('set_sh_filetype'),
+  pattern = '/tmp/bash-fc.*',
+  callback = function() vim.bo.filetype = 'sh' end,
+})
