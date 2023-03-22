@@ -14,6 +14,7 @@ function M.setup()
   dap.listeners.after.event_initialized['dapui_config'] = dapui.open
   dap.listeners.before.event_terminated['dapui_config'] = dapui.close
   dap.listeners.before.event_exited['dapui_config'] = dapui.close
+  dap.listeners.after.disconnect['dapui_config'] = dapui.close
 
   -- Setup debuggers
   require('config.dap.bash').setup()
