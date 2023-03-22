@@ -19,6 +19,10 @@ function M.setup()
         function() dap.set_breakpoint(vim.fn.input({ prompt = '[Condition] > ' })) end,
         'Conditional breakpoint',
       },
+      L = {
+        function() dap.set_breakpoint(nil, nil, vim.fn.input({ prompt = '[Message] > ' })) end,
+        'Logpoint',
+      },
       U = { dapui.toggle, 'Toggle UI' },
       b = { dap.step_back, 'Step back' },
       c = { dap.continue, 'Continue' },
