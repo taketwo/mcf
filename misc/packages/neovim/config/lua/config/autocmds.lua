@@ -42,7 +42,6 @@ vim.api.nvim_create_autocmd('FileType', {
     'man',
     'notify',
     'qf',
-    'query', -- :InspectTree
     'spectre_panel',
     'startuptime',
     'tsplayground',
