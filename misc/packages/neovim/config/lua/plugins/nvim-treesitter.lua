@@ -21,6 +21,7 @@ return {
         'json',
         'jsonc',
         'lua',
+        'luadoc',
         'luap',
         'make',
         'markdown',
