@@ -66,6 +66,21 @@ function M.setup()
     noremap = true,
     nowait = false,
   })
+
+  wk.register({
+    ['<F5>'] = { dap.continue, 'Continue' },
+    ['<F9>'] = { dap.toggle_breakpoint, 'Toggle breakpoint' },
+    ['<F10>'] = { dap.step_over, 'Step over' },
+    ['<F11>'] = { dap.step_into, 'Step into' },
+    ['<S-F11>'] = { dap.step_out, 'Step out' },
+    ['<S-F5>'] = { dap.terminate, 'Stop' },
+  }, {
+    mode = 'n',
+    buffer = nil,
+    silent = true,
+    noremap = true,
+    nowait = false,
+  })
 end
 
 return M
