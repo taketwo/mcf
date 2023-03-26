@@ -36,7 +36,7 @@ return {
       highlight = { enable = true },
       indent = {
         enable = true,
-        disable = { 'cpp', 'python' }, -- currently misbehaving
+        disable = { 'cpp' }, -- currently misbehaving
       },
       playground = {
         enable = true,
