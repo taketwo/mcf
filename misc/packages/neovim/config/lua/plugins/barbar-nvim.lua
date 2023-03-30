@@ -4,7 +4,12 @@ return {
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
-      closable = false,
+      icons = {
+        button = false,
+        modified = {
+          button = false,
+        },
+      },
     },
     config = function(_, opts)
       require('bufferline').setup(opts)
