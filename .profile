@@ -67,7 +67,7 @@ fi
 # Source config if it exists and was not sourced already
 # Note that Nix config requires USER environment variable to be set
 # This may not be the case in some situations, so we explicitly set it
-if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] &&  [ -z "${NIX_PATH}" ]; then
+if [ -f "${HOME}/.nix-profile/etc/profile.d/nix.sh" ] && [ -z "${NIX_PATH}" ]; then
   USER=$(whoami) . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 fi
 
@@ -89,6 +89,11 @@ export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 # Load Git secrets
 if [ -f "${HOME}/.config/git/secrets" ]; then
   . "${HOME}/.config/git/secrets"
+fi
+
+# Load other secrets
+if [ -f "${MCF}/misc/secrets" ]; then
+  . "${MCF}/misc/secrets"
 fi
 
 # Cabal bin directory
