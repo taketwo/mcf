@@ -3,6 +3,22 @@ return {
     'romgrk/barbar.nvim',
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
+    keys = {
+      { 'H', '<cmd>BufferPrevious<cr>', desc = 'Previous buffer' },
+      { 'N', '<cmd>BufferNext<cr>', desc = 'Next buffer' },
+      { '<F11>', '<cmd>BufferClose<cr>', desc = 'Close buffer' },
+      { '<Leader>bcc', '<cmd>BufferCloseAllButCurrent<cr>', desc = 'Close all but current' },
+      { '<Leader>bcl', '<cmd>BufferCloseBuffersLeft<cr>', desc = 'Close all on the left' },
+      { '<Leader>bcr', '<cmd>BufferCloseBuffersRight<cr>', desc = 'Close all on the right' },
+      { '<Leader>bcv', '<cmd>BufferCloseAllButVisible<cr>', desc = 'Close all but visible' },
+      { '<Leader>bh', '<cmd>BufferMovePrevious<cr>', desc = 'Move buffer left' },
+      { '<Leader>bn', '<cmd>BufferMoveNext<cr>', desc = 'Move buffer right' },
+      { '<Leader>bp', '<cmd>BufferPin<cr>', desc = 'Pin buffer' },
+      { '<Leader>bsd', '<cmd>BufferOrderByDirectory<cr>', desc = 'Sort buffers by directory' },
+      { '<Leader>bsl', '<cmd>BufferOrderByLanguage<cr>', desc = 'Sort buffers by language' },
+      { '<Leader>bsn', '<cmd>BufferOrderByBufferNumber<cr>', desc = 'Sort buffers by buffer number' },
+      { '<Leader>b<Space>', '<cmd>BufferPick<cr>', desc = 'Jump to buffer' },
+    },
     opts = {
       icons = {
         button = false,
@@ -13,32 +29,11 @@ return {
     },
     config = function(_, opts)
       require('barbar').setup(opts)
-      -- TODO: Migrate to 'keys' option
       require('which-key').register({
-        H = { '<cmd>BufferPrevious<cr>', 'Previous buffer' },
-        N = { '<cmd>BufferNext<cr>', 'Next buffer' },
-        ['<F11>'] = { '<cmd>BufferClose<cr>', 'Close buffer' },
-        ['<Leader>'] = {
-          b = {
-            name = 'Buffer',
-            c = {
-              name = 'Close',
-              c = { '<cmd>BufferCloseAllButCurrent<cr>', 'Close all but current' },
-              l = { '<cmd>BufferCloseBuffersLeft<cr>', 'Close all on the left' },
-              r = { '<cmd>BufferCloseBuffersRight<cr>', 'Close all on the right' },
-              v = { '<cmd>BufferCloseAllButVisible<cr>', 'Close all but visible' },
-            },
-            h = { '<cmd>BufferMovePrevious<cr>', 'Move buffer left' },
-            n = { '<cmd>BufferMoveNext<cr>', 'Move buffer right' },
-            p = { '<cmd>BufferPin<cr>', 'Pin buffer' },
-            s = {
-              name = 'Sort',
-              d = { '<cmd>BufferOrderByDirectory<cr>', 'Sort buffers by directory' },
-              l = { '<cmd>BufferOrderByLanguage<cr>', 'Sort buffers by language' },
-              n = { '<cmd>BufferOrderByBufferNumber<cr>', 'Sort buffers by buffer number' },
-            },
-            ['<Space>'] = { '<cmd>BufferPick<cr>', 'Jump to buffer' },
-          },
+        ['<Leader>b'] = {
+          name = 'Buffer',
+          c = { name = 'Close' },
+          s = { name = 'Sort' },
         },
       })
     end,
