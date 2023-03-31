@@ -12,7 +12,7 @@ return {
       },
     },
     config = function(_, opts)
-      require('bufferline').setup(opts)
+      require('barbar').setup(opts)
       -- TODO: Migrate to 'keys' option
       require('which-key').register({
         H = { '<cmd>BufferPrevious<cr>', 'Previous buffer' },
