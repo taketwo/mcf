@@ -16,7 +16,6 @@ return {
         'glsl',
         'haskell',
         'hcl', -- for Terraform files
-        'help',
         -- 'hjson', seems to be broken, using a plugin instead
         'json',
         'jsonc',
