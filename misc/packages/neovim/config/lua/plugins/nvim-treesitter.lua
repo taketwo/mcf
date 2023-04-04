@@ -31,6 +31,7 @@ return {
         'regex',
         'toml',
         'vim',
+        'vimdoc',
         'yaml',
       },
       highlight = { enable = true },
