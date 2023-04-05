@@ -98,10 +98,6 @@ set bind-tty-special-chars off
 # Prepends sudo to the current command and runs it
 "\es": "\C-asudo \C-m"
 
-# Alt-o "optirun"
-# Prepends optirun to the current command and runs it
-"\eo": "\C-aoptirun \C-m"
-
 # Alt-p "pudb"
 # Prepends pudb3 to the current command and runs it
 "\ep": "\C-apudb3 \C-m"
