@@ -39,6 +39,7 @@ neovim
 bat
 broot
 ranger
+lsd
 tree
 nix: fd
 nix: ripgrep

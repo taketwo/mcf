@@ -1,0 +1,6 @@
+date: '+%d %b %y %H:%m'
+
+icons:
+  when: never
+
+symlink-arrow: →
