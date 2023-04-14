@@ -1,6 +1,7 @@
 # System
 powertop
 htop
+nix: btop
 less
 
 # Package managers
