@@ -4,7 +4,6 @@ from collections import defaultdict
 import subprocess
 from pathlib import Path
 
-import stow
 import mcf
 from install import get_platform
 from filesystem import link
@@ -40,14 +39,6 @@ class Nix(Install):
         for p in packages:
             cmd = self.CMD + " " + p + " " + " ".join(args)
             subprocess.check_call(cmd.split(), env=env)
-
-
-class Pip(Install):
-    CMD = "sudo -H pip install --upgrade"
-
-    def __init__(self, packages, args=None):
-        super().__init__(packages, args)
-        stow.adopt_as("pip")
 
 
 class Pipx(Install):
@@ -100,7 +91,7 @@ if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
 if PLATFORM == "arch":
     INSTALL["arch"] = Yaourt
-INSTALL.update({"nix": Nix, "pip": Pip, "pipx": Pipx, "cabal": Cabal})
+INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal})
 
 
 class PackageManager(object):
@@ -182,7 +173,7 @@ class PackageManager(object):
         Arguments
         ---------
         manager: str
-            Name of a package manager to use (apt, pacman, yaourt, pip, cabal).
+            Name of a package manager to use (apt, pacman, yaourt, pipx, cabal).
         package: str | list
             Package name or list of package names.
         args:
