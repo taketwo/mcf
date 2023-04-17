@@ -18,11 +18,7 @@ return {
       triggers_blacklist = {
         i = { '.' },
       },
-    },
-    config = function(_, opts)
-      local wk = require('which-key')
-      wk.setup(opts)
-      wk.register({
+      defaults = {
         ['<Leader>'] = {
           ['.'] = { name = 'Telescope' },
           g = { name = 'Git' },
@@ -39,7 +35,12 @@ return {
         ["'"] = { name = 'Marks' },
         ['`'] = { name = 'Marks' },
         ['<C-w>'] = { name = 'Window' },
-      })
+      },
+    },
+    config = function(_, opts)
+      local wk = require('which-key')
+      wk.setup(opts)
+      wk.register(opts.defaults)
     end,
   },
 }

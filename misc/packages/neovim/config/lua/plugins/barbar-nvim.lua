@@ -2,7 +2,21 @@ return {
   {
     'romgrk/barbar.nvim',
     event = 'VeryLazy',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = {
+      { 'nvim-tree/nvim-web-devicons' },
+      {
+        'folke/which-key.nvim',
+        opts = {
+          defaults = {
+            ['<Leader>b'] = {
+              name = 'Buffer',
+              c = { name = 'Close' },
+              s = { name = 'Sort' },
+            },
+          },
+        },
+      },
+    },
     keys = {
       { 'H', '<cmd>BufferPrevious<cr>', desc = 'Previous buffer' },
       { 'N', '<cmd>BufferNext<cr>', desc = 'Next buffer' },
@@ -27,15 +41,5 @@ return {
         },
       },
     },
-    config = function(_, opts)
-      require('barbar').setup(opts)
-      require('which-key').register({
-        ['<Leader>b'] = {
-          name = 'Buffer',
-          c = { name = 'Close' },
-          s = { name = 'Sort' },
-        },
-      })
-    end,
   },
 }
