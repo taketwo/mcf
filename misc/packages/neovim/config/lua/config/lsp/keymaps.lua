@@ -1,5 +1,7 @@
 local M = {}
 
+local format = function() require('config.lsp.format').format({ force = true }) end
+
 M._keys = {
   { '<', '<cmd>Lspsaga diagnostic_jump_prev<cr>', desc = 'Go to previous diagnostic' },
   { '>', '<cmd>Lspsaga diagnostic_jump_next<cr>', desc = 'Go to next diagnostic' },
@@ -34,8 +36,8 @@ M._keys = {
     desc = 'Toggle inlay hints',
     has = 'inlayHint',
   },
-  { '<F2>', require('config.lsp.format').format, desc = 'Format document', has = 'documentFormatting' },
-  { '<F2>', require('config.lsp.format').format, desc = 'Format range', mode = 'v', has = 'documentRangeFormatting' },
+  { '<F2>', format, desc = 'Format document', has = 'documentFormatting' },
+  { '<F2>', format, desc = 'Format range', mode = 'v', has = 'documentRangeFormatting' },
 }
 
 function M.on_attach(client, buffer)
