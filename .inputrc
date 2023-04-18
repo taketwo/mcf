@@ -94,6 +94,11 @@ set bind-tty-special-chars off
 # Appends pipe to `less` to the end of the current command and runs it
 "\el": "\C-e | less\C-m"
 
+# Alt-w "count lines"
+# Appends pipe to `wc -l` to the end of the current command and runs it
+# Note: Alt-c or Alt-l would be more appropriate, but they are busy
+"\ew": "\C-e | wc -l\C-m"
+
 # Alt-s "sudo"
 # Prepends sudo to the current command and runs it
 "\es": "\C-asudo \C-m"
