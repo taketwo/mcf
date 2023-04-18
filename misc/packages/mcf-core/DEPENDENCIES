@@ -21,6 +21,7 @@ nix: delta                             # syntax highlighting for diffs
 pipx: codespell                        # spell checking for C++
 pudb
 libxml2-utils                          # linting for XML
+lnav                                   # log viewer
 
 # Terminal
 tmux
