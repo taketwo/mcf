@@ -8,6 +8,7 @@ return {
       transparent = true,
       highlights = {
         Search = { fg = 'none', bg = 'none', fmt = 'bold,underline' },
+        CurSearch = { fg = 'none', bg = 'none', fmt = 'bold,underline' },
         IncSearch = { fg = 'none', bg = 'none', fmt = 'bold,underline,standout' },
         CursorLineNr = { fmt = 'bold' },
         YankedRegion = { fg = '$red' },
