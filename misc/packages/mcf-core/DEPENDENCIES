@@ -10,6 +10,7 @@ ubuntu: apt-file
 # Development
 cmake                                  # also YouCompleteMe requires this
 clang
+clangd                                 # only the config file, the server is managed by Mason
 build-essential
 nix: ninja
 pipx: cmakelint

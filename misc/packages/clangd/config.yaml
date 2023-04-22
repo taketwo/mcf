@@ -1,0 +1,18 @@
+Diagnostics:
+  UnusedIncludes: Strict
+  ClangTidy:
+    Add:
+    - boost-*
+    - bugprone-*
+    - clang-analyzer-*
+    - cppcoreguidelines-*
+    - misc-*
+    - modernize-*
+    - performance-*
+    - readability-*
+    Remove:
+    - bugprone-easily-swappable-parameters
+    - modernize-return-braced-init-list
+    - modernize-use-nodiscard
+    - modernize-use-trailing-return-type
+    - readability-braces-around-statements
