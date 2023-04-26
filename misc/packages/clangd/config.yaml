@@ -16,3 +16,7 @@ Diagnostics:
     - modernize-use-nodiscard
     - modernize-use-trailing-return-type
     - readability-braces-around-statements
+    CheckOptions:
+      readability-identifier-length.MinimumParameterNameLength: 2
+      readability-identifier-length.MinimumVariableNameLength: 2
+      misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
