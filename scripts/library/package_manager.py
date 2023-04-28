@@ -66,6 +66,7 @@ class Pipx(Install):
         Returns package name (without [] spec).
         """
         import re
+
         cmd = self.CMD + " " + package + " " + " ".join(args)
         subprocess.check_output(cmd.split())
         m = re.match(r"(.*)\[.*\]", package)
@@ -77,9 +78,9 @@ class Cabal(Install):
 
     def __init__(self, packages, args=None):
         subprocess.check_call(["cabal", "v2-update"])
-        cmd = "LC_ALL=C {} --lib {}".format(self.CMD, ' '.join(packages))
+        cmd = "LC_ALL=C {} --lib {}".format(self.CMD, " ".join(packages))
         subprocess.check_call(cmd, shell=True)
-        cmd = "LC_ALL=C {} {}".format(self.CMD, ' '.join(packages))
+        cmd = "LC_ALL=C {} {}".format(self.CMD, " ".join(packages))
         subprocess.check_call(cmd, shell=True)
 
 
