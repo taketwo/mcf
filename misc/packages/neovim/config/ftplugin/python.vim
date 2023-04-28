@@ -43,4 +43,3 @@ let g:ale_python_mypy_options = '--ignore-missing-imports'
 let b:ale_linters = ['flake8', 'mypy']
 " Fixers
 " Consider enabling 'reorder-python-imports' if https://github.com/asottile/reorder_python_imports/issues/66 is solved
-let b:ale_fixers = ['black']

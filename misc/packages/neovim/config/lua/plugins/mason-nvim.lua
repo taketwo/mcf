@@ -6,6 +6,7 @@ return {
       ensure_installed = {
         'bash-debug-adapter',
         'bash-language-server',
+        'black',
         'clangd',
         'cpptools',
         'jedi-language-server',

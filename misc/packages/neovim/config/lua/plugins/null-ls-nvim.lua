@@ -7,6 +7,7 @@ return {
       local nls = require('null-ls')
       return {
         sources = {
+          nls.builtins.formatting.black,
           nls.builtins.formatting.shfmt.with({
             extra_args = { '-i', '2', '-ci' },
           }),
