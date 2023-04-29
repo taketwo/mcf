@@ -1,6 +1,6 @@
 from os import remove
 from os.path import isfile
-from subprocess import check_call, check_output, CalledProcessError
+from subprocess import CalledProcessError, check_call, check_output
 
 # subprocess.DEVNULL was introduced in 3.3, therefore not available on
 # contemporary Ubuntu systems

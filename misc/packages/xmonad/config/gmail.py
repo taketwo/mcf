@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-import re
-import sys
-import time
-import signal
-import logging
-import imaplib
 import argparse
 import datetime
-from pathlib import Path
+import imaplib
+import logging
+import os
+import re
+import signal
+import sys
+import time
 from contextlib import contextmanager
+from pathlib import Path
+
 from systemd.journal import JournalHandler
 
 
-log = logging.getLogger('gmail')
+log = logging.getLogger("gmail")
 log.addHandler(JournalHandler())
 log.setLevel(logging.INFO)
 
@@ -32,6 +33,7 @@ class TimeoutError(Exception):
 def timeout(seconds):
     def signal_handler(signum, frame):
         raise TimeoutError
+
     signal.signal(signal.SIGALRM, signal_handler)
     signal.alarm(seconds)
     try:
@@ -41,19 +43,18 @@ def timeout(seconds):
 
 
 class Gmail(object):
-
-    REGEX = re.compile(r'X-GM-THRID (\d+) UID')
+    REGEX = re.compile(r"X-GM-THRID (\d+) UID")
 
     def __init__(self, user, token):
-        self.imap = imaplib.IMAP4_SSL('imap.gmail.com', '993')
-        self.imap.login('{}@gmail.com'.format(user), token)
+        self.imap = imaplib.IMAP4_SSL("imap.gmail.com", "993")
+        self.imap.login("{}@gmail.com".format(user), token)
         self.imap.select()
-        log.info('Established connection with GMail IMAP server')
+        log.info("Established connection with GMail IMAP server")
 
     def close(self):
         self.imap.close()
         self.imap.logout()
-        log.info('Closed connection with GMail IMAP server')
+        log.info("Closed connection with GMail IMAP server")
 
     def get_unread_count(self):
         """
@@ -61,12 +62,12 @@ class Gmail(object):
         Throws if connection failed.
         """
         self.imap.select()
-        uids = self.imap.uid('search', None, 'UnSeen')[1][0].decode().split()
+        uids = self.imap.uid("search", None, "UnSeen")[1][0].decode().split()
         if not uids:
             return 0
-        query = ','.join(uids).encode('utf-8')
-        items = [t.decode() for t in self.imap.uid('fetch', query, '(X-GM-THRID)')[1]]
-        tids = self.REGEX.findall(' '.join(items))
+        query = ",".join(uids).encode("utf-8")
+        items = [t.decode() for t in self.imap.uid("fetch", query, "(X-GM-THRID)")[1]]
+        tids = self.REGEX.findall(" ".join(items))
         return len(set(tids))
 
     def get_unread_count_every(self, interval):
@@ -81,18 +82,18 @@ class Gmail(object):
 
 
 def load_credentials(path):
-    with open(str(path), 'r') as f:
+    with open(str(path), "r") as f:
         user = f.readline().strip()
         token = f.readline().strip()
     if not user or not token:
-        raise CredentialsError('Loaded user name or token is empty')
+        raise CredentialsError("Loaded user name or token is empty")
     return user, token
 
 
 class Indicator:
     def __init__(self):
         self.unread_count = 0
-        self.mode = 'normal'
+        self.mode = "normal"
 
     def set_normal_mode(self, signum, frame):
         log.info("Enabled normal mode")
@@ -119,19 +120,23 @@ class Indicator:
             symbol = " "
             if datetime.datetime.now() > self.until:
                 self.set_normal_mode()
-        return '%{{F{} B{}}} {}{} %{{F- B-}}'.format(fg, bg, symbol, count)
+        return "%{{F{} B{}}} {}{} %{{F- B-}}".format(fg, bg, symbol, count)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='''
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="""
     Gmail unread count.
-    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('-i', '--interval', type=int, default=10,
-                        help='check interval (seconds)')
+    """,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "-i", "--interval", type=int, default=10, help="check interval (seconds)"
+    )
     args = parser.parse_args()
 
     try:
-        path = Path(os.path.dirname(os.path.realpath(__file__))) / 'gmail.token'
+        path = Path(os.path.dirname(os.path.realpath(__file__))) / "gmail.token"
         user, token = load_credentials(path)
     except Exception as e:
         log.critical(e)
@@ -148,9 +153,9 @@ if __name__ == '__main__':
                 indicator.set_unread_count(unread)
                 print(indicator, flush=True)
         except TimeoutError:
-            log.warning('Communication timeout, will wait and reconnect')
+            log.warning("Communication timeout, will wait and reconnect")
         except Exception as e:
-            log.warning('Exception: {}'.format(e))
+            log.warning("Exception: {}".format(e))
         finally:
             gmail.close()
         time.sleep(args.interval)

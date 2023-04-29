@@ -1,12 +1,12 @@
 import os
-from os.path import join, isdir
-from collections import defaultdict
 import subprocess
+from collections import defaultdict
+from os.path import isdir, join
 from pathlib import Path
 
 import mcf
-from install import get_platform
 from filesystem import link
+from install import get_platform
 
 
 PACKAGES = mcf.path("misc", "packages")

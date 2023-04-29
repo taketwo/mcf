@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import os
-import sys
 import argparse
+import os
 import subprocess
+import sys
 from os.path import expanduser, join
 from shutil import which
 

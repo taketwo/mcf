@@ -1,5 +1,6 @@
-from powerline_shell.utils import BasicSegment
 from socket import gethostname
+
+from powerline_shell.utils import BasicSegment
 
 
 class Segment(BasicSegment):
