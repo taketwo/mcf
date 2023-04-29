@@ -15,6 +15,7 @@ return {
         'shellcheck',
         'shfmt',
         'stylua',
+        'usort',
       },
     },
     config = function(_, opts)

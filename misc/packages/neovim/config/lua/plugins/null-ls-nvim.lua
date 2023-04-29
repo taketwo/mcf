@@ -14,6 +14,7 @@ return {
           nls.builtins.formatting.stylua.with({
             extra_args = { '--config-path', vim.fn.stdpath('config') .. '/extras/stylua.toml' },
           }),
+          nls.builtins.formatting.usort,
         },
         on_attach = require('config.lsp').on_attach,
       }
