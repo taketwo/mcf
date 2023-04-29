@@ -9,6 +9,7 @@ return {
         'black',
         'clangd',
         'cpptools',
+        'gersemi',
         'jedi-language-server',
         'json-lsp',
         'lua-language-server',

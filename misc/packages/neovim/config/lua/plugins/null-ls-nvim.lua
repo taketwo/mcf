@@ -8,6 +8,7 @@ return {
       return {
         sources = {
           nls.builtins.formatting.black,
+          nls.builtins.formatting.gersemi,
           nls.builtins.formatting.shfmt.with({
             extra_args = { '-i', '2', '-ci' },
           }),
