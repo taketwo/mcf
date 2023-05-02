@@ -139,8 +139,6 @@ myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
   , TI "music"    ""                                         (spawnInTerminal "ncmpcpp")
-  , TI "papers"   "~/Downloads/papers"                       (spawn "firefox" >> spawn "nautilus ~/Downloads/papers")
-  , TI "mendeley" ""                                         (spawn "mendeleydesktop")
   , TI "zeal"     ""                                         (spawn "zeal")
   , TI "mcf"      "~/.mcf"                                   (spawnTmux)
   , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnTmux)
@@ -148,8 +146,6 @@ myTopics =
   , TI "ael"      ""                                         (spawnInTerminal "ael tmux load ael")
   , TI "docker"   ""                                         (spawnInTerminal "ael container attach")
   , TI "fnd"      ""                                         (spawnInTerminal "ael -p fnd container attach")
-  , TI "mp3"      ""                                         (spawn "easytag" >> spawn "nautilus ~/Downloads/Torrents")
-  , TI "profiler" ""                                         (spawn "profiler_gui")
   , TI "msg"      ""                                         (spawn "slack" >> spawn "telegram-desktop")
   , ti "gimp"     ""
   , ti "zoom"     ""
