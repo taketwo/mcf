@@ -24,3 +24,16 @@ Diagnostics:
       readability-identifier-length.IgnoredVariableNames: "^[Rxyz]$"
       readability-identifier-length.MinimumParameterNameLength: 2
       readability-identifier-length.MinimumVariableNameLength: 2
+
+---
+# Unit and accuracy tests.
+# Disable diagnistics that trigger on Google Test TEST macros.
+If:
+  PathMatch: ".*_tests/.*_test.cpp"
+Diagnostics:
+  ClangTidy:
+    Remove:
+    - cppcoreguidelines-avoid-non-const-global-variables
+    - cppcoreguidelines-owning-memory
+    - cppcoreguidelines-special-member-functions
+    - readability-function-cognitive-complexity
