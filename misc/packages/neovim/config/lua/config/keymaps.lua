@@ -106,12 +106,3 @@ map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
 map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = false })
 
 -- NOTE: Some keys that are still free: $ ^ F5 F10
-
-local available, wk = pcall(require, 'which-key')
-if not available then return end
-wk.register({
-  ['<Leader>'] = {
-    f = { name = 'Filename' },
-    u = { name = 'Toggle buffer options' },
-  },
-})

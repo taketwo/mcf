@@ -21,9 +21,11 @@ return {
       defaults = {
         ['<Leader>'] = {
           ['.'] = { name = 'Telescope' },
+          f = { name = 'Filename' },
           g = { name = 'Git' },
           l = { name = 'LSP' },
           s = { name = 'Shift object' },
+          u = { name = 'Toggle buffer options' },
         },
         [']'] = { name = 'Jump next' },
         ['['] = { name = 'Jump previous' },
