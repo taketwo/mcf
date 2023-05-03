@@ -12,11 +12,15 @@ Diagnostics:
     - readability-*
     Remove:
     - bugprone-easily-swappable-parameters
+    - cppcoreguidelines-pro-type-union-access # too much noise because PCR uses unions in point types
     - modernize-return-braced-init-list
     - modernize-use-nodiscard
     - modernize-use-trailing-return-type
     - readability-braces-around-statements
+    - readability-uppercase-literal-suffix    # because all my code has lowercase literal suffixes
     CheckOptions:
+      misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
+      readability-identifier-length.IgnoredLoopCounterNames: "^[ijk_xyz]$"
+      readability-identifier-length.IgnoredVariableNames: "^[Rxyz]$"
       readability-identifier-length.MinimumParameterNameLength: 2
       readability-identifier-length.MinimumVariableNameLength: 2
-      misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
