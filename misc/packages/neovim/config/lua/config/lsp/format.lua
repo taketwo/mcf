@@ -2,30 +2,35 @@ local Util = require('utils')
 
 local M = {}
 
+-- Global state, can be toggled using M.toggle({ global = true })
+-- This is overridden by buffer-local state vim.b.autoformat
 M.autoformat = true
 
 function M._is_capability_disabled(client, capability)
   return client.config and client.config.capabilities and client.config.capabilities[capability] == false
 end
 
-function M.toggle()
-  if vim.b.autoformat == false then
-    vim.b.autoformat = nil
-    M.autoformat = true
-  else
+---@param opts? {global?:boolean}
+function M.toggle(opts)
+  if opts and opts.global then
     M.autoformat = not M.autoformat
-  end
-  if M.autoformat then
-    Util.info('Enabled format on save', { title = 'Format' })
+    Util.info((M.autoformat and 'Enabled' or 'Disabled') .. ' format on save globally', { title = 'Format' })
   else
-    Util.warn('Disabled format on save', { title = 'Format' })
+    if vim.b.autoformat == nil then
+      vim.b.autoformat = not M.autoformat
+    else
+      vim.b.autoformat = not vim.b.autoformat
+    end
+    Util.info((vim.b.autoformat and 'Enabled' or 'Disabled') .. ' format on save for this buffer', { title = 'Format' })
   end
 end
 
 ---@param opts? {force?:boolean}
 function M.format(opts)
   local buf = vim.api.nvim_get_current_buf()
-  if vim.b.autoformat == false and not (opts and opts.force) then return end
+  if not opts or not opts.force then
+    if vim.b.autoformat == false or (vim.b.autoformat == nil and M.autoformat == false) then return end
+  end
   local ft = vim.bo[buf].filetype
   local have_nls = #require('null-ls.sources').get_available(ft, 'NULL_LS_FORMATTING') > 0
   vim.lsp.buf.format({
@@ -49,9 +54,7 @@ function M.on_attach(client, buffer)
     vim.api.nvim_create_autocmd('BufWritePre', {
       group = vim.api.nvim_create_augroup('LspFormat.' .. buffer, {}),
       buffer = buffer,
-      callback = function()
-        if M.autoformat then M.format() end
-      end,
+      callback = M.format,
     })
   end
 end

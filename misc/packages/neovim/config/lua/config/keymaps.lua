@@ -99,6 +99,12 @@ map(
 )
 map('n', '<Leader>ud', Util.toggle_diagnostics, { desc = 'Toggle diagnostics' })
 map('n', '<Leader>uf', require('config.lsp.format').toggle, { desc = 'Toggle format on save' })
+map(
+  'n',
+  '<Leader>uF',
+  function() require('config.lsp.format').toggle({ global = true }) end,
+  { desc = 'Toggle format on save (globally)' }
+)
 
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
