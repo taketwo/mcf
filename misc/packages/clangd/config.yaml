@@ -33,6 +33,7 @@ If:
 Diagnostics:
   ClangTidy:
     Remove:
+    - cppcoreguidelines-avoid-goto
     - cppcoreguidelines-avoid-non-const-global-variables
     - cppcoreguidelines-owning-memory
     - cppcoreguidelines-special-member-functions
