@@ -2,9 +2,21 @@ local M = {}
 
 local format = function() require('config.lsp.format').format({ force = true }) end
 
+-- Jump to the next error diagnostic. If there are no error diagnostics, jump to the next diagnostic of any severity.
+local diagnostic_jump_next = function()
+  local opts = { severity = vim.diagnostic.severity.ERROR }
+  require('lspsaga.diagnostic'):goto_next(vim.diagnostic.get_next(opts) and opts or nil)
+end
+
+-- Jump to the previous error diagnostic. If there are no error diagnostics, jump to the previous diagnostic of any severity.
+local diagnostic_jump_prev = function()
+  local opts = { severity = vim.diagnostic.severity.ERROR }
+  require('lspsaga.diagnostic'):goto_prev(vim.diagnostic.get_prev(opts) and opts or nil)
+end
+
 M._keys = {
-  { '<', '<cmd>Lspsaga diagnostic_jump_prev<cr>', desc = 'Go to previous diagnostic' },
-  { '>', '<cmd>Lspsaga diagnostic_jump_next<cr>', desc = 'Go to next diagnostic' },
+  { '<', diagnostic_jump_prev, desc = 'Go to previous diagnostic' },
+  { '>', diagnostic_jump_next, desc = 'Go to next diagnostic' },
   {
     '<F5>',
     vim.lsp.buf.signature_help,
