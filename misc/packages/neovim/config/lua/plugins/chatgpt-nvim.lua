@@ -7,5 +7,8 @@ return {
       'nvim-telescope/telescope.nvim',
     },
     cmd = { 'ChatGPT', 'ChatGPTActAs', 'ChatGPTEditWithInstructions', 'ChatGPTRun' },
+    opts = {
+      actions_paths = {},
+    },
   },
 }
