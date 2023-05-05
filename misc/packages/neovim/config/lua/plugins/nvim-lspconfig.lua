@@ -23,6 +23,7 @@ return {
 
       -- LSP server settings
       local servers = {
+        bashls = {},
         clangd = {
           cmd = { 'clangd', '--background-index', '--completion-style=bundled', '--clang-tidy' },
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'gtest.cpp' },
@@ -30,7 +31,6 @@ return {
             offsetEncoding = 'utf-16',
           },
         },
-        bashls = {},
         jedi_language_server = {},
         lua_ls = {
           settings = {
