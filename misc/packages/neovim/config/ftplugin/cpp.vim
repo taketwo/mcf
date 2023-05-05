@@ -83,17 +83,3 @@ inoremap <LocalLeader>] <C-o>o{<CR>}<C-o>O
 " Append semicolon to the end of line
 nnoremap <buffer> <silent> <LocalLeader>; :call AppendSemicolon()<CR>
 inoremap <buffer> <silent> <LocalLeader>; <C-o>:call AppendSemicolon()<CR>
-
-" ALE config
-let b:ale_enabled = 1
-" Linters
-let b:ale_linters = [ 'cppcheck' ]
-let g:ale_cpp_cppcheck_options = '--enable=all --project=build/compile_commands.json --inline-suppr'
-" Setup clang-tidy fixer (pick the newest version)
-for v in ['5.0', '4.0', '3.8', '3.6']
-    let e = 'clang-tidy-' . v
-    if executable(e)
-        let g:ale_cpp_clangtidy_executable = e
-        break
-    endif
-endfor
