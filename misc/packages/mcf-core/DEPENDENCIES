@@ -20,7 +20,6 @@ pipx: flake8 flake8-bugbear
 nix: delta                             # syntax highlighting for diffs
 pipx: codespell                        # spell checking for C++
 pudb
-libxml2-utils                          # linting for XML
 lnav                                   # log viewer
 
 # Terminal
@@ -35,6 +34,7 @@ git
 
 # Neovim
 neovim
+libxml2-utils                          # xmllint
 
 # Filesystem navigation/search
 bat
