@@ -17,6 +17,7 @@ return {
         'shellcheck',
         'shfmt',
         'stylua',
+        'taplo',
         'usort',
       },
     },
