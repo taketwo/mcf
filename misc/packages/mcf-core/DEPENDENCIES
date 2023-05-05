@@ -16,7 +16,6 @@ nix: ninja
 pipx: cmakelint
 pipx: pipenv
 pipx: poetry
-pipx: flake8 flake8-bugbear
 nix: delta                             # syntax highlighting for diffs
 pipx: codespell                        # spell checking for C++
 pudb
