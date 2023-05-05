@@ -13,7 +13,7 @@ PACKAGES = mcf.path("misc", "packages")
 PLATFORM = get_platform()
 
 
-class Install(object):
+class Install:
     def __init__(self, packages, args=None):
         args = args or []
         cmd = self.CMD + " " + " ".join(packages) + " " + " ".join(args)
@@ -87,7 +87,7 @@ class Cabal(Install):
 # A dictionary mapping manager names to classes. The insertion order matters, we
 # want to install with the main system manager first and with secondary managers
 # (e.g. Cabal) last.
-INSTALL = dict()
+INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
 if PLATFORM == "arch":
@@ -95,7 +95,7 @@ if PLATFORM == "arch":
 INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal})
 
 
-class PackageManager(object):
+class PackageManager:
     def __init__(self):
         pass
 
@@ -208,7 +208,7 @@ class PackageManager(object):
             if "pre-install" in merged:
                 print("[*] Pre-install scripts\n")
                 for s in merged["pre-install"]:
-                    print("> {}".format(s))
+                    print(f"> {s}")
                     subprocess.check_call([s], env=os.environ)
                     print("")
             for pm in INSTALL.keys():
@@ -219,7 +219,7 @@ class PackageManager(object):
             if "install" in merged:
                 print("[*] Install scripts\n")
                 for s in sorted(merged["install"]):
-                    print("> {}".format(s))
+                    print(f"> {s}")
                     cmd = [s]
                     if force_reinstall:
                         cmd.append("--reinstall")
