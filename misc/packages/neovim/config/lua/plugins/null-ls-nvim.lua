@@ -9,6 +9,9 @@ return {
         sources = {
           nls.builtins.formatting.black,
           nls.builtins.formatting.gersemi,
+          nls.builtins.diagnostics.ruff.with({
+            extra_args = { '--config', vim.fn.stdpath('config') .. '/extras/ruff.toml' },
+          }),
           nls.builtins.formatting.shfmt.with({
             extra_args = { '-i', '2', '-ci' },
           }),
@@ -19,6 +22,7 @@ return {
           nls.builtins.formatting.xmllint,
         },
         on_attach = require('config.lsp').on_attach,
+        fallback_severity = vim.diagnostic.severity.WARN,
       }
     end,
   },

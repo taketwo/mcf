@@ -13,6 +13,7 @@ return {
         'jedi-language-server',
         'json-lsp',
         'lua-language-server',
+        'ruff',
         'shellcheck',
         'shfmt',
         'stylua',

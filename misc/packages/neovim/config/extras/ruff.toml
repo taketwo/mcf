@@ -1,0 +1,7 @@
+select = ["ALL"]
+ignore = [
+  "E501",
+  "EM",     # noisy warnings about need to store exception messages in variables
+  "ERA001", # has false positives
+]
+line-length = 88
