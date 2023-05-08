@@ -1,0 +1,10 @@
+[Desktop Entry]
+Comment=Slack Desktop
+GenericName=Slack Client for Linux
+Type=Application
+Encoding=UTF-8
+Name=Slack
+Exec=/home/sergey/.nix-profile/bin/slack -s %U
+Icon=/home/sergey/.nix-profile/share/pixmaps/slack.png
+Terminal=false
+StartupNotify=true
