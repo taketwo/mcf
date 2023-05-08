@@ -1,7 +1,8 @@
-ubuntu: ghc    # cabal inside nix still needs a GHC
+ghc
 
 # Need at least 2.4.1 because it contains important bugfix
-nix: cabal-install
+cabal-install
+
 cabal: xmonad
 cabal: xmonad-contrib
 
