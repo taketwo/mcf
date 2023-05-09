@@ -15,13 +15,24 @@ echo "Latest version: ${LATEST_VERSION}"
 DOWNLOAD_URL="https://github.com/$GITHUB_USER_NAME/$GITHUB_PROJECT_NAME/releases/download/${LATEST_VERSION}/VictorMono.zip"
 FONT_DIR="$HOME/.local/share/fonts/downloaded-fonts"
 
+# Check if font is already installed and if so, which version it has
+VERSION_FILE="$FONT_DIR/version.txt"
+if [ -f "$VERSION_FILE" ]; then
+  CURRENT_VERSION=$(grep -oP 'v\d+\.\d+\.\d+' <"$VERSION_FILE")
+  echo "Current version: ${CURRENT_VERSION}"
+
+  if [ "$CURRENT_VERSION" == "$LATEST_VERSION" ]; then
+    echo "Already up to date"
+    exit 0
+  fi
+fi
+
 echo "Downloading and unzipping..."
 
 mkdir -p "$FONT_DIR"
 curl -L "$DOWNLOAD_URL" | bsdtar -xvf - -C "$FONT_DIR"
-rm "$FONT_DIR"/*Windows*
 
-echo "Victor Mono with NERD icons version: ${LATEST_VERSION}" > "$FONT_DIR"/version.txt
+echo "Victor Mono with NERD icons version: ${LATEST_VERSION}" >"$VERSION_FILE"
 
 echo "Updating font cache..."
 
