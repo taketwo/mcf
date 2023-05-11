@@ -1,4 +1,4 @@
-date: '+%d %b %y %H:%m'
+date: '+%y %b %d %H:%m'
 
 icons:
   when: never
