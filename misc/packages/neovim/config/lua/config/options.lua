@@ -5,9 +5,9 @@ local opt = vim.opt
 
 opt.autowrite = true -- Automatically save before e.g. :make
 opt.clipboard = 'unnamedplus' -- Sync with system clipboard
-opt.completeopt = 'menu,menuone,noselect'                                            -- TODO: Is menu needed?
+opt.completeopt = 'menu,menuone,noselect'
 opt.conceallevel = 3 -- Hide * markup for bold and italic                            -- TODO: Good idea?
-opt.confirm = true -- Confirm to save changes before exiting modified buffer         -- TODO: Good idea?
+opt.confirm = true -- Confirm to save changes before exiting modified buffer
 opt.cursorline = true -- Enable highlighting of the current line
 opt.cursorlineopt = 'number' -- Only make current line number bold
 opt.expandtab = true -- Use spaces instead of tabs
@@ -24,7 +24,7 @@ opt.laststatus = 2 -- Always show statusline                                    
 opt.list = true -- Show some invisible characters
 opt.listchars = { tab = '→ ', trail = '·' } -- Show tabs and trailing spaces
 opt.matchpairs:append({ '<:>' }) -- Match angle brackets
-opt.mouse = 'a' -- Enable mouse in all modes                                         -- TODO: Good idea?
+opt.mouse = 'a' -- Enable mouse in all modes
 opt.number = true -- Print line number
 opt.pumheight = 15 -- Maximum number of entries in a popup
 opt.relativenumber = true -- Relative line numbers
