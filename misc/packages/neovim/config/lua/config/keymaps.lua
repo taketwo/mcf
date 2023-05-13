@@ -106,6 +106,10 @@ map(
   { desc = 'Toggle format on save (globally)' }
 )
 
+-- Command-line completion
+map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
+map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
+
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
