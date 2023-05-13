@@ -1,0 +1,11 @@
+[Desktop Entry]
+Comment=Firefox
+GenericName=Web Browser
+Type=Application
+Encoding=UTF-8
+Name=Firefox
+Exec=/home/sergey/.nix-profile/bin/firefox %u
+Icon=/home/sergey/.nix-profile/share/icons/hicolor/128x128/apps/firefox.png
+Terminal=false
+StartupNotify=true
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
