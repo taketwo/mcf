@@ -17,6 +17,5 @@ return {
         callback = function() vim.b.miniindentscope_disable = true end,
       })
     end,
-    config = function(_, opts) require('mini.indentscope').setup(opts) end,
   },
 }
