@@ -5,6 +5,4 @@ gobject-introspection
 gir1.2-gstreamer-1.0
 # Some of the plugins needs pycairo, which in turn requires dev library.
 libcairo2-dev
-# Recent beets version crashes if BeautifulSoup is not installed
-#   https://github.com/beetbox/beets/issues/4027
-pipx: beets[fetchart] pygobject beautifulsoup4
+pipx: beets[fetchart] pygobject
