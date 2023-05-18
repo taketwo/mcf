@@ -1,10 +1,12 @@
 select = ["ALL"]
 ignore = [
+  "ANN003", # kwargs argument without type annotation is okay
   "E501",
   "E999",   # syntax errors will be reported by jedi-language-server
   "EM",     # noisy warnings about need to store exception messages in variables
   "ERA001", # has false positives
   "I",      # imports are sorted automatically by usort
+  "S603",   # calling subprocess with shell=True is okay
   "T20",    # print statements are okay
 ]
 line-length = 88
