@@ -1,7 +1,7 @@
 return {
   {
     'taketwo/vim-ros',
-    cmd = { 'A' },
+    event = { 'BufReadPre', 'BufNewFile' },
     init = function() vim.g.ros_disable_warnings = 1 end,
   },
 }
