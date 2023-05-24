@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
 # Copied from: https://stackoverflow.com/a/4024263/1525865
-verlte()
-{
+verlte() {
   [ "$1" = "$(echo -e "$1\\n$2" | sort -V | head -n1)" ]
 }
 
-verlt()
-{
+verlt() {
   if [ "$1" = "$2" ]; then
     return 1
   else
@@ -15,7 +13,7 @@ verlt()
   fi
 }
 
-required="3.9.1"
+required="3.11.3"
 actual=$(python3 --version | cut -d ' ' -f2)
 
 echo "Pipx installation"
@@ -24,26 +22,29 @@ echo " * Default Python version: $actual"
 
 if verlt "$actual" "$required"; then
   # System version of Python is too old, use pyenv
-  # If pyenv is not in the PATH (happens during bootstrapping), temporary add it
-  if [[ ":$PATH:" != *"pyenv"* ]]; then
-    PATH="${HOME}/.pyenv/bin:${PATH}"
-    eval "$(pyenv init --path)"
-    eval "$(pyenv init -)"
-  fi
+  # Unconditionally add pyenv to the PATH to be on the safe side
+  PATH="${HOME}/.pyenv/bin:${PATH}"
+  eval "$(pyenv init --path)"
+  eval "$(pyenv init -)"
   # Check if required version of Python is installed with pyenv
   if ! pyenv versions | grep -q "$required"; then
     echo " > Installing required Python version with Pyenv"
     PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --skip-existing "$required"
   fi
-  echo " > Enabling required Python version in current shell with Pyenv"
+  echo " > Activating required Python version in current shell with Pyenv"
   pyenv shell "$required"
-  echo " * Active Python version: $(python --version)"
+  active=$(python --version | cut -d ' ' -f2)
+  echo " * Active Python version: $active"
+  if verlt "$active" "$required"; then
+    echo " ! Failed to activate required Python version"
+    exit 1
+  fi
 fi
 
 echo " > Installing Pipx via system Pip"
 pip3 install --user --no-warn-script-location pipx
 echo " > Installing Pipx via Pipx"
-python3 -m pipx install -f pipx  # -f to force overwrite the binary installed with previous command
+python3 -m pipx install -f pipx # -f to force overwrite the binary installed with previous command
 # Store pipx symlink
 pipx_where="$HOME/.local/bin/pipx"
 pipx_where_actual=$(readlink "$pipx_where")
