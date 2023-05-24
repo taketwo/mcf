@@ -51,7 +51,7 @@ ncdu
 
 # Util
 unrar                                    # for unpack command
-pipx: pygments pygments-solarized-style  # for fv command
+pipx: pygments                           # for fv command
 python3-click                            # for mpm and *-sync commands
 ministat                                 # for quick statistical analysis of data
 chatblade                                # interaction with chat services
