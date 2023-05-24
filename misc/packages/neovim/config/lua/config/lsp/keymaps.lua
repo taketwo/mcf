@@ -36,6 +36,18 @@ M._keys = {
   },
   { '<Leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
   { '<Leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
+  {
+    '<Leader>lN',
+    function()
+      vim.ui.input({ prompt = 'New Name:' }, function(input)
+        if not input or #input == 0 then return end
+        vim.lsp.buf.rename(input)
+      end)
+    end,
+    desc = 'Rename symbol (no placeholder)',
+    mode = { 'n', 'v' },
+    has = 'rename',
+  },
   { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
   { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration', has = 'declaration' },
   { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
