@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-declare -a browsers=("firefox" "chromium-browser" "chromium")
-for browser in "${browsers[@]}"; do
-  if hash ${browser} 2>/dev/null; then
-    exec ${browser} "$@"
-  fi
-done

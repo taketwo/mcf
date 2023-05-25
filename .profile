@@ -44,7 +44,7 @@ export KEYBOARD_LAYOUTS="us(dvorak),ru"
 #---------------------------------------------------------------------#
 
 export EDITOR=nvim
-export BROWSER=browser
+export BROWSER=firefox
 export PAGER=less
 export MANPAGER=${PAGER}
 export NOSPLASH=1

@@ -13,7 +13,7 @@ import XMonad.Core
 
 appTerminal = "alacritty"
 appTmux = appTerminal ++ " -e tmux"
-appBrowser  = "browser"
+appBrowser  = "firefox"
 
 spawnInTerminal :: String -> X ()
 spawnInTerminal cmd = spawn $ appTerminal ++ " -e " ++ cmd ++ ""
