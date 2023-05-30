@@ -14,6 +14,7 @@ return {
         visual_line = 'gS',
         delete = 'ds',
         change = 'ks',
+        change_line = 'kS',
       },
       surrounds = {
         -- By default, using the opening brackets leads to spaces being added around the object.
