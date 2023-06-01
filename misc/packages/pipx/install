@@ -1,44 +1,27 @@
 #!/usr/bin/env bash
 
-# Copied from: https://stackoverflow.com/a/4024263/1525865
-verlte() {
-  [ "$1" = "$(echo -e "$1\\n$2" | sort -V | head -n1)" ]
-}
-
-verlt() {
-  if [ "$1" = "$2" ]; then
-    return 1
-  else
-    verlte "$1" "$2"
-  fi
-}
-
-required="3.11.3"
-actual=$(python3 --version | cut -d ' ' -f2)
+PYTHON_VERSION=3.11.3
 
 echo "Pipx installation"
-echo " * Required Python version: $required"
-echo " * Default Python version: $actual"
+echo " * Required Python version: $PYTHON_VERSION"
 
-if verlt "$actual" "$required"; then
-  # System version of Python is too old, use pyenv
-  # Unconditionally add pyenv to the PATH to be on the safe side
-  PATH="${HOME}/.pyenv/bin:${PATH}"
-  eval "$(pyenv init --path)"
-  eval "$(pyenv init -)"
-  # Check if required version of Python is installed with pyenv
-  if ! pyenv versions | grep -q "$required"; then
-    echo " > Installing required Python version with Pyenv"
-    PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --skip-existing "$required"
-  fi
-  echo " > Activating required Python version in current shell with Pyenv"
-  pyenv shell "$required"
-  active=$(python --version | cut -d ' ' -f2)
-  echo " * Active Python version: $active"
-  if verlt "$active" "$required"; then
-    echo " ! Failed to activate required Python version"
-    exit 1
-  fi
+# Unconditionally add pyenv to the PATH to be on the safe side
+PATH="${HOME}/.pyenv/bin:${PATH}"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+# Check if required version of Python is installed with pyenv
+if ! pyenv versions | grep -q "$PYTHON_VERSION"; then
+  echo " > Installing required Python version with Pyenv"
+  PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --skip-existing "$PYTHON_VERSION"
+fi
+echo " > Activating required Python version in current shell with Pyenv"
+pyenv shell "$PYTHON_VERSION"
+active=$(python --version | cut -d ' ' -f2)
+echo " * Active Python version: $active"
+# if active is not same as required, exit with error
+if [[ "$active" != "$PYTHON_VERSION" ]]; then
+  echo " ! Failed to activate required Python version"
+  exit 1
 fi
 
 echo " > Installing Pipx via system Pip"
