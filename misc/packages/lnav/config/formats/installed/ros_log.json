@@ -6,7 +6,7 @@
     "file-pattern": ".*.log",
     "regex": {
       "node": {
-        "pattern": "\\[\\s*(?P<level>\\w+)] \\[(?P<timestamp>[\\d.]+)\\]: (?P<body>.+)"
+        "pattern": "\\[\\s*(?P<level>\\w+)] \\[(?P<timestamp>[\\d.]+)(, [\\d.]+)?\\]: (?P<body>.+)"
       },
       "rosout": {
         "pattern": "(?P<timestamp>[\\d.]+) ((?P<level>\\w+)? (?P<node>\\/\\w+) \\[(?P<line>.+)\\] \\[(?P<topics>.+)\\])? (?P<message>.+)"
@@ -16,6 +16,10 @@
       {
         "line": "[ INFO] [1681808007.993209499]: Door handle modeling tool node is up. Awaiting \"~model_door_handle\" service call.",
         "level": "info"
+      },
+      {
+        "line": "[ERROR] [1685624820.834500241, 146.134000000]: Discrete pose computation was skipped due to lack of seed pose",
+        "level": "error"
       },
       {
         "line": "[ERROR] [1681808186.931032510]: Door handle modeling failed with error message: boost::filesystem::create_directories: Invalid argument",
