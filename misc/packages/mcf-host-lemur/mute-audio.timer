@@ -1,0 +1,10 @@
+[Unit]
+Description=Mute audio in the late evening
+Requires=mute-audio.service
+
+[Timer]
+Unit=mute-audio.service
+OnCalendar=*-*-* 22:05:00
+
+[Install]
+WantedBy=timers.target

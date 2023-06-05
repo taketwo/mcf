@@ -1,0 +1,10 @@
+[Unit]
+Description=Mute audio
+Wants=mute-audio.timer
+
+[Service]
+Type=oneshot
+ExecStart=pactl set-sink-mute alsa_output.pci-0000_05_00.6.analog-stereo 1
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+StandardOutput=journal

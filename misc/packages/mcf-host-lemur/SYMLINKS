@@ -1,0 +1,2 @@
+mute-audio.service:.local/share/systemd/user/mute-audio.service:Mute audio systemd unit
+mute-audio.timer:.local/share/systemd/user/mute-audio.timer:Mute audio systemd timer

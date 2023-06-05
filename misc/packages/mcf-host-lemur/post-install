@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ $HOSTNAME == *"docker"* ]]; then
+  echo "Not installing systemd timer in Docker container"
+else
+  echo "Installing systemd timer..."
+  systemctl --user daemon-reload
+  systemctl --user enable mute-audio.timer
+  systemctl --user start mute-audio.timer
+fi
