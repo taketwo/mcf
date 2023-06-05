@@ -22,6 +22,7 @@ Diagnostics:
       misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
       readability-identifier-length.IgnoredLoopCounterNames: "^[ijk_xyz]$"
       readability-identifier-length.IgnoredVariableNames: "^[Rxyz]$"
+      readability-identifier-length.IgnoredParameterNames: "^[xyz]$"
       readability-identifier-length.MinimumParameterNameLength: 2
       readability-identifier-length.MinimumVariableNameLength: 2
 
