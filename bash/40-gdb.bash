@@ -3,6 +3,7 @@
 #  - in case rosrun was used, will automatically resolve the path from package/executable
 #  - environment variable assignments in the beginning of the command will be evaluated
 gdb-last-command() {
+  local cmd bin arg
   cmd=$(fc -ln -2 -2 | sed -e 's/^[[:space:]]*//')
   cmd=$(echo "${cmd// && /$'\n'}" | tail -1)
   for token in $cmd; do
