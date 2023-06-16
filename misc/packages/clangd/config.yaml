@@ -12,20 +12,22 @@ Diagnostics:
     - readability-*
     Remove:
     - bugprone-easily-swappable-parameters
-    - cppcoreguidelines-pro-type-union-access # too much noise because PCR uses unions in point types
+    - cppcoreguidelines-pro-bounds-array-to-pointer-decay  # too much noise because ROS logging macros decay arrays to pointers
+    - cppcoreguidelines-pro-type-union-access              # too much noise because PCL uses unions in point types
+    - cppcoreguidelines-pro-type-vararg                    # too much noise because ROS logging macros use vararg
     - modernize-return-braced-init-list
     - modernize-use-nodiscard
     - modernize-use-trailing-return-type
     - readability-braces-around-statements
-    - readability-uppercase-literal-suffix    # because all my code has lowercase literal suffixes
+    - readability-uppercase-literal-suffix                 # because all my code has lowercase literal suffixes
     CheckOptions:
       misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
+      readability-function-cognitive-complexity.IgnoreMacros: true
       readability-identifier-length.IgnoredLoopCounterNames: "^[ijk_xyz]$"
-      readability-identifier-length.IgnoredVariableNames: "^[Rxyz]$"
       readability-identifier-length.IgnoredParameterNames: "^[xyz]$"
+      readability-identifier-length.IgnoredVariableNames: "^[Rxyz]$"
       readability-identifier-length.MinimumParameterNameLength: 2
       readability-identifier-length.MinimumVariableNameLength: 2
-
 ---
 # Unit and accuracy tests.
 # Disable diagnistics that trigger on Google Test TEST macros.
