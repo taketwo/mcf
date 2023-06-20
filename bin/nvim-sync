@@ -26,8 +26,7 @@ nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
 
 if [ "$1" = "--update" ]; then
   echo "Launching Neovim to update plugins"
-  # TODO: Figure out how to run "Lazy check" automatically with UI
-  nvim
+  nvim -c 'autocmd User VeryLazy Lazy check'
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
   # Check if the lock file has changed
   if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
