@@ -7,6 +7,7 @@ return {
     },
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
+    cmd = { 'TSUpdateSync' },
     opts = {
       ensure_installed = {
         'bash',
