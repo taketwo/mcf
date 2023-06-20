@@ -22,11 +22,11 @@ LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
 
 echo "Restoring the state of Neovim plugins"
-nvim --headless "+Lazy! restore" +qa
+nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
 
 if [ "$1" = "--update" ]; then
   echo "Launching Neovim to update plugins"
-  # TODO: Figure out how to run "Lazy sync" automatically with UI
+  # TODO: Figure out how to run "Lazy check" automatically with UI
   nvim
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
   # Check if the lock file has changed
