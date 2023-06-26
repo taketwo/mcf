@@ -90,3 +90,12 @@ snippet #!
 #!/usr/bin/env bash
 $0
 endsnippet
+
+snippet exit "execute function on exit" b
+function on_exit {
+	${1:# Clean-up code here}
+}
+
+trap on_exit EXIT
+endsnippet
+	
