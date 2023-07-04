@@ -21,6 +21,9 @@ return {
       vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
       vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
 
+      -- LSP formatting
+      require('config.lsp.format').setup()
+
       -- LSP server settings
       local servers = {
         bashls = {},
