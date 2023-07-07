@@ -16,7 +16,7 @@ return {
         v = 'Visual',
       },
       triggers_blacklist = {
-        i = { '.' },
+        i = { '.', '\\' },
       },
       defaults = {
         ['<Leader>'] = {
