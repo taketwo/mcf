@@ -12,7 +12,10 @@ if [ ! -d "$LOCK_REPO_PATH" ]; then
   git clone "$LOCK_REPO_URI" "$LOCK_REPO_PATH"
 else
   echo "Lock repository found, pulling latest changes"
-  git -C "$LOCK_REPO_PATH" pull
+  if ! git -C "$LOCK_REPO_PATH" pull; then
+    echo "Git pull failed, aborting"
+    exit 1
+  fi
 fi
 
 # Copy the lock file to the local repository
