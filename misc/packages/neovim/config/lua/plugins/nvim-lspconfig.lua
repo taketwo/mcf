@@ -3,13 +3,15 @@ return {
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-      { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
+      { 'folke/neoconf.nvim', cmd = 'Neoconf', config = false, dependencies = { 'nvim-lspconfig' } },
       { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } },
       'mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
+      require('neoconf').setup()
+
       vim.diagnostic.config({
         underline = true,
         update_in_insert = false,
