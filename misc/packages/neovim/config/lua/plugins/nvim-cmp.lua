@@ -8,6 +8,7 @@ return {
       'hrsh7th/cmp-omni',
       'hrsh7th/cmp-path',
       'onsails/lspkind-nvim',
+      'paopaol/cmp-doxygen',
       'quangnguyen30192/cmp-nvim-ultisnips',
     },
     opts = function()
