@@ -50,8 +50,18 @@ M._keys = {
   },
   { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
   { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration', has = 'declaration' },
-  { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
-  { 'gd', '<cmd>Telescope lsp_definitions<cr>', desc = 'Goto to definition', has = 'definition' }, -- TODO: Or use Trouble?
+  {
+    'gI',
+    function() require('telescope.builtin').lsp_implementations({ reuse_win = true }) end,
+    desc = 'Go to implementation',
+    has = 'implementation',
+  },
+  {
+    'gd',
+    function() require('telescope.builtin').lsp_definitions({ reuse_win = true }) end,
+    desc = 'Goto to definition',
+    has = 'definition',
+  }, -- TODO: Or use Trouble?
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
   { '<Leader>ui', function() vim.lsp.inlay_hint(0) end, desc = 'Toggle inlay hints', has = 'inlayHint' },
