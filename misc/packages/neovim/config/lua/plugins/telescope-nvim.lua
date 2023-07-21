@@ -14,6 +14,7 @@ return {
       { '<Leader>.g', '<cmd>Telescope live_grep<cr>', desc = 'Live grep' },
       { '<Leader>.h', '<cmd>Telescope help_tags<cr>', desc = 'Open help' },
       { '<Leader>.;', '<cmd>Telescope command_history<cr>', desc = 'Command history' },
+      { '<Leader>.r', '<cmd>Telescope registers<cr>', desc = 'Registers' },
       -- TODO: Consider moving next three keymaps to lspconfig.lua and changing prefix
       { '<Leader>.s', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Jump to symbol' },
       { '<Leader>.S', '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', desc = 'Jump to symbol (workspace)' },
