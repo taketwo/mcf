@@ -19,6 +19,7 @@ return {
         'shfmt',
         'stylua',
         'taplo',
+        'tectonic',
         'usort',
       },
     },
