@@ -86,10 +86,7 @@ map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 -- Toggle buffer options
 map('n', '<Leader>us', function() Util.toggle('spell') end, { desc = 'Toggle spellchecking' })
 map('n', '<Leader>uw', function() Util.toggle('wrap') end, { desc = 'Toggle word wraping' })
-map('n', '<Leader>ul', function()
-  Util.toggle('relativenumber', true)
-  Util.toggle('number')
-end, { desc = 'Toggle line numbers' })
+map('n', '<Leader>ul', function() Util.toggle_number() end, { desc = 'Toggle line numbers' })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map(
   'n',
