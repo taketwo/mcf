@@ -1,10 +1,10 @@
 session_name: mcf
 start_directory: $MCF
 windows:
-- window_name: mcf
-  focus: true
-- window_name: neovim
-  start_directory: misc/packages/neovim/config
-- window_name: tasks
-- window_name: aeolus
-  start_directory: external/aeolus
+  - window_name: mcf
+    focus: true
+  - window_name: neovim
+    start_directory: misc/packages/neovim/config
+  - window_name: tasks
+  - window_name: aeolus
+    start_directory: external/aeolus
