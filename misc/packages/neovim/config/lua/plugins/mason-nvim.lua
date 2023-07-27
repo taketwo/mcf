@@ -19,7 +19,6 @@ return {
         'shfmt',
         'stylua',
         'taplo',
-        'tectonic',
         'usort',
         'yaml-language-server',
       },
