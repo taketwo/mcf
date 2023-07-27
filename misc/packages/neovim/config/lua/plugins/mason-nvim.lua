@@ -21,6 +21,7 @@ return {
         'taplo',
         'tectonic',
         'usort',
+        'yaml-language-server',
       },
     },
     config = function(_, opts)

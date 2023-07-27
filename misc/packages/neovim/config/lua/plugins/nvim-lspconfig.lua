@@ -79,6 +79,24 @@ return {
           },
         },
         taplo = {},
+        yamlls = {
+          settings = {
+            redhat = {
+              telemetry = {
+                enabled = false,
+              },
+            },
+            yaml = {
+              keyOrdering = false,
+              format = {
+                enable = true,
+              },
+              validate = {
+                enable = true,
+              },
+            },
+          },
+        },
       }
 
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
