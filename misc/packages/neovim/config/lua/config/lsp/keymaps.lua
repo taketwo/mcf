@@ -71,7 +71,11 @@ M._keys = {
 
 function M.on_attach(client, buffer)
   for _, keys in ipairs(M._keys) do
-    if not keys.has or client.server_capabilities[keys.has .. 'Provider'] then
+    if
+      not keys.has
+      or client.server_capabilities[keys.has .. 'Provider']
+      or client.supports_method('textDocument/' .. keys.has)
+    then
       local opts = require('lazy.core.handler.keys').opts(keys)
       opts.has = nil
       opts.silent = true
