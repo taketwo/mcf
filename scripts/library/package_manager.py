@@ -24,10 +24,6 @@ class AptGet(Install):
     CMD = "sudo apt-get install --yes"
 
 
-class Yaourt(Install):
-    CMD = "yaourt --noconfirm --needed -Sa"
-
-
 class Nix(Install):
     CMD = "nix-env -i"
 
@@ -90,8 +86,6 @@ class Cabal(Install):
 INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
-if PLATFORM == "arch":
-    INSTALL["arch"] = Yaourt
 INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal})
 
 
@@ -174,7 +168,7 @@ class PackageManager:
         Arguments
         ---------
         manager: str
-            Name of a package manager to use (apt, pacman, yaourt, pipx, cabal).
+            Name of a package manager to use (apt, pacman, pipx, cabal).
         package: str | list
             Package name or list of package names.
         args:
