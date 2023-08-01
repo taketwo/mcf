@@ -90,13 +90,14 @@ INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal})
 
 
 class PackageManager:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def resolve(self, package_name):
-        """
-        Resolve package name into a list of commands to install/configure the package
-        and its dependencies.
+    def resolve(self, package_name: str) -> list[str]:
+        """Resolve package name into a list of commands.
+
+        The commands, when executed, will install/configure the package and its
+        dependencies.
         """
         if isdir(join(PACKAGES, package_name)):
             directory = join(PACKAGES, package_name)
@@ -185,8 +186,7 @@ class PackageManager:
         INSTALL[manager](p, args or [])
 
     def install(self, package_name, verbose=False, force_reinstall=False, update=False):
-        """
-        Install package with a given name.
+        """Install package with a given name.
 
         Installation order:
           1. Pre-install scripts
@@ -205,9 +205,9 @@ class PackageManager:
                     print(f"> {s}")
                     subprocess.check_call([s], env=os.environ)
                     print("")
-            for pm in INSTALL.keys():
+            for pm in INSTALL:
                 if pm in merged:
-                    print("[*] Install {} packages\n".format(pm.capitalize()))
+                    print(f"[*] Install {pm.capitalize()} packages\n")
                     self._install_with_package_manager(pm, merged[pm])
                     print("")
             if "install" in merged:
@@ -228,43 +228,43 @@ class PackageManager:
             if "post-install" in merged:
                 print("[*] Post-install scripts\n")
                 for s in merged["post-install"]:
-                    print("> {}".format(s))
+                    print(f"> {s}")
                     subprocess.check_call([s], env=os.environ)
                     print("")
             return True
         except Exception as e:
-            print('Installation of "{}" failed'.format(package_name))
-            print("Error: {}".format(e))
+            print(f'Installation of "{package_name}" failed')
+            print(f"Error: {e}")
             if hasattr(e, "output"):
-                print("       {}".format(e.output))
+                print(f"       {e.output}")
             return False
 
     def describe_package(self, package_name, merged):
-        print('Package "{}" resolved into:\n'.format(package_name))
+        print(f'Package "{package_name}" resolved into:\n')
         if "pre-install" in merged:
             print(" - Pre-install scripts\n")
             for s in merged["pre-install"]:
-                print("  {}".format(s))
+                print(f"  {s}")
             print("")
-        for pm in INSTALL.keys():
+        for pm in INSTALL:
             if pm in merged:
-                print(" - {} packages\n".format(pm.capitalize()))
+                print(f" - {pm.capitalize()} packages\n")
                 print("  " + ", ".join(merged[pm]))
                 print("")
         if "install" in merged:
             print(" - Custom install scripts\n")
             for s in merged["install"]:
-                print("  {}".format(s))
+                print(f"  {s}")
             print("")
         if "symlink" in merged:
             print(" - Symlinks\n")
             for s in merged["symlink"]:
-                print("  {}".format(s[2]))
+                print(f"  {s[2]}")
             print("")
         if "post-install" in merged:
             print(" - Post-install scripts\n")
             for s in merged["post-install"]:
-                print("  {}".format(s))
+                print(f"  {s}")
             print("")
 
     def _merge(self, commands):
@@ -282,6 +282,20 @@ class PackageManager:
             return str(Path(base).resolve() / p)
 
 
-def install(package_name, verbose=False, force_reinstall=False, update=False):
+def install(
+    package_name: str,
+    *,
+    verbose: bool = False,
+    force_reinstall: bool = False,
+    update: bool = False,
+) -> bool:
+    """Install a package.
+
+    Package argument should be one of:
+      * package name of a package that exists in mcf/misc/packages or in native platform
+        package manager repository
+      * package spec in the format "manager: package"
+      * full path to package
+    """
     pm = PackageManager()
     return pm.install(package_name, verbose, force_reinstall, update)

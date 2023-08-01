@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
-# encoding: utf-8
 
 import sys
+
 import click
 
 import package_manager
 
 
 @click.command()
-@click.argument('package', type=str)
-@click.option('--reinstall', help='force reinstallation', is_flag=True)
-@click.option('--update', help='update', is_flag=True)
-def install(package, reinstall, update):
-    """
-    Install a package.
+@click.argument("package", type=str)
+@click.option("--reinstall", help="force reinstallation", is_flag=True)
+@click.option("--update", help="update", is_flag=True)
+def install(package: str, *, reinstall: bool, update: bool) -> bool:
+    """Install a package.
 
     Package argument should be one of:
-
-      * package name of a package that exists in mcf/misc/packages or in platform manager repository
-
+      * package name of a package that exists in mcf/misc/packages or in native platform
+        package manager repository
       * package spec in the format "manager: package"
-
       * full path to package
     """
-    click.echo('Package name: {}'.format(package))
-    return package_manager.install(package, verbose=True, force_reinstall=reinstall, update=update)
+    click.echo(f"Package name: {package}")
+    return package_manager.install(
+        package,
+        verbose=True,
+        force_reinstall=reinstall,
+        update=update,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if not install():
         sys.exit("Package installation failed")
