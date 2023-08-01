@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# This is only needed for version 1.5
+# Newer versions of TLP have this enabled by default
+sudo systemctl enable tlp.service
