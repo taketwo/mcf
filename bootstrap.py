@@ -84,6 +84,10 @@ else:
     print("")
     pm.install("fnm", verbose=True)
 
+    print("[*] Install Eget")
+    print("")
+    pm.install("nix: eget", verbose=True)
+
     print("[*] Install MCF")
     print("")
 

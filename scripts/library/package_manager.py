@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 from collections import defaultdict
 from os.path import isdir, join
@@ -80,13 +81,33 @@ class Cabal(Install):
         subprocess.check_call(cmd, shell=True)
 
 
+class Eget(Install):
+    CMD = f"eget --to {mcf.HOME}/.local/bin --upgrade-only"
+
+    def __init__(self, packages, args=None):
+        args = args or []
+        for package in packages:
+            # We support optional additional arguments to be passed to Eget. Such
+            # arguments, if provided, should be supplied in square brackets, e.g.
+            # "eget[--foo bar]".
+
+            regex = r"([^[\]]+)(?:\[(.+?)\])?"
+            m = re.match(regex, package)
+            if m is None:
+                raise ValueError(f"Invalid package specification: {package}")
+            package_name, package_args = m.groups()
+            print(package_name)
+            cmd = self.CMD + " " + package_name + " " + (package_args or "")
+            subprocess.check_call(cmd.split())
+
+
 # A dictionary mapping manager names to classes. The insertion order matters, we
 # want to install with the main system manager first and with secondary managers
 # (e.g. Cabal) last.
 INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
-INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal})
+INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal, "eget": Eget})
 
 
 class PackageManager:
@@ -110,15 +131,16 @@ class PackageManager:
         commands = list()
         deps = join(directory, "DEPENDENCIES")
         if os.path.isfile(deps):
-            for line in open(deps, "r"):
-                package = self._remove_comments(line).strip()
-                if len(package.split(": ")) == 2:
-                    commands.append(tuple(package.split(": ")))
-                elif package:
-                    if package != package_name:
-                        commands += self.resolve(package)
-                    else:
-                        commands.append((PLATFORM, package))
+            with open(deps) as f:
+                for line in f:
+                    package = self._remove_comments(line).strip()
+                    if len(package.split(": ")) == 2:
+                        commands.append(tuple(package.split(": ")))
+                    elif package:
+                        if package != package_name:
+                            commands += self.resolve(package)
+                        else:
+                            commands.append((PLATFORM, package))
         nix_expression = join(directory, "default.nix")
         if os.path.isfile(nix_expression):
             commands.append(("nix", "-f {}".format(directory)))
@@ -156,23 +178,33 @@ class PackageManager:
                 commands.append(("symlink", (src, tgt, desc)))
         return commands
 
-    def _remove_comments(self, line):
+    def _remove_comments(self, line: str) -> str:
+        """Remove comments from a given line.
+
+        Comments are denoted by a hash sign (#) and can appear anywhere in the line.
+        This function removes all characters from the first hash sign to the end of
+        the line. It also removes leading and trailing whitespace.
+        """
         p = line.find("#")
         if p == -1:
             return line
-        return line[:p]
+        return line[:p].strip()
 
-    def _install_with_package_manager(self, manager, package, args=None):
-        """
-        Install package(s) using given package manager.
+    def _install_with_package_manager(
+        self,
+        manager: str,
+        package: str | list[str],
+        args: list[str] | None = None,
+    ) -> None:
+        """Install package(s) using given package manager.
 
-        Arguments
+        Arguments:
         ---------
         manager: str
-            Name of a package manager to use (apt, pacman, pipx, cabal).
+            Name of a package manager to use (apt, pacman, pipx, cabal, eget).
         package: str | list
             Package name or list of package names.
-        args:
+        args: list:
             Additional options to pass to the package manager.
         """
         if manager not in INSTALL.keys():
