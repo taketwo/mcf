@@ -114,7 +114,7 @@ class PackageManager:
     def __init__(self) -> None:
         pass
 
-    def resolve(self, package_name: str) -> list[str]:
+    def resolve(self, package_name: str):
         """Resolve package name into a list of commands.
 
         The commands, when executed, will install/configure the package and its
@@ -190,12 +190,7 @@ class PackageManager:
             return line
         return line[:p].strip()
 
-    def _install_with_package_manager(
-        self,
-        manager: str,
-        package: str | list[str],
-        args: list[str] | None = None,
-    ) -> None:
+    def _install_with_package_manager(self, manager, package, args=None) -> None:
         """Install package(s) using given package manager.
 
         Arguments:
