@@ -24,7 +24,7 @@ return {
           f = { name = 'Filename' },
           g = { name = 'Git' },
           l = { name = 'LSP' },
-          s = { name = 'Shift object' },
+          s = { name = 'Shift/swap object' },
           u = { name = 'Toggle buffer options' },
         },
         [']'] = { name = 'Jump next' },
