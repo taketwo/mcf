@@ -246,7 +246,7 @@ table =
   , k "<Space>"      launchRofi              nextKeyboardLayout      __                      __
   , k "<Tab>"        nextLayout              resetLayout             __                      __
   , k "`"            scratchTerminal         __                      __                      __
-  , k "'"            gridSelect              __                      __                      __
+  , k "'"            goToGridSelection       bringGridSelection      __                      __
   , k "/"            promptWebSearch         selectWebSearch         __                      __
   , k "0"            gotoPrevWorkspace       __                      __                      __
   , k "]"            windowOpacityUp         __                      __                      __
@@ -348,7 +348,8 @@ table =
     promptWebSearch         = Unbound "Prompt web search"                                  (submap . mySearchMap $ myPromptWebSearch)
     selectWebSearch         = Unbound "X selection web search"                             (submap . mySearchMap $ mySelectWebSearch)
     closeWindow             = Unbound "Close the focused window"                           (kill)
-    gridSelect              = Unbound "Open GridSelect"                                    (goToSelected $ gridSelectConfig)
+    goToGridSelection       = Unbound "Go to grid selection"                               (goToSelected $ gridSelectConfig)
+    bringGridSelection      = Unbound "Bring grid selection"                               (bringSelected $ gridSelectConfig)
     printScreen             = Unbound "Print screen using Flameshot"                       (spawn "flameshot gui")
     -- Keyboard control
     nextKeyboardLayout      = Unbound "Next keyboard layout"                               (spawn "keyboard -n")
