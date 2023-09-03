@@ -197,7 +197,7 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
   where
-    spawnTerminal  = appTerminal ++ " --class ScratchTerminal -e tmux"
+    spawnTerminal  = appTerminal ++ " --class ScratchTerminal -e tmux new-session -A -s scratch"
     findTerminal   = (resource =? "ScratchTerminal")
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
