@@ -16,6 +16,8 @@ return {
         IlluminatedWordText = { fmt = 'bold' },
         IlluminatedWordRead = { fmt = 'bold' },
         IlluminatedWordWrite = { fmt = 'bold' },
+        -- NOTE: OneDark is currently incompatible with IBL v3. Watch out for updates and remove this override.
+        IblIndent = { fg = '$bg1', fmt = 'nocombine' },
       },
     },
     config = function(_, opts)
