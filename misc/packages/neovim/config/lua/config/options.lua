@@ -48,6 +48,7 @@ opt.showmode = false -- Dont show mode since we have a statusline
 opt.sidescrolloff = 15 -- Columns of context
 opt.smartcase = true -- Do not ignore case when query has capitals
 opt.smartindent = true -- Insert indents automatically
+opt.smoothscroll = true -- Smooth scrolling in presence of wrapped lines
 opt.softtabstop = 2 -- Number of spaces tabs count for when editing                  -- TODO: Still needed?
 opt.spelllang = { 'en_us' } -- Spell checking language
 opt.splitbelow = true -- New splits, help, scratch preview all go to the bottom
