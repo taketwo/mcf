@@ -3,7 +3,11 @@ return {
     'lukas-reineke/indent-blankline.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
-      indent = { char = '│', highlight = 'IblIndent' },
+      indent = {
+        char = '│',
+        tab_char = '│',
+        highlight = 'IblIndent',
+      },
       whitespace = { highlight = { 'Whitespace', 'NonText' } },
       scope = { enabled = false },
       exclude = {
