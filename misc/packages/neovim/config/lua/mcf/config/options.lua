@@ -59,6 +59,7 @@ opt.termguicolors = true -- True color support
 opt.timeoutlen = 300 -- Time to wait for a mapped sequence to complete               -- TODO: Good idea?
 opt.undofile = true -- Persistent undo
 opt.updatetime = 1000 -- Trigger CursorHold after inactivity of this length
+opt.virtualedit = 'block' -- Allow cursor to move where there is no text in visual block mode
 opt.visualbell = true -- No sounds
 opt.wildignore = { '*.o', '*.obj', '*.so', '*.pyc', '*.pyo', '*.swp' } -- Files to ignore when completing
 opt.wildmode = 'longest:full,full' -- Command-line completion until longest match, then iterate over full matches
