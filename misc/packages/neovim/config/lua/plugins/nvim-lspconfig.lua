@@ -24,7 +24,7 @@ return {
       vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
 
       -- LSP formatting
-      require('config.lsp.format').setup()
+      require('mcf.config.lsp.format').setup()
 
       -- LSP server settings
       local servers = {
@@ -104,7 +104,7 @@ return {
       local function setup(server)
         local server_opts = servers[server] or {}
         server_opts.capabilities = vim.tbl_deep_extend('force', capabilities, server_opts.capabilities or {})
-        server_opts.on_attach = require('config.lsp').on_attach
+        server_opts.on_attach = require('mcf.config.lsp').on_attach
         require('lspconfig')[server].setup(server_opts)
       end
 

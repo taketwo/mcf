@@ -18,7 +18,7 @@ return {
           nls.builtins.formatting.usort,
           nls.builtins.formatting.xmllint,
         },
-        on_attach = require('config.lsp').on_attach,
+        on_attach = require('mcf.config.lsp').on_attach,
         fallback_severity = vim.diagnostic.severity.WARN,
       }
     end,

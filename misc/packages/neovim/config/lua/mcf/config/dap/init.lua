@@ -18,8 +18,8 @@ function M.setup()
   dap.listeners.after.disconnect['dapui_config'] = dapui.close
 
   -- Setup debuggers
-  require('config.dap.bash').setup()
-  require('config.dap.cpp').setup()
+  require('mcf.config.dap.bash').setup()
+  require('mcf.config.dap.cpp').setup()
 end
 
 return M

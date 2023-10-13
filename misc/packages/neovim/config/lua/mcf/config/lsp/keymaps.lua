@@ -1,6 +1,6 @@
 local M = {}
 
-local format = function() require('config.lsp.format').format({ force = true }) end
+local format = function() require('mcf.config.lsp.format').format({ force = true }) end
 
 -- Jump to the next error diagnostic. If there are no error diagnostics, jump to the next diagnostic of any severity.
 local diagnostic_jump_next = function()
