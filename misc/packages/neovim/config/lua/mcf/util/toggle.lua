@@ -1,21 +1,24 @@
--- Some of the functions in this file were adapted from LazyVim
--- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
+-- Based on https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/toggle.lua
 
-local Util = require('lazy.core.util')
+local Util = require('mcf.util')
 
+---@class mcf.util.toggle
 local M = {}
 
 ---@param silent boolean?
 ---@param values? {[1]:any, [2]:any}
-function M.toggle(option, silent, values)
+function M.option(option, silent, values)
   if values then
     if vim.opt_local[option]:get() == values[1] then
+      ---@diagnostic disable-next-line: no-unknown
       vim.opt_local[option] = values[2]
     else
+      ---@diagnostic disable-next-line: no-unknown
       vim.opt_local[option] = values[1]
     end
     return Util.info('Set ' .. option .. ' to ' .. vim.opt_local[option]:get(), { title = 'Option' })
   end
+  ---@diagnostic disable-next-line: no-unknown
   vim.opt_local[option] = not vim.opt_local[option]:get()
   if not silent then
     if vim.opt_local[option]:get() then
@@ -27,7 +30,7 @@ function M.toggle(option, silent, values)
 end
 
 local nu = { number = true, relativenumber = true }
-function M.toggle_number()
+function M.number()
   if vim.opt_local.number:get() or vim.opt_local.relativenumber:get() then
     nu = { number = vim.opt_local.number:get(), relativenumber = vim.opt_local.relativenumber:get() }
     vim.opt_local.number = false
@@ -40,7 +43,7 @@ function M.toggle_number()
   end
 end
 
-function M.toggle_diagnostics()
+function M.diagnostics()
   if vim.diagnostic.is_disabled() then
     vim.diagnostic.enable()
     Util.info('Enabled diagnostics', { title = 'Diagnostics' })
@@ -50,7 +53,8 @@ function M.toggle_diagnostics()
   end
 end
 
-M.info = Util.info
-M.warn = Util.warn
+setmetatable(M, {
+  __call = function(m, ...) return m.option(...) end,
+})
 
 return M

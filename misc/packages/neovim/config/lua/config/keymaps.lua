@@ -1,4 +1,4 @@
-local Util = require('utils')
+local Util = require('mcf.util')
 
 local function map(mode, lhs, rhs, opts)
   opts = opts or {}
@@ -86,7 +86,7 @@ map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 -- Toggle buffer options
 map('n', '<Leader>us', function() Util.toggle('spell') end, { desc = 'Toggle spellchecking' })
 map('n', '<Leader>uw', function() Util.toggle('wrap') end, { desc = 'Toggle word wraping' })
-map('n', '<Leader>ul', function() Util.toggle_number() end, { desc = 'Toggle line numbers' })
+map('n', '<Leader>ul', function() Util.toggle.number() end, { desc = 'Toggle line numbers' })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map(
   'n',
@@ -94,7 +94,7 @@ map(
   function() Util.toggle('conceallevel', false, { 0, conceallevel }) end,
   { desc = 'Toggle concealing' }
 )
-map('n', '<Leader>ud', Util.toggle_diagnostics, { desc = 'Toggle diagnostics' })
+map('n', '<Leader>ud', Util.toggle.diagnostics, { desc = 'Toggle diagnostics' })
 map('n', '<Leader>uf', require('config.lsp.format').toggle, { desc = 'Toggle format on save' })
 map(
   'n',
