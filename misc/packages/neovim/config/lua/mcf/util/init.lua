@@ -1,7 +1,9 @@
-local LazyUtil = require('lazy.core.util')
+-- Dispatch to Lazy and LazyVim utils
+-- If not found, try to load from mcf/util
 
----@class mcf.util: McfUtilCore
----@field toggle mcf.util.toggle
+local LazyUtil = require('lazyvim.util')
+
+---@class mcf.util
 local M = {}
 
 setmetatable(M, {
