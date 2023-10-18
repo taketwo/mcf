@@ -4,6 +4,8 @@
 local LazyUtil = require('lazyvim.util')
 
 ---@class mcf.util
+---@field format lazyvim.util.format
+---@field toggle lazyvim.util.toggle
 local M = {}
 
 setmetatable(M, {

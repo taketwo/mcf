@@ -1,3 +1,5 @@
+local Util = require('mcf.util')
+
 return {
   {
     'neovim/nvim-lspconfig',
@@ -23,8 +25,8 @@ return {
       vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
       vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
 
-      -- LSP formatting
-      require('mcf.config.lsp.format').setup()
+      -- Register LSP formatter
+      Util.format.register(Util.lsp.formatter())
 
       -- LSP server settings
       local servers = {

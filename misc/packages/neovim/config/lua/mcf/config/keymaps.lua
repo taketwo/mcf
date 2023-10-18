@@ -95,13 +95,8 @@ map(
   { desc = 'Toggle concealing' }
 )
 map('n', '<Leader>ud', Util.toggle.diagnostics, { desc = 'Toggle diagnostics' })
-map('n', '<Leader>uf', require('mcf.config.lsp.format').toggle, { desc = 'Toggle format on save' })
-map(
-  'n',
-  '<Leader>uF',
-  function() require('mcf.config.lsp.format').toggle({ global = true }) end,
-  { desc = 'Toggle format on save (globally)' }
-)
+map('n', '<Leader>uf', function() Util.format.toggle(true) end, { desc = 'Toggle format on save' })
+map('n', '<Leader>uF', function() Util.format.toggle() end, { desc = 'Toggle format on save (globally)' })
 
 -- Command-line completion
 map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
@@ -111,5 +106,7 @@ map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
 map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = false })
+map('n', '<F2>', Util.format.format, { desc = 'Format document' })
+map('v', '<F2>', Util.format.format, { desc = 'Format range' })
 
 -- NOTE: Some keys that are still free: $ ^ F5 F10

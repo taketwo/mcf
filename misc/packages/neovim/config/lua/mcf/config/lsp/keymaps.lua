@@ -1,7 +1,5 @@
 local M = {}
 
-local format = function() require('mcf.config.lsp.format').format({ force = true }) end
-
 -- Jump to the next error diagnostic. If there are no error diagnostics, jump to the next diagnostic of any severity.
 local diagnostic_jump_next = function()
   local opts = { severity = vim.diagnostic.severity.ERROR }
@@ -65,8 +63,6 @@ M._keys = {
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
   { '<Leader>ui', function() vim.lsp.inlay_hint(0) end, desc = 'Toggle inlay hints', has = 'inlayHint' },
-  { '<F2>', format, desc = 'Format document', has = 'documentFormatting' },
-  { '<F2>', format, desc = 'Format range', mode = 'v', has = 'documentRangeFormatting' },
 }
 
 function M.on_attach(client, buffer)

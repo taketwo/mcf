@@ -14,6 +14,7 @@ opt.expandtab = true -- Use spaces instead of tabs
 opt.foldenable = false -- Disable folding by default
 opt.foldmethod = 'indent' -- Fold based on indent
 opt.foldnestmax = 3 -- Maximum number of nested folds
+opt.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
 opt.formatoptions = 'tcro/qnljp'
 opt.grepformat = '%f:%l:%c:%m'
 opt.grepprg = 'rg --vimgrep'
