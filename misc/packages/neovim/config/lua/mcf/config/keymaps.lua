@@ -102,6 +102,20 @@ map('n', '<Leader>uF', function() Util.format.toggle() end, { desc = 'Toggle for
 map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
 map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
 
+-- Floating terminal
+local lazyterm = function() Util.terminal(nil, { cwd = Util.root() }) end
+map('n', '<C-/>', lazyterm, { desc = 'Show terminal' })
+map('t', '<C-/>', '<cmd>close<cr>', { desc = 'Hide terminal' })
+-- NOTE: The <C-_> maps is necessary due terminal weirdness
+--See: https://apple.stackexchange.com/questions/24261/how-do-i-send-c-that-is-control-slash-to-the-terminal/227286#227286
+map('n', '<C-_>', lazyterm, { desc = 'which_key_ignore' })
+map('t', '<C-_>', '<cmd>close<cr>', { desc = 'which_key_ignore' })
+map('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'Enter normal mode' })
+map('t', '<C-h>', '<cmd>wincmd h<cr>', { desc = 'Go to left window' })
+map('t', '<C-t>', '<cmd>wincmd j<cr>', { desc = 'Go to lower window' })
+map('t', '<C-c>', '<cmd>wincmd k<cr>', { desc = 'Go to upper window' })
+map('t', '<C-n>', '<cmd>wincmd l<cr>', { desc = 'Go to right window' })
+
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
