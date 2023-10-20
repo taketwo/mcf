@@ -5,17 +5,16 @@ return {
     init = function()
       -- This initialization function was copied from LazyVim and should be kept in sync with it.
       -- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/formatting.lua
-      -- The only modification is to avoid using local conform_opts variable and set set timeout_ms
-      -- option directly in the call to require('conform').format().
       require('lazyvim.util').on_very_lazy(function()
         require('lazyvim.util').format.register({
           name = 'conform.nvim',
           priority = 100,
           primary = true,
           format = function(buf)
-            require('conform').format(require('lazyvim.util').merge({
-              timeout_ms = 3000,
-            }, { bufnr = buf }))
+            local plugin = require('lazy.core.config').plugins['conform.nvim']
+            local Plugin = require('lazy.core.plugin')
+            local opts = Plugin.values(plugin, 'opts', false)
+            require('conform').format(require('lazyvim.util').merge(opts.format, { bufnr = buf }))
           end,
           sources = function(buf)
             local ret = require('conform').list_formatters(buf)
