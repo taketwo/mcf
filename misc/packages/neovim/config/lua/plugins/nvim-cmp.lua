@@ -25,6 +25,10 @@ return {
           ['<C-h>'] = cmp.mapping.close(),
           ['<C-n>'] = cmp.mapping.confirm({ select = true }),
           ['<C-t>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+          ['<C-CR>'] = function(fallback)
+            cmp.abort()
+            fallback()
+          end,
         },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
