@@ -10,7 +10,7 @@ return {
     cmd = { 'Telescope' },
     keys = {
       { '<Leader>..', '<cmd>Telescope find_files<cr>', desc = 'Open file' },
-      { '<Leader>.b', '<cmd>Telescope buffers<cr>', desc = 'Jump to buffer' },
+      { '<Leader>.b', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Jump to buffer' },
       { '<Leader>.g', '<cmd>Telescope live_grep<cr>', desc = 'Live grep' },
       { '<Leader>.h', '<cmd>Telescope help_tags<cr>', desc = 'Open help' },
       { '<Leader>.;', '<cmd>Telescope command_history<cr>', desc = 'Command history' },
@@ -22,7 +22,11 @@ return {
       { '<Leader>gl', '<cmd>Telescope git_bcommits<cr>', desc = 'Log (buffer only)' },
       { '<Leader>gL', '<cmd>Telescope git_commits<cr>', desc = 'Log (everything)' },
       { '<Leader>gS', '<cmd>Telescope git_status<cr>', desc = 'Status' },
-      { '<space>', '<cmd>Telescope buffers show_all_buffers=true<cr>', desc = 'Jump to buffer' },
+      {
+        '<space>',
+        '<cmd>Telescope buffers show_all_buffers=true sort_mru=true sort_lastused=true<cr>',
+        desc = 'Jump to buffer',
+      },
       { 'z=', '<cmd>Telescope spell_suggest<cr>', desc = 'Spelling suggestions' },
     },
     opts = {
