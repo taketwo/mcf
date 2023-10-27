@@ -15,9 +15,12 @@ require('lazy').setup({
   spec = {
     -- We are only interested in the utility functions and built-in plugins that come with LazyVim.
     -- We want to be able to use them in our config and plugin specifications, thus LazyVime comes
-    -- before importing our plugins. We also provide an empty setup function to prevent loading the
-    -- entire LazyVim config.
-    { 'LazyVim/LazyVim', config = function() end },
+    -- before importing our plugins.
+    {
+      'LazyVim/LazyVim',
+      config = function() end, -- empty setup function to prevent loading the entire LazyVim config
+      submodules = false, -- do not waste time cloning and updating submodules that we do not use
+    },
     { import = 'plugins' },
   },
   diff = {
