@@ -31,9 +31,7 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         sh = { 'shfmt' },
-        -- NOTE: We would like to have usort as a secondary formatter for Python, but conform.nvim
-        -- does not support it yet.
-        python = { 'black' },
+        python = { 'black', 'usort' },
         -- NOTE: We would like to use gersemi as the primary formatter for CMake, but conform.nvim
         -- does not support it yet.
         -- cmake = { 'gersemi' },
