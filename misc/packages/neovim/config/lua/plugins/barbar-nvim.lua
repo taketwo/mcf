@@ -1,6 +1,7 @@
 return {
   {
-    'romgrk/barbar.nvim',
+    'taketwo/barbar.nvim',
+    branch = 'schedule-wrap',
     event = 'VeryLazy',
     dependencies = {
       { 'nvim-tree/nvim-web-devicons' },
