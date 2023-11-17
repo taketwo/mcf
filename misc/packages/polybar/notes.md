@@ -29,4 +29,4 @@ References
 ----------
 
 [1] https://stackoverflow.com/a/51861809/1525865
-[2] https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/misc/polybar/default.nix
+[2] https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/po/polybar/package.nix
