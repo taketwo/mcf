@@ -15,7 +15,7 @@ return {
           dismiss = '<C-]>',
         },
       },
-      copilot_node_command = vim.fn.expand('$FNM_DIR') .. '/aliases/node17/bin/node',
+      copilot_node_command = vim.g.node_path .. '/node',
     },
   },
 }

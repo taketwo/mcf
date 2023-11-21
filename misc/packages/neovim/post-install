@@ -11,7 +11,7 @@ source "$PYENV_ROOT/versions/$PYTHON_VERSION/envs/py3nvim/bin/activate"
 pip install --upgrade pynvim
 
 # Node.js provider
-fnm exec --using=node17 npm install --location=global neovim
+fnm exec --using=node-nvim npm install --location=global neovim
 
 # Ensure that plugins are installed
 if hash nvim-sync 2>/dev/null; then

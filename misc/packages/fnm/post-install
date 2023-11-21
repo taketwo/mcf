@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Install Node 17
-fnm install 17
-fnm alias 17 node17
-fnm default 17
+# Install Node 20
+fnm install 20
+fnm alias 20 node-nvim
+fnm default 20
