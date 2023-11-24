@@ -2,6 +2,8 @@ local Util = require('mcf.util')
 
 local M = {}
 
+function M.toggle_inlay_hints(buffer) vim.lsp.inlay_hint.enable(buffer, not vim.lsp.inlay_hint.is_enabled(buffer)) end
+
 function M.on_attach(client, buffer) require('mcf.config.lsp.keymaps').on_attach(client, buffer) end
 
 function M.capabilities()

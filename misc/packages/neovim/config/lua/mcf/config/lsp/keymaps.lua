@@ -62,7 +62,7 @@ M._keys = {
   }, -- TODO: Or use Trouble?
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
-  { '<Leader>ui', function() vim.lsp.inlay_hint(0) end, desc = 'Toggle inlay hints', has = 'inlayHint' },
+  { '<Leader>ui', require('mcf.config.lsp').toggle_inlay_hints, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
 function M.on_attach(client, buffer)
