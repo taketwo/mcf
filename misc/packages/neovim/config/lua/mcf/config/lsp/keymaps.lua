@@ -1,3 +1,5 @@
+local Util = require('mcf.util')
+
 local M = {}
 
 -- Jump to the next error diagnostic. If there are no error diagnostics, jump to the next diagnostic of any severity.
@@ -62,7 +64,7 @@ M._keys = {
   }, -- TODO: Or use Trouble?
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
-  { '<Leader>ui', require('mcf.config.lsp').toggle_inlay_hints, desc = 'Toggle inlay hints', has = 'inlayHint' },
+  { '<Leader>ui', function() Util.toggle.inlay_hints() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
 function M.on_attach(client, buffer)
