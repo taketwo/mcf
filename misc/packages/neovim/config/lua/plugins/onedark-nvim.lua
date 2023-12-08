@@ -16,6 +16,9 @@ return {
         IlluminatedWordText = { fmt = 'bold' },
         IlluminatedWordRead = { fmt = 'bold' },
         IlluminatedWordWrite = { fmt = 'bold' },
+        NeoTreeIndentMarker = { fg = '$grey' },
+        NeoTreeExpander = { fg = '$grey' },
+        NeoTreeModified = { fg = '$orange' },
       },
     },
     config = function(_, opts)
