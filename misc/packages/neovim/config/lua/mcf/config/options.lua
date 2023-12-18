@@ -5,7 +5,7 @@ local opt = vim.opt
 
 opt.autowrite = true -- Automatically save before e.g. :make
 opt.clipboard = 'unnamedplus' -- Sync with system clipboard
-opt.completeopt = 'menu,menuone,noselect'
+opt.completeopt = 'menu,menuone,noselect,popup'
 opt.conceallevel = 3 -- Hide * markup for bold and italic                            -- TODO: Good idea?
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
 opt.cursorline = true -- Enable highlighting of the current line
