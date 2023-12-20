@@ -71,3 +71,5 @@
 [delta]
   navigate = true
   syntax-theme = TwoDark
+[rerere]
+  enabled = true
