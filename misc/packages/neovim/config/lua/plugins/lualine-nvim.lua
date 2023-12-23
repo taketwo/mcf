@@ -2,10 +2,19 @@ return {
   {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+      'AndreM222/copilot-lualine',
+    },
     opts = {
       theme = 'onedark',
       sections = {
+        lualine_x = {
+          { 'copilot', separator = ' ' },
+          'encoding',
+          'fileformat',
+          'filetype',
+        },
         lualine_y = {
           { 'progress', separator = '' },
           { 'searchcount' },
