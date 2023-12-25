@@ -35,7 +35,7 @@ if [ "$1" = "--update" ]; then
   if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
     echo "Lock file has changed, committing and pushing changes"
     git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
-    git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME"
+    git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME" -m "Host: $(hostname -s)"
     git -C "$LOCK_REPO_PATH" push
   else
     echo "Lock file has not changed"
