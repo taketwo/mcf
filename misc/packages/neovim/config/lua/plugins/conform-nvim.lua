@@ -30,8 +30,9 @@ return {
       log_level = vim.log.levels.DEBUG,
       formatters_by_ft = {
         lua = { 'stylua' },
-        sh = { 'shfmt' },
         python = { 'black', 'usort' },
+        sh = { 'shfmt' },
+        xml = { 'xmllint' },
         -- NOTE: We would like to use gersemi as the primary formatter for CMake, but conform.nvim
         -- does not support it yet.
         -- cmake = { 'gersemi' },
