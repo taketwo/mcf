@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Check if file path is provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 path_to_file"
+  exit 1
+fi
+
+FILE_TO_WATCH="$1"
+TMP_FILE=$(mktemp /tmp/filewatch.XXXXXX)
+
+# Function to clean up when the script exits
+cleanup() {
+  echo "Cleaning up..."
+  rm -f "$TMP_FILE"
+}
+
+# Register the cleanup function to be called on script exit
+trap cleanup EXIT
+
+# Initialize the temporary file with the current state of the file
+cp "$FILE_TO_WATCH" "$TMP_FILE"
+
+while true; do
+  inotifywait -e close_write "$FILE_TO_WATCH" >/dev/null 2>&1
+  echo "File changed, showing diff:"
+  diff -u "$TMP_FILE" "$FILE_TO_WATCH" | delta
+  cp "$FILE_TO_WATCH" "$TMP_FILE"
+done
