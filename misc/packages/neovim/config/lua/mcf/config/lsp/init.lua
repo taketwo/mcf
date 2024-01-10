@@ -38,6 +38,11 @@ function M.setup()
     function() M.capabilities() end,
     { desc = 'Show capabilities of LSP clients attached to the current buffer' }
   )
+  vim.api.nvim_create_user_command(
+    'LspLogClear',
+    function() os.remove(vim.lsp.get_log_path()) end,
+    { desc = 'Clear LSP log file' }
+  )
 end
 
 return M
