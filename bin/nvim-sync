@@ -26,6 +26,18 @@ cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
 
 echo "Restoring the state of Neovim plugins"
 nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
+echo "" # TSUpdateSync always prints a message without newline, so we add one
+
+# After restore command has finished, the lock file should remain the same
+# If it is not the same, it means that there was an issue during restoration
+if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
+  echo "Lock file has changed while executing restore command, this indicates there was an issue"
+  echo "Lock file diff:"
+  git -C "$LOCK_REPO_PATH" diff "$LAZY_LOCK_FILE_NAME"
+  exit 2
+else
+  echo "Restoration succeeded"
+fi
 
 if [ "$1" = "--update" ]; then
   echo "Launching Neovim to update plugins"
