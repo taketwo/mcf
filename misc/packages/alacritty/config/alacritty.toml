@@ -1,0 +1,62 @@
+[[colors.indexed_colors]]
+color = "#232326"
+index = 16
+
+[[colors.indexed_colors]]
+color = "#2c2d31"
+index = 17
+
+[[colors.indexed_colors]]
+color = "#35363b"
+index = 18
+
+[[colors.indexed_colors]]
+color = "#37383d"
+index = 19
+
+[[colors.indexed_colors]]
+color = "#1b1c1e"
+index = 20
+
+[[colors.indexed_colors]]
+color = "#68aee8"
+index = 21
+
+[[colors.indexed_colors]]
+color = "#e2c792"
+index = 22
+
+[colors.normal]
+black = "#101012"
+blue = "#57a5e5"
+cyan = "#51a8b3"
+green = "#8fb573"
+magenta = "#bb70d2"
+red = "#de5d68"
+white = "#5a5b5e"
+yellow = "#dbb671"
+
+[colors.primary]
+background = "#232326"
+foreground = "#a7aab0"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 11.0
+
+[font.normal]
+family = "VictorMono Nerd Font"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 0
+
+[window]
+dynamic_padding = false
+
+[window.padding]
+x = 1
+y = 1
