@@ -15,7 +15,7 @@ class ${1:`!p snip.rv = to_pascalcase(snip.basename) or "Name"`}
 public:
   ${1/(\w+).*/$1/}(${2});
 
-  virtual ~${1/(\w+).*/$1/}() { }
+  virtual ~${1/(\w+).*/$1/}() = default;
 
 private:
   $0
