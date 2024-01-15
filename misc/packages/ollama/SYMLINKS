@@ -1,0 +1,1 @@
+ollama.service:.local/share/systemd/user/ollama.service:Ollama systemd unit
