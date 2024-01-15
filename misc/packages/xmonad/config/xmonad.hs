@@ -537,6 +537,9 @@ myManageHook = manageWindows <+> namedScratchpadManageHook myScratchPads <+> ful
 
 manageWindows = composeAll . concat $
     [ [isDialog --> doCenterFloat]
+    , [isFloating --> doCenterFloat]
+    , [isOSD --> doCenterFloat]
+    , [isTooltip --> doIgnore]
     , [className =? c --> doFloat   | c <- myCFloats]
     , [className =? u --> doUnfloat | u <- myCUnFloats] -- does not work for Gimp actually
     , [title     =? t --> doFloat   | t <- myTFloats]
@@ -563,6 +566,9 @@ manageWindows = composeAll . concat $
     myMendeleyShifts = ["Mendeley Desktop"]
     mySimShifts = ["RViz", "rviz", "Gazebo", "aeolus_rviz_launcher"]
     myUvcShifts = ["UVC Coverage GUI"]
+    isFloating = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_ABOVE"
+    isOSD      = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY"
+    isTooltip  = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_TOOLTIP"
 
 -- Hint: use `xprop` to figure out window class name
 
