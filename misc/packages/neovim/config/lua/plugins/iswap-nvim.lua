@@ -15,7 +15,7 @@ return {
         },
       },
     },
-    cmds = {
+    cmd = {
       'ISwap',
       'ISwapWith',
       'ISwapWithLeft',
