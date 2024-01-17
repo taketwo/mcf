@@ -19,6 +19,8 @@ return {
       require('nvim-treesitter.query_predicates')
     end,
     opts = {
+      -- Some of the following parsers are installed by default, but we want to ensure that our config is
+      -- not affected by future changes to the default parsers.
       ensure_installed = {
         'bash',
         'c',
