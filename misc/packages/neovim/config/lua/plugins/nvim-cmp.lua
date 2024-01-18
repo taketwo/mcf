@@ -32,7 +32,8 @@ return {
         },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
-          { name = 'ultisnips' },
+          -- FIX: This source massively slows down the editor, so we disable it for now.
+          -- { name = 'ultisnips' },
           -- TODO: Double-check if the problem is still there
           -- { name = 'omni' },  disable temporarily because of slow-downs when editing gitcommit
           { name = 'path' },
