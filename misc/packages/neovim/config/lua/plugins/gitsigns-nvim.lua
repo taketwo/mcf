@@ -13,7 +13,7 @@ return {
               h = {
                 name = '+Hunks',
                 d = { gs.diffthis, 'Diff' },
-                p = { gs.preview_hunk, 'Preview' },
+                p = { gs.preview_hunk_inline, 'Preview inline' },
                 r = { gs.reset_hunk, 'Reset' },
                 s = { gs.stage_hunk, 'Stage' },
                 u = { gs.undo_stage_hunk, 'Unstage' },
