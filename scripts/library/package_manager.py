@@ -26,7 +26,7 @@ class AptGet(Install):
 
 
 class Nix(Install):
-    CMD = "nix-env -i"
+    CMD = "nix-env -iA"
 
     def __init__(self, packages, args=None):
         args = args or []
@@ -34,6 +34,11 @@ class Nix(Install):
         # rest of the system may be compromised
         env = dict(os.environ, LD_LIBRARY_PATH="", LD_PRELOAD="")
         for p in packages:
+            if "." not in p:
+                # We use --attr option, thus package names should be attribute paths.
+                # If there is no dot in the name, we assume that this package comes
+                # from Nixpkgs.
+                p = "nixpkgs." + p
             cmd = self.CMD + " " + p + " " + " ".join(args)
             subprocess.check_call(cmd.split(), env=env)
 
