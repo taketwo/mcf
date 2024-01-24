@@ -1,2 +1,2 @@
 ncat
-nix: pandoc-cli
+nix: pandoc
