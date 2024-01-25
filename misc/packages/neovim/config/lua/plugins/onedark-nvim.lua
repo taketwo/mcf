@@ -16,6 +16,8 @@ return {
         IlluminatedWordText = { fmt = 'bold' },
         IlluminatedWordRead = { fmt = 'bold' },
         IlluminatedWordWrite = { fmt = 'bold' },
+        MatchParen = { fg = '$red', bg = 'none', fmt = 'bold' }, -- Matching parenthesis
+        MatchWord = { fg = 'none', bg = 'none', fmt = 'nocombine' }, -- Matching word/tag (disable highlighting)
         NeoTreeIndentMarker = { fg = '$grey' },
         NeoTreeExpander = { fg = '$grey' },
         NeoTreeModified = { fg = '$orange' },
