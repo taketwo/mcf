@@ -12,6 +12,7 @@ Diagnostics:
       - readability-*
     Remove:
       - bugprone-easily-swappable-parameters
+      - bugprone-unchecked-optional-access # too many false positives, may re-enable if the rules are improved in the future
       - cppcoreguidelines-pro-bounds-array-to-pointer-decay # too much noise because ROS logging macros decay arrays to pointers
       - cppcoreguidelines-pro-type-union-access # too much noise because PCL uses unions in point types
       - cppcoreguidelines-pro-type-vararg # too much noise because ROS logging macros use vararg
