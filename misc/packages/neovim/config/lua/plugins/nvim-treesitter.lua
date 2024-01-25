@@ -55,9 +55,6 @@ return {
         enable = true,
         disable = { 'cpp' }, -- currently misbehaving
       },
-      playground = {
-        enable = true,
-      },
       incremental_selection = {
         enable = true,
         keymaps = {
