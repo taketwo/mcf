@@ -64,6 +64,10 @@ return {
           node_decremental = '+',
         },
       },
+      matchup = {
+        enable = true,
+        disable_virtual_text = true,
+      },
       textobjects = {
         select = { enable = false },
         swap = {
