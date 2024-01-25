@@ -47,6 +47,7 @@ return {
         'toml',
         'vim',
         'vimdoc',
+        'xml',
         'yaml',
       },
       highlight = { enable = true },
