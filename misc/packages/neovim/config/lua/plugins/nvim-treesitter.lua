@@ -33,6 +33,7 @@ return {
         'haskell',
         'hcl', -- for Terraform files
         -- 'hjson', seems to be broken, using a plugin instead
+        'html',
         'json',
         'jsonc',
         'lua',
