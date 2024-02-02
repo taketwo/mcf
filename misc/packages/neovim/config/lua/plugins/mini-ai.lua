@@ -8,7 +8,7 @@ return {
       return {
         n_lines = 500,
         custom_textobjects = {
-          A = ai.gen_spec.treesitter({ a = '@assigment.outer', i = '@assigment.inner' }, {}),
+          A = ai.gen_spec.treesitter({ a = '@assignment.outer', i = '@assignment.inner' }, {}),
           o = ai.gen_spec.treesitter({
             a = { '@block.outer', '@conditional.outer', '@loop.outer' },
             i = { '@block.inner', '@conditional.inner', '@loop.inner' },
