@@ -69,7 +69,7 @@ if [ -f "${HOME}/.bashrc.local" ]; then
   timed_source "${HOME}/.bashrc.local"
 fi
 
-unset scrits
+unset scripts
 unset sorted
 unset timed_source
 unset bash_times_file
