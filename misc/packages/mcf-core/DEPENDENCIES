@@ -45,7 +45,7 @@ tree
 nix: fd
 nix: ripgrep
 nix: hexyl                             # for hex command
-nix: zoxide                            # quick jumping between directories
+zoxide                                 # quick jumping between directories
 nix: duf                               # df replacement to check disk usage
 ncdu
 

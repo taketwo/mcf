@@ -1,1 +1,0 @@
-../71-zoxide.bash
