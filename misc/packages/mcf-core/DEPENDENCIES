@@ -24,7 +24,7 @@ lnav                                   # log viewer
 
 # Terminal
 tmux
-powerline-shell
+starship
 bash-completion
 fzf
 xsel                                   # copy to clipboard
