@@ -1,0 +1,142 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# TODO: Check the modules from $docker_context onwards and remove the ones that are not needed
+# TODO: Remove powerline-shell once starship is fully configured
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$docker_context\
+$package\
+$c\
+$cmake\
+$cobol\
+$daml\
+$dart\
+$deno\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$fennel\
+$golang\
+$guix_shell\
+$haskell\
+$haxe\
+$helm\
+$java\
+$julia\
+$kotlin\
+$gradle\
+$lua\
+$nim\
+$nodejs\
+$ocaml\
+$opa\
+$perl\
+$php\
+$pulumi\
+$purescript\
+$python\
+$raku\
+$rlang\
+$red\
+$ruby\
+$rust\
+$scala\
+$solidity\
+$swift\
+$terraform\
+$typst\
+$vlang\
+$vagrant\
+$zig\
+$buf\
+$nix_shell\
+$conda\
+$meson\
+$spack\
+$memory_usage\
+$aws\
+$gcloud\
+$openstack\
+$azure\
+$direnv\
+$env_var\
+$crystal\
+$custom\
+$sudo\
+$cmd_duration\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$os\
+$container\
+$shell\
+$character"""
+
+palette = 'onedark_warmer'
+
+[palettes.onedark_warmer]
+# Colors taken from onedark.nvim
+color_black = "#101012"
+color_bg0 = "#232326"
+color_bg1 = "#2c2d31"
+color_bg2 = "#35363b"
+color_bg3 = "#37383d"
+color_bg_d = "#1b1c1e"
+color_bg_blue = "#68aee8"
+color_bg_yellow = "#e2c792"
+color_fg = "#a7aab0"
+color_purple = "#bb70d2"
+color_green = "#8fb573"
+color_orange = "#c49060"
+color_blue = "#57a5e5"
+color_yellow = "#dbb671"
+color_cyan = "#51a8b3"
+color_red = "#de5d68"
+color_gray = "#5a5b5e"
+color_light_gray = "#818387"
+color_dark_cyan = "#2b5d63"
+color_dark_red = "#833b3b"
+color_dark_yellow = "#7c5c20"
+color_dark_purple = "#79428a"
+color_diff_add = "#282b26"
+color_diff_delete = "#2a2626"
+color_diff_change = "#1a2a37"
+color_diff_text = "#2c485f"
+# Aliases
+color_git_status_bg = "#37383d" # bg3
+
+[username]
+format = "[$user]($style) on " # default format uses "in" preposition
+
+[hostname]
+# TODO: Consider removing the icon
+
+[git_status]
+# NOTE: The change type (added, modified, renamed) is not important to me, I would prefer to only
+# see the status type (staged, unstaged, untracked). Unfortunately, this is not possible. The
+# following PR will probably add the necessary features: https://github.com/starship/starship/pull/5655
+format = """(\
+  [](fg:color_git_status_bg)\
+  [$ahead_behind$stashed$conflicted$deleted$renamed$staged$modified$untracked ](bg:color_git_status_bg)\
+  [](fg:color_git_status_bg) \
+)"""
+ahead = '[$count⇡](fg:color_fg bg:color_git_status_bg)'
+behind = '[$count⇣](fg:color_fg bg:color_git_status_bg)'
+diverged = '[${ahead_count}⇡${behind_count}⇣](fg:color_fg bg:color_git_status_bg)'
+stashed = '[ 󰏗 ](fg:color_yellow bg:color_git_status_bg)'
+conflicted = '[](fg:color_yellow bg:color_git_status_bg)'
+deleted = '[](fg:color_purple bg:color_git_status_bg)'
+renamed = '[](fg:color_purple bg:color_git_status_bg)'
+staged = '[](fg:color_green bg:color_git_status_bg)'
+modified = '[](fg:color_yellow bg:color_git_status_bg)'
+untracked = '[](fg:color_red bg:color_git_status_bg)'

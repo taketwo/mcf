@@ -1,0 +1,2 @@
+starship.bash:.local/bash/91-starship.bash:Starship setup
+starship.toml:.config/starship.toml:Starship config
