@@ -140,3 +140,8 @@ renamed = '[](fg:color_purple bg:color_git_status_bg)'
 staged = '[](fg:color_green bg:color_git_status_bg)'
 modified = '[](fg:color_yellow bg:color_git_status_bg)'
 untracked = '[](fg:color_red bg:color_git_status_bg)'
+
+[character]
+# NOTE: The very last character is a non-breaking space to enable the Tmux prompt jump trick.
+# Credits: https://www.youtube.com/watch?v=uglorjY0Ntg
+format = '$symbol '
