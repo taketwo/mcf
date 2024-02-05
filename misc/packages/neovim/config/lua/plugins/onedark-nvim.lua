@@ -8,6 +8,10 @@ return {
       transparent = true,
       highlights = {
         Search = { fg = 'none', bg = 'none', fmt = 'bold,underline' },
+        -- The highlight below changes the background of inactive Neovim windows in the same way as it does with inactive
+        -- Tmux panes. On one hand, this is useful to understand which window is active. On the other hand, it destroys the
+        -- visual consistency of floating windows (such as Telescope). Therefore, it is commented out.
+        -- NormalNC = { fg = 'none', bg = '$bg1' },
         CurSearch = { fg = 'none', bg = 'none', fmt = 'bold,underline' },
         IncSearch = { fg = 'none', bg = 'none', fmt = 'bold,underline,standout' },
         CursorLineNr = { fmt = 'bold' },
