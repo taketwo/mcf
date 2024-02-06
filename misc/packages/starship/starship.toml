@@ -1,6 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# TODO: Check the modules from $docker_context onwards and remove the ones that are not needed
+# TODO: Check the modules from $scala onwards and remove the ones that are not needed
 # TODO: Remove powerline-shell once starship is fully configured
 
 format = """
@@ -11,43 +11,8 @@ $git_branch\
 $git_commit\
 $git_state\
 $git_status\
-$docker_context\
 $package\
-$c\
-$cmake\
-$cobol\
-$daml\
-$dart\
-$deno\
-$dotnet\
-$elixir\
-$elm\
-$erlang\
-$fennel\
-$golang\
-$guix_shell\
-$haskell\
-$haxe\
-$helm\
-$java\
-$julia\
-$kotlin\
-$gradle\
-$lua\
-$nim\
-$nodejs\
-$ocaml\
-$opa\
-$perl\
-$php\
-$pulumi\
-$purescript\
 $python\
-$raku\
-$rlang\
-$red\
-$ruby\
-$rust\
 $scala\
 $solidity\
 $swift\
@@ -140,6 +105,14 @@ renamed = '[](fg:color_purple bg:color_git_status_bg)'
 staged = '[](fg:color_green bg:color_git_status_bg)'
 modified = '[](fg:color_yellow bg:color_git_status_bg)'
 untracked = '[](fg:color_red bg:color_git_status_bg)'
+
+[python]
+# We do not use Python 2, so we do not need it in the list
+python_binary = ['python', 'python3']
+# Disable file and folder detection, effectively show the module only when a virtual environment is active
+detect_extensions = []
+detect_files = []
+detect_folders = []
 
 [character]
 # NOTE: The very last character is a non-breaking space to enable the Tmux prompt jump trick.
