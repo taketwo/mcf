@@ -1,8 +1,5 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# TODO: Check the modules from $scala onwards and remove the ones that are not needed
-# TODO: Remove powerline-shell once starship is fully configured
-
 format = """
 $username\
 $hostname\
@@ -13,38 +10,11 @@ $git_state\
 $git_status\
 $package\
 $python\
-$scala\
-$solidity\
-$swift\
-$terraform\
-$typst\
-$vlang\
-$vagrant\
-$zig\
-$buf\
 $nix_shell\
-$conda\
-$meson\
-$spack\
-$memory_usage\
-$aws\
-$gcloud\
-$openstack\
-$azure\
-$direnv\
-$env_var\
-$crystal\
-$custom\
-$sudo\
 $cmd_duration\
 $line_break\
 $jobs\
-$battery\
-$time\
-$status\
-$os\
 $container\
-$shell\
 $character"""
 
 palette = 'onedark_warmer'
@@ -84,7 +54,8 @@ color_git_status_bg = "#37383d" # bg3
 format = "[$user]($style) on " # default format uses "in" preposition
 
 [hostname]
-# TODO: Consider removing the icon
+ssh_symbol = ""
+style = "color_green bold"
 
 [git_status]
 # NOTE: The change type (added, modified, renamed) is not important to me, I would prefer to only
@@ -113,6 +84,12 @@ python_binary = ['python', 'python3']
 detect_extensions = []
 detect_files = []
 detect_folders = []
+
+[jobs]
+symbol = "✦ " # with extra space on the right such that it does not overlap with the optional number
+
+[container]
+style = "color_blue"
 
 [character]
 # NOTE: The very last character is a non-breaking space to enable the Tmux prompt jump trick.
