@@ -5,15 +5,29 @@ return {
     -- specific filetypes. We need to disable lazy loading to ensure that the ftplugins are loaded.
     lazy = false,
     keys = function()
-      local keys = {
-        { '<BS>', '<Plug>(PearTreeBackspace)', desc = 'Delete character before cursor' },
-        { '<CR>', '<Plug>(PearTreeExpand)', desc = 'Begin new line' },
-        { '<Space>', '<Plug>(PearTreeSpace)', desc = 'Insert space' },
-        { '<C-s>', '<Plug>(PearTreeJump)', desc = 'Jump past closing pair' },
+      -- We need to map special keys to <Plug>(PearTreeXXX) mappings. The difficulty is that in
+      -- the TelescopePrompt buffers, such mappings will not be available. As a workaround, we
+      -- let the keys call the underlying plugin functions directly, without going through the
+      -- <Plug>(PearTreeXXX) mappings. The carrespondence between the mappings and the plugin
+      -- functions is based on the PearTree source code:
+      --     https://github.com/tmsvg/pear-tree/blob/3bb209d9637d6bd7506040b2fcd158c9a7917db3/plugin/pear-tree.vim#L132-L138
+      local _keys = {
+        { '<BS>', 'Backspace', 'Delete character before cursor' },
+        { '<CR>', 'PrepareExpansion', 'Begin new line' },
+        { '<Space>', 'Space', 'Insert space' },
+        { '<C-s>', 'JumpOut', 'Jump past closing pair' },
       }
-      for _, key in ipairs(keys) do
-        key.mode = 'i'
-        key.ft = '!TelescopePrompt'
+      local keys = {}
+      for _, key in ipairs(_keys) do
+        table.insert(keys, {
+          key[1],
+          function() return vim.fn['pear_tree#insert_mode#' .. key[2]]() end,
+          desc = key[3],
+          mode = 'i',
+          expr = true,
+          replace_keycodes = false,
+          silent = true,
+        })
       end
       return keys
     end,
