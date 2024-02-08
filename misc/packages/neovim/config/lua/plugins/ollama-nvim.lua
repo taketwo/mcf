@@ -21,6 +21,6 @@ return {
     },
   },
   opts = {
-    model = 'stable-code',
+    model = 'codellama:7b-instruct',
   },
 }
