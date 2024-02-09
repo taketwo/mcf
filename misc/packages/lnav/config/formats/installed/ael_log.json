@@ -1,0 +1,40 @@
+{
+  "$schema": "https://lnav.org/schemas/format-v1.schema.json",
+  "ael_log": {
+    "title": "Ael",
+    "description": "Ael log format",
+    "file-pattern": ".*.log",
+    "regex": {
+      "nodelet": {
+        "pattern": "(?P<timestamp>[\\d.]+)(, [\\d.]+)?: (?P<level>\\w+)\\s+: (?P<thread>\\d+)\\s+: (?P<nodelet>\\w+)(\\.(?P<component>\\w+))?\\s+: (?P<body>.+)"
+      }
+    },
+    "level": {
+      "critical": "Critical",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Default|Detailed",
+      "debug": "Kilo|Mego|Giga|Debug"
+    },
+    "value": {
+      "nodelet": {
+        "kind": "string",
+        "identifier": true
+      },
+      "component": {
+        "kind": "string",
+        "identifier": true
+      }
+    },
+    "sample": [
+      {
+        "line": "1707469042.565558274, 0000000.0000: Default   : 765751 : rgb_debug_fps_limiter          : subscribe to: /head_camera/image_raw",
+        "level": "info"
+      },
+      {
+        "line": "1707469473.592943645, 0000421.2025: Error     : 765722 : voxel_map.measurement_updater  : Lookup would require extrapolation 1.583582600s into the future.",
+        "level": "error"
+      }
+    ]
+  }
+}
