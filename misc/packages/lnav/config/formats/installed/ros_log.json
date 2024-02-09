@@ -12,6 +12,13 @@
         "pattern": "(?P<timestamp>[\\d.]+) ((?P<level>\\w+)? (?P<node>\\/\\w+) \\[(?P<line>.+)\\] \\[(?P<topics>.+)\\])? (?P<message>.+)"
       }
     },
+    "level": {
+      "fatal": "FATAL",
+      "error": "ERROR",
+      "warning": "WARNING",
+      "info": "INFO",
+      "debug": "DEBUG"
+    },
     "sample": [
       {
         "line": "[ INFO] [1681808007.993209499]: Door handle modeling tool node is up. Awaiting \"~model_door_handle\" service call.",
