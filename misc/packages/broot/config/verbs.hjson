@@ -41,7 +41,6 @@ verbs: [
     }
 
     # Leave Broot and enter the selected directory
-    # Note that we cannot use internal "cd" due to a bug (https://github.com/Canop/broot/issues/365)
     {
         key: enter
         external: "cd {directory}"
