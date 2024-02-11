@@ -23,7 +23,6 @@ return {
           ['.'] = { name = 'Telescope' },
           f = { name = 'Filename' },
           g = { name = 'Git' },
-          l = { name = 'LSP' },
           s = { name = 'Shift/swap object' },
           u = { name = 'Toggle buffer options' },
         },

@@ -8,6 +8,7 @@ return {
           defaults = {
             ['<Leader>c'] = {
               name = 'Change case',
+              mode = { 'n', 'v' },
               o = { name = 'Operator' },
               r = { name = 'Rename with LSP' },
             },

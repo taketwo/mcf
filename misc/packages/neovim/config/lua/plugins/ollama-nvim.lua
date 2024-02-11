@@ -1,7 +1,18 @@
 return {
   'nomnivore/ollama.nvim',
   dependencies = {
-    'nvim-lua/plenary.nvim',
+    { 'nvim-lua/plenary.nvim' },
+    {
+      'folke/which-key.nvim',
+      opts = {
+        defaults = {
+          ['<Leader>o'] = {
+            name = 'Ollama',
+            mode = { 'n', 'v' },
+          },
+        },
+      },
+    },
   },
   cmd = { 'Ollama', 'OllamaModel' },
   keys = {
@@ -9,14 +20,14 @@ return {
     {
       '<leader>oo',
       ":<c-u>lua require('ollama').prompt()<cr>",
-      desc = 'ollama prompt',
+      desc = 'Prompt',
       mode = { 'n', 'v' },
     },
     -- Sample keybind for direct prompting. Note that the <c-u> is important for selections to work properly.
     {
       '<leader>oG',
       ":<c-u>lua require('ollama').prompt('Generate_Code')<cr>",
-      desc = 'ollama Generate Code',
+      desc = 'Generate Code',
       mode = { 'n', 'v' },
     },
   },

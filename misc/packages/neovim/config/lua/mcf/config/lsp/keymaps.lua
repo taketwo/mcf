@@ -68,6 +68,12 @@ M._keys = {
 }
 
 function M.on_attach(client, buffer)
+  require('which-key').register({
+    ['<Leader>l'] = {
+      name = 'LSP',
+      mode = { 'n', 'v' },
+    },
+  }, { buffer = buffer })
   for _, keys in ipairs(M._keys) do
     if
       not keys.has

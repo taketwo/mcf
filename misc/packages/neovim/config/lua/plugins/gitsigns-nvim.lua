@@ -11,7 +11,7 @@ return {
               name = 'Git',
               d = { gs.toggle_deleted, 'Toggle deleted lines' },
               h = {
-                name = '+Hunks',
+                name = 'Hunks',
                 d = { gs.diffthis, 'Diff' },
                 p = { gs.preview_hunk_inline, 'Preview inline' },
                 r = { gs.reset_hunk, 'Reset' },
