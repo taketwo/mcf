@@ -3,17 +3,17 @@
   "ael_log": {
     "title": "Ael",
     "description": "Ael log format",
-    "file-pattern": ".*.log",
+    "file-pattern": ".*\\.(log|txt)",
     "regex": {
       "nodelet": {
-        "pattern": "(?P<timestamp>[\\d.]+)(, [\\d.]+)?: (?P<level>\\w+)\\s+: (?P<thread>\\d+)\\s+: (?P<nodelet>\\w+)(\\.(?P<component>\\w+))?\\s+: (?P<body>.+)"
+        "pattern": "(?P<timestamp>[\\d.]+)(, [\\d.]+)?: (?P<level>\\w+)\\s+: (?P<thread>\\d+)\\s+: (?P<nodelet>[\\w.]+)\\s+: (?P<body>.*)"
       }
     },
     "level": {
       "critical": "Critical",
       "error": "Error",
       "warning": "Warning",
-      "info": "Default|Detailed",
+      "info": "Default|Detailed|Setup",
       "debug": "Kilo|Mego|Giga|Debug"
     },
     "value": {
@@ -34,6 +34,18 @@
       {
         "line": "1707469473.592943645, 0000421.2025: Error     : 765722 : voxel_map.measurement_updater  : Lookup would require extrapolation 1.583582600s into the future.",
         "level": "error"
+      },
+      {
+        "line": "1707735461.414988591: Default   : 61866 : xyz                            : ",
+        "level": "info"
+      },
+      {
+        "line": "1707735462.042198461: Setup     : 61866 : lanning.planning_scene.manager : PlanningSceneManager: External planning scene mode",
+        "level": "info"
+      },
+      {
+        "line": "1707735517.529552597: Warning   : 62937 : .task.collision_avoidance_task : ComputeTrajectory: UMP locked joints",
+        "level": "warning"
       }
     ]
   }
