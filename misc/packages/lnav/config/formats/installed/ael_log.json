@@ -20,10 +20,6 @@
       "nodelet": {
         "kind": "string",
         "identifier": true
-      },
-      "component": {
-        "kind": "string",
-        "identifier": true
       }
     },
     "sample": [
