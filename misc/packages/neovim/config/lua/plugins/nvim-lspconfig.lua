@@ -85,6 +85,12 @@ return {
           },
         },
         taplo = {},
+        typos_lsp = {
+          init_options = {
+            -- Assign 'warning' severity to discovered typos
+            diagnosticSeverity = 'Warning',
+          },
+        },
         yamlls = {
           settings = {
             redhat = {

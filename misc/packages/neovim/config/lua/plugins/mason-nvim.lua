@@ -19,6 +19,7 @@ return {
         'shfmt',
         'stylua',
         'taplo',
+        'typos-lsp',
         'usort',
         'yaml-language-server',
       },
