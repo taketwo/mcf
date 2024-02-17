@@ -19,6 +19,7 @@ return {
       { '<Leader>.s', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Jump to symbol' },
       { '<Leader>.S', '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', desc = 'Jump to symbol (workspace)' },
       { '<Leader>lr', '<cmd>Telescope lsp_references<cr>', desc = 'References' },
+      { '<Leader>gC', '<cmd>Telescope git_branches<cr>', desc = 'Check out branch' },
       { '<Leader>gl', '<cmd>Telescope git_bcommits<cr>', desc = 'Log (buffer only)' },
       { '<Leader>gL', '<cmd>Telescope git_commits<cr>', desc = 'Log (everything)' },
       { '<Leader>gS', '<cmd>Telescope git_status<cr>', desc = 'Status' },
