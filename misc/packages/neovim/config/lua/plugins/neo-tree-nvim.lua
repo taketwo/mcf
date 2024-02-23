@@ -42,15 +42,6 @@ return {
         follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
         filtered_items = { visible = true },
-        commands = {
-          copy_path = function(state)
-            local node = state.tree:get_node()
-            if node then
-              vim.fn.setreg('*', node.path)
-              vim.notify('Copied ' .. node.path .. ' path to clipboard')
-            end
-          end,
-        },
       },
       window = {
         mappings = {
@@ -59,7 +50,11 @@ return {
           ['t'] = 'none', -- do not map anything such that it functions as down
           ['h'] = 'close_node',
           ['n'] = 'open',
-          ['Y'] = 'copy_path',
+          ['Y'] = function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            vim.fn.setreg('+', path, 'c')
+          end,
         },
       },
       default_component_configs = {
