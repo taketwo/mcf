@@ -33,9 +33,7 @@ return {
         python = { 'black', 'usort' },
         sh = { 'shfmt' },
         xml = { 'xmllint' },
-        -- NOTE: We would like to use gersemi as the primary formatter for CMake, but conform.nvim
-        -- does not support it yet.
-        -- cmake = { 'gersemi' },
+        cmake = { 'gersemi' },
       },
       formatters = {
         injected = { options = { ignore_errors = true } },
