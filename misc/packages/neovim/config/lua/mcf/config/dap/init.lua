@@ -12,6 +12,7 @@ function M.setup()
   -- TODO: Investigate what else is possible with dap-ui
   dapui.setup()
   dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+  dap.listeners.after.event_initialized['mcf'] = vim.diagnostic.disable
   dap.listeners.after.event_initialized['keymaps'] = require('config.dap.keymaps').setup
   dap.listeners.before.event_terminated['dapui_config'] = dapui.close
   dap.listeners.before.event_exited['dapui_config'] = dapui.close
