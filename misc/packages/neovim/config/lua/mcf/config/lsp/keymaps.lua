@@ -69,6 +69,9 @@ M._keys = {
   { '<Leader>ui', function() Util.toggle.inlay_hints() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
+-- Do not set LSP keymaps for these filetypes
+M._filetype_blacklist = { 'ctrlsf' }
+
 function M.on_attach(client, buffer)
   require('which-key').register({
     ['<Leader>l'] = {
@@ -76,6 +79,7 @@ function M.on_attach(client, buffer)
       mode = { 'n', 'v' },
     },
   }, { buffer = buffer })
+  if vim.tbl_contains(M._filetype_blacklist, vim.bo.filetype) then return end
   for _, keys in ipairs(M._keys) do
     if
       not keys.has
