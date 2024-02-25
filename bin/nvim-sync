@@ -1,62 +1,91 @@
 #!/usr/bin/env bash
 
-# Synchronize the state of Neovim plugins
-
 LOCK_REPO_NAME="mcf-nvim-lock"
 LOCK_REPO_URI="git@gitlab.com:taketwo/$LOCK_REPO_NAME.git"
 LOCK_REPO_PATH="$MCF/external/$LOCK_REPO_NAME"
-
-# Clone or pull the external repository
-if [ ! -d "$LOCK_REPO_PATH" ]; then
-  echo "Lock repository not found, cloning"
-  git clone "$LOCK_REPO_URI" "$LOCK_REPO_PATH"
-else
-  echo "Lock repository found, pulling latest changes"
-  if ! git -C "$LOCK_REPO_PATH" pull; then
-    echo "Git pull failed, aborting"
-    exit 1
-  fi
-fi
-
-# Copy the lock file to the local repository
 LAZY_LOCK_FILE_NAME="lazy-lock.json"
 LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
 LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 
-# Restore the state of Neovim plugins. Retry up to 3 times before giving up.
-retries_left=3
-until [ $retries_left -le 0 ]; do
-  echo "Restoring the state of Neovim plugins"
-  cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
-  nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
-  echo "" # TSUpdateSync always prints a message without newline, so we add one
-  if diff --brief "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" >/dev/null; then
-    echo "Restoration succeeded"
-    break
-  else
-    retries_left=$((retries_left - 1))
-    if [ $retries_left -gt 0 ]; then
-      echo "Lock file has changed while executing restore command, retrying"
-    else
-      echo "Restoration failed after 3 retries"
-      echo "List of plugins that failed to be updated:"
-      diff --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" | sed 's/:.*//' | sed 's/"//g'
-      exit 2
-    fi
+# Restore the state of Neovim plugins according to the latest remote lock file
+function restore() {
+  echo "Fetching the latest lock file from the remote repository"
+  if ! git -C "$LOCK_REPO_PATH" fetch; then
+    echo "Git fetch failed, aborting"
+    exit 1
   fi
-done
+  git -C "$LOCK_REPO_PATH" reset --hard origin/main
+  retries_left=3
+  until [ $retries_left -le 0 ]; do
+    echo "Restoring the state of Neovim plugins"
+    cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
+    nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
+    echo "" # TSUpdateSync always prints a message without newline, so we add one
+    if diff --brief "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" >/dev/null; then
+      echo "Restoration succeeded"
+      break
+    else
+      retries_left=$((retries_left - 1))
+      if [ $retries_left -gt 0 ]; then
+        echo "Lock file has changed while executing restore command, retrying"
+      else
+        echo "Restoration failed after 3 retries"
+        echo "List of plugins that failed to be updated:"
+        diff --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" | sed 's/:.*//' | sed 's/"//g'
+        exit 2
+      fi
+    fi
+  done
+}
 
-if [ "$1" = "--update" ]; then
+# Update Neovim plugins
+function update() {
   echo "Launching Neovim to update plugins"
   nvim -c 'autocmd User VeryLazy Lazy check'
+}
+
+# Commit changes in the local lock file and push to the remote repository
+function commit() {
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
   # Check if the lock file has changed
   if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
     echo "Lock file has changed, committing and pushing changes"
     git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
     git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME" -m "Host: $(hostname -s)"
-    git -C "$LOCK_REPO_PATH" push
+    git -C "$LOCK_REPO_PATH" push --force
   else
-    echo "Lock file has not changed"
+    echo "Lock file has not changed, nothing to commit"
   fi
+}
+
+# Clone or pull the external repository
+if [ ! -d "$LOCK_REPO_PATH" ]; then
+  echo "Lock repository not found, cloning"
+  git clone "$LOCK_REPO_URI" "$LOCK_REPO_PATH"
+fi
+
+# Execute operations requested through positional arguments
+# If no arguments are provided, execute restore, update, and commit in sequence
+if [ $# -eq 0 ]; then
+  restore
+  update
+  commit
+else
+  for arg in "$@"; do
+    case $arg in
+      restore)
+        restore
+        ;;
+      update)
+        update
+        ;;
+      commit)
+        commit
+        ;;
+      *)
+        echo "Unknown operation: $arg"
+        exit 3
+        ;;
+    esac
+  done
 fi
