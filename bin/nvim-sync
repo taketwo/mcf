@@ -22,22 +22,29 @@ fi
 LAZY_LOCK_FILE_NAME="lazy-lock.json"
 LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
 LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
-cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
 
-echo "Restoring the state of Neovim plugins"
-nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
-echo "" # TSUpdateSync always prints a message without newline, so we add one
-
-# After restore command has finished, the lock file should remain the same
-# If it is not the same, it means that there was an issue during restoration
-if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
-  echo "Lock file has changed while executing restore command, this indicates there was an issue"
-  echo "Lock file diff:"
-  git -C "$LOCK_REPO_PATH" diff "$LAZY_LOCK_FILE_NAME"
-  exit 2
-else
-  echo "Restoration succeeded"
-fi
+# Restore the state of Neovim plugins. Retry up to 3 times before giving up.
+retries_left=3
+until [ $retries_left -le 0 ]; do
+  echo "Restoring the state of Neovim plugins"
+  cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
+  nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
+  echo "" # TSUpdateSync always prints a message without newline, so we add one
+  if diff --brief "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" >/dev/null; then
+    echo "Restoration succeeded"
+    break
+  else
+    retries_left=$((retries_left - 1))
+    if [ $retries_left -gt 0 ]; then
+      echo "Lock file has changed while executing restore command, retrying"
+    else
+      echo "Restoration failed after 3 retries"
+      echo "List of plugins that failed to be updated:"
+      diff --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" | sed 's/:.*//' | sed 's/"//g'
+      exit 2
+    fi
+  fi
+done
 
 if [ "$1" = "--update" ]; then
   echo "Launching Neovim to update plugins"
