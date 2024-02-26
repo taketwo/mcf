@@ -16,6 +16,8 @@ return {
     keys = {
       { '<Leader>re', '<cmd>Telescope ros ed<cr>', desc = 'Open file in package' },
       { '<Leader>rm', '<cmd>Telescope ros msg<cr>', desc = 'Open message' },
+      { '<Leader>rs', '<cmd>Telescope ros srv<cr>', desc = 'Open service' },
+      { '<Leader>ra', '<cmd>Telescope ros action<cr>', desc = 'Open action' },
     },
     opts = {
       log_level = 'trace',
