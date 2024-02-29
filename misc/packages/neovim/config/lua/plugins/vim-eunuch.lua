@@ -13,5 +13,6 @@ return {
       'SudoEdit',
       'SudoWrite',
     },
+    init = function() vim.g.eunuch_no_maps = 1 end,
   },
 }
