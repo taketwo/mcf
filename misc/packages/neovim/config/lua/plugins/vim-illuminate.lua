@@ -17,6 +17,7 @@ return {
       filetypes_denylist = {
         'magit',
         'markdown',
+        'neo-tree',
       },
     },
     config = function(_, opts) require('illuminate').configure(opts) end,
