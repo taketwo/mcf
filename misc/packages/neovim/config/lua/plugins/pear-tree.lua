@@ -14,7 +14,6 @@ return {
       local _keys = {
         { '<BS>', 'Backspace', 'Delete character before cursor' },
         { '<CR>', 'PrepareExpansion', 'Begin new line' },
-        { '<Space>', 'Space', 'Insert space' },
         { '<C-s>', 'JumpOut', 'Jump past closing pair' },
       }
       local keys = {}
