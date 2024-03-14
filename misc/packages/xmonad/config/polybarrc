@@ -58,10 +58,6 @@ modules-left = xmonad network-speed-eth network-speed-wlan
 modules-center = 
 modules-right = mpd volume keyboard network-connectivity-eth network-connectivity-wlan gmail battery0 battery1 date
 
-tray-position = center
-tray-padding = 2
-tray-background = ${self.background}
-
 override-redirect = true
 
 enable-ipc = true
