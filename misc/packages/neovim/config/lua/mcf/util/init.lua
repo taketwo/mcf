@@ -1,14 +1,12 @@
--- Dispatch to Lazy and LazyVim utils
--- If not found, try to load from mcf/util
-
-local LazyUtil = require('lazyvim.util')
+-- Dispatches calls to corresponding LazyVim utils
+-- If not found, tries to load from mcf/util
 
 ---@class mcf.util: lazyvim.util
 local M = {}
 
 setmetatable(M, {
   __index = function(t, k)
-    if LazyUtil[k] then return LazyUtil[k] end
+    if LazyVim[k] then return LazyVim[k] end
     ---@diagnostic disable-next-line: no-unknown
     t[k] = require('mcf.util.' .. k)
     return t[k]

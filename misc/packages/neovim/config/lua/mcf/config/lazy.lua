@@ -14,11 +14,14 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   spec = {
     -- We are only interested in the utility functions and built-in plugins that come with LazyVim.
-    -- We want to be able to use them in our config and plugin specifications, thus LazyVime comes
+    -- We want to be able to use them in our config and plugin specifications, thus LazyVim comes
     -- before importing our plugins.
     {
       'LazyVim/LazyVim',
-      config = function() end, -- empty setup function to prevent loading the entire LazyVim config
+      config = function()
+        -- Not running the complete LazyVim setup as we are only interested in the utility functions
+        _G.LazyVim = require('lazyvim.util')
+      end,
       submodules = false, -- do not waste time cloning and updating submodules that we do not use
     },
     { import = 'plugins' },
