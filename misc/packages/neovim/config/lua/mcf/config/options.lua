@@ -4,7 +4,10 @@ vim.g.maplocalleader = '\\'
 local opt = vim.opt
 
 opt.autowrite = true -- Automatically save before e.g. :make
-opt.clipboard = 'unnamedplus' -- Sync with system clipboard
+if not vim.env.SSH_TTY then
+  -- Only set clipboard if not in SSH to make sure the OSC 52 integration works automatically
+  opt.clipboard = 'unnamedplus' -- Sync with system clipboard
+end
 opt.completeopt = 'menu,menuone,noselect,popup'
 opt.conceallevel = 3 -- Hide * markup for bold and italic                            -- TODO: Good idea?
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
