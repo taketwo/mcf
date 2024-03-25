@@ -60,6 +60,9 @@ return {
               workspace = {
                 checkThirdParty = 'Disable',
               },
+              codeLens = {
+                enable = false,
+              },
               completion = {
                 callSnippet = 'Replace',
               },
