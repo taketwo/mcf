@@ -50,11 +50,14 @@ return {
           ['t'] = 'none', -- do not map anything such that it functions as down
           ['h'] = 'close_node',
           ['n'] = 'open',
-          ['Y'] = function(state)
-            local node = state.tree:get_node()
-            local path = node:get_id()
-            vim.fn.setreg('+', path, 'c')
-          end,
+          ['Y'] = {
+            function(state)
+              local node = state.tree:get_node()
+              local path = node:get_id()
+              vim.fn.setreg('+', path, 'c')
+            end,
+            desc = 'copy_path_to_clipboard',
+          },
         },
       },
       default_component_configs = {
