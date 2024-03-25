@@ -73,6 +73,8 @@
   syntax-theme = TwoDark
 [rerere]
   enabled = true
+[rebase]
+  autostash = true
 [filter "lfs"]
   required = true
   clean = git-lfs clean -- %f
