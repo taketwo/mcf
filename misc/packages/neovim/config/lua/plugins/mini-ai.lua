@@ -16,6 +16,7 @@ return {
           f = ai.gen_spec.treesitter({ a = '@function.outer', i = '@function.inner' }, {}),
           c = ai.gen_spec.treesitter({ a = '@class.outer', i = '@class.inner' }, {}),
           C = ai.gen_spec.treesitter({ a = '@comment.outer', i = '@comment.inner' }, {}),
+          d = { '%f[%d]%d+' },
         },
       }
     end,
@@ -41,6 +42,7 @@ return {
         b = 'Balanced ), ], }',
         c = 'Class',
         C = 'Comment',
+        d = 'Digits',
         f = 'Function',
         o = 'Block, conditional, loop',
         q = 'Quote `, ", \'',
