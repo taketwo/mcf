@@ -56,6 +56,7 @@
   fontdiff = -family \"VictorMono Nerd Font\" -size 10 -weight normal -slant roman -underline 0 -overstrike 0
 [diff]
   colorMoved = default
+  algorithm = histogram
   submodule = log
 [merge]
   tool = diffconflicts
