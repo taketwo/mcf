@@ -1,1 +1,2 @@
 config.json:.config/bob/config.json:Bob config file
+$HOME/.cargo/bin/bob:.local/bin/bob:Bob executable
