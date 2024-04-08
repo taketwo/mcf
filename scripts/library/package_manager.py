@@ -106,13 +106,23 @@ class Eget(Install):
             subprocess.check_call(cmd.split())
 
 
+class Cargo(Install):
+    CMD = "cargo install"
+
+    def __init__(self, packages, args=None):
+        args = args or []
+        for p in packages:
+            cmd = self.CMD + " " + p + " " + " ".join(args)
+            subprocess.check_call(cmd.split())
+
+
 # A dictionary mapping manager names to classes. The insertion order matters, we
 # want to install with the main system manager first and with secondary managers
 # (e.g. Cabal) last.
 INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
-INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal, "eget": Eget})
+INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal, "eget": Eget, "cargo": Cargo})
 
 
 class PackageManager:

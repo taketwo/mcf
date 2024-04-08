@@ -88,6 +88,10 @@ else:
     print("")
     pm.install("nix: eget", verbose=True)
 
+    print("[*] Install Cargo")
+    print("")
+    pm.install("nix: cargo", verbose=True)
+
     print("[*] Install MCF")
     print("")
 
