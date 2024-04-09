@@ -26,6 +26,9 @@ return {
     opts = {
       format = {
         timeout_ms = 3000,
+        async = false,
+        quiet = false,
+        lsp_fallback = true,
       },
       log_level = vim.log.levels.DEBUG,
       formatters_by_ft = {
