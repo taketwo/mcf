@@ -1,3 +1,4 @@
 {
-  "enable_nightly_info": true
+  "enable_nightly_info": true,
+  "installation_location": "$HOME/.local/bin"
 }
