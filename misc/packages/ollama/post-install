@@ -8,6 +8,8 @@ def enable_service():
     print("Enabling Ollama service...")
     call(["systemctl", "--user", "daemon-reload"])
     call(["systemctl", "--user", "enable", "ollama.service"])
+    print("Restarting Ollama service...")
+    call(["systemctl", "--user", "restart", "ollama.service"])
 
 
 if __name__ == "__main__":
