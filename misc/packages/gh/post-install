@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+gh extension install --force github/gh-copilot
