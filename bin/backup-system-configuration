@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+print_warning() {
+  echo -e "\033[31m⚠  $1\033[0m"
+}
+
+# Check if a directory name was provided
+if [ -z "$1" ]; then
+  echo "Please provide output directory name"
+  exit 1
+fi
+
+# Define the output directory
+output_dir="$1"
+
+# Check if the log directory exists and is not empty
+if [ -d "$output_dir" ] && [ "$(ls -A "$output_dir")" ]; then
+  read -p "$output_dir is not empty. Are you sure you want to continue? (y/N) " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+elif [ ! -d "$output_dir" ]; then
+  mkdir -p "$output_dir"
+fi
+
+echo "Logging installed Nix packages..."
+nix-env -qs >"$output_dir/nix_packages.txt"
+
+echo "Logging installed pipx packages..."
+pipx list >"$output_dir/pipx_packages.txt"
+
+echo "Logging Pyenv Python versions and virtual environments..."
+pyenv versions >"$output_dir/pyenv_versions.txt"
+
+echo "Logging installed debian packages..."
+dpkg --get-selections >"$output_dir/debian_packages.txt"
+
+echo "Logging installed Snap packages..."
+snap list >"$output_dir/snap_packages.txt"
+
+echo "Logging /opt directory tree using ncdu..."
+ncdu -o "$output_dir/opt_ncdu.txt" /opt
+
+echo "Copying NetworkManager connections (requires sudo permissions)..."
+mkdir -p "$output_dir/networkmanager_system_connections"
+sudo cp /etc/NetworkManager/system-connections/* "$output_dir/networkmanager_system_connections/"
+
+echo "Storing fstab..."
+cp /etc/fstab "$output_dir/fstab"
+
+echo "Copying contents of .ssh directory..."
+cp -r ~/.ssh "$output_dir/ssh"
+
+zoom_config="$HOME/.config/zoomus.conf"
+if [ -f "$zoom_config" ]; then
+  echo "Copying Zoom configuration..."
+  cp "$zoom_config" "$output_dir"
+fi
+
+zotero_dir="$HOME/.zotero"
+if [ -d "$zotero_dir" ]; then
+  echo "Copying Zotero directory..."
+  cp -r "$zotero_dir" "$output_dir/zotero"
+fi
+
+syncthing_dir=~/.config/syncthing
+if [[ -d $syncthing_dir ]]; then
+  mkdir -p "$output_dir/syncthing_config"
+  cp $syncthing_dir/{config.xml,cert.pem,key.pem} "$output_dir/syncthing_config/"
+fi
+
+echo "Checking MCF repository..."
+cd "$MCF" || exit
+git fetch
+if git stash list | read; then
+  print_warning "There are stashed changes!"
+fi
+if git log origin/master..master | read; then
+  print_warning "There are unpushed commits!"
+fi
+for branch in $(git branch --format '%(refname:short)'); do
+  if ! git branch -r | grep -q "$branch"; then
+    print_warning "Branch $branch is not on origin!"
+  fi
+done
+
+if dpkg -l | grep -q forticlient; then
+  print_warning "FortiClient is installed, open it and backup config"
+fi
+
+echo "Done, files were written to $output_dir"
