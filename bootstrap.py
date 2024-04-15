@@ -65,7 +65,7 @@ pm = __import__("package_manager")
 print("")
 
 if "MCF" not in os.environ:
-    print("[*] Install package managers")
+    print("[*] Install core package managers")
     print("")
 
     if (
@@ -79,17 +79,14 @@ if "MCF" not in os.environ:
         print(f"Run the following command: source {dest / '.profile'}")
         print("Now re-run this script to complete bootstrapping.")
 else:
-    print("[*] Install FNM")
+    print("[*] Install extra package managers")
     print("")
-    pm.install("fnm", verbose=True)
-
-    print("[*] Install Eget")
-    print("")
-    pm.install("nix: eget", verbose=True)
-
-    print("[*] Install Cargo")
-    print("")
-    pm.install("nix: cargo", verbose=True)
+    if (
+        not pm.install("fnm", verbose=True)
+        or not pm.install("nix: eget", verbose=True)
+        or not pm.install("nix: cargo", verbose=True)
+    ):
+        sys.exit("Second part of bootstrapping procedure failed!")
 
     print("[*] Install MCF")
     print("")
