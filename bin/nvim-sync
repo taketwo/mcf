@@ -13,7 +13,8 @@ for target in "${targets[@]}"; do
 done
 
 LOCK_REPO_NAME="mcf-nvim-lock"
-LOCK_REPO_URI="git@gitlab.com:taketwo/$LOCK_REPO_NAME.git"
+LOCK_REPO_HTTPS_URI="https://gitlab.com/taketwo/$LOCK_REPO_NAME.git"
+LOCK_REPO_GIT_URI="git@gitlab.com:taketwo/$LOCK_REPO_NAME.git"
 LOCK_REPO_PATH="$MCF/external/$LOCK_REPO_NAME"
 LAZY_LOCK_FILE_NAME="lazy-lock.json"
 LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
@@ -61,6 +62,11 @@ function commit_plugins() {
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
   # Check if the lock file has changed
   if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
+    # Pushing will work only if the remote is configured with SSH address
+    if [[ "$(git -C "$LOCK_REPO_PATH" remote get-url origin)" != "$LOCK_REPO_GIT_URI" ]]; then
+      echo "Updating remote URI to use SSH authorization"
+      git -C "$LOCK_REPO_PATH" remote set-url origin $LOCK_REPO_GIT_URI
+    fi
     echo "Lock file has changed, committing and pushing changes"
     git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
     git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME" -m "Host: $(hostname -s)"
@@ -73,7 +79,10 @@ function commit_plugins() {
 # Clone or pull the external repository
 if [ ! -d "$LOCK_REPO_PATH" ]; then
   echo "Lock repository not found, cloning"
-  git clone "$LOCK_REPO_URI" "$LOCK_REPO_PATH"
+  git clone "$LOCK_REPO_HTTPS_URI" "$LOCK_REPO_PATH"
+else
+  echo "Pulling latest commits in lock repository"
+  git -C "$LOCK_REPO_PATH" pull
 fi
 
 # Parse and validate the input arguments
