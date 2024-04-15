@@ -18,6 +18,9 @@ if hash nix-env 2>/dev/null; then
   alias nr='nix-env -e'
   alias ngc='nix-collect-garbage -d'
   alias nli='nix-env -qs'
+  function nlf() {
+    tree "$(nix-build '<nixpkgs>' -A "$0")"
+  }
 fi
 
 DISTRO=$(cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)')
