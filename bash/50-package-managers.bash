@@ -19,7 +19,7 @@ if hash nix-env 2>/dev/null; then
   alias ngc='nix-collect-garbage -d'
   alias nli='nix-env -qs'
   function nlf() {
-    tree "$(nix-build '<nixpkgs>' -A "$0")"
+    tree "$(nix-build '<nixpkgs>' -A "$1")"
   }
 fi
 
