@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-# encoding: utf-8
 
 import argparse
 import os
 import subprocess
 import sys
-from os.path import expanduser, join
+from pathlib import Path
 from shutil import which
 
 if not which("git"):
     sys.exit("Please install git before running bootstrap script")
 
-dest = join(expanduser("~"), ".mcf")
+dest = Path.expanduser("~") / ".mcf"
 
 parser = argparse.ArgumentParser(
     description="""
@@ -29,21 +28,21 @@ args = parser.parse_args()
 
 print("[*] Bootstrap MCF")
 print("")
-print("    Installation path: {}".format(dest))
+print(f"    Installation path: {dest}")
 print("")
 
 print("[*] Obtain MCF sources")
 print("")
 if args.no_git:
-    if os.path.isdir(dest):
+    if dest.isdir():
         print("    .mcf folder exists")
     else:
         sys.exit(
-            "MCF sources are not available and --no-git option was passed, aborting..."
+            "MCF sources are not available and --no-git option was passed, aborting...",
         )
 else:
     try:
-        if os.path.isdir(dest):
+        if dest.isdir():
             print("    .mcf folder already exists, pulling the latest version")
             os.chdir(dest)
             cmd = "git pull"
@@ -52,14 +51,14 @@ else:
             subprocess.check_call(cmd.split())
         else:
             print("    cloning the repository")
-            cmd = "git clone --recursive https://github.com/taketwo/mcf {}".format(dest)
+            cmd = f"git clone --recursive https://github.com/taketwo/mcf {dest}"
             subprocess.check_call(cmd.split())
     except subprocess.CalledProcessError:
         sys.exit("Failed to obtain MCF sources, aborting...")
 print("")
 
 print("[*] Import MPM")
-library = join(dest, "scripts", "library")
+library = dest / "scripts" / "library"
 os.environ["PYTHONPATH"] = library
 sys.path.append(library)
 pm = __import__("package_manager")
@@ -77,7 +76,7 @@ if "MCF" not in os.environ:
         sys.exit("First part of bootstrapping procedure failed!")
     else:
         print("First part of bootstrapping procedure is completed.")
-        print("Run the following command: source {}".format(join(dest, ".profile")))
+        print(f"Run the following command: source {dest / '.profile'}")
         print("Now re-run this script to complete bootstrapping.")
 else:
     print("[*] Install FNM")
