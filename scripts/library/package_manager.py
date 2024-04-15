@@ -26,20 +26,22 @@ class AptGet(Install):
 
 
 class Nix(Install):
-    CMD = "nix-env -iA"
-
     def __init__(self, packages, args=None):
         args = args or []
         # Make sure that LD variables are not set, otherwise Nix insulation from the
         # rest of the system may be compromised
         env = dict(os.environ, LD_LIBRARY_PATH="", LD_PRELOAD="")
         for p in packages:
+            cmd = "nix-env -i"
             if "." not in p:
                 # We use --attr option, thus package names should be attribute paths.
                 # If there is no dot in the name, we assume that this package comes
                 # from Nixpkgs.
                 p = "nixpkgs." + p
-            cmd = self.CMD + " " + p + " " + " ".join(args)
+            if not p.startswith("-f "):
+                # -f indicates that this is a custom derivation, thus -A is not needed
+                cmd += "A"
+            cmd += " " + p + " " + " ".join(args)
             subprocess.check_call(cmd.split(), env=env)
 
 
@@ -158,7 +160,7 @@ class PackageManager:
                             commands.append((PLATFORM, package))
         nix_expression = join(directory, "default.nix")
         if os.path.isfile(nix_expression):
-            commands.append(("nix", "-f {}".format(directory)))
+            commands.append(("nix", "-f {}".format(nix_expression)))
         python_setup = join(directory, "setup.py")
         if os.path.isfile(python_setup):
             commands.append(("pipx", "{} -e".format(directory)))
