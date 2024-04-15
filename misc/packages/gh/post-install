@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-gh extension install --force github/gh-copilot
+if ! gh extension install --force github/gh-copilot; then
+  echo "Failed to install gh-copilot extension"
+  echo "This is likely because gh config file was not decrypted"
+  echo "Repeat installation once the file is decrypted"
+fi
