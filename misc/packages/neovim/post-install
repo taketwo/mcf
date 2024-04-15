@@ -14,8 +14,4 @@ pip install --upgrade pynvim
 fnm exec --using=node-nvim npm install --location=global neovim
 
 # Ensure that plugins are installed
-if hash nvim-sync 2>/dev/null; then
-  nvim-sync
-else
-  nvim --headless "+Lazy! sync" +qa
-fi
+nvim-sync restore
