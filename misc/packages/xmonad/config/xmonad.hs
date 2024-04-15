@@ -53,8 +53,8 @@ import qualified XMonad.StackSet as W
 import Control.Monad (liftM2)
 import Data.Ratio ((%))
 import System.Directory
+import System.Environment (lookupEnv)
 import System.IO.Unsafe (unsafePerformIO)
-import System.Posix.Env (getEnv)
 import Data.Maybe (maybe, fromMaybe)
 import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
@@ -439,18 +439,16 @@ viewWeb = windows (W.view "web")
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
 
--- desktop :: DESKTOP_SESSION -> desktop configuration
-desktop "gnome"  = gnomeConfig
-desktop "xmonad" = gnomeConfig
-desktop "plasma" = kde4Config
-desktop _        = desktopConfig
-
 main :: IO ()
 main = do
-  session          <- getEnv "DESKTOP_SESSION"
   dbus             <- D.connectSession
   D.requestName dbus (D.busName_ "org.xmonad.Log") [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-  let myDesktopConfig = maybe desktopConfig desktop session
+  maybeSession <- lookupEnv "DESKTOP_SESSION"
+  let myDesktopConfig = case maybeSession of
+        Just "gnome"  -> gnomeConfig
+        Just "xmonad" -> gnomeConfig
+        Just "plasma" -> kde4Config
+        _             -> desktopConfig
   xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ewmhFullscreen $ ewmh myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
