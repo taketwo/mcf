@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Change permissions of .gnupg directory and its contents
+chmod 700 ~/.gnupg
+chmod 600 ~/.gnupg/*
+chmod 700 ~/.gnupg/*.d
