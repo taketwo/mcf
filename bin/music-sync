@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-# encoding: utf-8
-
 
 import os
-import socket
+import os.path
 import subprocess
 import tempfile
-import os.path
 from pathlib import Path
 
 import click
@@ -14,8 +11,7 @@ import click
 from filesystem import which
 
 
-class Location(object):
-
+class Location:
     def __init__(self, path, group=None):
         self.path = path
         self.group = group
@@ -27,18 +23,16 @@ class Location(object):
         pass
 
 
-class MTPLocation(object):
-    """
-    Pre-mounted MTP location.
-    """
+class MTPLocation:
+    """Pre-mounted MTP location."""
 
     def __init__(self, relative_path):
         gvfs = Path("/run/user/1000/gvfs")
         if not gvfs.is_dir():
-            raise Exception("{} is not a directory".format(gvfs))
+            raise Exception(f"{gvfs} is not a directory")
         mtps = list(gvfs.iterdir())
         if not len(mtps) == 1:
-            raise Exception("There should be a single MTP directory in {}".format(gvfs))
+            raise Exception(f"There should be a single MTP directory in {gvfs}")
         self.path = mtps[0] / relative_path
         self.group = None
 
@@ -49,7 +43,7 @@ class MTPLocation(object):
         pass
 
 
-class JMTPFSLocation(object):
+class JMTPFSLocation:
 
     def __init__(self, relative_path):
         self.relative_path = relative_path
@@ -59,47 +53,48 @@ class JMTPFSLocation(object):
 
     def __enter__(self):
         self.path = tempfile.TemporaryDirectory()
-        print('Mounting jmtpfs at {}'.format(self.path.name))
-        cmd = 'jmtpfs {}'.format(self.path.name)
+        print(f"Mounting jmtpfs at {self.path.name}")
+        cmd = f"jmtpfs {self.path.name}"
         subprocess.check_call(cmd.split())
         return os.path.join(self.path.name, self.relative_path)
 
     def __exit__(self, type, value, traceback):
-        print('Unmounting jmtpfs from {}'.format(self.path.name))
-        cmd = 'fusermount -u {}'.format(self.path.name)
+        print(f"Unmounting jmtpfs from {self.path.name}")
+        cmd = f"fusermount -u {self.path.name}"
         subprocess.check_call(cmd.split())
         self.path.cleanup()
 
 
-def get_music_location(host=None):
+def get_music_location(host: str = None) -> Location:
     if host is None:
-        return Location(os.path.expanduser('~/Music'))
-    if host in ['raccoon', 'ramen', 'alpaca', 'lemur']:
-        return Location(host + ':/home/sergey/Music')
-    elif host == 'sloth':
-        return Location(host + ':/data/Music', group="data")
-    elif host == 'xz1c':
-        return MTPLocation('disk/Music')
-    else:
-        p = Path(host).resolve()
-        if p.is_dir() and p.name == "Music":
-            return Location(str(p))
-        raise Exception('unknown host')
+        return Location(os.path.expanduser("~/Music"))
+    if host in ["raccoon", "ramen", "alpaca", "lemur"]:
+        return Location(host + ":/home/sergey/Music")
+    if host == "sloth":
+        return Location(host + ":/data/Music", group="data")
+    if host == "xz1c":
+        return MTPLocation("disk/Music")
+    p = Path(host).resolve()
+    if p.is_dir() and p.name == "Music":
+        return Location(str(p))
+    raise Exception("unknown host")
 
 
-def rsync(src, dst, delete=True):
-    cmd = ['rsync',
-           '-avz',
-           '--size-only',
-           '--omit-dir-times',
-           '--no-perms',
-           '--no-t',
-           '--progress']
+def rsync(src: Location, dst: Location, delete: bool = True) -> None:
+    cmd = [
+        "rsync",
+        "-avz",
+        "--size-only",
+        "--omit-dir-times",
+        "--no-perms",
+        "--no-t",
+        "--progress",
+    ]
     if delete:
-        cmd.append('--delete')
+        cmd.append("--delete")
     if dst.group:
         cmd.append("--chown=:" + dst.group)
-    cmd.append(src.path + ('' if src.path.endswith('/') else '/'))
+    cmd.append(src.path + ("" if src.path.endswith("/") else "/"))
     cmd.append(dst.path)
     subprocess.call(cmd)
 
@@ -110,30 +105,32 @@ def cli():
 
 
 @cli.command()
-@click.option('--delete', '-d', is_flag=True,
-              help='Delete extraneous files from destination')
-@click.argument('host')
-def push(host, delete):
-    """
-    Push music to another host.
-    """
-    with get_music_location() as src:
-        with get_music_location(host) as dst:
-            rsync(src, dst, delete=delete)
+@click.option(
+    "--delete",
+    "-d",
+    is_flag=True,
+    help="Delete extraneous files from destination",
+)
+@click.argument("host")
+def push(host: str, *, delete: bool) -> None:
+    """Push music to another host."""
+    with get_music_location() as src, get_music_location(host) as dst:
+        rsync(src, dst, delete=delete)
 
 
 @cli.command()
-@click.option('--delete', '-d', is_flag=True,
-              help='Delete extraneous files from destination')
-@click.argument('host')
-def pull(host, delete):
-    """
-    pull music from another host.
-    """
-    with get_music_location() as dst:
-        with get_music_location(host) as src:
-            rsync(src, dst, delete=delete)
+@click.option(
+    "--delete",
+    "-d",
+    is_flag=True,
+    help="Delete extraneous files from destination",
+)
+@click.argument("host")
+def pull(host: str, *, delete: bool) -> None:
+    """Pull music from another host."""
+    with get_music_location() as dst, get_music_location(host) as src:
+        rsync(src, dst, delete=delete)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()
