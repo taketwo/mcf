@@ -10,7 +10,7 @@ from shutil import which
 if not which("git"):
     sys.exit("Please install git before running bootstrap script")
 
-dest = Path.expanduser("~") / ".mcf"
+dest = Path.home() / ".mcf"
 
 parser = argparse.ArgumentParser(
     description="""
