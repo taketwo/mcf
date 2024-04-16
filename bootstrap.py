@@ -34,7 +34,7 @@ print("")
 print("[*] Obtain MCF sources")
 print("")
 if args.no_git:
-    if dest.isdir():
+    if dest.is_dir():
         print("    .mcf folder exists")
     else:
         sys.exit(
@@ -42,7 +42,7 @@ if args.no_git:
         )
 else:
     try:
-        if dest.isdir():
+        if dest.is_dir():
             print("    .mcf folder already exists, pulling the latest version")
             os.chdir(dest)
             cmd = "git pull"
@@ -58,7 +58,7 @@ else:
 print("")
 
 print("[*] Import MPM")
-library = dest / "scripts" / "library"
+library = str(dest / "scripts" / "library")
 os.environ["PYTHONPATH"] = library
 sys.path.append(library)
 pm = __import__("package_manager")
