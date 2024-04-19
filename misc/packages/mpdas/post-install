@@ -5,9 +5,9 @@ from subprocess import call
 
 
 def enable_service():
-    print("Enabling MPDAS service...")
+    print("Enabling and starting MPDAS service...")
     call(["systemctl", "--user", "daemon-reload"])
-    call(["systemctl", "--user", "enable", "mpdas.service"])
+    call(["systemctl", "--user", "enable", "--now", "mpdas.service"])
 
 
 if __name__ == "__main__":
