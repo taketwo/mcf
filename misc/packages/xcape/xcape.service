@@ -5,7 +5,7 @@ After=graphical.target
 [Service]
 Type=forking
 Environment=DISPLAY=:0
-ExecStart=/usr/bin/xcape -e 'Alt_L=Escape;Alt_R=Return;Super_L=Super_L|0;Shift_R=Shift_R|Tab;Control_L=Control_L|a'
+ExecStart=%h/.nix-profile/bin/xcape -e 'Alt_L=Escape;Alt_R=Return;Super_L=Super_L|0;Shift_R=Shift_R|Tab;Control_L=Control_L|a'
 Restart=always
 RestartSec=1
 
