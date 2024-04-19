@@ -49,6 +49,9 @@ sudo cp /etc/NetworkManager/system-connections/* "$output_dir/networkmanager_sys
 echo "Storing fstab..."
 cp /etc/fstab "$output_dir/fstab"
 
+echo "Storing Bash history..."
+cp ~/.bash_history "$output_dir/bash_history"
+
 echo "Copying contents of .ssh directory..."
 cp -r ~/.ssh "$output_dir/ssh"
 
