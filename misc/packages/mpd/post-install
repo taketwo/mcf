@@ -11,8 +11,6 @@ def setup():
     call(["sudo", "systemctl", "disable", "mpd.service"])
     call(["sudo", "systemctl", "disable", "mpd.socket"])
     print("Disabling global MPD user service and socket...")
-    call(["sudo", "systemctl", "--global", "stop", "mpd.service"])
-    call(["sudo", "systemctl", "--global", "stop", "mpd.socket"])
     call(["sudo", "systemctl", "--global", "disable", "mpd.service"])
     call(["sudo", "systemctl", "--global", "disable", "mpd.socket"])
     print("Enabling and starting MPD user service...")
