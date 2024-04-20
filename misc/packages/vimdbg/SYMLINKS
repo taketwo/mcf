@@ -1,2 +1,0 @@
-vimdbg:.local/bin/vimdbg:Vim debugger
-vimrc:.local/share/vimdbg/vimrc:Vim debugger config

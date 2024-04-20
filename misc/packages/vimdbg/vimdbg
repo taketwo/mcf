@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-/usr/bin/vim -u "$HOME/.local/share/vimdbg/vimrc" "$@"
