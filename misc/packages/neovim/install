@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 
-# HACK: When Neovim is installed using bootstrapping script, bob is not yet available because
-# the symlink into Cargo bin directory is not created yet. As a workaround, we call bob using
-# an explicit path.
-BOB=$HOME/.cargo/bin/bob
-$BOB install nightly
-$BOB use nightly
+bob install nightly
+bob use nightly
