@@ -2,5 +2,5 @@
 
 # Change permissions of .gnupg directory and its contents
 chmod 700 ~/.gnupg
-chmod 600 ~/.gnupg/*
-chmod 700 ~/.gnupg/*.d
+find ~/.gnupg -type f -exec chmod 600 {} \;
+find ~/.gnupg -type d -exec chmod 700 {} \;
