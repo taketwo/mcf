@@ -1,0 +1,4 @@
+nix: openfortivpn
+# Below are dependencies of fuckForticlient.sh
+jq
+lz4json
