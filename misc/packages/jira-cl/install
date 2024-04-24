@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-fnm exec --using=default npm install --location=global jira-cl
