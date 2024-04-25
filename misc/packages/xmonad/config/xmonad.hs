@@ -22,6 +22,8 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
+import XMonad.Layout.Column
+import XMonad.Layout.ComboP
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
@@ -29,15 +31,13 @@ import XMonad.Layout.IndependentScreens
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.Magnifier as Mag
 import XMonad.Layout.MouseResizableTile
-import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Reflect
+import XMonad.Layout.Renamed
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
-import XMonad.Layout.ComboP
-import XMonad.Layout.Column
 import XMonad.ManageHook
 import XMonad.Prompt
 import XMonad.Prompt.Input
