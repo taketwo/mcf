@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
+echo "Installing copilot extension for gh..."
 if ! gh extension install --force github/gh-copilot; then
   echo "Failed to install gh-copilot extension"
   echo "This is likely because gh config file was not decrypted"
   echo "Repeat installation once the file is decrypted"
+  exit 0
 fi
+
+echo "Creating aliases for copilot commands..."
+ALIASES=$HOME/.local/bash/72-gh-copilot.bash
+gh copilot alias -- bash | sed 's/^ghcs/suggest/' | sed 's/^ghce/explain/' >>"$ALIASES"
+echo "Done"
