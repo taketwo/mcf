@@ -141,11 +141,10 @@ myTopics =
   , TI "music"    ""                                         (spawnInTerminal "ncmpcpp")
   , TI "zeal"     ""                                         (spawn "zeal")
   , TI "mcf"      "~/.mcf"                                   (spawnTmux)
-  , TI "pcl"      "~/Workspace/Libraries/pcl"                (spawnTmux)
-  , TI "opencv"   "~/Workspace/Libraries/opencv"             (spawnTmux)
   , TI "ael"      ""                                         (spawnInTerminal "ael tmux load ael")
+  , TI "remmina"  ""                                         (spawn "remmina")
+  , TI "robots"   ""                                         (spawnInTerminal "ael tmux load robots")
   , TI "docker"   ""                                         (spawnInTerminal "ael container attach")
-  , TI "fnd"      ""                                         (spawnInTerminal "ael -p fnd container attach")
   , TI "msg"      ""                                         (spawn "slack" >> spawn "telegram-desktop")
   , ti "gimp"     ""
   , ti "zoom"     ""
