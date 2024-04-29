@@ -2,17 +2,7 @@ local Util = require('mcf.util')
 
 local M = {}
 
-function M.on_attach(client, buffer)
-  require('mcf.config.lsp.keymaps').on_attach(client, buffer)
-  -- Code lens requires regular refresh
-  if vim.lsp.codelens and client.supports_method('textDocument/codeLens') then
-    vim.lsp.codelens.refresh()
-    vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
-      buffer = buffer,
-      callback = vim.lsp.codelens.refresh,
-    })
-  end
-end
+function M.on_attach(client, buffer) require('mcf.config.lsp.keymaps').on_attach(client, buffer) end
 
 function M.capabilities()
   local current_buf = vim.api.nvim_get_current_buf()
