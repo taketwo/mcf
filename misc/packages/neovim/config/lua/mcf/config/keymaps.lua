@@ -124,10 +124,3 @@ map('n', '<F2>', Util.format.format, { desc = 'Format document' })
 map('v', '<F2>', Util.format.format, { desc = 'Format range' })
 
 -- NOTE: Some keys that are still free: $ ^ F5 F10
-
--- Remove default LSP-related mappings
--- These are not needed because we have our own custom mappings. Furthermore, the ones starting
--- with "c" introduce lag in upward motion.
-vim.keymap.del('n', 'crn')
-vim.keymap.del('n', 'crr')
-vim.keymap.del('n', 'gr')
