@@ -32,6 +32,7 @@ return {
         previous = 'c',
         next = 't',
         open_tab = {}, -- never use tabs
+        open_code_href = 'g', -- (g)o to the diagnostic URI
       },
       auto_close = true,
       use_diagnostic_signs = true,
