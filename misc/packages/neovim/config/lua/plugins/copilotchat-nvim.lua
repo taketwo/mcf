@@ -27,6 +27,17 @@ return {
       { '<Leader>at', '<cmd>CopilotChatTests<cr>', desc = 'Generate unit tests', mode = { 'n', 'v' } },
       { '<Leader>aC', '<cmd>CopilotChatCommit<cr>', desc = 'Write commit message for entire diff' },
       { '<Leader>ac', '<cmd>CopilotChatCommitStaged<cr>', desc = 'Write commit message for staged diff' },
+      {
+        '<Leader>aq',
+        function()
+          local input = vim.fn.input('Quick question: ')
+          if input ~= '' then
+            require('CopilotChat').ask(input, { selection = require('CopilotChat.select').visual })
+          end
+        end,
+        desc = 'Quick question about this code',
+        mode = { 'v' },
+      },
     },
     opts = {
       debug = false,
