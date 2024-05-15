@@ -2,7 +2,7 @@
 
 # Define available operations and targets
 declare -a operations=("restore" "update" "commit")
-declare -a targets=("plugins")
+declare -a targets=("editor" "plugins")
 declare -A valid_operations
 declare -A valid_targets
 for operation in "${operations[@]}"; do
@@ -19,6 +19,8 @@ LOCK_REPO_PATH="$MCF/external/$LOCK_REPO_NAME"
 LAZY_LOCK_FILE_NAME="lazy-lock.json"
 LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
 LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
+BOB_LOCK_FILE_NAME="bob-lock.json"
+BOB_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$BOB_LOCK_FILE_NAME"
 
 # Obtain the latest revision of the remote lock repository
 function repo_obtain_latest() {
@@ -88,16 +90,54 @@ function restore_plugins() {
   done
 }
 
+# Install Neovim version stored in the remote lock file
+function restore_editor() {
+  echo "Restoring editor version"
+  lock_version=$(jq -r '.version' "$BOB_LOCK_FILE_PATH_REMOTE")
+  lock_revision=$(jq -r '.revision' "$BOB_LOCK_FILE_PATH_REMOTE")
+  echo "Lock file version/revision: $lock_version/$lock_revision"
+  # Parse the output of nvim --version
+  # Example: NVIM v0.10.0-dev-3145+g9ca81b025
+  version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
+  version=$(echo "$version_string" | cut -d '-' -f 1)
+  revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
+  echo "Installed version/revision: $version/$revision"
+  # Compare and warn of mismatch
+  if [[ $version != "$lock_version" || $revision != "$lock_revision" ]]; then
+    echo "Installed version/revision does not match the lock file"
+    echo "Need to restore version from lock file, but this is not implemented yet"
+  fi
+}
+
 # Update Neovim plugins
 function update_plugins() {
   echo "Launching Neovim to update plugins"
   nvim -c 'autocmd User VeryLazy Lazy check'
 }
 
-# Commit changes in the local lock file and push to the remote repository
+# Update Neovim editor
+function update_editor() {
+  echo "Update editor is not implemented yet"
+}
+
+# Commit changes in the local lock file
 function commit_plugins() {
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
   repo_commit_if_changed "$LAZY_LOCK_FILE_NAME"
+}
+
+# Commit installed Neovim version to the lock file
+function commit_editor() {
+  # Parse the output of nvim --version
+  # Example: NVIM v0.10.0-dev-3145+g9ca81b025
+  version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
+  version=$(echo "$version_string" | cut -d '-' -f 1)
+  revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
+  echo "{
+  \"version\": \"$version\",
+  \"revision\": \"$revision\"
+}" >"$BOB_LOCK_FILE_PATH_REMOTE"
+  repo_commit_if_changed "$BOB_LOCK_FILE_NAME"
 }
 
 # Parse and validate the input arguments
