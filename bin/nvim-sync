@@ -22,12 +22,6 @@ LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 
 # Restore the state of Neovim plugins according to the latest remote lock file
 function restore_plugins() {
-  echo "Fetching the latest lock file from the remote repository"
-  if ! git -C "$LOCK_REPO_PATH" fetch; then
-    echo "Git fetch failed, aborting"
-    exit 1
-  fi
-  git -C "$LOCK_REPO_PATH" reset --hard origin/main
   retries_left=3
   until [ $retries_left -le 0 ]; do
     echo "Restoring the state of Neovim plugins"
@@ -76,13 +70,20 @@ function commit_plugins() {
   fi
 }
 
-# Clone or pull the external repository
+# Clone or fetch/reset the external repository
 if [ ! -d "$LOCK_REPO_PATH" ]; then
   echo "Lock repository not found, cloning"
   git clone "$LOCK_REPO_HTTPS_URI" "$LOCK_REPO_PATH"
 else
-  echo "Pulling latest commits in lock repository"
-  git -C "$LOCK_REPO_PATH" pull
+  if ! git -C "$LOCK_REPO_PATH" diff --quiet; then
+    echo "Local lock repository has uncommitted changes, resetting to the latest commit from the remote repository"
+    git -C "$LOCK_REPO_PATH" reset --hard origin/main
+  fi
+  echo "Pulling the latest commits from the remote lock repository"
+  if ! git -C "$LOCK_REPO_PATH" pull; then
+    echo "Git pull failed, aborting"
+    exit 1
+  fi
 fi
 
 # Parse and validate the input arguments
