@@ -29,7 +29,7 @@ return {
           [']h'] = {
             function()
               if vim.wo.diff then return ']h' end
-              vim.schedule(function() gs.next_hunk() end)
+              vim.schedule(function() gs.nav_hunk('next') end)
               return '<Ignore>'
             end,
             'Next git hunk',
@@ -38,7 +38,7 @@ return {
           ['[h'] = {
             function()
               if vim.wo.diff then return '[h' end
-              vim.schedule(function() gs.prev_hunk() end)
+              vim.schedule(function() gs.nav_hunk('prev') end)
               return '<Ignore>'
             end,
             'Previous git hunk',
