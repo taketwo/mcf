@@ -66,8 +66,12 @@ return {
               completion = {
                 callSnippet = 'Replace',
               },
+              doc = {
+                privateName = { '^_' },
+              },
               hint = {
                 enable = true,
+                arrayIndex = 'Disable',
               },
             },
           },
