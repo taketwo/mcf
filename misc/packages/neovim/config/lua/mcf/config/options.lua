@@ -50,6 +50,7 @@ opt.shortmess:append({ c = true }) -- Do not give ins-completion-menu messages
 opt.shortmess:append({ s = true }) -- Do not give "search hit BOTTOM" messages
 opt.showmode = false -- Dont show mode since we have a statusline
 opt.sidescrolloff = 15 -- Columns of context
+opt.signcolumn = 'yes' -- Always show sign column
 opt.smartcase = true -- Do not ignore case when query has capitals
 opt.smartindent = true -- Insert indents automatically
 opt.smoothscroll = true -- Smooth scrolling in presence of wrapped lines
