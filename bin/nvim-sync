@@ -20,6 +20,49 @@ LAZY_LOCK_FILE_NAME="lazy-lock.json"
 LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
 LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 
+# Obtain the latest revision of the remote lock repository
+function repo_obtain_latest() {
+  if [ ! -d "$LOCK_REPO_PATH" ]; then
+    echo "Lock repository not found, cloning"
+    git clone "$LOCK_REPO_HTTPS_URI" "$LOCK_REPO_PATH"
+  else
+    if ! git -C "$LOCK_REPO_PATH" diff --quiet; then
+      echo "Lock repository has uncommitted changes, resetting to the latest commit from the remote repository"
+      git -C "$LOCK_REPO_PATH" reset --hard origin/main
+    fi
+    echo "Pulling the latest commits from the remote lock repository"
+    if ! git -C "$LOCK_REPO_PATH" pull; then
+      echo "Git pull failed, aborting"
+      exit 1
+    fi
+  fi
+}
+
+# Check if a given lock file has changed and commit the changes if it has
+function repo_commit_if_changed() {
+  if ! git -C "$LOCK_REPO_PATH" diff --quiet "$1"; then
+    echo "Lock file has changed, committing changes"
+    git -C "$LOCK_REPO_PATH" add "$1"
+    git -C "$LOCK_REPO_PATH" commit -m "Update $1" -m "Host: $(hostname -s)"
+  else
+    echo "Lock file has not changed, nothing to commit"
+  fi
+}
+
+# Eunsure that the remote repository is configured with SSH address
+function repo_ensure_ssh() {
+  if [[ "$(git -C "$LOCK_REPO_PATH" remote get-url origin)" != "$LOCK_REPO_GIT_URI" ]]; then
+    echo "Updating remote repository URI to use SSH authorization"
+    git -C "$LOCK_REPO_PATH" remote set-url origin $LOCK_REPO_GIT_URI
+  fi
+}
+
+# Push commits to the remote repository
+function repo_push() {
+  repo_ensure_ssh
+  git -C "$LOCK_REPO_PATH" push --force
+}
+
 # Restore the state of Neovim plugins according to the latest remote lock file
 function restore_plugins() {
   retries_left=3
@@ -54,37 +97,8 @@ function update_plugins() {
 # Commit changes in the local lock file and push to the remote repository
 function commit_plugins() {
   cp "$LAZY_LOCK_FILE_PATH_LOCAL" "$LAZY_LOCK_FILE_PATH_REMOTE"
-  # Check if the lock file has changed
-  if ! git -C "$LOCK_REPO_PATH" diff --quiet "$LAZY_LOCK_FILE_NAME"; then
-    # Pushing will work only if the remote is configured with SSH address
-    if [[ "$(git -C "$LOCK_REPO_PATH" remote get-url origin)" != "$LOCK_REPO_GIT_URI" ]]; then
-      echo "Updating remote URI to use SSH authorization"
-      git -C "$LOCK_REPO_PATH" remote set-url origin $LOCK_REPO_GIT_URI
-    fi
-    echo "Lock file has changed, committing and pushing changes"
-    git -C "$LOCK_REPO_PATH" add "$LAZY_LOCK_FILE_NAME"
-    git -C "$LOCK_REPO_PATH" commit -m "Update $LAZY_LOCK_FILE_NAME" -m "Host: $(hostname -s)"
-    git -C "$LOCK_REPO_PATH" push --force
-  else
-    echo "Lock file has not changed, nothing to commit"
-  fi
+  repo_commit_if_changed "$LAZY_LOCK_FILE_NAME"
 }
-
-# Clone or fetch/reset the external repository
-if [ ! -d "$LOCK_REPO_PATH" ]; then
-  echo "Lock repository not found, cloning"
-  git clone "$LOCK_REPO_HTTPS_URI" "$LOCK_REPO_PATH"
-else
-  if ! git -C "$LOCK_REPO_PATH" diff --quiet; then
-    echo "Local lock repository has uncommitted changes, resetting to the latest commit from the remote repository"
-    git -C "$LOCK_REPO_PATH" reset --hard origin/main
-  fi
-  echo "Pulling the latest commits from the remote lock repository"
-  if ! git -C "$LOCK_REPO_PATH" pull; then
-    echo "Git pull failed, aborting"
-    exit 1
-  fi
-fi
 
 # Parse and validate the input arguments
 declare -a execution_plan
@@ -135,23 +149,27 @@ if [ ${#execution_plan[@]} -eq 0 ]; then
   done
 fi
 
+# Add repo management commands to the execution plan
+execution_plan=("repo obtain latest" "${execution_plan[@]}")
+execution_plan+=("repo push")
+
 # Dry-run output: show the final execution plan and exit
 if [[ $dry_run_mode -eq 1 ]]; then
   echo "Execution plan:"
-  for operation_target in "${execution_plan[@]}"; do
-    echo " - $operation_target"
+  for command in "${execution_plan[@]}"; do
+    echo " - $command"
   done
   exit 0
 fi
 
 # Execute the plan
-for operation_target in "${execution_plan[@]}"; do
-  IFS=' ' read -r operation target <<<"$operation_target"
-  func_name="${operation}_${target}"
+for command in "${execution_plan[@]}"; do
+  # build func name by replacing spaces with underscores
+  func_name="${command// /_}"
   if declare -f "$func_name" >/dev/null; then
     "$func_name"
   else
-    echo "Error: unsupported operation/target combination: $operation $target"
+    echo "Error: unsupported command: $command"
     exit 1
   fi
 done
