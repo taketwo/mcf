@@ -9,6 +9,9 @@ return {
       beacon = {
         enable = false, -- disable annoying flashing
       },
+      lightbulb = {
+        enable = false,
+      },
     },
   },
 }
