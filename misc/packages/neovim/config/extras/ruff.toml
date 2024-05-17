@@ -13,6 +13,7 @@ ignore = [
   "T20",    # print statements are okay
   "TD002",  # no need to mention author in TODO comments (use git blame instead)
   "TD003",  # no need to create ticket for every TODO comment
+  "FA102",  # no need to import from __future__ to support fancy annotations
   "FIX002", # not every TODO comment needs to be fixed
 ]
 line-length = 88
