@@ -23,7 +23,13 @@ return {
           ['<C-d>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-h>'] = cmp.mapping.close(),
-          ['<C-n>'] = cmp.mapping.confirm({ select = true }),
+          ['<C-n>'] = function(fallback)
+            if cmp.visible() then
+              require('mcf.util').create_undo()
+              if cmp.confirm({ select = true }) then return end
+            end
+            return fallback()
+          end,
           ['<C-t>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
           ['<C-CR>'] = function(fallback)
             cmp.abort()
