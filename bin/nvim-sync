@@ -22,6 +22,13 @@ LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 BOB_LOCK_FILE_NAME="bob-lock.json"
 BOB_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$BOB_LOCK_FILE_NAME"
 
+function _get_neovim_commit_date() {
+  commit_details=$(curl -s https://api.github.com/repos/neovim/neovim/commits/$1)
+  commit_date=$(echo "$commit_details" | jq -r '.commit.committer.date')
+  pretty_date=$(date -d "$commit_date" +"%Y-%m-%d %H:%M:%S")
+  echo "$pretty_date"
+}
+
 # Obtain the latest revision of the remote lock repository
 function repo_obtain_latest() {
   if [ ! -d "$LOCK_REPO_PATH" ]; then
@@ -95,13 +102,15 @@ function restore_editor() {
   echo "Restoring editor version"
   lock_version=$(jq -r '.version' "$BOB_LOCK_FILE_PATH_REMOTE")
   lock_revision=$(jq -r '.revision' "$BOB_LOCK_FILE_PATH_REMOTE")
-  echo "Lock file version/revision: $lock_version/$lock_revision"
+  lock_date=$(_get_neovim_commit_date "$lock_revision")
+  echo "Lock file version/revision/date: $lock_version/$lock_revision/$lock_date"
   # Parse the output of nvim --version
   # Example: NVIM v0.10.0-dev-3145+g9ca81b025
   version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
   version=$(echo "$version_string" | cut -d '-' -f 1)
   revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
-  echo "Installed version/revision: $version/$revision"
+  date=$(_get_neovim_commit_date "$revision")
+  echo "Installed version/revision/date: $version/$revision/$date"
   # Compare and warn of mismatch
   if [[ $version != "$lock_version" || $revision != "$lock_revision" ]]; then
     echo "Installed version/revision does not match the lock file"
