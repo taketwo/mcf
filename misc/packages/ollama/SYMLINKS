@@ -1,1 +1,2 @@
 ollama.service:.local/share/systemd/user/ollama.service:Ollama systemd unit
+ollama.bash:.local/bash/70-ollama.bash:Ollama aliases
