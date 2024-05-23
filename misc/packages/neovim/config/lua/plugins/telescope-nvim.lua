@@ -9,11 +9,17 @@ return {
     },
     cmd = { 'Telescope' },
     keys = {
+      { '<Leader>.<Space>', '<cmd>Telescope resume<cr>', desc = 'Resume previous search' },
       { '<Leader>..', '<cmd>Telescope find_files<cr>', desc = 'Open file' },
+      { '<Leader>.;', '<cmd>Telescope command_history<cr>', desc = 'Command history' },
       { '<Leader>.b', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Jump to buffer' },
+      { '<Leader>.c', '<cmd>Telescope commands<cr>', desc = 'Commands' },
       { '<Leader>.g', '<cmd>Telescope live_grep<cr>', desc = 'Live grep' },
       { '<Leader>.h', '<cmd>Telescope help_tags<cr>', desc = 'Open help' },
-      { '<Leader>.;', '<cmd>Telescope command_history<cr>', desc = 'Command history' },
+      { '<Leader>.k', '<cmd>Telescope keymaps<cr>', desc = 'Keymaps' },
+      { '<Leader>.l', '<cmd>Telescope loclist<cr>', desc = 'Location list' },
+      { '<Leader>.m', '<cmd>Telescope marks<cr>', desc = 'Jump to mark' },
+      { '<Leader>.q', '<cmd>Telescope quickfix<cr>', desc = 'Quickfix list' },
       { '<Leader>.r', '<cmd>Telescope registers<cr>', desc = 'Registers' },
       -- TODO: Consider moving next three keymaps to lspconfig.lua and changing prefix
       { '<Leader>.s', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Jump to symbol' },
