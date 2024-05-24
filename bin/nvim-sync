@@ -156,6 +156,8 @@ function commit_plugins() {
 
 # Commit installed Neovim version to the lock file
 function commit_editor() {
+  echo "Editor version management is not implemented yet, thus skipping committing of editor version to the lock file"
+  return
   # Parse the output of nvim --version
   # Example: NVIM v0.10.0-dev-3145+g9ca81b025
   version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
