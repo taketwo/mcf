@@ -53,6 +53,7 @@ function repo_commit_if_changed() {
     echo "Lock file has changed, committing changes"
     git -C "$LOCK_REPO_PATH" add "$1"
     git -C "$LOCK_REPO_PATH" commit -m "Update $1" -m "Host: $(hostname -s)"
+    there_are_commits_to_push=1
   else
     echo "Lock file has not changed, nothing to commit"
   fi
@@ -68,8 +69,13 @@ function repo_ensure_ssh() {
 
 # Push commits to the remote repository
 function repo_push() {
-  repo_ensure_ssh
-  git -C "$LOCK_REPO_PATH" push --force
+  if [ -z ${there_are_commits_to_push+x} ]; then
+    echo "No new commits to push to remote lock repository"
+  else
+    repo_ensure_ssh
+    echo "Pushing commits to remote lock repository"
+    git -C "$LOCK_REPO_PATH" push --force
+  fi
 }
 
 # Restore the state of Neovim plugins according to the latest remote lock file
