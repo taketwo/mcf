@@ -74,8 +74,9 @@ function repo_push() {
 
 # Restore the state of Neovim plugins according to the latest remote lock file
 function restore_plugins() {
-  retries_left=3
-  until [ $retries_left -le 0 ]; do
+  num_retries=0
+  max_retries=3
+  until [ $num_retries -ge $max_retries ]; do
     echo "Restoring the state of Neovim plugins"
     cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
     nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
@@ -84,14 +85,26 @@ function restore_plugins() {
       echo "Restoration succeeded"
       break
     else
-      retries_left=$((retries_left - 1))
-      if [ $retries_left -gt 0 ]; then
+      num_retries=$((num_retries + 1))
+      if [ $num_retries -lt $max_retries ]; then
         echo "Lock file has changed while executing restore command, retrying"
       else
-        echo "Restoration failed after 3 retries"
-        echo "List of plugins that failed to be updated:"
-        diff --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" | sed 's/:.*//' | sed 's/"//g'
-        exit 2
+        echo "Restoration failed $num_retries times"
+        readarray -t failed_plugins < <(diff --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" | sed 's/:.*//' | sed 's/"//g')
+        echo "List of plugins that failed to be restored:"
+        echo "${failed_plugins[@]}"
+        read -p "Do you want to remove these plugins and retry restoration? [y/N] " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+          echo "Removing plugins:"
+          for plugin in "${failed_plugins[@]}"; do
+            echo "$plugin"
+            nvim --headless "+Lazy! clean $plugin" +qa
+          done
+          max_retries=$((max_retries + 1))
+        else
+          break
+        fi
       fi
     fi
   done
