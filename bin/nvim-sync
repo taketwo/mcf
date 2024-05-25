@@ -22,11 +22,27 @@ LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
 BOB_LOCK_FILE_NAME="bob-lock.json"
 BOB_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$BOB_LOCK_FILE_NAME"
 
-function _get_neovim_commit_date() {
-  commit_details=$(curl -s https://api.github.com/repos/neovim/neovim/commits/$1)
+# Parse revision of the installed Neovim
+function neovim_parse_revision() {
+  # Examples:
+  #  - NVIM v0.10.0-dev-3145+g9ca81b025
+  #  - NVIM v0.10.0-dev-a0a189a
+  # The first one is a nightly build, the second one is arbitrary commit built from source locally.
+  version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
+  revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
+  if [ -z "$revision" ]; then
+    revision=$(echo "$version_string" | grep -oP '(?<=-dev-)[0-9a-f]+')
+  fi
+  echo "$revision"
+}
+
+# Retrieve full hash and commit date given a revision
+function neovim_retrieve_commit_info() {
+  commit_details=$(curl -s "https://api.github.com/repos/neovim/neovim/commits/$1")
+  commit_hash=$(echo "$commit_details" | jq -r '.sha')
   commit_date=$(echo "$commit_details" | jq -r '.commit.committer.date')
   pretty_date=$(date -d "$commit_date" +"%Y-%m-%d %H:%M:%S")
-  echo "$pretty_date"
+  echo "$commit_hash" "$pretty_date"
 }
 
 # Obtain the latest revision of the remote lock repository
@@ -119,22 +135,19 @@ function restore_plugins() {
 # Install Neovim version stored in the remote lock file
 function restore_editor() {
   echo "Restoring editor version"
-  lock_version=$(jq -r '.version' "$BOB_LOCK_FILE_PATH_REMOTE")
-  lock_revision=$(jq -r '.revision' "$BOB_LOCK_FILE_PATH_REMOTE")
-  lock_date=$(_get_neovim_commit_date "$lock_revision")
-  echo "Lock file version/revision/date: $lock_version/$lock_revision/$lock_date"
-  # Parse the output of nvim --version
-  # Example: NVIM v0.10.0-dev-3145+g9ca81b025
-  version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
-  version=$(echo "$version_string" | cut -d '-' -f 1)
-  revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
-  date=$(_get_neovim_commit_date "$revision")
-  echo "Installed version/revision/date: $version/$revision/$date"
-  # Compare and warn of mismatch
-  if [[ $version != "$lock_version" || $revision != "$lock_revision" ]]; then
-    echo "Installed version/revision does not match the lock file"
-    echo "Need to restore version from lock file, but this is not implemented yet"
+  lock_hash=$(jq -r '.hash' "$BOB_LOCK_FILE_PATH_REMOTE")
+  lock_date=$(jq -r '.date' "$BOB_LOCK_FILE_PATH_REMOTE")
+  echo "Lock file hash/date: $lock_hash/$lock_date"
+  revision=$(neovim_parse_revision)
+  echo "Installed revision: $revision"
+  # Check if lock hash starts with installed revision
+  if [[ $lock_hash == "$revision"* ]]; then
+    echo "Installed version matches the lock file"
+    return
   fi
+  echo "Installed version/revision does not match the lock file"
+  echo "Installing Neovim from commit $lock_hash"
+  bob use "$lock_hash"
 }
 
 # Update Neovim plugins
@@ -156,16 +169,11 @@ function commit_plugins() {
 
 # Commit installed Neovim version to the lock file
 function commit_editor() {
-  echo "Editor version management is not implemented yet, thus skipping committing of editor version to the lock file"
-  return
-  # Parse the output of nvim --version
-  # Example: NVIM v0.10.0-dev-3145+g9ca81b025
-  version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
-  version=$(echo "$version_string" | cut -d '-' -f 1)
-  revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
+  revision=$(neovim_parse_revision)
+  read hash date <<<$(neovim_retrieve_commit_info "$revision")
   echo "{
-  \"version\": \"$version\",
-  \"revision\": \"$revision\"
+  \"hash\": \"$hash\",
+  \"date\": \"$date\"
 }" >"$BOB_LOCK_FILE_PATH_REMOTE"
   repo_commit_if_changed "$BOB_LOCK_FILE_NAME"
 }
