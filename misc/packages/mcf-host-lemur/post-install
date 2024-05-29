@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 if [[ $HOSTNAME == *"docker"* ]]; then
-  echo "Not installing systemd timer in Docker container"
+  echo "Not installing systemd timer and udev rules in Docker container"
 else
   echo "Installing systemd timer..."
   systemctl --user daemon-reload
   systemctl --user enable mute-audio.timer
   systemctl --user start mute-audio.timer
+  echo "Reloading udev rules..."
+  sudo udevadm control --reload-rules
 fi
