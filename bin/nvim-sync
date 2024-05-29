@@ -45,6 +45,18 @@ function neovim_retrieve_commit_info() {
   echo "$commit_hash" "$pretty_date"
 }
 
+# Retrieve full hash of the latest nightly build
+function neovim_retrieve_nightly_hash() {
+  last_prerelease_json=$(curl -s "https://api.github.com/repos/neovim/neovim/releases" | jq '[.[] | select(.prerelease == true)] | max_by(.published_at)')
+  tag_name=$(echo "$last_prerelease_json" | jq -r '.tag_name')
+  if [[ $tag_name == "nightly" ]]; then
+    echo "$last_prerelease_json" | jq -r '.target_commitish'
+  else
+    echo "Failed to retrieve commit hash of the latest nightly pre-release"
+    exit 1
+  fi
+}
+
 # Obtain the latest revision of the remote lock repository
 function repo_obtain_latest() {
   if [ ! -d "$LOCK_REPO_PATH" ]; then
@@ -146,8 +158,14 @@ function restore_editor() {
     return
   fi
   echo "Installed version/revision does not match the lock file"
-  echo "Installing Neovim from commit $lock_hash"
-  bob use "$lock_hash"
+  latest_nightly_hash=$(neovim_retrieve_nightly_hash)
+  if [[ $lock_hash == "$latest_nightly_hash" ]]; then
+    echo "Installing Neovim nightly"
+    bob use nightly
+  else
+    echo "Installing Neovim from commit $lock_hash"
+    bob use "$lock_hash"
+  fi
 }
 
 # Update Neovim plugins
@@ -158,7 +176,8 @@ function update_plugins() {
 
 # Update Neovim editor
 function update_editor() {
-  echo "Update editor is not implemented yet"
+  echo "Updating editor to the latest nightly build"
+  bob use nightly
 }
 
 # Commit changes in the local lock file
