@@ -124,3 +124,10 @@ map('n', '<F2>', Util.format.format, { desc = 'Format document' })
 map('v', '<F2>', Util.format.format, { desc = 'Format range' })
 
 -- NOTE: Some keys that are still free: $ ^ F5 F10
+
+-- Remove default LSP-related mappings
+-- These are not needed because we have our own custom mappings.
+vim.keymap.del('n', 'grn')
+vim.keymap.del('n', 'gra')
+vim.keymap.del('n', 'grr')
+-- TODO: There is also CTRL-S for signature help, perhaps we should remove it too
