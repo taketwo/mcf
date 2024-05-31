@@ -49,13 +49,13 @@ return {
             ['<A-]>'] = function(...) return require('telescope.actions').cycle_previewers_next(...) end,
             ['<A-[>'] = function(...) return require('telescope.actions').cycle_previewers_prev(...) end,
             ['<Esc>'] = function(...) return require('telescope.actions').close(...) end,
-            ['<C-t>'] = function(...) return require('trouble.providers.telescope').open_with_trouble(...) end,
+            ['<C-t>'] = function(...) return require('trouble.sources.telescope').open(...) end,
             -- TODO: Consider adding keymaps similar to the following
             -- ['<a-i>'] = function() Util.telescope('find_files', { no_ignore = true })() end,
             -- ['<a-h>'] = function() Util.telescope('find_files', { hidden = true })() end,
           },
           n = {
-            ['<C-t>'] = function(...) return require('trouble.providers.telescope').open_with_trouble(...) end,
+            ['<C-t>'] = function(...) return require('trouble.sources.telescope').open(...) end,
           },
         },
         -- Open files in the first window that is an actual file.

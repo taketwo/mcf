@@ -1,13 +1,13 @@
 return {
   {
     'folke/trouble.nvim',
-    cmd = { 'TroubleToggle', 'Trouble' },
+    cmd = { 'Trouble' },
     keys = {
       {
         '[q',
         function()
           if require('trouble').is_open() then
-            require('trouble').previous({ skip_groups = true, jump = true })
+            require('trouble').prev({ skip_groups = true, jump = true })
           else
             vim.cmd.cprev()
           end
@@ -28,14 +28,12 @@ return {
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
-      action_keys = {
-        previous = 'c',
-        next = 't',
-        open_tab = {}, -- never use tabs
-        open_code_href = 'g', -- (g)o to the diagnostic URI
+      auto_close = true, -- Auto close when there are no items
+      focus = true, -- Focus the window when opened
+      keys = {
+        t = 'next',
+        c = 'prev',
       },
-      auto_close = true,
-      use_diagnostic_signs = true,
     },
     -- NOTE: Keymaps are defined in lspconfig.lua when LSP is active
   },
