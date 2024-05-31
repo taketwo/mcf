@@ -237,13 +237,9 @@ if [[ -n $current_operation && -z $current_target ]]; then
   done
 fi
 
-# Default behavior if no arguments are provided
+# If no arguments are provided, run a predefined sync sequence
 if [ ${#execution_plan[@]} -eq 0 ]; then
-  for operation in "${operations[@]}"; do
-    for target in "${targets[@]}"; do
-      execution_plan+=("$operation $target")
-    done
-  done
+  execution_plan=("update editor" "commit editor" "restore plugins" "update plugins" "commit plugins")
 fi
 
 # Add repo management commands to the execution plan
