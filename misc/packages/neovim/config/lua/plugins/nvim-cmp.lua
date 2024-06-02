@@ -13,7 +13,6 @@ return {
     },
     opts = function()
       local cmp = require('cmp')
-      local Util = require('mcf.util')
       return {
         snippet = {
           expand = function(args) vim.fn['UltiSnips#Anon'](args.body) end,
@@ -24,7 +23,7 @@ return {
           ['<C-d>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-h>'] = cmp.mapping.close(),
-          ['<C-n>'] = Util.cmp.confirm(),
+          ['<C-n>'] = LazyVim.cmp.confirm(),
           ['<C-t>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
           ['<C-CR>'] = function(fallback)
             cmp.abort()

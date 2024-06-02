@@ -1,5 +1,3 @@
-local Util = require('mcf.util')
-
 local M = {}
 
 function M.on_attach(client, buffer) require('mcf.config.lsp.keymaps').on_attach(client, buffer) end
@@ -29,7 +27,7 @@ function M.capabilities()
     end
   end
 
-  Util.info(table.concat(lines, '\n'), { title = 'LSP Capabilities' })
+  LazyVim.info(table.concat(lines, '\n'), { title = 'LSP Capabilities' })
 end
 
 function M.setup()

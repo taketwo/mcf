@@ -1,5 +1,3 @@
-local Util = require('mcf.util')
-
 local function map(mode, lhs, rhs, opts)
   opts = opts or {}
   opts.silent = opts.silent == nil and true or opts.silent
@@ -84,26 +82,26 @@ map('i', '.', '.<c-g>u', { desc = 'Insert . and add undo breakpoint' })
 map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 
 -- Toggle buffer options
-map('n', '<Leader>us', function() Util.toggle('spell') end, { desc = 'Toggle spellchecking' })
-map('n', '<Leader>uw', function() Util.toggle('wrap') end, { desc = 'Toggle word wraping' })
-map('n', '<Leader>ul', function() Util.toggle.number() end, { desc = 'Toggle line numbers' })
+map('n', '<Leader>us', function() LazyVim.toggle('spell') end, { desc = 'Toggle spellchecking' })
+map('n', '<Leader>uw', function() LazyVim.toggle('wrap') end, { desc = 'Toggle word wraping' })
+map('n', '<Leader>ul', function() LazyVim.toggle.number() end, { desc = 'Toggle line numbers' })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map(
   'n',
   '<Leader>uc',
-  function() Util.toggle('conceallevel', false, { 0, conceallevel }) end,
+  function() LazyVim.toggle('conceallevel', false, { 0, conceallevel }) end,
   { desc = 'Toggle concealing' }
 )
-map('n', '<Leader>ud', Util.toggle.diagnostics, { desc = 'Toggle diagnostics' })
-map('n', '<Leader>uf', function() Util.format.toggle(true) end, { desc = 'Toggle format on save' })
-map('n', '<Leader>uF', function() Util.format.toggle() end, { desc = 'Toggle format on save (globally)' })
+map('n', '<Leader>ud', LazyVim.toggle.diagnostics, { desc = 'Toggle diagnostics' })
+map('n', '<Leader>uf', function() LazyVim.format.toggle(true) end, { desc = 'Toggle format on save' })
+map('n', '<Leader>uF', function() LazyVim.format.toggle() end, { desc = 'Toggle format on save (globally)' })
 
 -- Command-line completion
 map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
 map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
 
 -- Floating terminal
-local lazyterm = function() Util.terminal(nil, { cwd = Util.root() }) end
+local lazyterm = function() LazyVim.terminal(nil, { cwd = LazyVim.root() }) end
 map('n', '<C-/>', lazyterm, { desc = 'Show terminal' })
 map('t', '<C-/>', '<cmd>close<cr>', { desc = 'Hide terminal' })
 -- NOTE: The <C-_> maps is necessary due terminal weirdness
@@ -120,8 +118,8 @@ map('t', '<C-n>', '<cmd>wincmd l<cr>', { desc = 'Go to right window' })
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
 map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = false })
-map('n', '<F2>', Util.format.format, { desc = 'Format document' })
-map('v', '<F2>', Util.format.format, { desc = 'Format range' })
+map('n', '<F2>', LazyVim.format.format, { desc = 'Format document' })
+map('v', '<F2>', LazyVim.format.format, { desc = 'Format range' })
 
 -- NOTE: Some keys that are still free: $ ^ F5 F10
 

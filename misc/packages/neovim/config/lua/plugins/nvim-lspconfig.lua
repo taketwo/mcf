@@ -1,5 +1,3 @@
-local Util = require('mcf.util')
-
 return {
   {
     'neovim/nvim-lspconfig',
@@ -30,7 +28,7 @@ return {
       })
 
       -- Register LSP formatter
-      Util.format.register(Util.lsp.formatter())
+      LazyVim.format.register(LazyVim.lsp.formatter())
 
       -- LSP server settings
       local servers = {

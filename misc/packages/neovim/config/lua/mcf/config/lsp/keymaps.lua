@@ -1,5 +1,3 @@
-local Util = require('mcf.util')
-
 local M = {}
 
 -- Goto to the next error diagnostic, if present. Otherwise, goto to the next diagnostic of any severity.
@@ -55,7 +53,7 @@ M._keys = {
   { 'gD', '<cmd>Trouble lsp_declarations<cr>', desc = 'Go to declaration', has = 'declaration' },
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
-  { '<Leader>ui', function() Util.toggle.inlay_hints() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
+  { '<Leader>ui', function() LazyVim.toggle.inlay_hints() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
 -- Do not set LSP keymaps for these filetypes

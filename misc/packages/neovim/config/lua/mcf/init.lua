@@ -13,8 +13,8 @@ require('mcf.globals')
 -- Setup formatting on VeryLazy event
 -- TODO: Perhaps there are other setup/configuration calls that can be postponed until VeryLazy event.
 -- Decide where is the right place to register such callbacks.
-require('lazyvim.util').on_very_lazy(function()
-  require('mcf.util').format.setup()
-  require('mcf.util').root.setup()
+LazyVim.on_very_lazy(function()
+  LazyVim.format.setup()
+  LazyVim.root.setup()
   require('mcf.config.lsp').setup()
 end)
