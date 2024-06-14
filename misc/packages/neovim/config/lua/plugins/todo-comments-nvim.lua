@@ -1,6 +1,12 @@
 return {
   {
     'folke/todo-comments.nvim',
+    dependencies = {
+      {
+        'folke/which-key.nvim',
+        opts = { defaults = { ['<Leader>t'] = { name = 'Trouble' } } },
+      },
+    },
     cmd = { 'TodoTrouble', 'TodoTelescope' },
     event = { 'BufReadPost', 'BufNewFile' },
     config = true,
@@ -8,9 +14,12 @@ return {
       { ']t', function() require('todo-comments').jump_next() end, desc = 'Next todo comment' },
       { '[t', function() require('todo-comments').jump_prev() end, desc = 'Previous todo comment' },
       { '<leader>.t', '<cmd>TodoTelescope<cr>', desc = 'Show todo comments' },
-      -- TODO: Consider enabling these or similar mappings
-      -- { "<leader>xt", "<cmd>TodoTrouble<cr>", desc = "Todo (Trouble)" },
-      -- { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
+      { '<leader>tt', '<cmd>Trouble todo toggle<cr>', desc = 'Show todo comments' },
+      {
+        '<leader>tT',
+        '<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>',
+        desc = 'Show actionable todo comments',
+      },
     },
   },
 }
