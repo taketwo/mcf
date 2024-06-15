@@ -25,6 +25,7 @@ opt.guicursor = 'a:blinkon0' -- Disable blinking cursor
 opt.ignorecase = true -- Ignore case when searching
 opt.inccommand = 'nosplit' -- Preview incremental substitute
 opt.laststatus = 2 -- Always show statusline                                         -- TODO: Consider trying 3
+opt.linebreak = true -- Wrap long lines at characters in 'breakat'
 opt.list = true -- Show some invisible characters
 opt.listchars = { tab = '→ ', trail = '·' } -- Show tabs and trailing spaces
 opt.matchpairs:append({ '<:>' }) -- Match angle brackets
