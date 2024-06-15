@@ -26,9 +26,24 @@ return {
     },
     config = function(_, opts)
       require('mason').setup(opts)
+      local registry = require('mason-registry')
+
+      -- Setup handler for successful installation of packages.
+      -- It triggers FileType event to possibly load this newly installed LSP server (copied from LazyVim)
+      registry:on('package:install:success', function()
+        vim.defer_fn(
+          function()
+            require('lazy.core.handler.event').trigger({
+              event = 'FileType',
+              buf = vim.api.nvim_get_current_buf(),
+            })
+          end,
+          100
+        )
+      end)
+
       -- Automatically refresh registry and install tools from the list above (copied from LazyVim)
       -- This is triggered every time LSP config is loaded
-      local registry = require('mason-registry')
       registry.refresh(function()
         for _, tool in ipairs(opts.ensure_installed) do
           local p = registry.get_package(tool)
