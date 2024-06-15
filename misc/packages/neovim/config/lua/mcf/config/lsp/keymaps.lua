@@ -12,6 +12,7 @@ local diagnostic_goto_prev_priority = function()
   require('lspsaga.diagnostic'):goto_prev(vim.diagnostic.get_prev(opts) and opts or nil)
 end
 
+---@type LazyKeysLspSpec[]|nil
 M._keys = {
   { '<', diagnostic_goto_prev_priority, desc = 'Go to previous diagnostic' },
   { '>', diagnostic_goto_next_priority, desc = 'Go to next diagnostic' },
@@ -59,7 +60,40 @@ M._keys = {
 -- Do not set LSP keymaps for these filetypes
 M._filetype_blacklist = { 'ctrlsf' }
 
-function M.on_attach(client, buffer)
+-- Check if any of the LSP clients for the buffer support the given method
+-- Copied from LazyVim
+---@param method string|string[]
+function M.has(buffer, method)
+  if type(method) == 'table' then
+    for _, m in ipairs(method) do
+      if M.has(buffer, m) then return true end
+    end
+    return false
+  end
+  method = method:find('/') and method or 'textDocument/' .. method
+  local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
+  for _, client in ipairs(clients) do
+    if client.supports_method(method) then return true end
+  end
+  return false
+end
+
+---@return LazyKeysLsp[]
+function M.resolve(buffer)
+  local Keys = require('lazy.core.handler.keys')
+  if not Keys.resolve then return {} end
+  local spec = M._keys
+  -- TODO: Implement getting keymaps from server configurations
+  -- local opts = LazyVim.opts("nvim-lspconfig")
+  -- local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
+  -- for _, client in ipairs(clients) do
+  --   local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
+  --   vim.list_extend(spec, maps)
+  -- end
+  return Keys.resolve(spec)
+end
+
+function M.on_attach(_, buffer)
   require('which-key').register({
     ['<Leader>l'] = {
       name = 'LSP',
@@ -67,17 +101,21 @@ function M.on_attach(client, buffer)
     },
   }, { buffer = buffer })
   if vim.tbl_contains(M._filetype_blacklist, vim.bo.filetype) then return end
-  for _, keys in ipairs(M._keys) do
-    if
-      not keys.has
-      or client.server_capabilities[keys.has .. 'Provider']
-      or client.supports_method('textDocument/' .. keys.has)
-    then
-      local opts = require('lazy.core.handler.keys').opts(keys)
+
+  -- The rest is copied from LazyVim
+  local Keys = require('lazy.core.handler.keys')
+  local keymaps = M.resolve(buffer)
+  for _, keys in pairs(keymaps) do
+    local has = not keys.has or M.has(buffer, keys.has)
+    local cond = not (keys.cond == false or ((type(keys.cond) == 'function') and not keys.cond()))
+
+    if has and cond then
+      local opts = Keys.opts(keys)
+      opts.cond = nil
       opts.has = nil
-      opts.silent = true
+      opts.silent = opts.silent ~= false
       opts.buffer = buffer
-      vim.keymap.set(keys.mode or 'n', keys[1], keys[2], opts)
+      vim.keymap.set(keys.mode or 'n', keys.lhs, keys.rhs, opts)
     end
   end
 end
