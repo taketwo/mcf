@@ -9,21 +9,19 @@ function M.capabilities()
   local lines = {}
 
   for _, client in pairs(clients) do
-    if client.name ~= 'null-ls' then
-      local capabilities = {}
-      for key, value in pairs(client.server_capabilities) do
-        if value and key:find('Provider') then
-          local capability = key:gsub('Provider$', '')
-          table.insert(capabilities, '* ' .. capability)
-        end
+    local capabilities = {}
+    for key, value in pairs(client.server_capabilities) do
+      if value and key:find('Provider') then
+        local capability = key:gsub('Provider$', '')
+        table.insert(capabilities, '* ' .. capability)
       end
-      table.sort(capabilities) -- sorts alphabetically
-      table.insert(lines, '# ' .. client.name)
-      if #capabilities == 0 then
-        table.insert(lines, '* (none)')
-      else
-        vim.list_extend(lines, capabilities)
-      end
+    end
+    table.sort(capabilities) -- sorts alphabetically
+    table.insert(lines, '# ' .. client.name)
+    if #capabilities == 0 then
+      table.insert(lines, '* (none)')
+    else
+      vim.list_extend(lines, capabilities)
     end
   end
 
