@@ -76,92 +76,14 @@ function M.setup()
     }
   )
 
-  -- LSP server settings
-  -- TODO: Move to separate files
-  local servers = {
-    bashls = {},
-    clangd = {
-      cmd = {
-        'clangd',
-        '--background-index',
-        '--clang-tidy',
-        '--completion-style=bundled', -- TODO: Check if detailed style is better
-        '--function-arg-placeholders', -- TODO: Understand whether this is useful
-      },
-      filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'gtest.cpp' },
-      capabilities = {
-        offsetEncoding = 'utf-16',
-      },
-      -- Some of the supported options are listed at: https://clangd.llvm.org/extensions
-      init_options = {
-        usePlaceholders = true, -- TODO: Understand whether this is useful
-        completeUnimported = true, -- TODO: Understand whether this is useful
-      },
-    },
-    jedi_language_server = {},
-    lua_ls = {
-      settings = {
-        Lua = {
-          workspace = {
-            checkThirdParty = 'Disable',
-          },
-          codeLens = {
-            enable = false,
-          },
-          completion = {
-            callSnippet = 'Replace',
-          },
-          doc = {
-            privateName = { '^_' },
-          },
-          hint = {
-            enable = true,
-            arrayIndex = 'Disable',
-          },
-        },
-      },
-      capabilities = {
-        documentFormattingProvider = false,
-      },
-    },
-    ruff_lsp = {
-      init_options = {
-        settings = {
-          args = { '--config', vim.fn.stdpath('config') .. '/extras/ruff.toml' },
-          fixAll = false,
-          organizeImports = false,
-        },
-      },
-      capabilities = {
-        hoverProvider = false,
-      },
-    },
-    taplo = {},
-    typos_lsp = {
-      init_options = {
-        -- Assign 'warning' severity to discovered typos
-        diagnosticSeverity = 'Warning',
-      },
-    },
-    yamlls = {
-      settings = {
-        redhat = {
-          telemetry = {
-            enabled = false,
-          },
-        },
-        yaml = {
-          keyOrdering = false,
-          format = {
-            enable = true,
-          },
-          validate = {
-            enable = true,
-          },
-        },
-      },
-    },
-  }
+  -- Load LSP server configurations
+  local servers_dir = vim.fn.expand('%:p:h') .. '/servers'
+  local servers = {}
+  for file in io.popen('ls ' .. servers_dir):lines() do
+    local server_name = file:match('^(.+)%..+$') -- Filename without extension
+    local server_config = dofile(servers_dir .. '/' .. file)
+    servers[server_name] = server_config
+  end
 
   local function setup(server)
     local server_opts = vim.tbl_deep_extend('force', {
