@@ -3,6 +3,7 @@ return {
     'folke/trouble.nvim',
     cmd = { 'Trouble' },
     keys = {
+      { '<Leader>t', '', desc = 'Trouble' },
       {
         '[q',
         function()

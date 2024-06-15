@@ -5,19 +5,9 @@ return {
     dependencies = {
       { 'zbirenbaum/copilot.lua' },
       { 'nvim-lua/plenary.nvim' },
-      {
-        'folke/which-key.nvim',
-        opts = {
-          defaults = {
-            ['<Leader>a'] = {
-              name = 'AI support',
-              mode = { 'n', 'v' },
-            },
-          },
-        },
-      },
     },
     keys = {
+      { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
       { '<Leader>a<Space>', '<cmd>CopilotChatOpen<cr>', desc = 'Open Copilot chat' },
       { '<Leader>ae', '<cmd>CopilotChatExplain<cr>', desc = 'Explain how this code works', mode = { 'n', 'v' } },
       { '<Leader>ar', '<cmd>CopilotChatReview<cr>', desc = 'Review this code', mode = { 'n', 'v' } },

@@ -1,21 +1,6 @@
 return {
   {
     'johmsalas/text-case.nvim',
-    dependencies = {
-      {
-        'folke/which-key.nvim',
-        opts = {
-          defaults = {
-            ['<Leader>c'] = {
-              name = 'Change case',
-              mode = { 'n', 'v' },
-              o = { name = 'Operator' },
-              r = { name = 'Rename with LSP' },
-            },
-          },
-        },
-      },
-    },
     keys = function()
       local T = {
         { '.', 'to_dot_case', 'dot.case' },
@@ -29,7 +14,11 @@ return {
         { 't', 'to_title_case', 'Title Case' },
         { 'u', 'to_upper_case', 'UPPER CASE' },
       }
-      local keys = {}
+      local keys = {
+        { '<Leader>c', '', desc = 'Change case', mode = { 'n', 'v' } },
+        { '<Leader>co', '', desc = 'Operator' },
+        { '<Leader>cr', '', desc = 'Rename with LSP' },
+      }
       for _, entry in ipairs(T) do
         table.insert(keys, {
           ('<Leader>c' .. entry[1]),

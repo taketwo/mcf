@@ -2,20 +2,10 @@ return {
   'nomnivore/ollama.nvim',
   dependencies = {
     { 'nvim-lua/plenary.nvim' },
-    {
-      'folke/which-key.nvim',
-      opts = {
-        defaults = {
-          ['<Leader>o'] = {
-            name = 'Ollama',
-            mode = { 'n', 'v' },
-          },
-        },
-      },
-    },
   },
   cmd = { 'Ollama', 'OllamaModel' },
   keys = {
+    { '<Leader>o', '', desc = 'Ollama', mode = { 'n', 'v' } },
     -- Sample keybind for prompt menu. Note that the <c-u> is important for selections to work properly.
     {
       '<leader>oo',

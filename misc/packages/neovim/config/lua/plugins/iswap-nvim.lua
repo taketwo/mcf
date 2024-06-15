@@ -4,16 +4,6 @@ return {
     dependencies = {
       -- We use Leap highlight groups
       'ggandor/leap.nvim',
-      {
-        'folke/which-key.nvim',
-        opts = {
-          defaults = {
-            ['<Leader>s'] = {
-              name = 'Shift/swap object',
-            },
-          },
-        },
-      },
     },
     cmd = {
       'ISwap',
@@ -34,6 +24,7 @@ return {
       'IMoveNodeWithRight',
     },
     keys = {
+      { '<Leader>s', '', desc = 'Shift/swap object' },
       { '<Leader>sw', '<cmd>ISwapWith<cr>', desc = 'Swap with' },
       { '<Leader>sW', '<cmd>ISwapNodeWith<cr>', desc = 'Swap node with' },
     },
