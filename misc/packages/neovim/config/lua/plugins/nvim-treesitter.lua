@@ -43,6 +43,7 @@ return {
         'markdown',
         'markdown_inline',
         'nix',
+        'printf',
         'python',
         'regex',
         'toml',
