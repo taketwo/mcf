@@ -82,14 +82,13 @@ end
 function M.resolve(buffer)
   local Keys = require('lazy.core.handler.keys')
   if not Keys.resolve then return {} end
+  local server_configs = require('mcf.config.lsp').get_server_configs()
   local spec = M._keys
-  -- TODO: Implement getting keymaps from server configurations
-  -- local opts = LazyVim.opts("nvim-lspconfig")
-  -- local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
-  -- for _, client in ipairs(clients) do
-  --   local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
-  --   vim.list_extend(spec, maps)
-  -- end
+  local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
+  for _, client in ipairs(clients) do
+    local maps = server_configs[client.name] and server_configs[client.name].keys or {}
+    vim.list_extend(spec, maps)
+  end
   return Keys.resolve(spec)
 end
 
