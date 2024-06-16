@@ -75,12 +75,12 @@ function M.setup()
   )
 
   -- Load LSP server configurations
-  local servers_dir = vim.fn.expand('%:p:h') .. '/servers'
   local servers = {}
-  for file in io.popen('ls ' .. servers_dir):lines() do
-    local server_name = file:match('^(.+)%..+$') -- Filename without extension
-    local server_config = dofile(servers_dir .. '/' .. file)
-    servers[server_name] = server_config
+  local servers_dir = vim.fn.stdpath('config') .. '/lua/mcf/config/lsp/servers'
+  local files = require('plenary.scandir').scan_dir(servers_dir, { add_dirs = false })
+  for _, file in ipairs(files) do
+    local server = file:match('([^/]+)%.lua$')
+    if server then servers[server] = require('mcf.config.lsp.servers.' .. server) end
   end
 
   local function setup(server)
