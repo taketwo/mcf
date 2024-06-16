@@ -1,5 +1,19 @@
 local M = {}
 
+M._server_configs = nil
+
+function M.get_server_configs()
+  if M._server_configs then return M._server_configs end
+  local servers_dir = vim.fn.stdpath('config') .. '/lua/mcf/config/lsp/servers'
+  local files = require('plenary.scandir').scan_dir(servers_dir, { add_dirs = false })
+  M._server_configs = {}
+  for _, file in ipairs(files) do
+    local server = file:match('([^/]+)%.lua$')
+    if server then M._server_configs[server] = require('mcf.config.lsp.servers.' .. server) end
+  end
+  return M._server_configs
+end
+
 function M.on_attach(client, buffer) require('mcf.config.lsp.keymaps').on_attach(client, buffer) end
 
 function M.capabilities()
@@ -74,19 +88,12 @@ function M.setup()
     }
   )
 
-  -- Load LSP server configurations
-  local servers = {}
-  local servers_dir = vim.fn.stdpath('config') .. '/lua/mcf/config/lsp/servers'
-  local files = require('plenary.scandir').scan_dir(servers_dir, { add_dirs = false })
-  for _, file in ipairs(files) do
-    local server = file:match('([^/]+)%.lua$')
-    if server then servers[server] = require('mcf.config.lsp.servers.' .. server) end
-  end
+  local server_configs = M.get_server_configs()
 
   local function setup(server)
     local server_opts = vim.tbl_deep_extend('force', {
       capabilities = vim.deepcopy(capabilities),
-    }, servers[server] or {})
+    }, server_configs[server] or {})
     -- NOTE: LazyVim optionally called custom server setup function here.
     -- As we do not have any use cases for this, the step was removed.
     require('lspconfig')[server].setup(server_opts)
@@ -95,7 +102,7 @@ function M.setup()
   local available = vim.tbl_keys(require('mason-lspconfig.mappings.server').lspconfig_to_package)
 
   local ensure_installed = {} ---@type string[]
-  for server, server_opts in pairs(servers) do
+  for server, server_opts in pairs(server_configs) do
     if server_opts then
       server_opts = server_opts == true and {} or server_opts
       if server_opts.enabled ~= false then
