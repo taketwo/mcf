@@ -4,6 +4,7 @@ return {
     cmd = { 'Trouble' },
     keys = {
       { '<Leader>t', '', desc = 'Trouble' },
+      { '<Leader>tc', function() require('trouble').close() end, desc = 'Close' },
       {
         '[q',
         function()
