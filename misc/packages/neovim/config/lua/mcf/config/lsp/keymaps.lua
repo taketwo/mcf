@@ -12,10 +12,38 @@ local diagnostic_goto_prev_priority = function()
   require('lspsaga.diagnostic'):goto_prev(vim.diagnostic.get_prev(opts) and opts or nil)
 end
 
+-- Goto next LSP item
+-- LSP item is one of the following:
+--   1. Trouble item (if Trouble is visible)
+--   2. Error diagnostic (if present)
+--   3. Non-error diagnostic
+local goto_next = function()
+  local Trouble = require('trouble')
+  if Trouble.is_open() then
+    Trouble.next({ jump = true })
+  else
+    diagnostic_goto_next_priority()
+  end
+end
+
+-- Goto previous LSP item
+-- LSP item is one of the following:
+--   1. Trouble item (if Trouble is visible)
+--   2. Error diagnostic (if present)
+--   3. Non-error diagnostic
+local goto_prev = function()
+  local Trouble = require('trouble')
+  if Trouble.is_open() then
+    Trouble.prev({ jump = true })
+  else
+    diagnostic_goto_prev_priority()
+  end
+end
+
 ---@type LazyKeysLspSpec[]|nil
 M._keys = {
-  { '<', diagnostic_goto_prev_priority, desc = 'Go to previous diagnostic' },
-  { '>', diagnostic_goto_next_priority, desc = 'Go to next diagnostic' },
+  { '<', goto_prev, desc = 'Go to previous LSP item' },
+  { '>', goto_next, desc = 'Go to next LSP item' },
   { '[d', function() require('lspsaga.diagnostic'):goto_prev() end, desc = 'Previous diagnostic' },
   { ']d', function() require('lspsaga.diagnostic'):goto_next() end, desc = 'Next diagnostic' },
   {
