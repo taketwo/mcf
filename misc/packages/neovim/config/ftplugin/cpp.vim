@@ -47,24 +47,6 @@ EOF
 
 nnoremap <LocalLeader>a viwbvi&<Esc>
 
-nnoremap <LocalLeader>c :pythonx ToggleCase()<CR>
-pythonx << EOF
-def ToggleCase():
-    from os.path import expanduser, join
-    import sys; sys.path.append(join(expanduser("~"), ".mcf/scripts/library"))
-    import conversions
-    import vim
-    word = vim.eval('expand("<cword>")')
-    if conversions.is_camelcase(word):
-        converted = conversions.camelcase_to_snakecase(word)
-    elif conversions.is_snakecase(word):
-        converted = conversions.to_camelcase(word)
-    else:
-        return
-    vim.command('normal! viws{}'.format(converted))
-    print('{} → {}'.format(word, converted))
-EOF
-
 " Surround with function call
 " Adds braces around selected text and puts cursor in front of them to input
 " the function name
