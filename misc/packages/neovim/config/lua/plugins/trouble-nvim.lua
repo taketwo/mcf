@@ -35,6 +35,8 @@ return {
       keys = {
         t = 'next',
         c = 'prev',
+        ['>'] = 'next',
+        ['<'] = 'prev',
       },
     },
     -- NOTE: Keymaps are defined in lspconfig.lua when LSP is active
