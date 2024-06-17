@@ -65,10 +65,6 @@ def ToggleCase():
     print('{} → {}'.format(word, converted))
 EOF
 
-" Remove function call
-" When on a function name, removes the name and the parens around its arguments
-nnoremap <LocalLeader>f diwds()
-
 " Surround with function call
 " Adds braces around selected text and puts cursor in front of them to input
 " the function name
