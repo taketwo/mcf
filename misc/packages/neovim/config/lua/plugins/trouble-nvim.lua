@@ -30,6 +30,7 @@ return {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       auto_close = true, -- Auto close when there are no items
+      auto_refresh = false, -- Do not update the list when cursor moves to another symbol
       focus = true, -- Focus the window when opened
       keys = {
         t = 'next',
