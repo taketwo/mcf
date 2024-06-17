@@ -7,9 +7,17 @@ setlocal foldlevel=100
 
 lua << EOF
 require('which-key').register({
-    ['..'] = { '->', 'which_key_ignore' },
-    ['...'] = { '...', 'which_key_ignore' },
-}, { mode = 'i', buffer = 0 })
+    ['..'] = { '->', 'which_key_ignore', mode = 'i' },
+    ['...'] = { '...', 'which_key_ignore', mode = 'i' },
+    ['<LocalLeader>-'] = { 'Select until underscore and substitute' },
+    ['<LocalLeader>p'] = { 'Toggle _ suffix (private member)' },
+    ['<LocalLeader>.'] = { 'Toggle pointer' },
+    ['<LocalLeader>a'] = { 'Prepend &' },
+    ['<LocalLeader>f'] = { 'Surround with function call', mode = 'v' },
+    ['<LocalLeader>0'] = { 'Delete until next closing brace' },
+    ['<LocalLeader>]'] = { 'Create block', mode = 'i' },
+    ['<LocalLeader>;'] = { 'Append semicolon to the end of line', mode = {'n', 'i'} },
+}, { buffer = 0 })
 EOF
 
 " Select until the underscore and substitute
