@@ -29,6 +29,7 @@ return {
         desc = 'Quick question about this code',
         mode = { 'v' },
       },
+      { '<C-s>', '<CR>', desc = 'Submit prompt', ft = 'copilot-chat', remap = true },
     },
     opts = {
       debug = false,
