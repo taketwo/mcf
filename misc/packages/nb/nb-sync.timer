@@ -4,6 +4,7 @@ Requires=nb-sync.service
 
 [Timer]
 Unit=nb-sync.service
+OnBootSec=5min
 OnUnitInactiveSec=10m
 RandomizedDelaySec=2m
 AccuracySec=1s
