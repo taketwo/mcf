@@ -5,10 +5,10 @@ function show_help() {
   Usage: ${0##*/} [-h] layout
 
   This script configures the screen layout according to predefined rules.
-  Supported layouts: laptop, office, alpaca.
+  Supported layouts: lemur, lemur-ext, alpaca.
 
-  If layout is not given, then count the number of connected/active displays
-  and try to choose automatically.
+  If layout is not specified, the script will try to automatically select
+  it based on the hostname and the number of connected/active displays.
 
   Options:
 
@@ -18,9 +18,8 @@ EOF
 
 function set_layout() {
   case $1 in
-    laptop) xrandr --output "$EDP1" --primary --mode "$EDP1_MODE" --pos 0x0 --rotate normal --output "$DP1" --off ;;
-    office-0) xrandr --output "$EDP1" --off --output "$DP1" --off ;;
-    office) xrandr --output "$EDP1" --off --output "$DP1" --primary --mode "$DP1_MODE" --pose 0x0 --rotate normal ;;
+    lemur) xrandr --output "$EDP1" --primary --mode "$EDP1_MODE" --pos 0x0 --rotate normal --output "$DP1" --off ;;
+    lemur-ext) xrandr --output "$EDP1" --off --output "$DP1" --primary --mode "$DP1_MODE" --pos 0x0 --rotate normal ;;
     alpaca-0) xrandr --output HDMI-0 --off --output DP-4 --primary --mode 2560x1440 --pos 0x0 --rotate normal ;;
     alpaca) xrandr --output HDMI-0 --mode 2560x1440 --pos 4000x0 --rotate normal --output DP-4 --primary --mode 2560x1440 --pos 1440x0 --rotate normal --output DP-2 --mode 2560x1440 --pos 0x0 --rotate left ;;
   esac
@@ -42,37 +41,37 @@ done
 
 EDP1="eDP"
 EDP1_MODE="1920x1080"
-DP1="DP-1-2"
+DP1="DP-1-0"
 DP1_MODE="2560x1440"
 
 if [[ $layout == "" ]]; then
+  host=$(hostname)
   connected=$(xrandr --query | grep -c " connected ")
   active=$(xrandr --query | grep -c "*")
-  echo -n "Number of connected/active displays: $connected/$active, "
-  if [[ $connected == 1 ]]; then
-    layout='laptop'
-  elif [[ $connected == 2 ]]; then
-    layout='office'
-  elif [[ $connected == 3 ]]; then
-    layout='alpaca'
+  echo -n "Hostname: $host, number of connected/active displays: $connected/$active, "
+  if [[ $host == "alpaca" ]]; then
+    layout="alpaca"
+  elif [[ $host == "lemur" ]]; then
+    if [[ $connected == 1 ]]; then
+      layout="lemur"
+    elif [[ $connected == 2 ]]; then
+      layout="lemur-ext"
+    else
+      echo "unable to auto select layout for lemur with $connected displays"
+      exit 1
+    fi
   else
     echo "unable to auto select layout"
     exit 1
   fi
-  echo "auto selecting layout: $layout"
+  echo "selected layout: $layout"
 fi
 
-if [[ $layout == "laptop" ]]; then
-  set_layout "laptop"
-elif [[ $layout == "office" ]]; then
-  set_layout "office-0"
-  set_layout "office"
-elif [[ $layout == "alpaca" ]]; then
+if [[ $layout == "alpaca" ]]; then
   set_layout "alpaca-0"
   set_layout "alpaca"
 else
-  echo "Unknown layout '$layout'"
-  exit 1
+  set_layout "$layout"
 fi
 
 xmonad --restart
