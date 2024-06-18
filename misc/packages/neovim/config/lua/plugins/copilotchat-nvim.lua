@@ -6,6 +6,7 @@ return {
       { 'zbirenbaum/copilot.lua' },
       { 'nvim-lua/plenary.nvim' },
     },
+    cmd = 'CopilotChat',
     keys = {
       { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
       { '<Leader>a<Space>', '<cmd>CopilotChatOpen<cr>', desc = 'Open Copilot chat', mode = { 'n', 'v' } },
