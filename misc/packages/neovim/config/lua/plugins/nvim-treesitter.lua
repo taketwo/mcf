@@ -46,6 +46,7 @@ return {
         'printf',
         'python',
         'regex',
+        'terraform',
         'toml',
         'vim',
         'vimdoc',
