@@ -9,6 +9,7 @@ return {
           ['<Leader>'] = {
             g = {
               name = 'Git',
+              b = { gs.blame, 'Blame' },
               d = { gs.toggle_deleted, 'Toggle deleted lines' },
               h = {
                 name = 'Hunks',
