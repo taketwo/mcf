@@ -28,21 +28,23 @@ return {
           },
           [']h'] = {
             function()
-              if vim.wo.diff then return ']h' end
-              vim.schedule(function() gs.nav_hunk('next') end)
-              return '<Ignore>'
+              if vim.wo.diff then
+                vim.cmd.normal({ ']c', bang = true })
+              else
+                gs.nav_hunk('next')
+              end
             end,
-            'Next git hunk',
-            expr = true,
+            'Next git hunk or diff',
           },
           ['[h'] = {
             function()
-              if vim.wo.diff then return '[h' end
-              vim.schedule(function() gs.nav_hunk('prev') end)
-              return '<Ignore>'
+              if vim.wo.diff then
+                vim.cmd.normal({ '[c', bang = true })
+              else
+                gs.nav_hunk('prev')
+              end
             end,
-            'Previous git hunk',
-            expr = true,
+            'Previous git hunk or diff',
           },
           -- Text object
           ih = { ':<C-U>Gitsigns select_hunk<CR>', 'Git hunk', mode = { 'o', 'x' } },
