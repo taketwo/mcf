@@ -12,6 +12,11 @@ return {
       { '<Leader>a<Space>', '<cmd>CopilotChatOpen<cr>', desc = 'Open Copilot chat', mode = { 'n', 'v' } },
       { '<Leader>ae', '<cmd>CopilotChatExplain<cr>', desc = 'Explain how this code works', mode = { 'n', 'v' } },
       { '<Leader>ar', '<cmd>CopilotChatReview<cr>', desc = 'Review this code', mode = { 'n', 'v' } },
+      {
+        '<Leader>aR',
+        function() vim.diagnostic.reset(vim.api.nvim_get_namespaces()['copilot_review']) end,
+        desc = 'Reset review diagnostics',
+      },
       { '<Leader>af', '<cmd>CopilotChatFix<cr>', desc = 'Fix this code', mode = { 'n', 'v' } },
       { '<Leader>ao', '<cmd>CopilotChatOptimize<cr>', desc = 'Optimize this code', mode = { 'n', 'v' } },
       { '<Leader>ad', '<cmd>CopilotChatDocs<cr>', desc = 'Write documentation for this code', mode = { 'n', 'v' } },
