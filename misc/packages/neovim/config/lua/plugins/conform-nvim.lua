@@ -32,11 +32,11 @@ return {
       },
       log_level = vim.log.levels.DEBUG,
       formatters_by_ft = {
+        cmake = { 'gersemi' },
         lua = { 'stylua' },
         python = { 'black', 'usort' },
         sh = { 'shfmt' },
         xml = { 'xmllint' },
-        cmake = { 'gersemi' },
       },
       formatters = {
         injected = { options = { ignore_errors = true } },
