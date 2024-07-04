@@ -10,11 +10,11 @@
       }
     },
     "level": {
-      "critical": "Critical",
-      "error": "Error|error",
-      "warning": "Warning|warning",
-      "info": "Default|Detailed|Setup|info",
-      "debug": "Kilo|Mego|Giga|Debug|debug"
+      "critical": "Critical|Crt",
+      "error": "Error|error|Err",
+      "warning": "Warning|warning|Wrn",
+      "info": "Default|Detailed|Setup|info|Inf",
+      "debug": "Kilo|Mego|Giga|Debug|debug|Trc"
     },
     "value": {
       "nodelet": {
