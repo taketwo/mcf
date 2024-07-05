@@ -32,7 +32,7 @@ return {
       -- The keys that will be used as a selection, in order
       keys = 'aoeuhtnsi',
       -- Highlight group for the sniping value (asdf etc.)
-      hl_snipe = 'LeapLabelPrimary',
+      hl_snipe = 'LeapLabel',
       -- Disable post-operation highlight flashing
       flash_style = false,
     },
