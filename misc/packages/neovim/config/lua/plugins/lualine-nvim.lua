@@ -3,8 +3,8 @@ return {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
     dependencies = {
-      'nvim-tree/nvim-web-devicons',
-      'AndreM222/copilot-lualine',
+      { 'AndreM222/copilot-lualine' },
+      { 'echasnovski/mini.icons' },
     },
     opts = {
       theme = 'onedark',

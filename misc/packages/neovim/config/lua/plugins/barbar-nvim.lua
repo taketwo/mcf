@@ -3,7 +3,7 @@ return {
     'romgrk/barbar.nvim',
     event = 'VeryLazy',
     dependencies = {
-      { 'nvim-tree/nvim-web-devicons' },
+      { 'echasnovski/mini.icons' },
     },
     keys = {
       { 'H', '<cmd>BufferPrevious<cr>', desc = 'Previous buffer' },

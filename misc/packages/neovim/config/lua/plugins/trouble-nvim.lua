@@ -28,7 +28,9 @@ return {
         desc = 'Next Trouble/Quickfix item',
       },
     },
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = {
+      { 'echasnovski/mini.icons' },
+    },
     opts = {
       auto_close = true, -- Auto close when there are no items
       auto_refresh = false, -- Do not update the list when cursor moves to another symbol
