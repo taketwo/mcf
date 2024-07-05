@@ -6,3 +6,4 @@ export FORGIT_COPY_CMD='xsel --clipboard --input'
 # See: https://github.com/wfxr/forgit#custom-options for other configuration possibilities
 # shellcheck source=/dev/null
 source "$MCF/external/forgit/forgit.plugin.sh"
+source "$MCF/external/forgit/completions/git-forgit.bash"
