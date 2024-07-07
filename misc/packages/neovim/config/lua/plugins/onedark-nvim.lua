@@ -17,9 +17,9 @@ return {
         CursorLineNr = { fmt = 'bold' },
         YankedRegion = { fg = '$red' },
         FloatBorder = { bg = 'none' },
-        IlluminatedWordText = { fmt = 'bold' },
-        IlluminatedWordRead = { fmt = 'bold' },
-        IlluminatedWordWrite = { fmt = 'bold' },
+        IlluminatedWordText = { fmt = 'bold', bg = 'none' },
+        IlluminatedWordRead = { fmt = 'bold', bg = 'none' },
+        IlluminatedWordWrite = { fmt = 'bold', bg = 'none' },
         MatchParen = { fg = '$red', bg = 'none', fmt = 'bold' }, -- Matching parenthesis
         MatchWord = { fg = 'none', bg = 'none', fmt = 'nocombine' }, -- Matching word/tag (disable highlighting)
         NeoTreeIndentMarker = { fg = '$grey' },
