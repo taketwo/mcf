@@ -34,6 +34,7 @@ return {
       formatters_by_ft = {
         cmake = { 'gersemi' },
         lua = { 'stylua' },
+        proto = { 'clang-format' },
         python = { 'black', 'usort' },
         sh = { 'shfmt' },
         xml = { 'xmllint' },
