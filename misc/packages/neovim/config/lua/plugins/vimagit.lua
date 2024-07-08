@@ -6,6 +6,7 @@ return {
     init = function()
       vim.g.magit_jump_next_hunk = '>'
       vim.g.magit_jump_prev_hunk = '<'
+      vim.g.magit_show_magit_mapping = ''
     end,
   },
 }
