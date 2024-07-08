@@ -44,6 +44,7 @@ return {
         'markdown_inline',
         'nix',
         'printf',
+        'proto',
         'python',
         'regex',
         'terraform',
