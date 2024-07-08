@@ -37,14 +37,22 @@ return {
       },
       { '<C-s>', '<CR>', desc = 'Submit prompt', ft = 'copilot-chat', remap = true },
     },
-    opts = {
-      debug = false,
-      mappings = {
-        complete = {
-          insert = '',
+    opts = function()
+      local user = vim.env.USER or 'User'
+      user = user:sub(1, 1):upper() .. user:sub(2)
+      return {
+        debug = false,
+        mappings = {
+          complete = {
+            insert = '',
+          },
         },
-      },
-    },
+        selection = function(source)
+          local select = require('CopilotChat.select')
+          return select.visual(source) or select.buffer(source)
+        end,
+      }
+    end,
     config = function(_, opts)
       require('CopilotChat').setup(opts)
       require('CopilotChat.integrations.cmp').setup()
