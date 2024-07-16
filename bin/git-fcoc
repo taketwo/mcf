@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# This is an adapted version of 'fcoc' recipe from FZF wiki
-# Checkout commit
-
-commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-commit=$(echo "$commits" | fzf --tac +s +m -e) &&
-git checkout $(echo "$commit" | sed "s/ .*//")

@@ -32,6 +32,7 @@
   changed-stat = "!git diff --stat $(git merge-base HEAD ${REVIEW_BASE:-master})"
   fa = forgit add
   fbd = forgit branch_delete
+  fcoc = forgit checkout_commit
   fcp = forgit cherry_pick
   fcpb = forgit cherry_pick_from_branch
   fd = forgit diff
