@@ -1,6 +1,7 @@
 return {
   {
     'dyng/ctrlsf.vim',
+    cmd = { 'CtrlSF' },
     keys = {
       { '<C-f>', '<Plug>CtrlSFPrompt', desc = 'CtrlSF prompt' },
       { '<C-f>', '<Plug>CtrlSFVwordExec', desc = 'CtrlSF selection', mode = 'x' },
