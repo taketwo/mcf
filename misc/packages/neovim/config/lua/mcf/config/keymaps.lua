@@ -83,7 +83,7 @@ map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 
 -- Toggle buffer options
 map('n', '<Leader>us', function() LazyVim.toggle('spell') end, { desc = 'Toggle spellchecking' })
-map('n', '<Leader>uw', function() LazyVim.toggle('wrap') end, { desc = 'Toggle word wraping' })
+map('n', '<Leader>uw', function() LazyVim.toggle('wrap') end, { desc = 'Toggle word wrapping' })
 map('n', '<Leader>ul', function() LazyVim.toggle.number() end, { desc = 'Toggle line numbers' })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map(
@@ -92,7 +92,7 @@ map(
   function() LazyVim.toggle('conceallevel', false, { 0, conceallevel }) end,
   { desc = 'Toggle concealing' }
 )
-map('n', '<Leader>ud', LazyVim.toggle.diagnostics, { desc = 'Toggle diagnostics' })
+map('n', '<Leader>ud', function() LazyVim.toggle.diagnostics() end, { desc = 'Toggle diagnostics' })
 map('n', '<Leader>uf', function() LazyVim.format.toggle(true) end, { desc = 'Toggle format on save' })
 map('n', '<Leader>uF', function() LazyVim.format.toggle() end, { desc = 'Toggle format on save (globally)' })
 

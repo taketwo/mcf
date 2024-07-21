@@ -6,18 +6,22 @@ setlocal foldmethod=syntax
 setlocal foldlevel=100
 
 lua << EOF
-require('which-key').register({
-    ['..'] = { '->', 'which_key_ignore', mode = 'i' },
-    ['...'] = { '...', 'which_key_ignore', mode = 'i' },
-    ['<LocalLeader>-'] = { 'Select until underscore and substitute' },
-    ['<LocalLeader>p'] = { 'Toggle _ suffix (private member)' },
-    ['<LocalLeader>.'] = { 'Toggle pointer' },
-    ['<LocalLeader>a'] = { 'Prepend &' },
-    ['<LocalLeader>f'] = { 'Surround with function call', mode = 'v' },
-    ['<LocalLeader>0'] = { 'Delete until next closing brace' },
-    ['<LocalLeader>]'] = { 'Create block', mode = 'i' },
-    ['<LocalLeader>;'] = { 'Append semicolon to the end of line', mode = {'n', 'i'} },
-}, { buffer = 0 })
+require('which-key').add({
+    buffer = 0,
+    {
+      { '..', desc = '->', mode = 'i' },
+    -- TODO: Not clear whether this is still needed
+    -- ['...'] = { '...', 'which_key_ignore', mode = 'i' },
+      { '<LocalLeader>-', desc = 'Select until underscore and substitute', },
+      { '<LocalLeader>p', desc = 'Toggle _ suffix (private member)' },
+      { '<LocalLeader>.', desc = 'Toggle pointer' },
+      { '<LocalLeader>a', desc = 'Prepend &' },
+      { '<LocalLeader>f', desc = 'Surround with function call', mode = 'v' },
+      { '<LocalLeader>0', desc = 'Delete until next closing brace' },
+      { '<LocalLeader>]', desc = 'Create block', mode = 'i' },
+      { '<LocalLeader>;', desc = 'Append semicolon to the end of line', mode = {'n', 'i'} },
+    }
+})
 EOF
 
 " Select until the underscore and substitute

@@ -43,7 +43,7 @@ function M.setup()
     },
   }
 
-  wk.register(keymap, {
+  wk.add(keymap, {
     mode = 'n',
     prefix = '<Leader>',
     buffer = nil,
@@ -58,7 +58,7 @@ function M.setup()
       e = { dapui.eval, 'Evaluate' },
     },
   }
-  wk.register(keymap_v, {
+  wk.add(keymap_v, {
     mode = 'v',
     prefix = '<Leader>',
     buffer = nil,
@@ -67,7 +67,7 @@ function M.setup()
     nowait = false,
   })
 
-  wk.register({
+  wk.add({
     ['<F5>'] = { dap.continue, 'Continue' },
     ['<F9>'] = { dap.toggle_breakpoint, 'Toggle breakpoint' },
     ['<F10>'] = { dap.step_over, 'Step over' },

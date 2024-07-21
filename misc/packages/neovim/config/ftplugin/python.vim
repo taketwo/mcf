@@ -21,10 +21,9 @@ require('nvim-surround').buffer_setup({
   },
 })
 
-require('which-key').register({
-    ['<LocalLeader>'] = {
-        b = { '<cmd>call InsertBreakpoint()<CR>', 'Insert PuDB breakpoint' },
-        [':'] = { '<cmd>call AppendColon()<CR>', 'Append colon' },
-    },
+require('which-key').add({
+   buffer = 0,
+   { '<LocalLeader>b', '<cmd>call InsertBreakpoint()<CR>', desc = 'Insert PuDB breakpoint' },
+   { '<LocalLeader>:', '<cmd>call AppendColon()<CR>', desc = 'Append colon' },
 })
 EOF

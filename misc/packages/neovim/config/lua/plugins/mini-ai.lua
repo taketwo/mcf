@@ -23,49 +23,62 @@ return {
     end,
     config = function(_, opts)
       require('mini.ai').setup(opts)
-      local i = {
-        [' '] = 'Whitespace',
-        ['"'] = 'Balanced "',
-        ["'"] = "Balanced '",
-        ['`'] = 'Balanced `',
-        ['('] = 'Balanced (',
-        [')'] = 'Balanced ) including white-space',
-        ['>'] = 'Balanced > including white-space',
-        ['<lt>'] = 'Balanced <',
-        [']'] = 'Balanced ] including white-space',
-        ['['] = 'Balanced [',
-        ['}'] = 'Balanced } including white-space',
-        ['{'] = 'Balanced {',
-        ['?'] = 'User prompt',
-        _ = 'Underscore',
-        a = 'Argument',
-        A = 'Assignment',
-        b = 'Balanced ), ], }',
-        c = 'Class',
-        C = 'Comment',
-        d = 'Digits',
-        f = 'Function',
-        F = 'Fenced code block',
-        o = 'Block, conditional, loop',
-        q = 'Quote `, ", \'',
-        t = 'Tag',
-      }
-      local a = vim.deepcopy(i)
-      for k, v in pairs(a) do
-        a[k] = v:gsub(' including.*', '')
-      end
-
-      local ic = vim.deepcopy(i)
-      local ac = vim.deepcopy(a)
-      for key, name in pairs({ n = 'next', l = 'last' }) do
-        i[key] = vim.tbl_extend('force', { name = 'Inside ' .. name .. ' textobject' }, ic)
-        a[key] = vim.tbl_extend('force', { name = 'Around ' .. name .. ' textobject' }, ac)
-      end
-      require('which-key').register({
-        mode = { 'o', 'x' },
-        i = i,
-        a = a,
-      })
+      LazyVim.on_load('which-key.nvim', function()
+        vim.schedule(function()
+          -- NOTE: Key setup below is based on LazyVim.mini.ai_whichkey(). The objects table was
+          -- modified to match our objects, the rest was kept the same.
+          local objects = {
+            { ' ', desc = 'Whitespace' },
+            { '"', desc = 'Balanced "' },
+            { "'", desc = "Balanced '" },
+            { '(', desc = 'Balanced (' },
+            { ')', desc = 'Balanced ) including white-space' },
+            { '<', desc = 'Balanced < block' },
+            { '>', desc = 'Balanced > including white-space' },
+            { '?', desc = 'User prompt' },
+            { '[', desc = 'Balanced [' },
+            { ']', desc = 'Balanced ] including white-space' },
+            { '_', desc = 'Underscore' },
+            { '`', desc = 'Balanced `' },
+            { 'a', desc = 'Argument' },
+            { 'A', desc = 'Assignment' },
+            { 'b', desc = 'Balanced ), ], }' },
+            { 'c', desc = 'Class' },
+            { 'C', desc = 'Comment' },
+            { 'd', desc = 'Digit(s)' },
+            { 'f', desc = 'Function' },
+            { 'F', desc = 'Fenced code block' },
+            { 'o', desc = 'Block, conditional, loop' },
+            { 'q', desc = 'Balanced `, ", \'' },
+            { 't', desc = 'Tag' },
+            { 'i', desc = 'Indent' },
+            { '{', desc = 'Balanced {' },
+            { '}', desc = 'Balanced } including white-space' },
+          }
+          local ret = { mode = { 'o', 'x' } }
+          ---@type table<string, string>
+          local mappings = vim.tbl_extend('force', {}, {
+            around = 'a',
+            inside = 'i',
+            around_next = 'an',
+            inside_next = 'in',
+            around_last = 'al',
+            inside_last = 'il',
+          }, opts.mappings or {})
+          mappings.goto_left = nil
+          mappings.goto_right = nil
+          for name, prefix in pairs(mappings) do
+            name = name:gsub('^around_', ''):gsub('^inside_', '')
+            ret[#ret + 1] = { prefix, group = name }
+            for _, obj in ipairs(objects) do
+              local desc = obj.desc
+              if prefix:sub(1, 1) == 'i' then desc = desc:gsub(' with ws', '') end
+              ret[#ret + 1] = { prefix .. obj[1], desc = obj.desc }
+            end
+          end
+          require('which-key').add(ret, { notify = false })
+        end)
+      end)
     end,
   },
 }

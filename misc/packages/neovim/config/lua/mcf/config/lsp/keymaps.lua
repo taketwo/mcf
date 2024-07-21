@@ -121,12 +121,12 @@ function M.resolve(buffer)
 end
 
 function M.on_attach(_, buffer)
-  require('which-key').register({
-    ['<Leader>l'] = {
-      name = 'LSP',
-      mode = { 'n', 'v' },
+  require('which-key').add({
+    buffer = buffer,
+    {
+      { '<Leader>l', group = 'LSP', mode = { 'n', 'v' } },
     },
-  }, { buffer = buffer })
+  })
   if vim.tbl_contains(M._filetype_blacklist, vim.bo.filetype) then return end
 
   -- The rest is copied from LazyVim
