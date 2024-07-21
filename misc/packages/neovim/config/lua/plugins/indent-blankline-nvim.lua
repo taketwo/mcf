@@ -25,6 +25,13 @@ return {
         },
       },
     },
-    main = 'ibl',
+    config = function(_, opts)
+      require('ibl').setup(opts)
+      LazyVim.toggle.map('<Leader>ug', {
+        name = 'indentation guides',
+        get = function() return require('ibl.config').get_config(0).enabled end,
+        set = function(state) require('ibl').setup_buffer(0, { enabled = state }) end,
+      })
+    end,
   },
 }
