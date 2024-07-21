@@ -10,25 +10,21 @@ return {
           name = 'conform.nvim',
           priority = 100,
           primary = true,
-          format = function(buf)
-            local plugin = require('lazy.core.config').plugins['conform.nvim']
-            local Plugin = require('lazy.core.plugin')
-            local opts = Plugin.values(plugin, 'opts', false)
-            require('conform').format(require('lazyvim.util').merge({}, opts.format, { bufnr = buf }))
-          end,
+          format = function(buf) require('conform').format({ bufnr = buf }) end,
           sources = function(buf)
             local ret = require('conform').list_formatters(buf)
+            ---@param v conform.FormatterInfo
             return vim.tbl_map(function(v) return v.name end, ret)
           end,
         })
       end)
     end,
     opts = {
-      format = {
+      default_format_opts = {
         timeout_ms = 3000,
-        async = false,
-        quiet = false,
-        lsp_fallback = true,
+        async = false, -- not recommended to change
+        quiet = false, -- not recommended to change
+        lsp_format = 'fallback', -- not recommended to change
       },
       log_level = vim.log.levels.DEBUG,
       formatters_by_ft = {
