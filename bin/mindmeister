@@ -37,6 +37,10 @@ def get_li(line):
             return 3
         if line.endswith("li800"):
             return 4
+        if line.endswith("li1000"):
+            return 4
+        if line.endswith("li1200"):
+            return 4
     return None
 
 
