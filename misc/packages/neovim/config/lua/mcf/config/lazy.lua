@@ -16,14 +16,7 @@ require('lazy').setup({
     -- We are only interested in the utility functions and built-in plugins that come with LazyVim.
     -- We want to be able to use them in our config and plugin specifications, thus LazyVim comes
     -- before importing our plugins.
-    {
-      'LazyVim/LazyVim',
-      config = function()
-        -- Not running the complete LazyVim setup as we are only interested in the utility functions
-        _G.LazyVim = require('lazyvim.util')
-      end,
-      submodules = false, -- do not waste time cloning and updating submodules that we do not use
-    },
+    require('mcf.config.lazyvim.spec'),
     { import = 'plugins' },
   },
   diff = {
