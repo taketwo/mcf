@@ -26,28 +26,31 @@ class Item:
 
 
 def get_li(line):
-    if '\\li' in line:
-        if line.endswith('li0'):
+    if "\\li" in line:
+        if line.endswith("li0"):
             return 0
-        if line.endswith('li200'):
+        if line.endswith("li200"):
             return 1
-        if line.endswith('li400'):
+        if line.endswith("li400"):
             return 2
-        if line.endswith('li600'):
+        if line.endswith("li600"):
             return 3
-        if line.endswith('li800'):
+        if line.endswith("li800"):
             return 4
     return None
 
 
 def get_fs(line):
-    return '\\fs' in line
+    return "\\fs" in line
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='''
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="""
     Parse exported MindMeister map and generate Markdown outline.
-    ''', formatter_class=argparse.RawDescriptionHelpFormatter)
+    """,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("input_path", type=Path, help="Input path")
     args = parser.parse_args()
 
@@ -64,7 +67,7 @@ if __name__ == '__main__':
         if get_fs(line):
             is_note = False
             continue
-        if line.startswith('\\') or line.startswith('{') or line.startswith('}'):
+        if line.startswith("\\") or line.startswith("{") or line.startswith("}"):
             continue
         if not is_note:
             doc.append_item(level, line)
