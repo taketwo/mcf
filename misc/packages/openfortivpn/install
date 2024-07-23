@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 FFC=$HOME/.local/bin/ffc
-wget https://raw.githubusercontent.com/taketwo/fuckForticlient/cache/fuckForticlient.sh -O "$FFC"
+wget https://raw.githubusercontent.com/nonamed01/fuckForticlient/main/fuckForticlient.sh -O "$FFC"
 chmod +x "$FFC"
