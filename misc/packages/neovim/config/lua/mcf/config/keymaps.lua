@@ -82,19 +82,21 @@ map('i', '.', '.<c-g>u', { desc = 'Insert . and add undo breakpoint' })
 map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 
 -- Toggle buffer options
-map('n', '<Leader>us', function() LazyVim.toggle('spell') end, { desc = 'Toggle spellchecking' })
-map('n', '<Leader>uw', function() LazyVim.toggle('wrap') end, { desc = 'Toggle word wrapping' })
-map('n', '<Leader>ul', function() LazyVim.toggle.number() end, { desc = 'Toggle line numbers' })
-local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
-map(
-  'n',
+LazyVim.toggle.map('<Leader>us', LazyVim.toggle('spell', { name = 'spellchecking' }))
+LazyVim.toggle.map('<Leader>uw', LazyVim.toggle('wrap', { name = 'word wrapping' }))
+LazyVim.toggle.map('<Leader>ul', LazyVim.toggle.number)
+LazyVim.toggle.map('<Leader>uL', LazyVim.toggle('relativenumber', { name = 'relative line numbers' }))
+LazyVim.toggle.map(
   '<Leader>uc',
-  function() LazyVim.toggle('conceallevel', false, { 0, conceallevel }) end,
-  { desc = 'Toggle concealing' }
+  LazyVim.toggle(
+    'conceallevel',
+    { values = { 0, vim.o.conceallevel > 0 and vim.o.conceallevel or 3 }, name = 'concealing' }
+  )
 )
-map('n', '<Leader>ud', function() LazyVim.toggle.diagnostics() end, { desc = 'Toggle diagnostics' })
-map('n', '<Leader>uf', function() LazyVim.format.toggle(true) end, { desc = 'Toggle format on save' })
-map('n', '<Leader>uF', function() LazyVim.format.toggle() end, { desc = 'Toggle format on save (globally)' })
+LazyVim.toggle.map('<Leader>ud', LazyVim.toggle.diagnostics)
+LazyVim.toggle.map('<Leader>uf', LazyVim.toggle.format_buffer)
+LazyVim.toggle.map('<Leader>uF', LazyVim.toggle.format_global)
+LazyVim.toggle.map('<Leader>uT', LazyVim.toggle.treesitter)
 
 -- Command-line completion
 map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
