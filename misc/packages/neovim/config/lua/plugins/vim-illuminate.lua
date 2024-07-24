@@ -15,6 +15,7 @@ return {
         providers = { 'lsp' },
       },
       filetypes_denylist = {
+        'OverseerList',
         'magit',
         'markdown',
         'neo-tree',
