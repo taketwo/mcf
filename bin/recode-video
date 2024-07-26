@@ -6,6 +6,7 @@ function display_help {
   echo "Options:"
   echo "-c codec       Specify the codec (h264 or h265). If not provided, the input video's codec is used."
   echo "-r resolution  Specify the resolution (1080p, 720p, 480p, 360p, or 240p). If not provided, the input video's resolution is used."
+  echo "-d             Perform a dry run printing command(s) that would be executed without actually executing them."
   echo "-h             Display this help message."
   echo
   echo "If output path is not provided, the input path name with .recoded suffix is used. Both files and directories are supported. In"
@@ -14,11 +15,13 @@ function display_help {
 
 codec=""
 resolution=""
+dry_run=false
 
-while getopts c:r:h option; do
+while getopts c:r:dh option; do
   case "${option}" in
     c) codec=${OPTARG} ;;
     r) resolution=${OPTARG} ;;
+    d) dry_run=true ;;
     h)
       display_help
       exit 0
@@ -98,7 +101,10 @@ function recode_video() {
     echo "Output codec: same"
   fi
   ffmpeg_cmd+=("$output_file")
-  "${ffmpeg_cmd[@]}"
+  echo "Recoding command: ${ffmpeg_cmd[*]}"
+  if ! $dry_run; then
+    "${ffmpeg_cmd[@]}"
+  fi
 }
 
 input_path=$1
