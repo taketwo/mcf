@@ -1,5 +1,6 @@
 return {
   'MeanderingProgrammer/markdown.nvim',
+  enabled = false,
   ft = { 'markdown', 'norg', 'rmd', 'org' },
   opts = {
     file_types = { 'markdown', 'norg', 'rmd', 'org' },
