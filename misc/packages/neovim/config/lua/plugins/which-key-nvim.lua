@@ -17,8 +17,8 @@ return {
     opts = {
       preset = 'classic',
       keys = {
-        scroll_down = '<T>', -- TODO: Does not seem to work
-        scroll_up = '<C>', -- TODO: Does not seem to work
+        scroll_down = '<PageDown>',
+        scroll_up = '<PageUp>',
       },
       sort = {},
       icons = { mappings = false },
