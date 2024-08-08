@@ -25,6 +25,9 @@ return {
         NeoTreeIndentMarker = { fg = '$grey' },
         NeoTreeExpander = { fg = '$grey' },
         NeoTreeModified = { fg = '$orange' },
+        LeapBackdrop = { fg = '$grey' },
+        LeapMatch = { fg = 'none', bg = '$red', fmt = 'bold' },
+        LeapLabel = { fg = 'none', bg = '$blue', fmt = 'bold' },
       },
     },
     config = function(_, opts)
