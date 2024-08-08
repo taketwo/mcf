@@ -22,6 +22,12 @@ require('which-key').add({
       { '<LocalLeader>;', desc = 'Append semicolon to the end of line', mode = {'n', 'i'} },
     }
 })
+
+require('nvim-surround').buffer_setup({
+  surrounds = {
+    ['m'] = { add = { 'std::move(', ')' } },
+  },
+})
 EOF
 
 " Select until the underscore and substitute
