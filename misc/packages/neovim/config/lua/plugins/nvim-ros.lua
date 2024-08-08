@@ -12,6 +12,7 @@ return {
       { '<Leader>rs', '<cmd>Telescope ros srv<cr>', desc = 'Open service' },
       { '<Leader>ra', '<cmd>Telescope ros action<cr>', desc = 'Open action' },
     },
+    ft = { 'rosmsg', 'rossrv', 'rosaction' },
     opts = {
       log_level = 'trace',
     },
