@@ -142,6 +142,7 @@ myTopics =
   , TI "zeal"     ""                                         (spawn "zeal")
   , TI "mcf"      "~/.mcf"                                   (spawnTmux)
   , TI "ael"      ""                                         (spawnInTerminal "ael tmux load ael")
+  , TI "alpaca"   ""                                         (spawnInTerminal "mosh alpaca")
   , TI "remmina"  ""                                         (spawn "remmina")
   , TI "robots"   ""                                         (spawnInTerminal "ael tmux load robots")
   , TI "docker"   ""                                         (spawnInTerminal "ael container attach")
