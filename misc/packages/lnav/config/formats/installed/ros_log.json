@@ -6,7 +6,7 @@
     "file-pattern": ".*.log",
     "regex": {
       "node": {
-        "pattern": "\\[\\s*(?P<level>\\w+)] \\[(?P<timestamp>[\\d.]+)(, [\\d.]+)?\\]: (?P<body>.+)"
+        "pattern": "\\[\\s*(?P<level>\\w+)\\] \\[(?P<timestamp>[\\d.]+)(, [\\d.]+)?\\]: (?P<body>.+)"
       },
       "rosout": {
         "pattern": "(?P<timestamp>[\\d.]+) ((?P<level>\\w+)? (?P<node>\\/\\w+) \\[(?P<line>.+)\\] \\[(?P<topics>.+)\\])? (?P<message>.+)"
@@ -15,7 +15,7 @@
     "level": {
       "fatal": "FATAL",
       "error": "ERROR",
-      "warning": "WARNING",
+      "warning": "WARN",
       "info": "INFO",
       "debug": "DEBUG"
     },
@@ -29,8 +29,8 @@
         "level": "error"
       },
       {
-        "line": "[ERROR] [1681808186.931032510]: Door handle modeling failed with error message: boost::filesystem::create_directories: Invalid argument",
-        "level": "error"
+        "line": "[DEBUG] [1685644820.834500241]: Looking up transform between odom_vis and rgb_optical_frame",
+        "level": "debug"
       }
     ]
   }
