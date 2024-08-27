@@ -68,10 +68,18 @@ case $resolution in
     ;;
 esac
 
-# If neith codec nor resolution are specified, there is nothing to do
+# If neither codec nor resolution are specified, there is nothing to do
 if [[ -z $codec && -z $resolution ]]; then
   echo "No recoding necessary. Exiting..."
   exit 0
+fi
+
+# Check if ffmpeg and ffprobe are installed
+if ! command -v ffmpeg &>/dev/null || ! command -v ffprobe &>/dev/null; then
+  echo "ffmpeg and/or ffprobe are not available"
+  echo "Please install them using the following command on Ubuntu:"
+  echo "  sudo apt install ffmpeg"
+  exit 1
 fi
 
 function recode_video() {
