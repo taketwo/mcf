@@ -3,9 +3,7 @@ return {
   builder = function(params)
     return {
       cmd = { 'catkin' },
-      args = { 'build', '--no-status', '--this' },
-      -- name = 'build current catkin package',
-      -- cwd = '/tmp',
+      args = { 'build', '--no-status', vim.b.ros_package_name },
       components = {
         {
           'on_output_parse',
@@ -23,6 +21,9 @@ return {
       },
     }
   end,
-  desc = 'Build catkin workspace',
+  desc = 'package of the active file',
   tags = { require('overseer').TAG.BUILD },
+  condition = {
+    callback = function() return vim.b.ros_package_name ~= nil end,
+  },
 }
