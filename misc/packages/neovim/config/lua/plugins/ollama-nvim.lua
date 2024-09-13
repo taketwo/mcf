@@ -5,17 +5,17 @@ return {
   },
   cmd = { 'Ollama', 'OllamaModel' },
   keys = {
-    { '<Leader>o', '', desc = 'Ollama', mode = { 'n', 'v' } },
+    { '<Leader>aO', '', desc = 'Ollama', mode = { 'n', 'v' } },
     -- Sample keybind for prompt menu. Note that the <c-u> is important for selections to work properly.
     {
-      '<leader>oo',
+      '<Leader>aO<Space>',
       ":<c-u>lua require('ollama').prompt()<cr>",
       desc = 'Prompt',
       mode = { 'n', 'v' },
     },
     -- Sample keybind for direct prompting. Note that the <c-u> is important for selections to work properly.
     {
-      '<leader>oG',
+      '<Leader>aOG',
       ":<c-u>lua require('ollama').prompt('Generate_Code')<cr>",
       desc = 'Generate Code',
       mode = { 'n', 'v' },
