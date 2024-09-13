@@ -10,6 +10,7 @@ return {
       theme = 'onedark',
       sections = {
         lualine_x = {
+          { 'overseer' },
           { 'copilot', separator = ' ' },
           'encoding',
           'fileformat',
