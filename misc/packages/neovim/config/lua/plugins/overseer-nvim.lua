@@ -2,6 +2,23 @@ return {
   {
     'stevearc/overseer.nvim',
     cmd = { 'OverseerRun', 'OverseerToggle' },
+    keys = {
+      { '<Leader>o', '', desc = 'Overseer' },
+      { '<Leader>oc', '<cmd>OverseerClearCache<cr>', desc = 'Clear task cache' },
+      { '<Leader>oq', '<cmd>OverseerQuickAction<cr>', desc = 'Run action on most recent task' },
+      { '<Leader>or', '<cmd>OverseerRun<cr>', desc = 'Run task' },
+      { '<Leader>ot', '<cmd>OverseerToggle<cr>', desc = 'Toggle panel' },
+      {
+        '<F9>',
+        function()
+          vim.cmd('write')
+          vim.cmd('OverseerRun BUILD')
+        end,
+        desc = 'Run build',
+        silent = false,
+        mode = { 'n', 'i' },
+      },
+    },
     opts = {
       templates = { 'builtin', 'catkin.build' },
       -- Disable patching of nvim-dap to support preLaunchTask and postDebugTask
