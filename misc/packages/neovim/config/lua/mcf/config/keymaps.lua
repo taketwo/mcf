@@ -119,7 +119,6 @@ map('t', '<C-n>', '<cmd>wincmd l<cr>', { desc = 'Go to right window' })
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin
 map('i', '<C-d>', '<BS>', { desc = 'Delete last entered character' })
-map({ 'n', 'i' }, '<F9>', '<cmd>MakeTarget<cr>', { desc = 'Run make', silent = false })
 map('n', '<F2>', LazyVim.format.format, { desc = 'Format document' })
 map('v', '<F2>', LazyVim.format.format, { desc = 'Format range' })
 
