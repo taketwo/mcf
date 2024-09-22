@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+URL="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+TEMP_DIR=$(mktemp -d)
+DEST_DIR="$HOME/.aws"
+BIN_DIR="$HOME/.local/bin"
+
+curl "$URL" -o $TEMP_DIR/awscliv2.zip
+unzip $TEMP_DIR/awscliv2.zip -d $TEMP_DIR
+
+mkdir -p $DEST_DIR
+$TEMP_DIR/aws/install -i $DEST_DIR -b $BIN_DIR
+rm -rf $TEMP_DIR
