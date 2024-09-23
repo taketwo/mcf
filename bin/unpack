@@ -6,9 +6,10 @@ function print_help {
   echo "Unpack an archive file using the appropriate decompression tool."
   echo ""
   echo "Options:"
-  echo "  -d, --delete     Delete the archive file after unpacking."
-  echo "  -c, --clipboard  Use the path contained in the system clipboard instead of ARCHIVE_PATH."
-  echo "  -h, --help       Print this help message and exit."
+  echo "  -d, --delete         Delete the archive file after unpacking."
+  echo "  -c, --clipboard      Use the path contained in the system clipboard instead of ARCHIVE_PATH."
+  echo "  -t, --remove-top-dir Remove the top-level directory if the archive extracts into a single directory."
+  echo "  -h, --help           Print this help message and exit."
 }
 
 # Parse command line options
@@ -25,6 +26,10 @@ while [[ $# -gt 0 ]]; do
         exit 1
       fi
       ARCHIVE_PATH=$(xsel --clipboard --output)
+      shift
+      ;;
+    -t | --remove-top-dir)
+      REMOVE_TOP_DIR=true
       shift
       ;;
     -h | --help)
@@ -84,7 +89,28 @@ if [ ! -f "${ARCHIVE_PATH}" ]; then
   exit 1
 fi
 
+# Track current files and directories
+initial_files=$(ls -1a)
+
+# Extract the archive
 if unpack "$ARCHIVE_PATH"; then
+  # Track new files and directories
+  new_files=$(ls -1a)
+
+  # Find the difference between initial and new files
+  added_files=$(comm -13 <(echo "$initial_files") <(echo "$new_files"))
+
+  if [ -n "${REMOVE_TOP_DIR}" ]; then
+    # Check if only one new directory was added
+    new_dir_count=$(echo "$added_files" | grep -c '/$')
+    if [ "$new_dir_count" -eq 1 ]; then
+      new_dir=$(echo "$added_files" | grep '/$')
+      echo "Moving contents of $new_dir to the current directory and removing $new_dir"
+      mv "$new_dir"/* .
+      rmdir "$new_dir"
+    fi
+  fi
+
   if [ -n "${DELETE_ARCHIVE}" ]; then
     echo "Successfully unpacked, removing archive..."
     rm "$ARCHIVE_PATH"
