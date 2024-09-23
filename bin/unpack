@@ -6,9 +6,10 @@ function print_help {
   echo "Unpack an archive file using the appropriate decompression tool."
   echo ""
   echo "Options:"
-  echo "  -d, --delete     Delete the archive file after unpacking."
-  echo "  -c, --clipboard  Use the path contained in the system clipboard instead of ARCHIVE_PATH."
-  echo "  -h, --help       Print this help message and exit."
+  echo "  -d, --delete         Delete the archive file after unpacking."
+  echo "  -c, --clipboard      Use the path contained in the system clipboard instead of ARCHIVE_PATH."
+  echo "  -t, --remove-top-dir Remove the top-level directory if the archive extracts into a single directory."
+  echo "  -h, --help           Print this help message and exit."
 }
 
 # Parse command line options
@@ -25,6 +26,10 @@ while [[ $# -gt 0 ]]; do
         exit 1
       fi
       ARCHIVE_PATH=$(xsel --clipboard --output)
+      shift
+      ;;
+    -t | --remove-top-dir)
+      REMOVE_TOP_DIR=true
       shift
       ;;
     -h | --help)
@@ -84,7 +89,22 @@ if [ ! -f "${ARCHIVE_PATH}" ]; then
   exit 1
 fi
 
+files_before_unpack=$(ls -1a)
+
 if unpack "$ARCHIVE_PATH"; then
+  if [ -n "${REMOVE_TOP_DIR}" ]; then
+    files_after_unpack=$(ls -1a)
+    unpacked_files=$(comm -13 <(echo "$files_before_unpack") <(echo "$files_after_unpack"))
+    unpacked_files_count=$(echo "$unpacked_files" | wc -l)
+    if [ "$unpacked_files_count" -eq 1 ]; then
+      if [ -d "$unpacked_files" ]; then
+        echo "Moving contents of $unpacked_files to the current directory and removing $unpacked_files"
+        mv "$unpacked_files"/* .
+        rmdir "$unpacked_files"
+      fi
+    fi
+  fi
+
   if [ -n "${DELETE_ARCHIVE}" ]; then
     echo "Successfully unpacked, removing archive..."
     rm "$ARCHIVE_PATH"
