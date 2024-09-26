@@ -16,11 +16,38 @@ local tmpl = {
       args = vim.list_extend({ 'build', '--no-status' }, params.args or {}),
       cwd = params.cwd,
       components = {
-        { 'on_output_parse', problem_matcher = '$gcc' },
+        {
+          'on_output_parse',
+          parser = {
+            diagnostics = {
+              'parallel',
+              { break_on_first_failure = false }, -- allow either of the nodes below to match
+              -- Extract diagnostics using Vim's native errorformat for C++
+              {
+                'extract_efm',
+              },
+              -- Extract diagnostics from linker errors
+              {
+                'sequence',
+                { 'extract', { append = false }, 'ld: error: (.*)', 'text' },
+                { 'extract', '>>> referenced by .+%((.+):(%d+)%)$', 'filename', 'lnum' },
+              },
+            },
+          },
+        },
         { 'on_result_diagnostics', remove_on_restart = true },
+        {
+          'on_result_diagnostics_trouble',
+          close = true,
+          -- TODO: Ideally, we'd like to show only the diagnostics produced by the task. However, to achieve
+          -- this, we will need to filter based on the diagnostic source, which is set to the task name, which
+          -- is not known at this point. One possible solution is to send a PR to Overseer to allow setting
+          -- custom source for diagnostics in 'on_result_diagnostics' command and then filer based on that.
+          args = { 'filter.severity=vim.diagnostic.severity.ERROR' },
+        },
         'on_complete_notify',
         'on_exit_set_status',
-        { 'unique', replace = false }, -- Restart existing task
+        { 'unique', replace = false }, -- restart existing task
       },
     }
   end,
