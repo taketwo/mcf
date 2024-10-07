@@ -44,7 +44,7 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = {
     'PlenaryTestPopup',
     'checkhealth',
-    'gitsigns.blame',
+    'gitsigns-blame',
     'help',
     'lspinfo',
     'man',
