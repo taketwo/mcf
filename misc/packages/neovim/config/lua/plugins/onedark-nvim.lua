@@ -28,6 +28,8 @@ return {
         LeapBackdrop = { fg = '$grey' },
         LeapMatch = { fg = 'none', bg = '$red', fmt = 'bold' },
         LeapLabel = { fg = 'none', bg = '$blue', fmt = 'bold' },
+        BufferCurrent = { fg = '$fg', bg = '$bg0', fmt = 'bold' },
+        BufferCurrentMod = { fg = '$orange', bg = '$bg0', fmt = 'bold,italic' },
       },
     },
     config = function(_, opts)
