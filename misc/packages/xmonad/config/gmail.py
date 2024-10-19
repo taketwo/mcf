@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import argparse
 import datetime
@@ -45,22 +44,26 @@ def timeout(seconds):
 class Gmail(object):
     REGEX = re.compile(r"X-GM-THRID (\d+) UID")
 
-    def __init__(self, user, token):
+    def __init__(self, user: str, token: str):
+        self.user = user
+        self.token = token
+        self.imap = None
+
+    def __enter__(self):
         self.imap = imaplib.IMAP4_SSL("imap.gmail.com", "993")
-        self.imap.login("{}@gmail.com".format(user), token)
+        self.imap.login(f"{self.user}@gmail.com", self.token)
         self.imap.select()
         log.info("Established connection with GMail IMAP server")
+        return self
 
-    def close(self):
-        self.imap.close()
-        self.imap.logout()
-        log.info("Closed connection with GMail IMAP server")
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.imap:
+            self.imap.close()
+            self.imap.logout()
+            log.info("Closed connection with GMail IMAP server")
 
-    def get_unread_count(self):
-        """
-        Get the number of unread messages.
-        Throws if connection failed.
-        """
+    def get_unread_count(self) -> int:
+        """Get the number of unread messages, throwing if connection failed."""
         self.imap.select()
         uids = self.imap.uid("search", None, "UnSeen")[1][0].decode().split()
         if not uids:
@@ -71,8 +74,8 @@ class Gmail(object):
         return len(set(tids))
 
     def get_unread_count_every(self, interval):
-        """
-        Check and yield the number of unread messages at given intervals.
+        """Check and yield the number of unread messages at given intervals.
+
         Throws if connection timed out or otherwise failed.
         """
         while True:
@@ -148,14 +151,12 @@ if __name__ == "__main__":
 
     while True:
         try:
-            gmail = Gmail(user, token)
-            for unread in gmail.get_unread_count_every(args.interval):
-                indicator.set_unread_count(unread)
-                print(indicator, flush=True)
+            with Gmail(user, token) as gmail:
+                for unread in gmail.get_unread_count_every(args.interval):
+                    indicator.set_unread_count(unread)
+                    print(indicator, flush=True)
         except TimeoutError:
             log.warning("Communication timeout, will wait and reconnect")
         except Exception as e:
-            log.warning("Exception: {}".format(e))
-        finally:
-            gmail.close()
+            log.warning("Caught exception", extra={"exception": e})
         time.sleep(args.interval)
