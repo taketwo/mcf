@@ -55,6 +55,7 @@ if [[ $layout == "" ]]; then
     if [[ $connected == 1 ]]; then
       layout="lemur"
     elif [[ $connected == 2 ]]; then
+      DP1=$(xrandr --query | grep " connected" | grep -o "DP-[0-9]-[0-9]*")
       layout="lemur-ext"
     else
       echo "unable to auto select layout for lemur with $connected displays"
