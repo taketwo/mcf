@@ -20,3 +20,11 @@ ignore = [
   "FA102",  # no need to import from __future__ to support fancy annotations
   "FIX002", # not every TODO comment needs to be fixed
 ]
+
+[lint.per-file-ignores]
+"**/test_*.py" = [
+  "ANN",    # type annotations are not required in tests
+  "D",      # docstrings are not required in tests
+  "S101",   # asserts are allowed in tests
+  "ARG001", # "unused" function arguments are needed to pass mock objects
+]
