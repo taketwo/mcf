@@ -4,24 +4,18 @@ return {
     cmd = 'Mason',
     build = ':MasonUpdate',
     opts = {
+      -- List of tools to install with Mason
+      -- All configured LSP servers will be added to this list automatically and do not need to be included here explicitly
       ensure_installed = {
         'bash-debug-adapter',
-        'bash-language-server',
         'black',
-        'clangd',
         'cpptools',
         'gersemi',
-        'jedi-language-server',
         'json-lsp',
-        'lua-language-server',
-        'ruff-lsp',
         'shellcheck',
         'shfmt',
         'stylua',
-        'taplo',
-        'typos-lsp',
         'usort',
-        'yaml-language-server',
       },
     },
     config = function(_, opts)
