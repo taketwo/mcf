@@ -1,3 +1,7 @@
+line-length = 88
+indent-width = 4
+
+[lint]
 select = ["ALL"]
 ignore = [
   "ANN003", # kwargs argument without type annotation is okay
@@ -16,4 +20,3 @@ ignore = [
   "FA102",  # no need to import from __future__ to support fancy annotations
   "FIX002", # not every TODO comment needs to be fixed
 ]
-line-length = 88
