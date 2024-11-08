@@ -6,6 +6,7 @@ return {
       { 'zbirenbaum/copilot.lua' },
       { 'nvim-lua/plenary.nvim' },
     },
+    build = 'make tiktoken',
     cmd = 'CopilotChat',
     keys = {
       { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
