@@ -47,6 +47,8 @@ return {
             insert = '',
           },
         },
+        question_header = '  ' .. user .. ' ',
+        answer_header = '  Copilot ',
         selection = function(source)
           local select = require('CopilotChat.select')
           return select.visual(source) or select.buffer(source)
