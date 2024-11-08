@@ -1,12 +1,26 @@
-import os
+from pathlib import Path
+from typing import Union
 
-HOME = os.path.expanduser("~")
-MCF = os.path.join(HOME, ".mcf")
-XMONAD = os.path.join(HOME, ".xmonad")
+HOME: Path = Path.home()
+MCF: Path = HOME / ".mcf"
+XMONAD: Path = HOME / ".xmonad"
 
 
-def path(*args):
+def path(*args: Union[str, Path]) -> Path:
+    """Create a path relative to MCF directory.
+
+    Parameters
+    ----------
+    args: List[Union[str, Path]]
+        A list of strings or Path objects representing the path
+
+    Returns
+    -------
+    Path: A Path object representing the full path relative to MCF directory.
+
+    Example:
+        >>> path("scripts", "library")
+        PosixPath('/home/user/.mcf/scripts/library')
+
     """
-    Generate a path relative to MCF directory.
-    """
-    return os.path.join(MCF, *args)
+    return MCF.joinpath(*args)
