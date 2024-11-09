@@ -35,43 +35,41 @@ done
 
 shift $((OPTIND - 1))
 
-# Validate and convert codec to libx format
-if [[ $codec == "h264" ]]; then
-  codec="libx264"
-elif [[ $codec == "h265" ]]; then
-  codec="libx265"
-else
-  echo "Invalid codec. Please choose either h264 or h265."
-  exit 1
+# Validate and convert codec to libx format if specified
+if [[ -n $codec ]]; then
+  if [[ $codec == "h264" ]]; then
+    codec="libx264"
+  elif [[ $codec == "h265" ]]; then
+    codec="libx265"
+  else
+    echo "Invalid codec. Please choose either h264 or h265."
+    exit 1
+  fi
 fi
 
-# Validate and convert resolution to height
-case $resolution in
-  "1080p")
-    height=1080
-    ;;
-  "720p")
-    height=720
-    ;;
-  "480p")
-    height=480
-    ;;
-  "360p")
-    height=360
-    ;;
-  "240p")
-    height=240
-    ;;
-  *)
-    echo "Invalid resolution. Please choose from 1080p, 720p, 480p, 360p, or 240p."
-    exit 1
-    ;;
-esac
-
-# If neither codec nor resolution are specified, there is nothing to do
-if [[ -z $codec && -z $resolution ]]; then
-  echo "No recoding necessary. Exiting..."
-  exit 0
+# Validate and convert resolution to height if specified
+if [[ -n $resolution ]]; then
+  case $resolution in
+    "1080p")
+      height=1080
+      ;;
+    "720p")
+      height=720
+      ;;
+    "480p")
+      height=480
+      ;;
+    "360p")
+      height=360
+      ;;
+    "240p")
+      height=240
+      ;;
+    *)
+      echo "Invalid resolution. Please choose from 1080p, 720p, 480p, 360p, or 240p."
+      exit 1
+      ;;
+  esac
 fi
 
 # Check if ffmpeg and ffprobe are installed
