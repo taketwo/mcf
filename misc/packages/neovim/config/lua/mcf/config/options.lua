@@ -58,7 +58,6 @@ opt.smartindent = true -- Insert indents automatically
 opt.smoothscroll = true -- Smooth scrolling in presence of wrapped lines
 opt.softtabstop = 2 -- Number of spaces tabs count for when editing                  -- TODO: Still needed?
 opt.spelllang = { 'en_us' } -- Spell checking language
-opt.spelloptions:append({ 'noplainbuffer' }) -- Only spell check designated regions
 opt.splitbelow = true -- New splits, help, scratch preview all go to the bottom
 opt.splitkeep = 'screen' -- Keep text on the same screen line in horizontal split    -- TODO: Good idea?
 opt.swapfile = false -- Disable swap file
