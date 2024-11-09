@@ -1,6 +1,7 @@
 nix: git
-nix: git-lfs
+nix: git-absorb
 nix: git-crypt
+nix: git-lfs
 git-gui
 gh
 gpg
