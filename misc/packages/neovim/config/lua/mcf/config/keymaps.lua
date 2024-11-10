@@ -82,28 +82,24 @@ map('i', '.', '.<c-g>u', { desc = 'Insert . and add undo breakpoint' })
 map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 
 -- Toggle buffer options
-LazyVim.toggle.map('<Leader>us', LazyVim.toggle('spell', { name = 'spellchecking' }))
-LazyVim.toggle.map('<Leader>uw', LazyVim.toggle('wrap', { name = 'word wrapping' }))
-LazyVim.toggle.map('<Leader>ul', LazyVim.toggle.number)
-LazyVim.toggle.map('<Leader>uL', LazyVim.toggle('relativenumber', { name = 'relative line numbers' }))
-LazyVim.toggle.map(
-  '<Leader>uc',
-  LazyVim.toggle(
-    'conceallevel',
-    { values = { 0, vim.o.conceallevel > 0 and vim.o.conceallevel or 3 }, name = 'concealing' }
-  )
-)
-LazyVim.toggle.map('<Leader>ud', LazyVim.toggle.diagnostics)
-LazyVim.toggle.map('<Leader>uf', LazyVim.toggle.format_buffer)
-LazyVim.toggle.map('<Leader>uF', LazyVim.toggle.format_global)
-LazyVim.toggle.map('<Leader>uT', LazyVim.toggle.treesitter)
+Snacks.toggle.option('spell', { name = 'spellchecking' }):map('<Leader>us')
+Snacks.toggle.option('wrap', { name = 'word wrapping' }):map('<Leader>uw')
+Snacks.toggle.line_number():map('<Leader>ul')
+Snacks.toggle.option('relativenumber', { name = 'relative line numbers' }):map('<Leader>uL')
+Snacks.toggle
+  .option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+  :map('<Leader>uc')
+Snacks.toggle.diagnostics():map('<Leader>ud')
+LazyVim.format.snacks_toggle():map('<Leader>uf')
+LazyVim.format.snacks_toggle(true):map('<Leader>uF')
+Snacks.toggle.treesitter():map('<Leader>uT')
 
 -- Command-line completion
 map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
 map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
 
 -- Floating terminal
-local lazyterm = function() LazyVim.terminal(nil, { cwd = LazyVim.root() }) end
+local lazyterm = function() Snacks.terminal(nil, { cwd = LazyVim.root() }) end
 map('n', '<C-/>', lazyterm, { desc = 'Show terminal' })
 map('t', '<C-/>', '<cmd>close<cr>', { desc = 'Hide terminal' })
 -- NOTE: The <C-_> maps is necessary due terminal weirdness
@@ -111,10 +107,6 @@ map('t', '<C-/>', '<cmd>close<cr>', { desc = 'Hide terminal' })
 map('n', '<C-_>', lazyterm, { desc = 'which_key_ignore' })
 map('t', '<C-_>', '<cmd>close<cr>', { desc = 'which_key_ignore' })
 map('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'Enter normal mode' })
-map('t', '<C-h>', '<cmd>wincmd h<cr>', { desc = 'Go to left window' })
-map('t', '<C-t>', '<cmd>wincmd j<cr>', { desc = 'Go to lower window' })
-map('t', '<C-c>', '<cmd>wincmd k<cr>', { desc = 'Go to upper window' })
-map('t', '<C-n>', '<cmd>wincmd l<cr>', { desc = 'Go to right window' })
 
 -- Misc
 -- TODO: This needs to be mapped to auto-pairs plugin

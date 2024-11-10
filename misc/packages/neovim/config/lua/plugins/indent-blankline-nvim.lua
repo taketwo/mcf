@@ -12,26 +12,25 @@ return {
       scope = { enabled = false },
       exclude = {
         filetypes = {
-          'help',
+          'Trouble',
           'alpha',
           'dashboard',
-          'neo-tree',
-          'Trouble',
+          'help',
           'lazy',
           'mason',
+          'neo-tree',
           'notify',
-          'toggleterm',
-          'lazyterm',
+          'snacks_terminal',
         },
       },
     },
     config = function(_, opts)
       require('ibl').setup(opts)
-      LazyVim.toggle.map('<Leader>ug', {
+      Snacks.toggle({
         name = 'indentation guides',
         get = function() return require('ibl.config').get_config(0).enabled end,
         set = function(state) require('ibl').setup_buffer(0, { enabled = state }) end,
-      })
+      }):map('<Leader>ug')
     end,
   },
 }

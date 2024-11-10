@@ -76,13 +76,20 @@ M._keys = {
     mode = { 'n', 'v' },
     has = 'rename',
   },
+  {
+    '<Leader>lR',
+    function() Snacks.rename.rename_file() end,
+    desc = 'Rename file',
+    mode = { 'n' },
+    has = { 'workspace/didRenameFiles', 'workspace/willRenameFiles' },
+  },
   { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
   { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
   { 'gd', '<cmd>Trouble lsp_definitions<cr>', desc = 'Go to definition', has = 'definition' },
   { 'gD', '<cmd>Trouble lsp_declarations<cr>', desc = 'Go to declaration', has = 'declaration' },
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
   { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
-  { '<Leader>ui', function() LazyVim.toggle.inlay_hints() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
+  { '<Leader>ui', function() Snacks.toggle.inlay_hints():toggle() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
 -- Do not set LSP keymaps for these filetypes

@@ -3,7 +3,24 @@ return {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       { 'nvim-treesitter/nvim-treesitter-textobjects' },
-      { 'nvim-treesitter/nvim-treesitter-context', opts = { max_lines = 3 } },
+      {
+        'nvim-treesitter/nvim-treesitter-context',
+        opts = function()
+          local tsc = require('treesitter-context')
+          Snacks.toggle({
+            name = 'treesitter context',
+            get = tsc.enabled,
+            set = function(state)
+              if state then
+                tsc.enable()
+              else
+                tsc.disable()
+              end
+            end,
+          }):map('<Leader>ut')
+          return { mode = 'cursor', max_lines = 3 }
+        end,
+      },
     },
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },

@@ -24,7 +24,7 @@ return {
   },
   config = function(_, opts)
     require('render-markdown').setup(opts)
-    LazyVim.toggle.map('<Leader>um', {
+    Snacks.toggle({
       name = 'markdown rendering',
       get = function() return require('render-markdown.state').enabled end,
       set = function(enabled)
@@ -35,6 +35,6 @@ return {
           m.disable()
         end
       end,
-    })
+    }):map('<Leader>um')
   end,
 }
