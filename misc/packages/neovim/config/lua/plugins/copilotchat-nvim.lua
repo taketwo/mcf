@@ -43,6 +43,7 @@ return {
       user = user:sub(1, 1):upper() .. user:sub(2)
       return {
         debug = false,
+        model = 'claude-3.5-sonnet',
         mappings = {
           complete = {
             insert = '',
