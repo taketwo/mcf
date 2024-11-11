@@ -48,7 +48,7 @@ M._keys = {
   { ']d', function() require('lspsaga.diagnostic'):goto_next() end, desc = 'Next diagnostic' },
   {
     '<F5>',
-    vim.lsp.buf.signature_help,
+    function() vim.lsp.buf.signature_help() end,
     mode = 'i',
     desc = 'Display LSP signature help',
     has = 'signatureHelp',
@@ -83,7 +83,7 @@ M._keys = {
     mode = { 'n' },
     has = { 'workspace/didRenameFiles', 'workspace/willRenameFiles' },
   },
-  { 'K', vim.lsp.buf.hover, desc = 'Display LSP hover information', has = 'hover' },
+  { 'K', function() vim.lsp.buf.hover() end, desc = 'Display LSP hover information', has = 'hover' },
   { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
   { 'gd', '<cmd>Trouble lsp_definitions<cr>', desc = 'Go to definition', has = 'definition' },
   { 'gD', '<cmd>Trouble lsp_declarations<cr>', desc = 'Go to declaration', has = 'declaration' },
