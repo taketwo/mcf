@@ -4,17 +4,17 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
-    bigfile = { enabled = false },
-    bufdelete = { enabled = false },
-    debug = { enabled = false },
-    git = { enabled = false },
-    gitbrowse = { enabled = false },
-    lazygit = { enabled = false },
-    notify = { enabled = false },
-    notifier = { enabled = false },
-    quickfile = { enabled = false },
+    bigfile = { enabled = true },
+    bufdelete = { enabled = false }, -- Barbar does a good job deleting buffers and preserving window layout
+    debug = { enabled = false }, -- TODO: Consider enabling
+    git = { enabled = false }, -- TODO: Consider enabling
+    gitbrowse = { enabled = false }, -- TODO: Consider enabling
+    lazygit = { enabled = false }, -- TODO: Consider enabling
+    notify = { enabled = false }, -- TODO: Consider enabling
+    notifier = { enabled = false }, -- TODO: Consider enabling
+    quickfile = { enabled = false }, -- TODO: Consider enabling
     rename = { enabled = true },
-    statuscolumn = { enabled = false },
+    statuscolumn = { enabled = true }, -- TODO: Evaluating this
     terminal = {
       enabled = true,
       float = {
@@ -27,8 +27,8 @@ return {
       },
     },
     toggle = { enabled = true },
-    win = { enabled = false },
-    words = { enabled = false },
+    win = { enabled = false }, -- TODO: Consider enabling
+    words = { enabled = false }, -- Illuminate functionality and UX are more appealing
   },
   config = function(_, opts)
     local Snacks = require('snacks')
