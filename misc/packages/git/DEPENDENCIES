@@ -2,6 +2,7 @@ nix: git
 nix: git-absorb
 nix: git-crypt
 nix: git-lfs
+lazygit
 git-gui
 gh
 gpg
