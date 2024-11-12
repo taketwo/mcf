@@ -33,7 +33,6 @@ return {
             { '<Leader>ghu', gs.undo_stage_hunk, desc = 'Unstage' },
             { '<Leader>gh]', function() gs.nav_hunk('next') end, desc = 'Next' },
             { '<Leader>gh[', function() gs.nav_hunk('prev') end, desc = 'Previous' },
-            { '<Leader>gM', function() gs.blame_line({ full = true }) end, desc = 'View commit message (gitsigns)' },
             { '<Leader>gs', gs.stage_buffer, desc = 'Stage buffer' },
             { '<Leader>ub', gs.toggle_current_line_blame, desc = 'Toggle current line blame' },
             {

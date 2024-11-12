@@ -6,8 +6,8 @@ return {
   opts = {
     bigfile = { enabled = true },
     bufdelete = { enabled = false }, -- Barbar does a good job deleting buffers and preserving window layout
-    git = { enabled = false }, -- TODO: Consider enabling
     debug = { enabled = true },
+    git = { enabled = true },
     gitbrowse = { enabled = false }, -- TODO: Consider enabling
     lazygit = { enabled = true }, -- TODO: Evaluating this
     notify = { enabled = true },
@@ -29,6 +29,9 @@ return {
     toggle = { enabled = true },
     win = { enabled = true },
     words = { enabled = false }, -- Illuminate functionality and UX are more appealing
+  },
+  keys = {
+    { '<Leader>gB', function() Snacks.git.blame_line() end, desc = 'Blame current line' },
   },
   config = function(_, opts)
     local Snacks = require('snacks')
