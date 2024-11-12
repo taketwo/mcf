@@ -9,7 +9,7 @@ return {
           buffer = bufnr,
           {
             { '<Leader>g', group = 'Git' },
-            { '<Leader>gb', gs.blame, desc = 'Blame' },
+            { '<Leader>gb', gs.blame, desc = 'Blame buffer' },
             { '<Leader>gd', gs.toggle_deleted, desc = 'Toggle deleted lines' },
             { '<Leader>gh', group = 'Hunks' },
             {
