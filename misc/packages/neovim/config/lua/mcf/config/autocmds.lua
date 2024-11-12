@@ -50,6 +50,8 @@ vim.api.nvim_create_autocmd('FileType', {
     'man',
     'notify',
     'qf',
+    'snacks_notif',
+    'snacks_win',
     'spectre_panel',
     'startuptime',
     'tsplayground',

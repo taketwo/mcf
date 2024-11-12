@@ -10,8 +10,8 @@ return {
     git = { enabled = false }, -- TODO: Consider enabling
     gitbrowse = { enabled = false }, -- TODO: Consider enabling
     lazygit = { enabled = false }, -- TODO: Consider enabling
-    notify = { enabled = false }, -- TODO: Consider enabling
-    notifier = { enabled = false }, -- TODO: Consider enabling
+    notify = { enabled = true },
+    notifier = { enabled = true },
     quickfile = { enabled = false }, -- TODO: Consider enabling
     rename = { enabled = true },
     statuscolumn = { enabled = true }, -- TODO: Evaluating this
@@ -42,6 +42,10 @@ return {
       if toggle.opts and toggle.opts.name then toggle.opts.name = toggle.opts.name:lower() end
       return toggle
     end
+
+    -- Snacks.notifier replaced nvim-notify, however it does not provide a convenient command to
+    -- display notifications history.
+    vim.cmd('command! -nargs=0 Notifications lua Snacks.notifier.show_history()')
 
     Snacks.setup(opts)
     _G.Snacks = Snacks

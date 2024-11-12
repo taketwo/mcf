@@ -13,7 +13,19 @@ return {
     },
     init = function()
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'help', 'alpha', 'dashboard', 'neo-tree', 'Trouble', 'lazy', 'mason', 'notify' },
+        pattern = {
+          'Trouble',
+          'alpha',
+          'dashboard',
+          'help',
+          'lazy',
+          'mason',
+          'neo-tree',
+          'notify',
+          'snacks_notif',
+          'snacks_terminal',
+          'snacks_win',
+        },
         callback = function() vim.b.miniindentscope_disable = true end,
       })
     end,
