@@ -8,13 +8,13 @@ return {
     bufdelete = { enabled = false }, -- Barbar does a good job deleting buffers and preserving window layout
     debug = { enabled = true },
     git = { enabled = true },
-    gitbrowse = { enabled = false }, -- TODO: Consider enabling
+    gitbrowse = { enabled = false }, --  Gitlinker is more advanced
     lazygit = { enabled = true }, -- TODO: Evaluating this
     notify = { enabled = true },
     notifier = { enabled = true },
     quickfile = { enabled = true },
     rename = { enabled = true },
-    statuscolumn = { enabled = false }, -- Waste of space
+    statuscolumn = { enabled = false }, -- Waste of horizontal space
     terminal = {
       enabled = true,
       float = {
