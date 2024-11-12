@@ -6,8 +6,8 @@ return {
   opts = {
     bigfile = { enabled = true },
     bufdelete = { enabled = false }, -- Barbar does a good job deleting buffers and preserving window layout
-    debug = { enabled = false }, -- TODO: Consider enabling
     git = { enabled = false }, -- TODO: Consider enabling
+    debug = { enabled = true },
     gitbrowse = { enabled = false }, -- TODO: Consider enabling
     lazygit = { enabled = true }, -- TODO: Evaluating this
     notify = { enabled = true },
