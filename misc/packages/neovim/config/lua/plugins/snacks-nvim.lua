@@ -9,12 +9,12 @@ return {
     debug = { enabled = false }, -- TODO: Consider enabling
     git = { enabled = false }, -- TODO: Consider enabling
     gitbrowse = { enabled = false }, -- TODO: Consider enabling
-    lazygit = { enabled = false }, -- TODO: Consider enabling
+    lazygit = { enabled = true }, -- TODO: Evaluating this
     notify = { enabled = true },
     notifier = { enabled = true },
-    quickfile = { enabled = false }, -- TODO: Consider enabling
+    quickfile = { enabled = true },
     rename = { enabled = true },
-    statuscolumn = { enabled = true }, -- TODO: Evaluating this
+    statuscolumn = { enabled = false }, -- Waste of space
     terminal = {
       enabled = true,
       float = {
@@ -27,7 +27,7 @@ return {
       },
     },
     toggle = { enabled = true },
-    win = { enabled = false }, -- TODO: Consider enabling
+    win = { enabled = true },
     words = { enabled = false }, -- Illuminate functionality and UX are more appealing
   },
   config = function(_, opts)
