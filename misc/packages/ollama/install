@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+echo "Checking Ollama version..."
+INSTALLED_VERSION=$(ollama --version | cut -d' ' -f4 | sed 's/^/v/')
+echo "Installed version: $INSTALLED_VERSION"
+
+LATEST_VERSION=$(gh --repo ollama/ollama release list --exclude-pre-releases --limit 1 --json tagName | jq -r '.[0].tagName')
+echo "Latest version: $LATEST_VERSION"
+
+if [ "$LATEST_VERSION" == "$INSTALLED_VERSION" ]; then
+  echo "Ollama is up to date, nothing to do"
+  exit 0
+fi
+
+echo "Downloading Ollama $LATEST_VERSION..."
+TMP_FILE=$(mktemp)
+gh --repo ollama/ollama release download --clobber --pattern ollama-linux-amd64.tgz --output "$TMP_FILE"
+echo "Extracting Ollama into ~/.local..."
+tar -xzf "$TMP_FILE" -C ~/.local
+rm "$TMP_FILE"
