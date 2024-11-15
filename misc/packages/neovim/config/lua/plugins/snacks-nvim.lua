@@ -9,7 +9,7 @@ return {
     debug = { enabled = true },
     git = { enabled = true },
     gitbrowse = { enabled = false }, --  Gitlinker is more advanced
-    lazygit = { enabled = true }, -- TODO: Evaluating this
+    lazygit = { enabled = true },
     notify = { enabled = true },
     notifier = { enabled = true },
     quickfile = { enabled = true },
@@ -32,6 +32,7 @@ return {
   },
   keys = {
     { '<Leader>gB', function() Snacks.git.blame_line() end, desc = 'Blame current line' },
+    { '<Leader>gy', function() Snacks.lazygit.open() end, desc = 'Open Lazygit' },
   },
   config = function(_, opts)
     local Snacks = require('snacks')
