@@ -132,13 +132,12 @@ return {
           ordinal_numbers,
           weekdays,
           months,
+          augend.constant.alias.bool,
         },
         cpp = {
-          augend.constant.alias.bool,
           logical_alias,
         },
         lua = {
-          augend.constant.alias.bool,
           logical_word_alias,
         },
         markdown = {
@@ -147,9 +146,6 @@ return {
         python = {
           capitalized_boolean,
           logical_word_alias,
-        },
-        yaml = {
-          augend.constant.alias.bool,
         },
       }
 
