@@ -23,8 +23,7 @@ return {
       { '<Leader>ad', '<cmd>CopilotChatDocs<cr>', desc = 'Write documentation for this code', mode = { 'n', 'v' } },
       { '<Leader>aD', '<cmd>CopilotChatFixDiagnostic<cr>', desc = 'Assist with diagnostic issue', mode = { 'n', 'v' } },
       { '<Leader>at', '<cmd>CopilotChatTests<cr>', desc = 'Generate unit tests', mode = { 'n', 'v' } },
-      { '<Leader>aC', '<cmd>CopilotChatCommit<cr>', desc = 'Write commit message for entire diff' },
-      { '<Leader>ac', '<cmd>CopilotChatCommitStaged<cr>', desc = 'Write commit message for staged diff' },
+      { '<Leader>ac', '<cmd>CopilotChatCommit<cr>', desc = 'Write commit message' },
       {
         '<Leader>aq',
         function()
