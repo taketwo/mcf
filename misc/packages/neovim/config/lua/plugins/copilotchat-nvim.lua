@@ -1,3 +1,7 @@
+local prompts = {
+  RewriteUsingAlgorithms = '/COPILOT_GENERATE Rewrite this code using STL or Boost algorithms. If you can think of multiple ways to accomplish that, provide them all along with a discussion.',
+}
+
 return {
   {
     'CopilotC-Nvim/CopilotChat.nvim',
@@ -50,6 +54,7 @@ return {
         },
         question_header = '  ' .. user .. ' ',
         answer_header = '  Copilot ',
+        prompts = prompts,
       }
     end,
     config = function(_, opts)
