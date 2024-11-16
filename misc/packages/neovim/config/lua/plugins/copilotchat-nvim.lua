@@ -15,6 +15,12 @@ return {
     keys = {
       { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
       { '<Leader>a<Space>', '<cmd>CopilotChatOpen<cr>', desc = 'Open Copilot chat', mode = { 'n', 'v' } },
+      {
+        '<Leader>aa',
+        function() require('CopilotChat.integrations.telescope').pick(require('CopilotChat.actions').prompt_actions()) end,
+        desc = 'Actions',
+        mode = { 'n', 'x' },
+      },
       { '<Leader>ae', '<cmd>CopilotChatExplain<cr>', desc = 'Explain how this code works', mode = { 'n', 'v' } },
       { '<Leader>ar', '<cmd>CopilotChatReview<cr>', desc = 'Review this code', mode = { 'n', 'v' } },
       {
