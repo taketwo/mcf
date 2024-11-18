@@ -53,11 +53,6 @@ return {
       return {
         debug = false,
         model = 'claude-3.5-sonnet',
-        mappings = {
-          complete = {
-            insert = '',
-          },
-        },
         question_header = '  ' .. user .. ' ',
         answer_header = '  Copilot ',
         prompts = prompts,
@@ -65,7 +60,6 @@ return {
     end,
     config = function(_, opts)
       require('CopilotChat').setup(opts)
-      require('CopilotChat.integrations.cmp').setup()
       vim.api.nvim_create_autocmd('BufEnter', {
         pattern = 'copilot-chat',
         callback = function()
