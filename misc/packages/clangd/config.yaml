@@ -30,15 +30,16 @@ Diagnostics:
       readability-identifier-length.MinimumParameterNameLength: 2
       readability-identifier-length.MinimumVariableNameLength: 2
 ---
-# Unit and accuracy tests.
-# Disable diagnistics that trigger on Google Test TEST macros.
+# Relax rules for unit and accuracy tests
 If:
-  PathMatch: ".*_tests/.*_test.cpp"
+  PathMatch: ".*tests?/.*_test.cpp"
 Diagnostics:
   ClangTidy:
     Remove:
-      - cppcoreguidelines-avoid-goto
+      - cppcoreguidelines-avoid-goto # triggers on EXPECT_THROW
+      - cppcoreguidelines-avoid-magic-numbers # its okay to have various unnamed numbers in test cases
       - cppcoreguidelines-avoid-non-const-global-variables
-      - cppcoreguidelines-owning-memory
-      - cppcoreguidelines-special-member-functions
+      - cppcoreguidelines-owning-memory # triggers on TEST and TEST_F
+      - cppcoreguidelines-special-member-functions # triggers on TEST and TEST_F
       - readability-function-cognitive-complexity
+      - readability-magic-numbers # its okay to have various unnamed numbers in test cases
