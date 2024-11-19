@@ -75,6 +75,7 @@ for dir in "$@"; do
   find . \
     \( -name '*.c' \
     -o -name '*.cc' \
+    -o -name '*.cl' \
     -o -name '*.cpp' \
     -o -name '*.h' \
     -o -name '*.hh' \
