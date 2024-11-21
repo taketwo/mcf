@@ -124,7 +124,14 @@ function restore_plugins() {
         echo "Lock file has changed while executing restore command, retrying"
       else
         echo "Restoration failed $num_retries times"
-        readarray -t failed_plugins < <(diff --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" | sed 's/:.*//' | sed 's/"//g')
+        readarray -t failed_plugins < <(diff \
+          --unchanged-line-format="" \
+          --old-line-format="%L" \
+          --new-line-format="%L" \
+          "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" |
+          sed 's/:.*//' |
+          sed 's/"//g' |
+          sort -u)
         echo "List of plugins that failed to be restored:"
         echo "${failed_plugins[@]}"
         read -p "Do you want to remove these plugins and retry restoration? [y/N] " -n 1 -r
