@@ -49,7 +49,7 @@ return {
 
     -- Snacks.notifier replaced nvim-notify, however it does not provide a convenient command to
     -- display notifications history.
-    vim.cmd('command! -nargs=0 Notifications lua Snacks.notifier.show_history()')
+    vim.cmd('command! -nargs=0 Notifications lua Snacks.notifier.show_history({reverse = true})')
 
     Snacks.setup(opts)
     _G.Snacks = Snacks
