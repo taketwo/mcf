@@ -11,6 +11,13 @@ return {
     graph_style = 'unicode',
     kind = 'vsplit',
     mappings = {
+      popup = {
+        -- Reassign c/t to uppercase to avoid conflicts with navigation keymaps
+        ['C'] = 'CommitPopup',
+        ['c'] = false,
+        ['T'] = 'TagPopup',
+        ['t'] = false,
+      },
       status = {
         ['>'] = 'GoToNextHunkHeader',
         ['<'] = 'GoToPreviousHunkHeader',
