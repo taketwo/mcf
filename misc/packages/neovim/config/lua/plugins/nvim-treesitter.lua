@@ -64,6 +64,7 @@ return {
         'proto',
         'python',
         'regex',
+        'robot',
         'terraform',
         'toml',
         'vim',
