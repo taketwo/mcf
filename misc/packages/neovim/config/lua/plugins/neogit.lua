@@ -2,10 +2,7 @@ return {
   'NeogitOrg/neogit',
   cmd = { 'Neogit' },
   keys = { { '<Leader>gn', '<cmd>Neogit<cr>', desc = 'Neogit' } },
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    -- "sindrets/diffview.nvim",        -- optional - Diff integration
-  },
+  dependencies = { 'nvim-lua/plenary.nvim' },
   ---@type NeogitConfig
   opts = {
     graph_style = 'unicode',
