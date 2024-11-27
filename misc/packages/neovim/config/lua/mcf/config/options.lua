@@ -14,6 +14,14 @@ opt.confirm = true -- Confirm to save changes before exiting modified buffer
 opt.cursorline = true -- Enable highlighting of the current line
 opt.cursorlineopt = 'number' -- Only make current line number bold
 opt.expandtab = true -- Use spaces instead of tabs
+opt.fillchars = {
+  diff = '╱', -- Deleted lines in diff
+  foldopen = '', -- Beginning of opened fold
+  foldclose = '', -- Beginning of closed fold
+  foldsep = ' ', -- No middle markers for open folds
+  fold = ' ', -- No filler after fold text
+  msgsep = '─', -- Message separator
+}
 opt.foldenable = false -- Disable folding by default
 opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
 opt.foldmethod = 'expr'
