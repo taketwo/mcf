@@ -29,6 +29,8 @@ return {
       status = {
         ['>'] = 'GoToNextHunkHeader',
         ['<'] = 'GoToPreviousHunkHeader',
+        ['S'] = 'Stage',
+        ['U'] = 'Unstage',
       },
     },
   },
