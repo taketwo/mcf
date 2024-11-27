@@ -30,6 +30,7 @@ return {
         LeapLabel = { fg = 'none', bg = '$blue', fmt = 'bold' },
         BufferCurrent = { fg = '$fg', bg = '$bg0', fmt = 'bold' },
         BufferCurrentMod = { fg = '$orange', bg = '$bg0', fmt = 'bold,italic' },
+        DiffviewDiffDeleteDim = { fg = '$bg2' },
       },
     },
     config = function(_, opts)
