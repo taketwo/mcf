@@ -1,6 +1,6 @@
 {
   "output": {
-    "filePath": "repomix-output.xml",
+    "filePath": "/tmp/repomix.xml",
     "style": "xml",
     "removeComments": false,
     "removeEmptyLines": false,
