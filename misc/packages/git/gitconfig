@@ -25,8 +25,9 @@
   tags = tag -l
   bd = branch -D
   start = "!git init && git commit --allow-empty -m 'Initial commit'"
-  reword = commit --amend
-  amend = commit --amend --no-edit
+  amend = commit --amend
+  fixup = commit --amend --no-edit
+  reword = commit --amend --only
   sync = "!git pull && git submodule sync && git submodule update --init --recursive && git remote prune origin"
   changed-list = "!git diff --name-only $(git merge-base HEAD ${REVIEW_BASE:-master})"
   changed-stat = "!git diff --stat $(git merge-base HEAD ${REVIEW_BASE:-master})"
