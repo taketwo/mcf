@@ -29,8 +29,11 @@ return {
       status = {
         ['>'] = 'GoToNextHunkHeader',
         ['<'] = 'GoToPreviousHunkHeader',
+        -- Reassign s/u to uppercase to be in line with vimagit mappings
         ['S'] = 'Stage',
+        ['s'] = false,
         ['U'] = 'Unstage',
+        ['u'] = false,
       },
     },
   },
