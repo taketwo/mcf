@@ -25,11 +25,6 @@ snippet level "Set logging level"
 ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::${1:Debug})$0
 endsnippet
 
-snippet ".par(d?)" "Query parameter from server" !wr
-`!p snip.rv = '.param' if match.group(1) else '.getParam'
-`${4/.+/</}${4:std::string}${4/.+/>/}("${1:parameter_name}", ${2:$1}${3/.+/, /}${3:default}${3/.+//})$0
-endsnippet
-
 snippet dynrec "Dynamic reconfigure template" !b
 #include <dynamic_reconfigure/server.h>
 #include <$1/$2.h>
@@ -207,6 +202,28 @@ endsnippet
 snippet wfm "Wait for message" !b
 auto ${1:msg} = ros::topic::waitForMessage<${2:std_msgs::String}>(${3:"topic"}${4:, ros::Duration(${5:timeout})});
 endsnippet
+
+###########################################################################
+#                               Parameters                                #
+###########################################################################
+
+snippet rpn "ROS parameter name constant" b
+constexpr const char *k${1:Name}Param = "${2:`!p snip.rv = camelcase_to_snakecase(t[1])`}";
+endsnippet
+
+snippet rpd "ROS parameter default value" b
+constexpr ${1:auto} kDefault${2:Name} = ${3};
+endsnippet
+
+snippet rpt "ROS parameter topic name" b
+constexpr const char *k${1:Name}Topic = "${2:`!p snip.rv = camelcase_to_snakecase(t[1])`}";
+endsnippet
+
+snippet ".par(d?)" "Query parameter from server" !wr
+`!p snip.rv = '.param' if match.group(1) else '.getParam'
+`${4/.+/</}${4:std::string}${4/.+/>/}("${1:parameter_name}", ${2:$1}${3/.+/, /}${3:default}${3/.+//})$0
+endsnippet
+
 
 #######################################################################
 #                                Misc                                 #
