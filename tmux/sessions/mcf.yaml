@@ -8,3 +8,4 @@ windows:
   - window_name: tasks
   - window_name: aeolus
     start_directory: external/aeolus
+  - window_name: ollama
