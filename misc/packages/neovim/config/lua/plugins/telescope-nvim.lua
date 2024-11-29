@@ -28,7 +28,6 @@ return {
       { '<Leader>gC', '<cmd>Telescope git_branches<cr>', desc = 'Check out branch' },
       { '<Leader>gl', '<cmd>Telescope git_bcommits<cr>', desc = 'Log (buffer only)' },
       { '<Leader>gL', '<cmd>Telescope git_commits<cr>', desc = 'Log (everything)' },
-      { '<Leader>gS', '<cmd>Telescope git_status<cr>', desc = 'Status' },
       {
         '<space>',
         '<cmd>Telescope buffers show_all_buffers=true sort_mru=true sort_lastused=true<cr>',
