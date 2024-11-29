@@ -31,7 +31,6 @@ return {
       { '<Leader>af', '<cmd>CopilotChatFix<cr>', desc = 'Fix this code', mode = { 'n', 'v' } },
       { '<Leader>ao', '<cmd>CopilotChatOptimize<cr>', desc = 'Optimize this code', mode = { 'n', 'v' } },
       { '<Leader>ad', '<cmd>CopilotChatDocs<cr>', desc = 'Write documentation for this code', mode = { 'n', 'v' } },
-      { '<Leader>aD', '<cmd>CopilotChatFixDiagnostic<cr>', desc = 'Assist with diagnostic issue', mode = { 'n', 'v' } },
       { '<Leader>at', '<cmd>CopilotChatTests<cr>', desc = 'Generate unit tests', mode = { 'n', 'v' } },
       { '<Leader>ac', '<cmd>CopilotChatCommit<cr>', desc = 'Write commit message' },
       {
