@@ -87,7 +87,7 @@ Snacks.toggle.option('wrap', { name = 'word wrapping' }):map('<Leader>uw')
 Snacks.toggle.line_number():map('<Leader>ul')
 Snacks.toggle.option('relativenumber', { name = 'relative line numbers' }):map('<Leader>uL')
 Snacks.toggle
-  .option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+  .option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = 'concealing' })
   :map('<Leader>uc')
 Snacks.toggle.diagnostics():map('<Leader>ud')
 LazyVim.format.snacks_toggle():map('<Leader>uf')
