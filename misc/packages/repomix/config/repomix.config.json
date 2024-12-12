@@ -4,7 +4,7 @@
     "style": "xml",
     "removeComments": false,
     "removeEmptyLines": false,
-    "topFilesLength": 5,
+    "topFilesLength": 10,
     "showLineNumbers": false,
     "copyToClipboard": true
   },
@@ -13,7 +13,10 @@
     "useGitignore": true,
     "useDefaultPatterns": true,
     "customPatterns": [
-      "**/*.rviz"
+      "**/*.rviz",
+      "**/*.pcd",
+      "**/ci/**",
+      "**/data/**"
     ]
   },
   "security": {
