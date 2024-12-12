@@ -6,7 +6,6 @@ return {
   ---@type NeogitConfig
   opts = {
     graph_style = 'unicode',
-    kind = 'vsplit',
     commit_editor = {
       staged_diff_split_kind = 'vsplit',
     },
