@@ -114,6 +114,8 @@ function recode_video() {
   echo "Input file: $input_file"
   echo "Output file: $output_file"
   ffmpeg_cmd=("ffmpeg" "-i" "$input_file")
+  ffmpeg_cmd+=("-map" "0")  # Select all streams from input
+  ffmpeg_cmd+=("-c" "copy") # Set default codec to "copy"
   input_height=$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=s=x:p=0 "$input_file")
   echo "Input resolution: ${input_height}p"
   if [[ -n $height ]]; then
@@ -129,7 +131,7 @@ function recode_video() {
   input_codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$input_file")
   echo "Input codec: $input_codec"
   if [[ -n $codec ]]; then
-    ffmpeg_cmd+=("-c:v" "$codec")
+    ffmpeg_cmd+=("-c:v" "$codec") # Override codec for video stream
     echo "Output codec: $codec"
   else
     echo "Output codec: same"
