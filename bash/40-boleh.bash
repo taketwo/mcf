@@ -27,24 +27,26 @@ function boleh() {
 function __boleh_import() {
   archive="$HOME/Downloads/taketwo_n.zip"
   tmp=/tmp/boleh
+  target=/etc/openvpn/client
   rm -f "$archive"
   read -r -p 'Download config https://users.bolehvpn.net/download/normal/6 and press ENTER'
   if [[ ! -f $archive ]]; then
     echo "Cannot find config at expected location $archive"
   else
     echo "Removing old Boleh configurations"
-    sudo rm /etc/openvpn/client/*Boleh.conf
+    sudo rm $target/*Boleh.conf
     unzip -o "$archive" -d $tmp >/dev/null
-    sudo cp /tmp/boleh/*{crt,key} /etc/openvpn/client
+    sudo cp $tmp/*{crt,key} $target
     echo "Importing Boleh fully routed configurations:"
     cd $tmp || return
     for f in *TCP.ovpn; do
       location=$(echo "$f" | awk -F'[-]' 'NF==3 {printf $1"-"$2}')
       if [[ -n $location ]]; then
         echo " * $location"
-        sudo cp "$f" "/etc/openvpn/client/$location.Boleh.conf"
+        sudo cp "$f" "$target/$location.Boleh.conf"
       fi
     done
+    cd $target || return
   fi
 }
 
