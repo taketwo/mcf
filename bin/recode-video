@@ -118,7 +118,7 @@ output_path=$2
 
 if [[ -f $input_path ]]; then
   if [[ -z $output_path ]]; then
-    output_path=$(basename "$input_path" | cut -d. -f1).recoded.$(basename "$input_path" | cut -d. -f2)
+    output_path="${input_path%.*}.recoded.${input_path##*.}"
   fi
   recode_video "$input_path" "$output_path"
 elif [[ -d $input_path ]]; then
