@@ -11,6 +11,8 @@ function display_help {
   echo
   echo "If output path is not provided, the input path name with .recoded suffix is used. Both files and directories are supported. In"
   echo "the latter case, all files in the directory are recoded."
+  echo
+  echo "If neither of -c/-r options are provided, the script will print information about video file(s)."
 }
 
 codec=""
@@ -80,6 +82,32 @@ if ! command -v ffmpeg &>/dev/null || ! command -v ffprobe &>/dev/null; then
   exit 1
 fi
 
+function display_info() {
+  local input_file=$1
+  echo "File: $input_file"
+  local video_info=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height -of csv=p=0 "$input_file")
+  IFS=',' read -r codec width height <<<"$video_info"
+  echo "  Video:"
+  echo "    Resolution: ${width}x${height}"
+  echo "    Codec: $codec"
+  echo "  Streams:"
+  ffprobe -v error \
+    -show_entries "stream=index,codec_type,codec_name:stream_tags=language,title" \
+    -of json \
+    "$input_file" | jq -r '.streams[] | "\(.index) \(.codec_type) \(.codec_name) \(.tags.language // "") \(.tags.title // "")"' |
+    while read -r index codec_type codec_name lang title; do
+      printf "    [%s] %-10s: %-10s" "$index" "$codec_type" "$codec_name"
+      if [[ -n "$lang" ]]; then
+        printf " (%s)" "$lang"
+      fi
+      if [[ -n "$title" ]]; then
+        printf " - %s" "$title"
+      fi
+      echo
+    done
+  echo
+}
+
 function recode_video() {
   input_file=$1
   output_file=$2
@@ -115,6 +143,24 @@ function recode_video() {
 
 input_path=$1
 output_path=$2
+
+if [[ $# == 1 && $OPTIND == 1 ]]; then
+  if [[ -f $input_path ]]; then
+    display_info "$input_path"
+  elif [[ -d $input_path ]]; then
+    echo "Directory: $input_path"
+    echo
+    for file in "$input_path"/*; do
+      if [[ -f $file ]]; then
+        display_info "$file"
+      fi
+    done
+  else
+    echo "Invalid input path. Please provide a valid file or directory."
+    exit 1
+  fi
+  exit 0
+fi
 
 if [[ -f $input_path ]]; then
   if [[ -z $output_path ]]; then
