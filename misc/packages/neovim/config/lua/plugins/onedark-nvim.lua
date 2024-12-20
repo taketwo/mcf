@@ -32,6 +32,7 @@ return {
         BufferCurrentMod = { fg = '$orange', bg = '$bg0', fmt = 'bold,italic' },
         DiffviewDiffDeleteDim = { fg = '$bg2' },
         Folded = { bg = '$bg1' },
+        SnacksIndent = { fg = '$bg1', fmt = 'nocombine' },
       },
     },
     config = function(_, opts)

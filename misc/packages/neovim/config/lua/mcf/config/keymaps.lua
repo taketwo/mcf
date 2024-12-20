@@ -93,6 +93,7 @@ Snacks.toggle.diagnostics():map('<Leader>ud')
 LazyVim.format.snacks_toggle():map('<Leader>uf')
 LazyVim.format.snacks_toggle(true):map('<Leader>uF')
 Snacks.toggle.treesitter():map('<Leader>uT')
+Snacks.toggle.indent():map('<Leader>ug')
 
 -- Command-line completion
 map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })

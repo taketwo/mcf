@@ -9,11 +9,17 @@ return {
     debug = { enabled = true },
     git = { enabled = true },
     gitbrowse = { enabled = false }, --  Gitlinker is more advanced
+    indent = {
+      enabled = true,
+      animate = { enabled = false },
+      scope = { enabled = false }, -- TODO: Consider using this instead of mini.indentscope
+    },
     lazygit = { enabled = true },
     notify = { enabled = true },
     notifier = { enabled = true },
     quickfile = { enabled = true },
     rename = { enabled = true },
+    scope = { enabled = false }, -- TODO: Consider using this instead of mini.indentscope
     statuscolumn = { enabled = false }, -- Waste of horizontal space
     terminal = {
       enabled = true,
