@@ -36,5 +36,12 @@ return {
       },
     },
   },
-  config = true,
+  init = function()
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'NeogitStatus',
+      callback = function()
+        vim.keymap.set('n', 'L', 'VS', { buffer = true, remap = true, desc = 'Stage current line' })
+      end,
+    })
+  end,
 }
