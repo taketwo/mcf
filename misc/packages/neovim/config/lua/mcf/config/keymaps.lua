@@ -122,4 +122,6 @@ map('v', '<F2>', LazyVim.format.format, { desc = 'Format range' })
 vim.keymap.del('n', 'grn')
 vim.keymap.del('n', 'gra')
 vim.keymap.del('n', 'grr')
+vim.keymap.del('n', 'gri')
+vim.keymap.del('n', 'gO')
 -- TODO: There is also CTRL-S for signature help, perhaps we should remove it too
