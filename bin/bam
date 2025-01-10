@@ -79,11 +79,6 @@ class BTDevice:
     supported_modes: list[AudioMode]
     default_mode: AudioMode
 
-    @property
-    def identifier(self) -> str:
-        """Human-readable identifier using first alias or name."""
-        return self.aliases[0] if self.aliases else self.name
-
 
 class BTManager:
     """Core logic for managing Bluetooth devices.
@@ -300,7 +295,7 @@ class BTManager:
 
         """
         mode = mode or device.default_mode
-        logger.info("Connecting to %s...", device.identifier)
+        logger.info("Connecting to %s...", device.name)
         self._run_command(f"bluetoothctl connect {device.mac_address}")
         time.sleep(2)  # Give it time to connect
 
@@ -316,7 +311,7 @@ class BTManager:
             Device to disconnect
 
         """
-        logger.info("Disconnecting %s...", device.identifier)
+        logger.info("Disconnecting %s...", device.name)
         self._run_command(f"bluetoothctl disconnect {device.mac_address}")
 
     def set_device_mode(self, device: BTDevice, mode: AudioMode) -> None:
@@ -333,7 +328,7 @@ class BTManager:
         profile = A2DP_SINK_PROFILE if mode == AudioMode.MUSIC else HSP_PROFILE
         mac = device.mac_address.replace(":", "_")
         self._run_command(f"pactl set-card-profile {CARD_PREFIX}{mac} {profile}")
-        logger.info("Switched %s to %s mode", device.identifier, mode.name.lower())
+        logger.info("Switched %s to %s mode", device.name, mode.name.lower())
 
     def toggle_mode(self, device: BTDevice) -> None:
         """Toggle device between music and call modes.
@@ -349,7 +344,7 @@ class BTManager:
         if current_mode is None:
             logger.error(
                 "Could not determine current mode for device %s",
-                device.identifier,
+                device.name,
             )
             return
 
@@ -362,7 +357,7 @@ class BTManager:
             logger.error(
                 "Mode %s is not supported by device %s",
                 new_mode.name.lower(),
-                device.identifier,
+                device.name,
             )
             return
 
