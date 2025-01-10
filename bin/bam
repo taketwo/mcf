@@ -179,6 +179,33 @@ class BTManager:
 
         return None
 
+    def get_battery_level(self, mac_address: str) -> int | None:
+        """Get battery level for a device, if available.
+
+        Parameters
+        ----------
+        mac_address : str
+            Device MAC address
+
+        Returns
+        -------
+        int or None
+            Battery percentage (0-100) if available, None otherwise
+
+        """
+        stdout, _ = self._run_command(f"bluetoothctl info {mac_address}")
+
+        for line in stdout.splitlines():
+            if "Battery Percentage:" in line:
+                try:
+                    # Line format: "\tBattery Percentage: 0x64 (100)"
+                    # Extract the decimal value in parentheses
+                    value = line.split("(")[1].split(")")[0]
+                    return int(value)
+                except (IndexError, ValueError):
+                    return None
+        return None
+
     def get_connected_devices(self) -> list[dict[str, str]]:
         """Get list of currently connected Bluetooth devices.
 
@@ -450,6 +477,7 @@ class BTManager:
                 "name": device["name"],
                 "mac_address": device["mac_address"],
                 "current_mode": self.get_device_mode(device["mac_address"]),
+                "battery_level": self.get_battery_level(device["mac_address"]),
                 "is_known": device["mac_address"] in self.devices,
             }
             if info["is_known"]:
@@ -483,37 +511,42 @@ def status() -> None:
     manager = get_manager()
     status_info = manager.get_device_status()
 
-    click.echo("Known devices:")
-    if not status_info["known"]:
-        click.echo("  No known devices")
-    else:
-        for device in status_info["known"]:
-            click.echo(f"  {device['name']}")
-            click.echo(f"    MAC: {device['mac_address']}")
-            click.echo(f"    Aliases: {', '.join(device['aliases'])}")
-            click.echo(
-                f"    Modes: {', '.join([m.name.lower() for m in device['supported_modes']])}",
-            )
-            click.echo(f"    Default: {device['default_mode'].name.lower()}")
-
-    click.echo("\nConnected devices:")
+    # Connected Devices Section
+    click.echo("Connected devices:")
     if not status_info["connected"]:
-        click.echo("  No connected devices")
+        click.echo("  No devices connected")
     else:
         for device in status_info["connected"]:
-            status = "Known" if device["is_known"] else "Unknown"
-            click.echo(f"  {device['name']} ({status})")
+            click.echo(f"\n  {device['name']}")
             click.echo(f"    MAC: {device['mac_address']}")
+            click.echo(f"    Enrolled: {'yes' if device['is_known'] else 'no'}")
             mode_str = (
                 device["current_mode"].name.lower()
                 if device["current_mode"]
                 else "unknown"
             )
             click.echo(f"    Mode: {mode_str}")
+            if device["battery_level"] is not None:
+                click.echo(f"    Battery: {device['battery_level']}%")
             if device["is_known"]:
                 click.echo(f"    Aliases: {', '.join(device['aliases'])}")
-            else:
-                click.echo("    Run 'bam enroll' to add this device to known devices")
+            if not device["is_known"]:
+                click.echo("    Note: Use 'btm enroll' to manage this device")
+
+    # Disconnected Known Devices Section
+    click.echo("\nDisconnected known devices:")
+    disconnected = [d for d in status_info["known"] if not d["is_connected"]]
+    if not disconnected:
+        click.echo("  No disconnected known devices")
+    else:
+        for device in disconnected:
+            click.echo(f"\n  {device['name']}")
+            click.echo(f"    MAC: {device['mac_address']}")
+            click.echo(f"    Aliases: {', '.join(device['aliases'])}")
+            click.echo(
+                f"    Supported modes: {', '.join([m.name.lower() for m in device['supported_modes']])}",
+            )
+            click.echo(f"    Default mode: {device['default_mode'].name.lower()}")
 
 
 @cli.command()
