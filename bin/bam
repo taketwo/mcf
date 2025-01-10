@@ -9,14 +9,14 @@ This tool provides convenient control of Bluetooth audio devices, including:
 - Quick status overview of connected devices and their modes
 
 Example usage:
-    btm status                    # Show current status
-    btm connect jbl --music       # Connect JBL in music mode
-    btm connect --call            # If only one device exists, connect it in call mode
-    btm disconnect                # Disconnect the only connected device
-    btm mode --call               # Switch only connected device to call mode
-    btm mode                      # Toggle mode of only connected device
-    btm mode jbl                  # Toggle JBL's mode
-    btm enroll                    # Start device enrollment wizard
+    bam status                    # Show current status
+    bam connect jbl --music       # Connect JBL in music mode
+    bam connect --call            # If only one device exists, connect it in call mode
+    bam disconnect                # Disconnect the only connected device
+    bam mode --call               # Switch only connected device to call mode
+    bam mode                      # Toggle mode of only connected device
+    bam mode jbl                  # Toggle JBL's mode
+    bam enroll                    # Start device enrollment wizard
 """
 
 from __future__ import annotations
@@ -531,7 +531,7 @@ def status() -> None:
             if device["is_known"]:
                 click.echo(f"    Aliases: {', '.join(device['aliases'])}")
             if not device["is_known"]:
-                click.echo("    Note: Use 'btm enroll' to manage this device")
+                click.echo("    Note: Use 'bam enroll' to manage this device")
 
     # Disconnected Known Devices Section
     click.echo("\nDisconnected known devices:")
