@@ -1,0 +1,665 @@
+#!/usr/bin/env python3
+
+"""BAM - Bluetooth Audio Manager.
+
+This tool provides convenient control of Bluetooth audio devices, including:
+- Managing known devices with aliases
+- Switching between high-quality (A2DP) and bidirectional (HSP/HFP) audio modes
+- Setting devices as system default audio output
+- Quick status overview of connected devices and their modes
+
+Example usage:
+    btm status                    # Show current status
+    btm connect jbl --music       # Connect JBL in music mode
+    btm connect --call            # If only one device exists, connect it in call mode
+    btm disconnect                # Disconnect the only connected device
+    btm mode --call               # Switch only connected device to call mode
+    btm mode                      # Toggle mode of only connected device
+    btm mode jbl                  # Toggle JBL's mode
+    btm enroll                    # Start device enrollment wizard
+"""
+
+from __future__ import annotations
+
+import logging
+import subprocess
+import time
+from dataclasses import dataclass
+from enum import auto, Enum
+from pathlib import Path
+
+import click
+import yaml
+
+from systemd.journal import JournalHandler
+
+# Audio profiles
+A2DP_SINK_PROFILE = "a2dp-sink"
+HSP_PROFILE = "headset-head-unit"
+HFP_PROFILE = "handsfree-head-unit"
+
+# Card naming pattern
+CARD_PREFIX = "bluez_card."
+SINK_PREFIX = "bluez_sink."
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
+logger.addHandler(JournalHandler())
+
+
+class AudioMode(Enum):
+    """Available audio modes for Bluetooth devices."""
+
+    MUSIC = auto()  # A2DP high-quality mode
+    CALL = auto()  # HSP/HFP bidirectional mode
+
+
+@dataclass
+class BTDevice:
+    """Represents a Bluetooth device with its capabilities and current state.
+
+    Parameters
+    ----------
+    mac_address : str
+        MAC address of the device.
+    name : str
+        Official name as discovered from the system.
+    aliases : list of str
+        User-defined aliases for quick access.
+    supported_modes : list of AudioMode
+        Audio modes supported by the device.
+    default_mode : AudioMode
+        Preferred mode when connecting.
+
+    """
+
+    mac_address: str
+    name: str
+    aliases: list[str]
+    supported_modes: list[AudioMode]
+    default_mode: AudioMode
+
+    @property
+    def identifier(self) -> str:
+        """Human-readable identifier using first alias or name."""
+        return self.aliases[0] if self.aliases else self.name
+
+
+class BTManager:
+    """Core logic for managing Bluetooth devices.
+
+    Parameters
+    ----------
+    config_path : Path
+        Path to YAML configuration file
+
+    """
+
+    def __init__(self, config_path: Path) -> None:
+        self.config_path = config_path
+        self.devices: dict[str, BTDevice] = {}
+        self.load_config()
+
+    def load_config(self) -> None:
+        """Load device configuration from YAML file."""
+        if not self.config_path.exists():
+            return
+
+        with self.config_path.open() as f:
+            config = yaml.safe_load(f) or {}
+
+        for mac, info in config.get("devices", {}).items():
+            self.devices[mac] = BTDevice(
+                mac_address=mac,
+                name=info["name"],
+                aliases=info.get("aliases", []),
+                supported_modes=[AudioMode[m.upper()] for m in info["supported_modes"]],
+                default_mode=AudioMode[info["default_mode"].upper()],
+            )
+
+    def save_config(self) -> None:
+        """Save current device configuration to YAML file."""
+        config = {"devices": {}}
+        for mac, device in self.devices.items():
+            config["devices"][mac] = {
+                "name": device.name,
+                "aliases": device.aliases,
+                "supported_modes": [m.name.lower() for m in device.supported_modes],
+                "default_mode": device.default_mode.name.lower(),
+            }
+
+        self.config_path.parent.mkdir(parents=True, exist_ok=True)
+        with self.config_path.open("w") as f:
+            yaml.dump(config, f)
+
+    def _run_command(self, command: str) -> tuple[str, str]:
+        """Run shell command and return its output.
+
+        Parameters
+        ----------
+        command : str
+            Shell command to execute
+
+        Returns
+        -------
+        tuple of (stdout, stderr)
+            Command output
+
+        """
+        process = subprocess.Popen(  # noqa: S602
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            text=True,
+        )
+        return process.communicate()
+
+    def _get_card_info(self, mac_address: str) -> str | None:
+        """Get card info for a device from PulseAudio.
+
+        Parameters
+        ----------
+        mac_address : str
+            Device MAC address to get info for
+
+        Returns
+        -------
+        str or None
+            Card info or None if not found
+
+        """
+        stdout, _ = self._run_command("pactl list cards")
+
+        cards = stdout.split("Card #")
+        mac_normalized = mac_address.replace(":", "_")
+        for card in cards:
+            if mac_normalized in card:
+                return card
+
+        return None
+
+    def get_connected_devices(self) -> list[dict[str, str]]:
+        """Get list of currently connected Bluetooth devices.
+
+        Returns
+        -------
+        list of dict
+            Each dict contains 'mac_address' and 'name' keys
+
+        """
+        stdout, _ = self._run_command("bluetoothctl devices Connected | grep Device")
+        devices = []
+        for line in stdout.splitlines():
+            if not line.strip():
+                continue
+            parts = line.split(None, 2)
+            if len(parts) >= 3:
+                devices.append({"mac_address": parts[1], "name": parts[2]})
+        return devices
+
+    def detect_device_modes(self, mac_address: str) -> list[AudioMode]:
+        """Detect supported audio modes for a device.
+
+        Parameters
+        ----------
+        mac_address : str
+            Device MAC address
+
+        Returns
+        -------
+        list of AudioMode
+            Supported modes
+
+        """
+        device_card = self._get_card_info(mac_address)
+
+        modes = []
+        if device_card:
+            if A2DP_SINK_PROFILE in device_card:
+                modes.append(AudioMode.MUSIC)
+            if any(profile in device_card for profile in [HSP_PROFILE, HFP_PROFILE]):
+                modes.append(AudioMode.CALL)
+
+        return modes
+
+    def find_device(self, identifier: str | None) -> BTDevice | None:
+        """Look up device by MAC, name, or alias.
+
+        Parameters
+        ----------
+        identifier : str or None
+            Device identifier (if None, returns single connected known device or None)
+
+        Returns
+        -------
+        BTDevice or None
+            Found device or None if:
+            - identifier provided but no matching device found
+            - no identifier and no connected known devices
+            - no identifier and multiple connected known devices (ambiguous)
+
+        """
+        if not identifier:
+            connected = self.get_connected_devices()
+            known_connected = [
+                dev
+                for dev in self.devices.values()
+                if any(conn["mac_address"] == dev.mac_address for conn in connected)
+            ]
+            return known_connected[0] if len(known_connected) == 1 else None
+
+        for device in self.devices.values():
+            if (
+                identifier in (device.mac_address, device.name)
+                or identifier in device.aliases
+            ):
+                return device
+        return None
+
+    def connect_device(
+        self,
+        device: BTDevice,
+        mode: AudioMode | None = None,
+    ) -> None:
+        """Connect to a device and set its mode.
+
+        Parameters
+        ----------
+        device : BTDevice
+            Device to connect
+        mode : AudioMode or None
+            Desired mode (if None, uses device's default)
+
+        """
+        mode = mode or device.default_mode
+        logger.info("Connecting to %s...", device.identifier)
+        self._run_command(f"bluetoothctl connect {device.mac_address}")
+        time.sleep(2)  # Give it time to connect
+
+        self.set_device_mode(device, mode)
+        self.set_as_default_sink(device)
+
+    def disconnect_device(self, device: BTDevice) -> None:
+        """Disconnect a device.
+
+        Parameters
+        ----------
+        device : BTDevice
+            Device to disconnect
+
+        """
+        logger.info("Disconnecting %s...", device.identifier)
+        self._run_command(f"bluetoothctl disconnect {device.mac_address}")
+
+    def set_device_mode(self, device: BTDevice, mode: AudioMode) -> None:
+        """Switch device to specified audio mode.
+
+        Parameters
+        ----------
+        device : BTDevice
+            Target device
+        mode : AudioMode
+            Desired mode
+
+        """
+        profile = A2DP_SINK_PROFILE if mode == AudioMode.MUSIC else HSP_PROFILE
+        mac = device.mac_address.replace(":", "_")
+        self._run_command(f"pactl set-card-profile {CARD_PREFIX}{mac} {profile}")
+        logger.info("Switched %s to %s mode", device.identifier, mode.name.lower())
+
+    def toggle_mode(self, device: BTDevice) -> None:
+        """Toggle device between music and call modes.
+
+        Parameters
+        ----------
+        device : BTDevice
+            Device to toggle
+
+        """
+        current_mode = self.get_device_mode(device.mac_address)
+
+        if current_mode is None:
+            logger.error(
+                "Could not determine current mode for device %s",
+                device.identifier,
+            )
+            return
+
+        if current_mode == AudioMode.MUSIC:
+            new_mode = AudioMode.CALL
+        else:
+            new_mode = AudioMode.MUSIC
+
+        if new_mode not in device.supported_modes:
+            logger.error(
+                "Mode %s is not supported by device %s",
+                new_mode.name.lower(),
+                device.identifier,
+            )
+            return
+
+        self.set_device_mode(device, new_mode)
+
+    def set_as_default_sink(self, device: BTDevice) -> None:
+        """Make device the system default audio output.
+
+        Parameters
+        ----------
+        device : BTDevice
+            Device to set as default
+
+        """
+        mac = device.mac_address.replace(":", "_")
+        self._run_command(f"pactl set-default-sink {SINK_PREFIX}{mac}")
+        logger.info("Set %s as default audio output", device.identifier)
+
+    def add_device(
+        self,
+        mac_address: str,
+        name: str,
+        aliases: list[str],
+        supported_modes: list[AudioMode],
+        default_mode: AudioMode,
+    ) -> None:
+        """Add new device to known devices.
+
+        Parameters
+        ----------
+        mac_address : str
+            Device MAC address
+        name : str
+            Official device name
+        aliases : list of str
+            User-defined aliases
+        supported_modes : list of AudioMode
+            Supported audio modes
+        default_mode : AudioMode
+            Preferred mode
+
+        """
+        self.devices[mac_address] = BTDevice(
+            mac_address=mac_address,
+            name=name,
+            aliases=aliases,
+            supported_modes=supported_modes,
+            default_mode=default_mode,
+        )
+        self.save_config()
+
+    def get_device_mode(self, mac_address: str) -> AudioMode | None:
+        """Get current audio mode of a device.
+
+        Parameters
+        ----------
+        mac_address : str
+            Device MAC address
+
+        Returns
+        -------
+        AudioMode or None
+            Current mode if device is connected, None if device is disconnected or mode
+            cannot be determined
+
+        """
+        if device_card := self._get_card_info(mac_address):
+            for line in device_card.splitlines():
+                if "active profile:" in line.lower():
+                    active_profile = line.split(":", 1)[1].strip().lower()
+                    if active_profile.startswith(A2DP_SINK_PROFILE):
+                        return AudioMode.MUSIC
+                    if active_profile.startswith((HSP_PROFILE, HFP_PROFILE)):
+                        return AudioMode.CALL
+                    break
+
+        return None
+
+    def get_device_status(self) -> dict[str, list[dict]]:
+        """Get comprehensive status of all known and connected devices.
+
+        Returns
+        -------
+        dict with keys:
+            'known': list of known device info
+            'connected': list of connected device info
+
+        """
+        # Get all connected devices first
+        connected_devices = self.get_connected_devices()
+        connected_macs = {d["mac_address"] for d in connected_devices}
+
+        # Prepare known devices info
+        known_info = []
+        for device in self.devices.values():
+            info = {
+                "name": device.name,
+                "mac_address": device.mac_address,
+                "aliases": device.aliases,
+                "supported_modes": device.supported_modes,
+                "default_mode": device.default_mode,
+                "is_connected": device.mac_address in connected_macs,
+            }
+            if info["is_connected"]:
+                info["current_mode"] = self.get_device_mode(device.mac_address)
+            known_info.append(info)
+
+        # Prepare connected devices info
+        connected_info = []
+        for device in connected_devices:
+            info = {
+                "name": device["name"],
+                "mac_address": device["mac_address"],
+                "current_mode": self.get_device_mode(device["mac_address"]),
+                "is_known": device["mac_address"] in self.devices,
+            }
+            if info["is_known"]:
+                known_device = self.devices[device["mac_address"]]
+                info["aliases"] = known_device.aliases
+            connected_info.append(info)
+
+        return {
+            "known": known_info,
+            "connected": connected_info,
+        }
+
+
+def get_manager() -> BTManager:
+    """Create BTManager with default config path."""
+    config_path = Path.home() / ".config" / "bam" / "config.yaml"
+    return BTManager(config_path)
+
+
+@click.group
+@click.option("--debug", is_flag=True, help="Enable debug logging")
+def cli(*, debug: bool) -> None:
+    """BAM - Bluetooth Audio Manager."""
+    if debug:
+        logger.setLevel(logging.DEBUG)
+
+
+@cli.command()
+def status() -> None:
+    """Show current system status."""
+    manager = get_manager()
+    status_info = manager.get_device_status()
+
+    click.echo("Known devices:")
+    if not status_info["known"]:
+        click.echo("  No known devices")
+    else:
+        for device in status_info["known"]:
+            click.echo(f"  {device['name']}")
+            click.echo(f"    MAC: {device['mac_address']}")
+            click.echo(f"    Aliases: {', '.join(device['aliases'])}")
+            click.echo(
+                f"    Modes: {', '.join([m.name.lower() for m in device['supported_modes']])}",
+            )
+            click.echo(f"    Default: {device['default_mode'].name.lower()}")
+
+    click.echo("\nConnected devices:")
+    if not status_info["connected"]:
+        click.echo("  No connected devices")
+    else:
+        for device in status_info["connected"]:
+            status = "Known" if device["is_known"] else "Unknown"
+            click.echo(f"  {device['name']} ({status})")
+            click.echo(f"    MAC: {device['mac_address']}")
+            mode_str = (
+                device["current_mode"].name.lower()
+                if device["current_mode"]
+                else "unknown"
+            )
+            click.echo(f"    Mode: {mode_str}")
+            if device["is_known"]:
+                click.echo(f"    Aliases: {', '.join(device['aliases'])}")
+            else:
+                click.echo("    Run 'bam enroll' to add this device to known devices")
+
+
+@cli.command()
+@click.argument("device_name", required=False)
+@click.option(
+    "--music",
+    "mode",
+    flag_value=AudioMode.MUSIC,
+    help="Connect in high-quality audio mode",
+)
+@click.option(
+    "--call",
+    "mode",
+    flag_value=AudioMode.CALL,
+    help="Connect in bidirectional audio mode",
+)
+def connect(device_name: str | None, mode: AudioMode | None) -> None:
+    """Connect to a device and set it as default audio device.
+
+    If mode not specified, uses device's default mode from config.
+    """
+    manager = get_manager()
+    device = manager.find_device(device_name)
+
+    if not device:
+        if device_name:
+            click.echo(f"Device '{device_name}' not found in known devices")
+        else:
+            click.echo(
+                "No default device found. Please specify device name or enroll a device.",
+            )
+        return
+
+    manager.connect_device(device, mode)
+
+
+@cli.command()
+@click.argument("device_name", required=False)
+def disconnect(device_name: str | None) -> None:
+    """Disconnect a device."""
+    manager = get_manager()
+    device = manager.find_device(device_name)
+
+    if not device:
+        if device_name:
+            click.echo(f"Device '{device_name}' not found in known devices")
+        else:
+            click.echo("No default device found. Please specify device name.")
+        return
+
+    manager.disconnect_device(device)
+
+
+@cli.command()
+@click.argument("device_name", required=False)
+@click.option(
+    "--music",
+    "mode",
+    flag_value=AudioMode.MUSIC,
+    help="Switch to high-quality audio",
+)
+@click.option(
+    "--call",
+    "mode",
+    flag_value=AudioMode.CALL,
+    help="Switch to bidirectional audio",
+)
+def mode(device_name: str | None, mode: AudioMode | None) -> None:
+    """Switch device mode.
+
+    If no mode specified, toggles between music/call. If no device specified, acts on
+    the only connected device.
+    """
+    manager = get_manager()
+    device = manager.find_device(device_name)
+
+    if not device:
+        if device_name:
+            click.echo(f"Device '{device_name}' not found in known devices")
+        else:
+            click.echo("No default device found. Please specify device name")
+        return
+
+    if mode:
+        manager.set_device_mode(device, mode)
+    else:
+        manager.toggle_mode(device)
+
+
+@cli.command()
+@click.option("--alias", help="Initial alias for the device")
+def enroll(alias: str | None) -> None:
+    """Add currently connected device to known devices."""
+    manager = get_manager()
+
+    connected = manager.get_connected_devices()
+    unenrolled = [d for d in connected if not manager.find_device(d["mac_address"])]
+    if not unenrolled:
+        click.echo("No new devices to enroll")
+        return
+
+    device_info = None
+    click.echo("Found new devices that can be enrolled:")
+    for idx, device in enumerate(unenrolled, 1):
+        click.echo(f"  {idx}. {device['mac_address']} {device['name']}")
+    if len(unenrolled) > 1:
+        choice = click.prompt(
+            "Select device to enroll (enter number)",
+            type=click.IntRange(1, len(unenrolled)),
+            show_choices=False,
+        )
+        device_info = unenrolled[choice - 1]
+    else:
+        device_info = unenrolled[0]
+
+    if not alias:
+        default_alias = device_info["name"].lower().replace(" ", "")
+        alias = click.prompt(
+            "Enter alias for quick access",
+            default=default_alias,
+            type=str,
+        )
+
+    click.echo("Detecting supported modes...")
+    modes = manager.detect_device_modes(device_info["mac_address"])
+
+    # Set default mode
+    mode_names = [m.name.lower() for m in modes]
+    default_mode = AudioMode.MUSIC if AudioMode.MUSIC in modes else modes[0]
+    chosen_mode = click.prompt(
+        "Select default mode",
+        type=click.Choice(mode_names),
+        default=default_mode.name.lower(),
+    )
+
+    # Save to config
+    manager.add_device(
+        mac_address=device_info["mac_address"],
+        name=device_info["name"],
+        aliases=[alias],
+        supported_modes=modes,
+        default_mode=AudioMode[chosen_mode.upper()],
+    )
+
+    click.echo("Device enrolled successfully")
+
+
+if __name__ == "__main__":
+    cli()
