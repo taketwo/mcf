@@ -100,9 +100,9 @@ map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', sile
 map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
 
 -- Floating terminal
-local lazyterm = function() Snacks.terminal(nil, { cwd = LazyVim.root() }) end
+local lazyterm = function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root() }) end
 map('n', '<C-/>', lazyterm, { desc = 'Show terminal' })
-map('t', '<C-/>', '<cmd>close<cr>', { desc = 'Hide terminal' })
+map('t', '<C-/>', lazyterm, { desc = 'Hide terminal' })
 -- NOTE: The <C-_> maps is necessary due terminal weirdness
 --See: https://apple.stackexchange.com/questions/24261/how-do-i-send-c-that-is-control-slash-to-the-terminal/227286#227286
 map('n', '<C-_>', lazyterm, { desc = 'which_key_ignore' })
