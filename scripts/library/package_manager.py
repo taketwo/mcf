@@ -59,6 +59,8 @@ class Pipx(Install):
             entries = package.split(" ")
             args += [e for e in entries if e.startswith("-")]
             entries = [e for e in entries if not e.startswith("-")]
+            if self.is_local_python_package(entries[0]):
+                args.append("--editable")
             package = self.install(entries[0], args)
             if len(entries) > 1:
                 for entry in entries[1:]:
@@ -75,6 +77,26 @@ class Pipx(Install):
         subprocess.check_output(cmd.split())
         m = re.match(r"(.*)\[.*\]", package)
         return package if m is None else m.groups()[0]
+
+    @classmethod
+    def is_local_python_package(cls, package: str) -> bool:
+        """Check if the given path contains a Python package.
+
+        Parameters
+        ----------
+        package: str
+            Path to the potential package directory.
+
+        Returns
+        -------
+        bool
+            True if the given path contains a Python package, False otherwise.
+
+        """
+        package_path = Path(package)
+        return (package_path / "setup.py").is_file() or (
+            package_path / "pyproject.toml"
+        ).is_file()
 
 
 class Cabal(Install):
@@ -161,9 +183,8 @@ class PackageManager:
         nix_expression = join(directory, "default.nix")
         if os.path.isfile(nix_expression):
             commands.append(("nix", "-f {}".format(nix_expression)))
-        python_setup = join(directory, "setup.py")
-        if os.path.isfile(python_setup):
-            commands.append(("pipx", "{} -e".format(directory)))
+        if Pipx.is_local_python_package(directory):
+            commands.append(("pipx", directory))
         pre_install_script = join(directory, "pre-install")
         if os.path.isfile(pre_install_script):
             commands.append(("pre-install", pre_install_script))
