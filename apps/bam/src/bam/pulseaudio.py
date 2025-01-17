@@ -1,0 +1,111 @@
+"""PulseAudio system interface."""
+
+from __future__ import annotations
+
+import logging
+import subprocess
+
+from .types import AudioMode
+
+logger = logging.getLogger(__name__)
+
+# Audio profiles
+A2DP_SINK_PROFILE = "a2dp-sink"
+HSP_PROFILE = "headset-head-unit"
+HFP_PROFILE = "handsfree-head-unit"
+
+# Card naming pattern
+CARD_PREFIX = "bluez_card."
+SINK_PREFIX = "bluez_sink."
+
+
+class PulseAudioController:
+    """Interface to PulseAudio functionality via pactl."""
+
+    def _run_command(self, command: str) -> tuple[str, str]:
+        """Run pactl command and return its output."""
+        full_command = f"pactl {command}"
+        process = subprocess.Popen(
+            full_command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            text=True,
+        )
+        return process.communicate()
+
+    def _get_card_info(self, mac_address: str) -> str | None:
+        """Get card info for a device from PulseAudio."""
+        stdout, _ = self._run_command("list cards")
+        cards = stdout.split("Card #")
+        mac_normalized = mac_address.replace(":", "_")
+
+        for card in cards:
+            if mac_normalized in card:
+                return card
+        return None
+
+    def _get_available_sinks(self) -> list[str]:
+        """Get list of available PulseAudio sinks."""
+        stdout, _ = self._run_command("list short sinks")
+        return [
+            parts[1]
+            for parts in (
+                line.split("\t") for line in stdout.splitlines() if line.strip()
+            )
+            if len(parts) >= 2
+        ]
+
+    def _get_available_sinks_for_device(self, mac_address: str) -> list[str]:
+        """Get the PulseAudio sink name(s) for a Bluetooth device."""
+        mac_normalized = mac_address.replace(":", "_")
+        sinks = self._get_available_sinks()
+        return [sink for sink in sinks if mac_normalized in sink]
+
+    def get_card_profile(self, mac_address: str) -> AudioMode | None:
+        """Get current audio mode of a device."""
+        if device_card := self._get_card_info(mac_address):
+            for line in device_card.splitlines():
+                if "active profile:" in line.lower():
+                    active_profile = line.split(":", 1)[1].strip().lower()
+                    if active_profile.startswith(A2DP_SINK_PROFILE):
+                        return AudioMode.MUSIC
+                    if active_profile.startswith((HSP_PROFILE, HFP_PROFILE)):
+                        return AudioMode.CALL
+                    break
+        return None
+
+    def set_card_profile(self, mac_address: str, mode: AudioMode) -> None:
+        """Set the audio profile for a device."""
+        profile = A2DP_SINK_PROFILE if mode == AudioMode.MUSIC else HSP_PROFILE
+        mac_normalized = mac_address.replace(":", "_")
+        self._run_command(f"set-card-profile {CARD_PREFIX}{mac_normalized} {profile}")
+
+    def set_as_default_sink(self, mac_address: str) -> None:
+        """Make device the system default audio output."""
+        if sinks := self._get_available_sinks_for_device(mac_address):
+            if len(sinks) > 1:
+                logger.warning(
+                    "Multiple sinks found for device with MAC %s: %s",
+                    mac_address,
+                    ", ".join(sinks),
+                )
+            for sink_name in sinks:
+                self._run_command(f"set-default-sink {sink_name}")
+                return
+        else:
+            raise RuntimeError(
+                f"No valid audio sink found for device with MAC {mac_address}",
+            )
+
+    def detect_supported_modes(self, mac_address: str) -> list[AudioMode]:
+        """Detect audio modes supported by a device."""
+        modes = []
+        if card_info := self._get_card_info(mac_address):
+            if A2DP_SINK_PROFILE in card_info.lower():
+                modes.append(AudioMode.MUSIC)
+            if any(
+                profile in card_info.lower() for profile in [HSP_PROFILE, HFP_PROFILE]
+            ):
+                modes.append(AudioMode.CALL)
+        return modes

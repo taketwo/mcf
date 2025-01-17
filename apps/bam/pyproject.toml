@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "bam"
+version = "0.1.0"
+description = "Bluetooth Audio Manager"
+authors = ["Sergey Alexandrov <alexandrov88@gmail.com>"]
+packages = [{ include = "bam", from = "src" }]
+
+[tool.poetry.scripts]
+bam = "bam.cli:cli"
+typecheck = "poetry:run mypy src/bam"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+click = "^8.1.8"
+pyyaml = "^6.0.2"
+systemd-python = "^235"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.14.1"
+types-pyyaml = "^6.0.12.20241230"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "systemd.*"
+ignore_missing_imports = true
