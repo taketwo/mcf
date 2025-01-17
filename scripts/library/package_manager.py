@@ -173,6 +173,7 @@ class PackageManager:
             with open(deps) as f:
                 for line in f:
                     package = self._remove_comments(line).strip()
+                    package = os.path.expandvars(package)
                     if len(package.split(": ")) == 2:
                         commands.append(tuple(package.split(": ")))
                     elif package:
