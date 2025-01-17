@@ -42,18 +42,18 @@ def status() -> None:
             click.echo(f"\n  {device['name']}")
             click.echo(f"    MAC: {device['mac_address']}")
             click.echo(f"    Enrolled: {'yes' if device['is_known'] else 'no'}")
+            if device["is_known"]:
+                click.echo(f"    Aliases: {', '.join(device['aliases'])}")
+            else:
+                click.echo("    Note: Use 'bam enroll' to manage this device")
+            if device["battery_level"] is not None:
+                click.echo(f"    Battery: {device['battery_level']}%")
             mode_str = (
                 device["current_mode"].name.lower()
                 if device["current_mode"]
                 else "unknown"
             )
             click.echo(f"    Mode: {mode_str}")
-            if device["battery_level"] is not None:
-                click.echo(f"    Battery: {device['battery_level']}%")
-            if device["is_known"]:
-                click.echo(f"    Aliases: {', '.join(device['aliases'])}")
-            if not device["is_known"]:
-                click.echo("    Note: Use 'bam enroll' to manage this device")
 
     # Disconnected Known Devices Section
     click.echo("\nDisconnected known devices:")
