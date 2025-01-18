@@ -47,7 +47,7 @@ class PulseAudioController:
         profile = (
             AudioProfile.A2DP_SINK if mode == AudioMode.MUSIC else AudioProfile.HSP
         )
-        mac_normalized = mac_address.replace(":", "_")
+        mac_normalized = self._normalize_mac(mac_address)
         self._run_command(
             f"set-card-profile {DevicePrefix.CARD.value}{mac_normalized} {profile.value}",
         )
@@ -65,11 +65,27 @@ class PulseAudioController:
                 modes.append(AudioMode.CALL)
         return modes
 
+    def _run_command(self, command: str) -> tuple[str, str]:
+        """Run pactl command and return its output."""
+        full_command = f"pactl {command}"
+        process = subprocess.Popen(
+            full_command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            text=True,
+        )
+        return process.communicate()
+
+    def _normalize_mac(self, mac_address: str) -> str:
+        """Convert MAC address to PulseAudio format by replacing colons with underscores."""
+        return mac_address.replace(":", "_")
+
     def _get_card_info(self, mac_address: str) -> str | None:
         """Get card info for a device from PulseAudio."""
         stdout, _ = self._run_command("list cards")
         cards = stdout.split("Card #")
-        mac_normalized = mac_address.replace(":", "_")
+        mac_normalized = self._normalize_mac(mac_address)
 
         for card in cards:
             if mac_normalized in card:
@@ -87,21 +103,9 @@ class PulseAudioController:
             if len(parts) >= 2
         ]
 
-    def _run_command(self, command: str) -> tuple[str, str]:
-        """Run pactl command and return its output."""
-        full_command = f"pactl {command}"
-        process = subprocess.Popen(
-            full_command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            shell=True,
-            text=True,
-        )
-        return process.communicate()
-
     def _get_available_sinks_for_device(self, mac_address: str) -> list[str]:
         """Get the PulseAudio sink name(s) for a Bluetooth device."""
-        mac_normalized = mac_address.replace(":", "_")
+        mac_normalized = self._normalize_mac(mac_address)
         sinks = self._get_available_sinks()
         return [sink for sink in sinks if mac_normalized in sink]
 
