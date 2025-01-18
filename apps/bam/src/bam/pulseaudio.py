@@ -65,6 +65,23 @@ class PulseAudioController:
                 modes.append(AudioMode.CALL)
         return modes
 
+    def set_default_sink(self, mac_address: str) -> None:
+        """Make device the system default audio output."""
+        if sinks := self._get_available_sinks(mac_address):
+            if len(sinks) > 1:
+                logger.warning(
+                    "Multiple sinks found for device with MAC %s: %s",
+                    mac_address,
+                    ", ".join(sinks),
+                )
+            for sink_name in sinks:
+                self._run_command(f"set-default-sink {sink_name}")
+                return
+        else:
+            raise RuntimeError(
+                f"No valid audio sink found for device with MAC {mac_address}",
+            )
+
     def _run_command(self, command: str) -> tuple[str, str]:
         """Run pactl command and return its output."""
         full_command = f"pactl {command}"
@@ -92,10 +109,22 @@ class PulseAudioController:
                 return card
         return None
 
-    def _get_available_sinks(self) -> list[str]:
-        """Get list of available PulseAudio sinks."""
+    def _get_available_sinks(self, mac_address: str | None = None) -> list[str]:
+        """Get list of available PulseAudio sinks.
+
+        Parameters
+        ----------
+        mac_address : str, optional
+            MAC address of the device to filter the sinks.
+
+        Returns
+        -------
+        list[str]
+            List of sink names.
+
+        """
         stdout, _ = self._run_command("list short sinks")
-        return [
+        sinks = [
             parts[1]
             for parts in (
                 line.split("\t") for line in stdout.splitlines() if line.strip()
@@ -103,25 +132,8 @@ class PulseAudioController:
             if len(parts) >= 2
         ]
 
-    def _get_available_sinks_for_device(self, mac_address: str) -> list[str]:
-        """Get the PulseAudio sink name(s) for a Bluetooth device."""
-        mac_normalized = self._normalize_mac(mac_address)
-        sinks = self._get_available_sinks()
-        return [sink for sink in sinks if mac_normalized in sink]
+        if mac_address is None:
+            return sinks
 
-    def set_as_default_sink(self, mac_address: str) -> None:
-        """Make device the system default audio output."""
-        if sinks := self._get_available_sinks_for_device(mac_address):
-            if len(sinks) > 1:
-                logger.warning(
-                    "Multiple sinks found for device with MAC %s: %s",
-                    mac_address,
-                    ", ".join(sinks),
-                )
-            for sink_name in sinks:
-                self._run_command(f"set-default-sink {sink_name}")
-                return
-        else:
-            raise RuntimeError(
-                f"No valid audio sink found for device with MAC {mac_address}",
-            )
+        mac_normalized = self._normalize_mac(mac_address)
+        return [sink for sink in sinks if mac_normalized in sink]

@@ -116,7 +116,7 @@ class BTManager:
         self.pulseaudio.set_device_mode(device.mac_address, mode)
         # FIXME: This often fails on first connect attempt, probably because the sink
         # is not ready yet. We should either retry or wait for the sink to be available.
-        self.pulseaudio.set_as_default_sink(device.mac_address)
+        self.pulseaudio.set_default_sink(device.mac_address)
 
     def disconnect_device(self, device: BTDevice) -> None:
         """Disconnect a device."""
