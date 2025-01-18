@@ -4,19 +4,26 @@ from __future__ import annotations
 
 import logging
 import subprocess
+from enum import Enum
 
 from .types import AudioMode
 
 logger = logging.getLogger(__name__)
 
-# Audio profiles
-A2DP_SINK_PROFILE = "a2dp-sink"
-HSP_PROFILE = "headset-head-unit"
-HFP_PROFILE = "handsfree-head-unit"
 
-# Card naming pattern
-CARD_PREFIX = "bluez_card."
-SINK_PREFIX = "bluez_sink."
+class AudioProfile(str, Enum):
+    """Audio profiles for Bluetooth devices."""
+
+    A2DP_SINK = "a2dp-sink"
+    HSP = "headset-head-unit"
+    HFP = "handsfree-head-unit"
+
+
+class DevicePrefix(str, Enum):
+    """Device naming prefixes."""
+
+    CARD = "bluez_card."
+    SINK = "bluez_sink."
 
 
 class PulseAudioController:
@@ -68,18 +75,22 @@ class PulseAudioController:
             for line in device_card.splitlines():
                 if "active profile:" in line.lower():
                     active_profile = line.split(":", 1)[1].strip().lower()
-                    if active_profile.startswith(A2DP_SINK_PROFILE):
+                    if active_profile.startswith(AudioProfile.A2DP_SINK):
                         return AudioMode.MUSIC
-                    if active_profile.startswith((HSP_PROFILE, HFP_PROFILE)):
+                    if active_profile.startswith((AudioProfile.HSP, AudioProfile.HFP)):
                         return AudioMode.CALL
                     break
         return None
 
     def set_card_profile(self, mac_address: str, mode: AudioMode) -> None:
         """Set the audio profile for a device."""
-        profile = A2DP_SINK_PROFILE if mode == AudioMode.MUSIC else HSP_PROFILE
+        profile = (
+            AudioProfile.A2DP_SINK if mode == AudioMode.MUSIC else AudioProfile.HSP
+        )
         mac_normalized = mac_address.replace(":", "_")
-        self._run_command(f"set-card-profile {CARD_PREFIX}{mac_normalized} {profile}")
+        self._run_command(
+            f"set-card-profile {DevicePrefix.CARD.value}{mac_normalized} {profile.value}",
+        )
 
     def set_as_default_sink(self, mac_address: str) -> None:
         """Make device the system default audio output."""
@@ -102,10 +113,11 @@ class PulseAudioController:
         """Detect audio modes supported by a device."""
         modes = []
         if card_info := self._get_card_info(mac_address):
-            if A2DP_SINK_PROFILE in card_info.lower():
+            if AudioProfile.A2DP_SINK in card_info.lower():
                 modes.append(AudioMode.MUSIC)
             if any(
-                profile in card_info.lower() for profile in [HSP_PROFILE, HFP_PROFILE]
+                profile in card_info.lower()
+                for profile in [AudioProfile.HSP, AudioProfile.HFP]
             ):
                 modes.append(AudioMode.CALL)
         return modes
