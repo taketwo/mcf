@@ -29,7 +29,7 @@ class DevicePrefix(str, Enum):
 class PulseAudioController:
     """Interface to PulseAudio functionality via pactl."""
 
-    def get_card_profile(self, mac_address: str) -> AudioMode | None:
+    def get_device_mode(self, mac_address: str) -> AudioMode | None:
         """Get current audio mode of a device."""
         if device_card := self._get_card_info(mac_address):
             for line in device_card.splitlines():
@@ -42,8 +42,8 @@ class PulseAudioController:
                     break
         return None
 
-    def set_card_profile(self, mac_address: str, mode: AudioMode) -> None:
-        """Set the audio profile for a device."""
+    def set_device_mode(self, mac_address: str, mode: AudioMode) -> None:
+        """Set audio mode for a device."""
         profile = (
             AudioProfile.A2DP_SINK if mode == AudioMode.MUSIC else AudioProfile.HSP
         )
@@ -52,7 +52,7 @@ class PulseAudioController:
             f"set-card-profile {DevicePrefix.CARD.value}{mac_normalized} {profile.value}",
         )
 
-    def detect_supported_modes(self, mac_address: str) -> list[AudioMode]:
+    def detect_device_supported_modes(self, mac_address: str) -> list[AudioMode]:
         """Detect audio modes supported by a device."""
         modes = []
         if card_info := self._get_card_info(mac_address):

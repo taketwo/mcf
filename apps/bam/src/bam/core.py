@@ -113,7 +113,7 @@ class BTManager:
         logger.info("Connecting to %s...", device.name)
 
         self.bluetooth.connect_device(device.mac_address)
-        self.pulseaudio.set_card_profile(device.mac_address, mode)
+        self.pulseaudio.set_device_mode(device.mac_address, mode)
         # FIXME: This often fails on first connect attempt, probably because the sink
         # is not ready yet. We should either retry or wait for the sink to be available.
         self.pulseaudio.set_as_default_sink(device.mac_address)
@@ -128,12 +128,12 @@ class BTManager:
         if mode not in device.supported_modes:
             raise ValueError(f"Mode {mode.name} not supported by device {device.name}")
 
-        self.pulseaudio.set_card_profile(device.mac_address, mode)
+        self.pulseaudio.set_device_mode(device.mac_address, mode)
         logger.info("Switched %s to %s mode", device.name, mode.name.lower())
 
     def toggle_mode(self, device: BTDevice) -> None:
         """Toggle device between music and call modes."""
-        current_mode = self.pulseaudio.get_card_profile(device.mac_address)
+        current_mode = self.pulseaudio.get_device_mode(device.mac_address)
         if current_mode is None:
             logger.error("Could not determine current mode for device %s", device.name)
             return
@@ -185,7 +185,7 @@ class BTManager:
                 "is_connected": device.mac_address in connected_macs,
             }
             if info["is_connected"]:
-                info["current_mode"] = self.pulseaudio.get_card_profile(
+                info["current_mode"] = self.pulseaudio.get_device_mode(
                     device.mac_address,
                 )
             known_info.append(info)
@@ -195,7 +195,7 @@ class BTManager:
             info = {
                 "name": device.name,
                 "mac_address": device.mac_address,
-                "current_mode": self.pulseaudio.get_card_profile(device.mac_address),
+                "current_mode": self.pulseaudio.get_device_mode(device.mac_address),
                 "battery_level": self.bluetooth.get_battery_level(device.mac_address),
                 "is_known": device.mac_address in self.devices,
             }

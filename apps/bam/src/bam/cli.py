@@ -194,7 +194,7 @@ def enroll(alias: str | None) -> None:
         )
 
     # Detect supported modes by checking available profiles
-    modes = manager.pulseaudio.detect_supported_modes(device_info.mac_address)
+    modes = manager.pulseaudio.detect_device_supported_modes(device_info.mac_address)
 
     # Set default mode
     mode_names = [m.name.lower() for m in modes]
