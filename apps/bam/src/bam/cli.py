@@ -148,7 +148,7 @@ def mode(device_name: str | None, mode: AudioMode | None) -> None:
         if device_name:
             click.echo(f"Device '{device_name}' not found in known devices")
         else:
-            click.echo("No default device found. Please specify device name.")
+            click.echo("Unable to automatically select device, please specify name")
         return
 
     if mode:
