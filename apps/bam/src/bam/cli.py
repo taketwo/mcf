@@ -194,16 +194,7 @@ def enroll(alias: str | None) -> None:
         )
 
     # Detect supported modes by checking available profiles
-    card_info = manager.pulseaudio._get_card_info(device_info.mac_address)
-    modes = []
-    if card_info:
-        if "a2dp-sink" in card_info.lower():
-            modes.append(AudioMode.MUSIC)
-        if any(
-            profile in card_info.lower()
-            for profile in ["headset-head-unit", "handsfree-head-unit"]
-        ):
-            modes.append(AudioMode.CALL)
+    modes = manager.pulseaudio.detect_supported_modes(device_info.mac_address)
 
     # Set default mode
     mode_names = [m.name.lower() for m in modes]
