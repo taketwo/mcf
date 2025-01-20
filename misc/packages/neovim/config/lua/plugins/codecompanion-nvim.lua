@@ -42,6 +42,9 @@ return {
         inline = {
           adapter = 'copilot',
         },
+        agent = {
+          adapter = 'copilot',
+        },
       },
     },
   },
