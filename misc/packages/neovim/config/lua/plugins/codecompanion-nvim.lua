@@ -11,6 +11,11 @@ return {
       'CodeCompanionChat',
       'CodeCompanionCmd',
     },
+    keys = {
+      { '<Leader>A', '', desc = 'AI support with CodeCompanion', mode = { 'n', 'v' } },
+      { '<Leader>A<Space>', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle chat window', mode = { 'n', 'v' } },
+      { '<Leader>Aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
+    },
     opts = {
       adapters = {
         copilot = function()
