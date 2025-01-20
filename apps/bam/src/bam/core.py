@@ -2,22 +2,20 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import Any, TYPE_CHECKING
 
 import yaml
-from systemd.journal import JournalHandler
 
 from .bluetooth import BluetoothController
+from .logging import get_logger
 from .pulseaudio import PulseAudioController
 from .types import AudioMode
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-logger = logging.getLogger(__name__)
-logger.addHandler(JournalHandler())
+logger = get_logger(__name__)
 
 
 @dataclass

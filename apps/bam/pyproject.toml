@@ -13,7 +13,8 @@ typecheck = "poetry:run mypy src/bam"
 python = "^3.11"
 click = "^8.1.8"
 pyyaml = "^6.0.2"
-systemd-python = "^235"
+rich = "^13.9.4"
+colorama = "^0.4.6"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.14.1"

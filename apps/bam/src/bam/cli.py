@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-import logging
 from pathlib import Path
 
 import click
 
 from .core import BTManager
+from .logging import configure_logging, get_logger
 from .types import AudioMode
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def get_manager() -> BTManager:
@@ -23,8 +23,7 @@ def get_manager() -> BTManager:
 @click.option("--debug", is_flag=True, help="Enable debug logging")
 def cli(*, debug: bool) -> None:
     """BAM - Bluetooth Audio Manager."""
-    if debug:
-        logger.setLevel(logging.DEBUG)
+    configure_logging(debug=debug)
 
 
 @cli.command()

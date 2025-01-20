@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-import logging
 import subprocess
 from enum import Enum
+
+from .logging import logging
 
 from .types import AudioMode
 
@@ -31,19 +32,30 @@ class PulseAudioController:
 
     def get_device_mode(self, mac_address: str) -> AudioMode | None:
         """Get current audio mode of a device."""
+        logger.debug("Getting audio mode for device with MAC %s", mac_address)
         if device_card := self._get_card_info(mac_address):
             for line in device_card.splitlines():
                 if "active profile:" in line.lower():
                     active_profile = line.split(":", 1)[1].strip().lower()
+                    logger.debug("Active profile: %s", active_profile)
                     if active_profile.startswith(AudioProfile.A2DP_SINK):
                         return AudioMode.MUSIC
                     if active_profile.startswith((AudioProfile.HSP, AudioProfile.HFP)):
                         return AudioMode.CALL
                     break
+            logger.warning(
+                "Active profile not found or not recognized for device with MAC %s",
+                mac_address,
+            )
         return None
 
     def set_device_mode(self, mac_address: str, mode: AudioMode) -> None:
         """Set audio mode for a device."""
+        logger.debug(
+            "Setting audio mode for device with MAC %s to %s",
+            mac_address,
+            mode,
+        )
         profile = (
             AudioProfile.A2DP_SINK if mode == AudioMode.MUSIC else AudioProfile.HSP
         )
@@ -67,6 +79,10 @@ class PulseAudioController:
 
     def set_default_sink(self, mac_address: str) -> None:
         """Make device the system default audio output."""
+        logger.debug(
+            "Setting device with MAC %s as system default audio sink",
+            mac_address,
+        )
         if sinks := self._get_available_sinks(mac_address):
             if len(sinks) > 1:
                 logger.warning(
@@ -85,6 +101,7 @@ class PulseAudioController:
     def _run_command(self, command: str) -> tuple[str, str]:
         """Run pactl command and return its output."""
         full_command = f"pactl {command}"
+        logger.debug("Running command: %s", full_command)
         process = subprocess.Popen(
             full_command,
             stdout=subprocess.PIPE,
@@ -92,7 +109,18 @@ class PulseAudioController:
             shell=True,
             text=True,
         )
-        return process.communicate()
+        stdout, stderr = process.communicate()
+        if process.returncode != 0:
+            logger.error(
+                "Command %s failed with return code %d",
+                full_command,
+                process.returncode,
+            )
+            if stdout:
+                logger.error("Stdout: %s", stdout.strip())
+            if stderr:
+                logger.error("Stderr: %s", stderr.strip())
+        return stdout, stderr
 
     def _normalize_mac(self, mac_address: str) -> str:
         """Convert MAC address to PulseAudio format by replacing colons with underscores."""
@@ -123,6 +151,10 @@ class PulseAudioController:
             List of sink names.
 
         """
+        if not mac_address:
+            logger.debug("Getting available sinks")
+        else:
+            logger.debug("Getting available sinks for device with MAC %s", mac_address)
         stdout, _ = self._run_command("list short sinks")
         sinks = [
             parts[1]
@@ -132,8 +164,8 @@ class PulseAudioController:
             if len(parts) >= 2
         ]
 
-        if mac_address is None:
-            return sinks
+        if mac_address:
+            sinks = [sink for sink in sinks if self._normalize_mac(mac_address) in sink]
 
-        mac_normalized = self._normalize_mac(mac_address)
-        return [sink for sink in sinks if mac_normalized in sink]
+        logger.debug("Found sinks: %s", ", ".join(sinks))
+        return sinks

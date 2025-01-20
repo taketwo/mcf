@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import logging
 import subprocess
 from dataclasses import dataclass
 
-logger = logging.getLogger(__name__)
+from .logging import get_logger
+
+logger = get_logger(__name__)
 
 
 @dataclass
