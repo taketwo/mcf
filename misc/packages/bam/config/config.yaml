@@ -1,0 +1,25 @@
+devices:
+  20:18:5B:F6:4C:78:
+    aliases:
+      - soundcore
+    default_mode: music
+    name: soundcore Liberty 4 NC
+    supported_modes:
+      - music
+      - call
+  40:EF:4C:7C:5C:55:
+    aliases:
+      - go
+    default_mode: music
+    name: JBL GO
+    supported_modes:
+      - music
+      - call
+  B4:9A:95:F0:DB:75:
+    aliases:
+      - live
+    default_mode: music
+    name: JBL LIVE220BT
+    supported_modes:
+      - music
+      - call
