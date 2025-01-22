@@ -20,7 +20,12 @@ def get_manager() -> BTManager:
 
 
 @click.group()
-@click.option("--debug", is_flag=True, help="Enable debug logging")
+@click.option(
+    "--debug",
+    is_flag=True,
+    envvar="BAM_DEBUG",
+    help="Enable debug logging",
+)
 def cli(*, debug: bool) -> None:
     """BAM - Bluetooth Audio Manager."""
     configure_logging(debug=debug)
