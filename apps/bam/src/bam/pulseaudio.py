@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import subprocess
 from enum import Enum
 
 from .logging import logging
 
 from .types import AudioMode
+from .utils import run_command
 
 logger = logging.getLogger(__name__)
 
@@ -60,8 +60,8 @@ class PulseAudioController:
             AudioProfile.A2DP_SINK if mode == AudioMode.MUSIC else AudioProfile.HSP
         )
         mac_normalized = self._normalize_mac(mac_address)
-        self._run_command(
-            f"set-card-profile {DevicePrefix.CARD.value}{mac_normalized} {profile.value}",
+        run_command(
+            f"pactl set-card-profile {DevicePrefix.CARD.value}{mac_normalized} {profile.value}",
         )
 
     def detect_device_supported_modes(self, mac_address: str) -> list[AudioMode]:
@@ -91,36 +91,12 @@ class PulseAudioController:
                     ", ".join(sinks),
                 )
             for sink_name in sinks:
-                self._run_command(f"set-default-sink {sink_name}")
+                run_command(f"pactl set-default-sink {sink_name}")
                 return
         else:
             raise RuntimeError(
                 f"No valid audio sink found for device with MAC {mac_address}",
             )
-
-    def _run_command(self, command: str) -> tuple[str, str]:
-        """Run pactl command and return its output."""
-        full_command = f"pactl {command}"
-        logger.debug("Running command: %s", full_command)
-        process = subprocess.Popen(
-            full_command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            shell=True,
-            text=True,
-        )
-        stdout, stderr = process.communicate()
-        if process.returncode != 0:
-            logger.error(
-                "Command %s failed with return code %d",
-                full_command,
-                process.returncode,
-            )
-            if stdout:
-                logger.error("Stdout: %s", stdout.strip())
-            if stderr:
-                logger.error("Stderr: %s", stderr.strip())
-        return stdout, stderr
 
     def _normalize_mac(self, mac_address: str) -> str:
         """Convert MAC address to PulseAudio format by replacing colons with underscores."""
@@ -128,7 +104,7 @@ class PulseAudioController:
 
     def _get_card_info(self, mac_address: str) -> str | None:
         """Get card info for a device from PulseAudio."""
-        stdout, _ = self._run_command("list cards")
+        stdout, _ = run_command("pactl list cards")
         cards = stdout.split("Card #")
         mac_normalized = self._normalize_mac(mac_address)
 
@@ -155,7 +131,7 @@ class PulseAudioController:
             logger.debug("Getting available sinks")
         else:
             logger.debug("Getting available sinks for device with MAC %s", mac_address)
-        stdout, _ = self._run_command("list short sinks")
+        stdout, _ = run_command("pactl list short sinks")
         sinks = [
             parts[1]
             for parts in (
