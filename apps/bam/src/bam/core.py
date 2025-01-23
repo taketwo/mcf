@@ -101,24 +101,48 @@ class BTManager:
             None,
         )
 
-    def connect_device(
+    def activate_device(
         self,
         device: BTDevice,
         mode: AudioMode | None = None,
     ) -> None:
-        """Connect to a device and set its mode."""
-        mode = mode or device.default_mode
-        logger.info("Connecting to %s...", device.name)
+        """Activate a device such that it is ready for use.
 
-        self.bluetooth.connect_device(device.mac_address)
-        self.pulseaudio.set_device_mode(device.mac_address, mode)
-        # FIXME: This often fails on first connect attempt, probably because the sink
-        # is not ready yet. We should either retry or wait for the sink to be available.
+        This ensures that the device is connected, has the desired mode, and is
+        set as the default system sink.
+        """
+        mode = mode or device.default_mode
+        logger.info("Activating %s...", device.name)
+
+        need_connect = True
+        need_set_mode = True
+        if self.bluetooth.is_device_connected(device.mac_address):
+            logger.debug("Device %s is already connected", device.name)
+            current_mode = self.pulseaudio.get_device_mode(device.mac_address)
+            if current_mode is not None:
+                need_connect = False
+                if current_mode == mode:
+                    logger.debug("Device %s is already in requested mode", device.name)
+                    need_set_mode = False
+            else:
+                logger.debug(
+                    "Device %s is in unknown mode, need to reconnect",
+                    device.name,
+                )
+                self.bluetooth.disconnect_device(device.mac_address)
+
+        if need_connect:
+            self.bluetooth.connect_device(device.mac_address)
+        if need_set_mode:
+            self.set_device_mode(device, mode)
         self.pulseaudio.set_default_sink(device.mac_address)
 
-    def disconnect_device(self, device: BTDevice) -> None:
-        """Disconnect a device."""
-        logger.info("Disconnecting %s...", device.name)
+    def deactivate_device(self, device: BTDevice) -> None:
+        """Deactivate a device.
+
+        This ensures that the device is disconnected.
+        """
+        logger.info("Deactivating %s...", device.name)
         self.bluetooth.disconnect_device(device.mac_address)
 
     def set_device_mode(self, device: BTDevice, mode: AudioMode) -> None:

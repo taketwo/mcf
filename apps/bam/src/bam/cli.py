@@ -88,29 +88,23 @@ def status() -> None:
     flag_value=AudioMode.CALL,
     help="Connect in bidirectional audio mode",
 )
-def connect(device_name: str | None, mode: AudioMode | None) -> None:
+def activate(device_name: str, mode: AudioMode | None) -> None:
     """Connect to a device and set it as default audio device.
 
     If mode not specified, uses device's default mode from config.
     """
     manager = get_manager()
-    device = manager.find_device(device_name)
 
-    if not device:
-        if device_name:
-            click.echo(f"Device '{device_name}' not found in known devices")
-        else:
-            click.echo(
-                "No default device found. Please specify device name or enroll a device.",
-            )
+    if device := manager.find_device(device_name):
+        manager.activate_device(device, mode)
         return
 
-    manager.connect_device(device, mode)
+    logger.error("Device '%s' is unknown", device_name)
 
 
 @cli.command()
 @click.argument("device_name", required=False)
-def disconnect(device_name: str | None) -> None:
+def deactivate(device_name: str | None) -> None:
     """Disconnect a device."""
     manager = get_manager()
     device = manager.find_device(device_name)
@@ -122,7 +116,7 @@ def disconnect(device_name: str | None) -> None:
             click.echo("No default device found. Please specify device name.")
         return
 
-    manager.disconnect_device(device)
+    manager.deactivate_device(device)
 
 
 @cli.command()
