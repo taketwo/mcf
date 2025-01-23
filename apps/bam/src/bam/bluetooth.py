@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-import subprocess
+import time
 from dataclasses import dataclass
 
 from .logging import get_logger
+from .utils import run_command
 
 logger = get_logger(__name__)
 
@@ -21,21 +22,9 @@ class ConnectedDevice:
 class BluetoothController:
     """Interface to system Bluetooth functionality via bluetoothctl."""
 
-    def _run_command(self, command: str) -> tuple[str, str]:
-        """Run bluetoothctl command and return its output."""
-        full_command = f"bluetoothctl {command}"
-        process = subprocess.Popen(
-            full_command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            shell=True,
-            text=True,
-        )
-        return process.communicate()
-
     def get_connected_devices(self) -> list[ConnectedDevice]:
         """Get list of currently connected Bluetooth devices."""
-        stdout, _ = self._run_command("devices Connected")
+        stdout, _ = run_command("bluetoothctl devices Connected")
         devices = []
         for line in stdout.splitlines():
             if not line.strip() or not line.startswith("Device"):
@@ -52,7 +41,7 @@ class BluetoothController:
 
     def get_battery_level(self, mac_address: str) -> int | None:
         """Get battery level for a device if available."""
-        stdout, _ = self._run_command(f"info {mac_address}")
+        stdout, _ = run_command(f"bluetoothctl info {mac_address}")
 
         for line in stdout.splitlines():
             if "Battery Percentage:" in line:
@@ -66,8 +55,14 @@ class BluetoothController:
 
     def connect_device(self, mac_address: str) -> None:
         """Connect to a Bluetooth device."""
-        self._run_command(f"connect {mac_address}")
+        run_command(f"bluetoothctl connect {mac_address}")
+        time.sleep(0.5)  # Wait for connection to establish
 
     def disconnect_device(self, mac_address: str) -> None:
         """Disconnect a Bluetooth device."""
-        self._run_command(f"disconnect {mac_address}")
+        run_command(f"bluetoothctl disconnect {mac_address}")
+
+    def is_device_connected(self, mac_address: str) -> bool:
+        """Check if a device is currently connected."""
+        stdout, _ = run_command(f"bluetoothctl info {mac_address}")
+        return "Connected: yes" in stdout
