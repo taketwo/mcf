@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 echo "Checking Ollama version..."
-INSTALLED_VERSION=$(ollama --version | cut -d' ' -f4 | sed 's/^/v/')
+if hash ollama 2>/dev/null; then
+  INSTALLED_VERSION=$(ollama --version | cut -d' ' -f4 | sed 's/^/v/')
+else
+  INSTALLED_VERSION="not installed"
+fi
 echo "Installed version: $INSTALLED_VERSION"
 
 LATEST_VERSION=$(gh --repo ollama/ollama release list --exclude-pre-releases --limit 1 --json tagName | jq -r '.[0].tagName')
