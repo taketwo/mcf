@@ -8,6 +8,7 @@ return {
   dependencies = { 'nvim-lua/plenary.nvim' },
   ---@type NeogitConfig
   opts = {
+    remember_settings = false,
     graph_style = 'unicode',
     commit_editor = {
       staged_diff_split_kind = 'vsplit',
