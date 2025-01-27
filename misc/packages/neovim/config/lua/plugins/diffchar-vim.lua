@@ -1,7 +1,7 @@
 return {
   {
+    -- Forked version with default keymaps removed
     'taketwo/diffchar.vim',
     event = 'VeryLazy',
-    --  TODO: Check if this plugin can be update do upstream 'master'
   },
 }
