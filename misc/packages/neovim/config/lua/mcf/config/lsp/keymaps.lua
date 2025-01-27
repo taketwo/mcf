@@ -96,7 +96,7 @@ M._keys = {
   { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
   { 'gd', '<cmd>Trouble lsp_definitions<cr>', desc = 'Go to definition', has = 'definition' },
   { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
-  { 'gt', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
+  { 'gT', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
   { '<Leader>ui', function() Snacks.toggle.inlay_hints():toggle() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
