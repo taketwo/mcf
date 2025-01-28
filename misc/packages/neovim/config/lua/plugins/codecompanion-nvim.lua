@@ -23,6 +23,11 @@ return {
       },
     },
     opts = {
+      display = {
+        chat = {
+          show_header_separator = true,
+        },
+      },
       adapters = {
         copilot = function()
           return require('codecompanion.adapters').extend('copilot', {
