@@ -2,6 +2,7 @@
 -- If not found, tries to load from mcf/util
 
 ---@class mcf.util: lazyvim.util
+---@field commits mcf.util.commits
 local M = {}
 
 setmetatable(M, {

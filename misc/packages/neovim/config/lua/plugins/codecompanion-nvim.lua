@@ -65,17 +65,21 @@ return {
             {
               role = 'user',
               content = function()
-                return string.format(
-                  [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me:
+                local prompt, err = require('mcf.util.commits').generate_prompt()
 
-```diff
-%s
-```
-
-Output only the commit message without any explanations and follow-up suggestions.
-]],
-                  vim.fn.system('git diff --no-ext-diff --staged')
+                if err then
+                  LazyVim.error(
+                    string.format('Failed to generate commit message prompt: %s', err),
+                    { title = 'Code Companion' }
+                  )
+                  return ''
+                end
+                LazyVim.debug(
+                  string.format('Generated commit message prompt: %s', prompt),
+                  { title = 'Code Companion' }
                 )
+
+                return prompt
               end,
               opts = {
                 contains_code = true,
