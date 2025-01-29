@@ -205,7 +205,7 @@ end
 ---@param commits string[] Array of recent commit messages
 ---@return CommitPattern style
 ---@return CommitMetadata metadata
-local function analyze_commit_history(commits)
+M.analyze_commit_history = function(commits)
   if not commits or #commits == 0 then return M.PATTERNS.FREEFORM, {} end
 
   -- Filter out version commits before analysis
