@@ -37,6 +37,7 @@ return {
           -- { name = 'omni' },  disable temporarily because of slow-downs when editing gitcommit
           { name = 'path' },
           { name = 'rosmsg' },
+          { name = 'render-markdown' },
           { name = 'buffer', keyword_length = 4 },
         }),
         completion = {
