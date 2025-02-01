@@ -9,7 +9,7 @@
         "pattern": "\\[\\s*(?P<level>\\w+)\\] \\[(?P<timestamp>[\\d.]+)(, [\\d.]+)?\\]: (?P<body>.+)"
       },
       "rosout": {
-        "pattern": "(?P<timestamp>[\\d.]+) ((?P<level>\\w+)? (?P<node>\\/\\w+) \\[(?P<line>.+)\\] \\[(?P<topics>.+)\\])? (?P<message>.+)"
+        "pattern": "(?P<timestamp>[\\d{10}.\\d{9}]+) ((?P<level>\\w+)? (?P<node>(\\/\\w+)+) \\[(?P<line>[^\\]]+)\\] )?(?P<body>.+)"
       }
     },
     "timestamp-format": [
@@ -24,7 +24,7 @@
     },
     "sample": [
       {
-        "line": "[ INFO] [1681808007.993209499]: Door handle modeling tool node is up. Awaiting \"~model_door_handle\" service call.",
+        "line": "[ INFO] [1681808007.993209499]: Door handle modeling tool node is up; awaiting \"~model_door_handle\" service call",
         "level": "info"
       },
       {
@@ -34,6 +34,14 @@
       {
         "line": "[DEBUG] [1685644820.834500241]: Looking up transform between odom_vis and rgb_optical_frame",
         "level": "debug"
+      },
+      {
+        "line": "1738317834.103403767 INFO /deadlock_monitor [/code/ros_comm/clients/roscpp/src/libros/service.cpp:80(service::exists)] waitForService: Service [/node/ok] has not been advertised, waiting...",
+        "level": "info"
+      },
+      {
+        "line": "1738318694.302413582 INFO /head_camera/driver [/code/nodelet_core/nodelet/src/nodelet.cpp:174(unloadNodelet)] Unloading nodelet /head_camera/driver from manager //camera_nodelet_manager",
+        "level": "info"
       }
     ]
   }
