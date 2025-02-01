@@ -22,78 +22,86 @@ return {
         ft = 'gitcommit',
       },
     },
-    opts = {
-      display = {
-        chat = {
-          show_header_separator = true,
+    opts = function()
+      local user = vim.env.USER:gsub('^%l', string.upper) or 'User'
+      return {
+        adapters = {
+          copilot = function()
+            return require('codecompanion.adapters').extend('copilot', {
+              schema = {
+                model = {
+                  default = 'claude-3.5-sonnet',
+                },
+              },
+            })
+          end,
         },
-      },
-      adapters = {
-        copilot = function()
-          return require('codecompanion.adapters').extend('copilot', {
-            schema = {
-              model = {
-                default = 'claude-3.5-sonnet',
+        strategies = {
+          chat = {
+            adapter = 'copilot',
+            keymaps = {
+              close = {
+                modes = {
+                  n = 'q',
+                },
               },
             },
-          })
-        end,
-      },
-      strategies = {
-        chat = {
-          adapter = 'copilot',
-          keymaps = {
-            close = {
-              modes = {
-                n = 'q',
-              },
+            roles = {
+              llm = function(adapter)
+                return string.format(
+                  '  %s%s',
+                  adapter.formatted_name,
+                  adapter.parameters.model and ' (' .. adapter.parameters.model .. ')' or ''
+                )
+              end,
+              user = '  ' .. user,
             },
           },
-        },
-        inline = {
-          adapter = 'copilot',
-        },
-        agent = {
-          adapter = 'copilot',
-        },
-      },
-      prompt_library = {
-        ['Commit Message'] = {
-          strategy = 'inline',
-          description = 'Generate a commit message',
-          opts = {
-            short_name = 'commit_message',
-            auto_submit = true,
-            placement = 'before|false',
+          inline = {
+            adapter = 'copilot',
           },
-          prompts = {
-            {
-              role = 'user',
-              content = function()
-                local prompt, err = require('mcf.util.commits').generate_prompt()
+          agent = {
+            adapter = 'copilot',
+          },
+        },
+        prompt_library = {
+          ['Commit Message'] = {
+            strategy = 'inline',
+            description = 'Generate a commit message',
+            opts = {
+              short_name = 'commit_message',
+              auto_submit = true,
+              placement = 'before|false',
+            },
+            prompts = {
+              {
+                role = 'user',
+                content = function()
+                  local prompt, err = require('mcf.util.commits').generate_prompt()
 
-                if err then
-                  LazyVim.error(
-                    string.format('Failed to generate commit message prompt: %s', err),
+                  if err then
+                    LazyVim.error(
+                      string.format('Failed to generate commit message prompt: %s', err),
+                      { title = 'Code Companion' }
+                    )
+                    return ''
+                  end
+                  LazyVim.debug(
+                    string.format('Generated commit message prompt: %s', prompt),
                     { title = 'Code Companion' }
                   )
-                  return ''
-                end
-                LazyVim.debug(
-                  string.format('Generated commit message prompt: %s', prompt),
-                  { title = 'Code Companion' }
-                )
 
-                return prompt
-              end,
-              opts = {
-                contains_code = true,
+                  return prompt
+                end,
+                opts = {
+                  contains_code = true,
+                },
               },
             },
           },
         },
-      },
-    },
+      }
+    end,
     init = function()
       -- Expand 'cc' into 'CodeCompanion' in the command line
       vim.cmd([[cab cc CodeCompanion]])
