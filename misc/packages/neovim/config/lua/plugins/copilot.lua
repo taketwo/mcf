@@ -1,7 +1,9 @@
 return {
   {
     'zbirenbaum/copilot.lua',
-    event = 'VeryLazy',
+    cmd = 'Copilot',
+    build = ':Copilot auth',
+    event = 'BufReadPost',
     opts = {
       suggestion = {
         enabled = true,
