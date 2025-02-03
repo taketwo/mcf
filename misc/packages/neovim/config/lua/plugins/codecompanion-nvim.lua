@@ -4,6 +4,10 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
+      {
+        'j-hui/fidget.nvim',
+        opts = { notification = { window = { winblend = 0 } } },
+      },
     },
     cmd = {
       'CodeCompanion',
@@ -103,6 +107,7 @@ return {
       }
     end,
     init = function()
+      require('mcf.extensions.codecompanion.fidget'):init()
       -- Expand 'cc' into 'CodeCompanion' in the command line
       vim.cmd([[cab cc CodeCompanion]])
     end,
