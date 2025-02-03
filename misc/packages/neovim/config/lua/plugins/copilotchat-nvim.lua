@@ -12,28 +12,28 @@ return {
     build = 'make tiktoken',
     cmd = 'CopilotChat',
     keys = {
-      { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
-      { '<Leader>a<Space>', '<cmd>CopilotChatOpen<cr>', desc = 'Open Copilot chat', mode = { 'n', 'v' } },
+      { '<Leader>A', '', desc = 'AI support with CopilotChat', mode = { 'n', 'v' } },
+      { '<Leader>A<Space>', '<cmd>CopilotChatOpen<cr>', desc = 'Open Copilot chat', mode = { 'n', 'v' } },
       {
-        '<Leader>aa',
+        '<Leader>Aa',
         function() require('CopilotChat.integrations.telescope').pick(require('CopilotChat.actions').prompt_actions()) end,
         desc = 'Actions',
         mode = { 'n', 'x' },
       },
-      { '<Leader>ae', '<cmd>CopilotChatExplain<cr>', desc = 'Explain how this code works', mode = { 'n', 'v' } },
-      { '<Leader>ar', '<cmd>CopilotChatReview<cr>', desc = 'Review this code', mode = { 'n', 'v' } },
+      { '<Leader>Ae', '<cmd>CopilotChatExplain<cr>', desc = 'Explain how this code works', mode = { 'n', 'v' } },
+      { '<Leader>Ar', '<cmd>CopilotChatReview<cr>', desc = 'Review this code', mode = { 'n', 'v' } },
       {
-        '<Leader>aR',
+        '<Leader>AR',
         function() vim.diagnostic.reset(vim.api.nvim_get_namespaces()['copilot_review']) end,
         desc = 'Reset review diagnostics',
       },
-      { '<Leader>af', '<cmd>CopilotChatFix<cr>', desc = 'Fix this code', mode = { 'n', 'v' } },
-      { '<Leader>ao', '<cmd>CopilotChatOptimize<cr>', desc = 'Optimize this code', mode = { 'n', 'v' } },
-      { '<Leader>ad', '<cmd>CopilotChatDocs<cr>', desc = 'Write documentation for this code', mode = { 'n', 'v' } },
-      { '<Leader>at', '<cmd>CopilotChatTests<cr>', desc = 'Generate unit tests', mode = { 'n', 'v' } },
-      { '<Leader>ac', '<cmd>CopilotChatCommit<cr>', desc = 'Write commit message' },
+      { '<Leader>Af', '<cmd>CopilotChatFix<cr>', desc = 'Fix this code', mode = { 'n', 'v' } },
+      { '<Leader>Ao', '<cmd>CopilotChatOptimize<cr>', desc = 'Optimize this code', mode = { 'n', 'v' } },
+      { '<Leader>Ad', '<cmd>CopilotChatDocs<cr>', desc = 'Write documentation for this code', mode = { 'n', 'v' } },
+      { '<Leader>At', '<cmd>CopilotChatTests<cr>', desc = 'Generate unit tests', mode = { 'n', 'v' } },
+      { '<Leader>Ac', '<cmd>CopilotChatCommit<cr>', desc = 'Write commit message' },
       {
-        '<Leader>aq',
+        '<Leader>Aq',
         function()
           local input = vim.fn.input('Quick question: ')
           if input ~= '' then

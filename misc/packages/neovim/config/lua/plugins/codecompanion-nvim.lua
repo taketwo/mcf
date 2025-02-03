@@ -12,9 +12,9 @@ return {
       'CodeCompanionCmd',
     },
     keys = {
-      { '<Leader>A', '', desc = 'AI support with CodeCompanion', mode = { 'n', 'v' } },
-      { '<Leader>A<Space>', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle chat window', mode = { 'n', 'v' } },
-      { '<Leader>Aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
+      { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
+      { '<Leader>a<Space>', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle chat window', mode = { 'n', 'v' } },
+      { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
       {
         '<Space>',
         function() require('codecompanion').prompt('commit_message') end,
