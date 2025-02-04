@@ -27,7 +27,7 @@ return {
       },
     },
     opts = function()
-      local user = vim.env.USER:gsub('^%l', string.upper) or 'User'
+      local user = (vim.env.USER or 'me'):gsub('^%l', string.upper)
       return {
         adapters = {
           copilot = function()
