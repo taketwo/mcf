@@ -17,10 +17,10 @@ return {
     },
     checkbox = {
       custom = {
-        todo = { raw = '[ ]', rendered = '󰄱 ', highlight = 'RenderMarkdownError', scope_highlight = nil },
-        done = { raw = '[+]', rendered = ' ', highlight = 'RenderMarkdownInfo', scope_highlight = nil },
-        cancelled = { raw = '[-]', rendered = ' ', highlight = 'RenderMarkdownWarn', scope_highlight = nil },
-        moved = { raw = '[~]', rendered = ' ', highlight = 'RenderMarkdownHint', scope_highlight = nil },
+        todo = { raw = '[ ]', rendered = '[ ]', highlight = 'RenderMarkdownError', scope_highlight = nil },
+        done = { raw = '[+]', rendered = '[+]', highlight = 'RenderMarkdownInfo', scope_highlight = nil },
+        cancelled = { raw = '[-]', rendered = '[-]', highlight = 'RenderMarkdownWarn', scope_highlight = nil },
+        moved = { raw = '[~]', rendered = '[~]', highlight = 'RenderMarkdownHint', scope_highlight = nil },
       },
     },
   },
