@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+TESTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+INIT_FILE="$TESTS_DIR/init.lua"
+
+nvim --headless -u "$INIT_FILE" -c "lua require('mini.test').run()" -c qa

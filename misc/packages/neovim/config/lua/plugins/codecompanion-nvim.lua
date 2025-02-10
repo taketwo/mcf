@@ -80,23 +80,7 @@ return {
             prompts = {
               {
                 role = 'user',
-                content = function()
-                  local prompt, err = require('mcf.util.commits').generate_prompt()
-
-                  if err then
-                    LazyVim.error(
-                      string.format('Failed to generate commit message prompt: %s', err),
-                      { title = 'Code Companion' }
-                    )
-                    return ''
-                  end
-                  LazyVim.debug(
-                    string.format('Generated commit message prompt: %s', prompt),
-                    { title = 'Code Companion' }
-                  )
-
-                  return prompt
-                end,
+                content = require('mcf.util.prompts').generate_commit,
                 opts = {
                   contains_code = true,
                 },
