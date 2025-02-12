@@ -17,6 +17,21 @@ return {
     lazygit = { enabled = true },
     notify = { enabled = true },
     notifier = { enabled = true },
+    picker = {
+      win = {
+        input = {
+          keys = {
+            ['<A-c>'] = { 'list_up', mode = { 'n', 'i' } },
+            ['<A-h>'] = { 'preview_scroll_up', mode = { 'n', 'i' } },
+            ['<A-n>'] = { 'preview_scroll_down', mode = { 'n', 'i' } },
+            ['<A-t>'] = { 'list_down', mode = { 'n', 'i' } },
+            ['<Esc>'] = { 'close', mode = { 'n', 'i' } },
+            ['<PageDown>'] = { 'list_scroll_down', mode = { 'n', 'i' } },
+            ['<PageUp>'] = { 'list_scroll_up', mode = { 'n', 'i' } },
+          },
+        },
+      },
+    },
     quickfile = { enabled = true },
     rename = { enabled = true },
     scope = { enabled = false }, -- TODO: Consider using this instead of mini.indentscope
