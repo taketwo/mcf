@@ -20,10 +20,11 @@ return {
       { '<Leader>a<Space>', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle chat window', mode = { 'n', 'v' } },
       { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
       {
-        '<Space>',
+        '<C-g>',
         function() require('codecompanion').prompt('commit_message') end,
         desc = 'Generate commit message',
         ft = 'gitcommit',
+        mode = { 'n', 'i' },
       },
     },
     opts = function()
