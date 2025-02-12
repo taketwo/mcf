@@ -60,6 +60,18 @@ return {
               end,
               user = '  ' .. user,
             },
+            slash_commands = {
+              ['buffer'] = {
+                opts = {
+                  provider = 'snacks',
+                },
+              },
+              ['file'] = {
+                opts = {
+                  provider = 'snacks',
+                },
+              },
+            },
           },
           inline = {
             adapter = 'copilot',
