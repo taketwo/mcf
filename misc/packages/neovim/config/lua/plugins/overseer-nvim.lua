@@ -5,6 +5,7 @@ return {
     keys = {
       { '<Leader>o', '', desc = 'Overseer' },
       { '<Leader>oc', '<cmd>OverseerClearCache<cr>', desc = 'Clear task cache' },
+      { '<Leader>od', '<cmd>OverseerQuickAction dispose<cr>', desc = 'Dispose most recent task' },
       { '<Leader>oq', '<cmd>OverseerQuickAction<cr>', desc = 'Run action on most recent task' },
       { '<Leader>or', '<cmd>OverseerRun<cr>', desc = 'Run task' },
       { '<Leader>ot', '<cmd>OverseerToggle<cr>', desc = 'Toggle panel' },
