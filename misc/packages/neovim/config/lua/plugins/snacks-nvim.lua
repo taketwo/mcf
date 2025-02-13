@@ -18,6 +18,9 @@ return {
     notify = { enabled = true },
     notifier = { enabled = true },
     picker = {
+      layout = {
+        preset = function() return vim.o.columns >= 120 and 'telescope' or 'vertical' end,
+      },
       win = {
         input = {
           keys = {
