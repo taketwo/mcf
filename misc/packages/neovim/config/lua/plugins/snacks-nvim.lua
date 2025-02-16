@@ -9,6 +9,7 @@ return {
     debug = { enabled = true },
     git = { enabled = true },
     gitbrowse = { enabled = false }, --  Gitlinker is more advanced
+    image = { enabled = false }, -- Not supported in Alacritty
     indent = {
       enabled = true,
       animate = { enabled = false },
