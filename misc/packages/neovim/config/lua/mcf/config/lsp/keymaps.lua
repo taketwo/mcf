@@ -77,7 +77,7 @@ M._keys = {
   { '<Leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
   { '<Leader>ld', '<cmd>Lspsaga peek_definition<cr>', desc = 'Definition preview' },
   { '<Leader>lf', '<cmd>Lspsaga lsp_finder<cr>', desc = 'Finder' },
-  { '<Leader>li', '<cmd>LspInfo<cr>', desc = 'Show info' },
+  { '<Leader>li', Snacks.picker.lsp_config, desc = 'Show info' },
   { '<Leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
   { '<Leader>lr', '<cmd>Telescope lsp_references<cr>', desc = 'References', has = 'references' },
   { '<Leader>ls', vim.lsp.buf.signature_help, desc = 'Signature help', has = 'signatureHelp' },
