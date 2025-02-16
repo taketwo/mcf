@@ -9,10 +9,6 @@ return {
     },
     cmd = { 'Telescope' },
     keys = {
-      { '<Leader>.<Space>', '<cmd>Telescope resume<cr>', desc = 'Resume previous search' },
-      { '<Leader>..', '<cmd>Telescope find_files<cr>', desc = 'Open file' },
-      { '<Leader>.b', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Jump to buffer' },
-      { '<Leader>.g', '<cmd>Telescope live_grep<cr>', desc = 'Live grep' },
       {
         '<space>',
         '<cmd>Telescope buffers show_all_buffers=true sort_mru=true sort_lastused=true<cr>',

@@ -23,7 +23,7 @@ return {
       sort = {},
       icons = { mappings = false },
       spec = {
-        { '<Leader>.', group = 'Telescope' },
+        { '<Leader>.', group = 'Search' },
         { '<Leader>f', group = 'Filename' },
         { '<Leader>g', group = 'Git' },
         { '<Leader>s', group = 'Shift/swap object' },
