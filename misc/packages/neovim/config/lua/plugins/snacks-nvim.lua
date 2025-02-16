@@ -57,6 +57,21 @@ return {
   keys = {
     { '<Leader>gB', function() Snacks.git.blame_line() end, desc = 'Blame current line' },
     { '<Leader>gy', function() Snacks.lazygit.open() end, desc = 'Open Lazygit' },
+    -- Picker: Search
+    { '<Leader>."', function() Snacks.picker.registers() end, desc = 'Registers' },
+    { '<Leader>.;', function() Snacks.picker.command_history() end, desc = 'Command history' },
+    { '<Leader>.D', function() Snacks.picker.diagnostics_buffer() end, desc = 'Diagnostics (buffer only)' },
+    { '<Leader>.H', function() Snacks.picker.highlights() end, desc = 'Highlights' },
+    { '<Leader>.a', function() Snacks.picker.autocmds() end, desc = 'Autocmds' },
+    { '<Leader>.c', function() Snacks.picker.commands() end, desc = 'Commands' },
+    { '<Leader>.d', function() Snacks.picker.diagnostics() end, desc = 'Diagnostics' },
+    { '<Leader>.h', function() Snacks.picker.help() end, desc = 'Help pages' },
+    { '<Leader>.i', function() Snacks.picker.icons() end, desc = 'Icons' },
+    { '<Leader>.k', function() Snacks.picker.keymaps() end, desc = 'Keymaps' },
+    { '<Leader>.l', function() Snacks.picker.loclist() end, desc = 'Location list' },
+    { '<Leader>.m', function() Snacks.picker.marks() end, desc = 'Marks' },
+    { '<Leader>.q', function() Snacks.picker.qflist() end, desc = 'Quickfix list' },
+    { '<Leader>.u', function() Snacks.picker.undo() end, desc = 'Undo history' },
     -- Picker: Git
     { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout brancnh' },
     { '<Leader>gL', function() Snacks.picker.git_log() end, desc = 'Log (everything)' },
