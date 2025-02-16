@@ -1,0 +1,31 @@
+<Scope>: <description>
+empty separator line
+<Optional body>
+
+## Scopes
+
+The `scope` provides contextual information about high-level module, component, or package that is being changed. Example scopes include:
+- Neovim
+- Git
+- Tmux
+- SSH
+- XMonad
+- Polybar
+
+Additionally, the MCF scope should be used for the changes that affect overall system or span multiple components.
+
+## Description
+
+The `description` contains a concise description of the change.
+- Is a **mandatory** part of the format
+- Use the imperative, present tense: "change" not "changed" nor "changes"
+  - Think of `This commit will...` or `This commit should...`
+- Don't capitalize the first letter
+- No dot (`.`) at the end
+
+## Body
+
+The `body` should include the motivation for the change and contrast this with previous behavior.
+- Is an **optional** part of the format
+- Use the imperative, present tense: "change" not "changed" nor "changes"
+- Write as normal prose that follows regular rules of punctuation and letter capitalization.
