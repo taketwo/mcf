@@ -81,8 +81,8 @@ return {
     { '<Leader>.u', function() Snacks.picker.undo() end, desc = 'Undo history' },
     { '<Leader>.w', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word', mode = { 'n', 'x' } },
     -- Picker: Git
-    { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout brancnh' },
-    { '<Leader>gL', function() Snacks.picker.git_log() end, desc = 'Log (everything)' },
+    { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout branch' },
+    { '<Leader>gL', function() Snacks.picker.git_log() end, desc = 'Log (repository)' },
     { '<Leader>gl', function() Snacks.picker.git_log_file() end, desc = 'Log (buffer only)' },
   },
   config = function(_, opts)
