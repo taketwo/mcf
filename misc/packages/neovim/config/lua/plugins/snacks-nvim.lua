@@ -57,6 +57,10 @@ return {
   keys = {
     { '<Leader>gB', function() Snacks.git.blame_line() end, desc = 'Blame current line' },
     { '<Leader>gy', function() Snacks.lazygit.open() end, desc = 'Open Lazygit' },
+    -- Picker: Git
+    { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout brancnh' },
+    { '<Leader>gL', function() Snacks.picker.git_log() end, desc = 'Log (everything)' },
+    { '<Leader>gl', function() Snacks.picker.git_log_file() end, desc = 'Log (buffer only)' },
   },
   config = function(_, opts)
     local Snacks = require('snacks')

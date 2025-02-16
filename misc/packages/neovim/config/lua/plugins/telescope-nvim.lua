@@ -21,10 +21,6 @@ return {
       { '<Leader>.m', '<cmd>Telescope marks<cr>', desc = 'Jump to mark' },
       { '<Leader>.q', '<cmd>Telescope quickfix<cr>', desc = 'Quickfix list' },
       { '<Leader>.r', '<cmd>Telescope registers<cr>', desc = 'Registers' },
-      -- TODO: Consider moving next three keymaps to lspconfig.lua and changing prefix
-      { '<Leader>gC', '<cmd>Telescope git_branches<cr>', desc = 'Check out branch' },
-      { '<Leader>gl', '<cmd>Telescope git_bcommits<cr>', desc = 'Log (buffer only)' },
-      { '<Leader>gL', '<cmd>Telescope git_commits<cr>', desc = 'Log (everything)' },
       {
         '<space>',
         '<cmd>Telescope buffers show_all_buffers=true sort_mru=true sort_lastused=true<cr>',
