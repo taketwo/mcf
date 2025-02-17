@@ -24,11 +24,23 @@ BOB_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$BOB_LOCK_FILE_NAME"
 
 # Parse revision of the installed Neovim
 function neovim_parse_revision() {
+  # Return "none" if Neovim is not installed
+  if ! hash nvim 2>/dev/null; then
+    echo "none"
+    return
+  fi
+  # Return "none" if Neovim fails to run and report its version
+  output=$(nvim --version)
+  if [[ $? -ne 0 ]]; then
+    echo "none"
+    return
+  fi
+  # Parse the output of `nvim --version` to extract the revision.
   # Examples:
   #  - NVIM v0.10.0-dev-3145+g9ca81b025
   #  - NVIM v0.10.0-dev-a0a189a
   # The first one is a nightly build, the second one is arbitrary commit built from source locally.
-  version_string=$(nvim --version | head -n 1 | cut -d ' ' -f 2)
+  version_string=$(echo "$output" | head -n 1 | cut -d ' ' -f 2)
   revision=$(echo "$version_string" | grep -oP '(?<=\+g)[0-9a-f]+')
   if [ -z "$revision" ]; then
     revision=$(echo "$version_string" | grep -oP '(?<=-dev-)[0-9a-f]+')
@@ -196,6 +208,10 @@ function commit_plugins() {
 # Commit installed Neovim version to the lock file
 function commit_editor() {
   revision=$(neovim_parse_revision)
+  if [[ $revision == "none" ]]; then
+    echo "Neovim is not installed, cannot commit the lock file"
+    exit 1
+  fi
   read hash date <<<$(neovim_retrieve_commit_info "$revision")
   echo "{
   \"hash\": \"$hash\",
