@@ -20,13 +20,12 @@ return {
       keymaps = {
         openNextLocation = { n = '>' },
         openPrevLocation = { n = '<' },
-        openLocation = { n = 'o' },
         close = { n = 'q' },
       },
     },
     config = function(_, opts)
       require('grug-far').setup(opts)
-      -- Autocommand to create keymaps to jump between input fields with Tab and Shift-Tab
+      -- Autocommand to create custom keymaps in grug-far buffer
       vim.api.nvim_create_autocmd('FileType', {
         group = vim.api.nvim_create_augroup('grug-far-keymap', { clear = true }),
         pattern = { 'grug-far' },
@@ -43,8 +42,18 @@ return {
             end
             vim.api.nvim_win_set_cursor(vim.fn.bufwinid(0), { next_line, 0 })
           end
+          -- Jump between input fields with Tab and Shift-Tab
           vim.keymap.set({ 'n', 'i' }, '<Tab>', function() jump_field(1) end, { buffer = true })
           vim.keymap.set({ 'n', 'i' }, '<S-Tab>', function() jump_field(-1) end, { buffer = true })
+          -- Leave insert mode and jump to first result with Enter
+          vim.keymap.set({ 'i' }, '<Enter>', '<Esc>>', { buffer = true, remap = true })
+          -- Open location and close Grug-far window with O
+          vim.keymap.set(
+            { 'n' },
+            'O',
+            '<LocalLeader>oq',
+            { buffer = true, remap = true, desc = 'Open location and close Grug-far' }
+          )
         end,
       })
     end,
