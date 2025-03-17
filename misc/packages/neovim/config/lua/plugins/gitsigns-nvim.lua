@@ -17,8 +17,6 @@ return {
               function() require('which-key').show({ keys = '<Leader>gh', loop = true }) end,
               desc = 'Hydra mode',
             },
-            { '<Leader>gh]', gs.nav_hunk('next'), desc = 'Next' },
-            { '<Leader>gh[', gs.nav_hunk('prev'), desc = 'Previous' },
             { '<Leader>ghd', gs.diffthis, desc = 'Diff' },
             { '<Leader>ghp', gs.preview_hunk_inline, desc = 'Preview inline' },
             { '<Leader>ghr', gs.reset_hunk, desc = 'Reset' },
