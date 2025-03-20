@@ -21,6 +21,7 @@ Diagnostics:
       - modernize-use-trailing-return-type
       - readability-braces-around-statements
       - readability-uppercase-literal-suffix # because all my code has lowercase literal suffixes
+      - readability-math-missing-parentheses # suggests useless parentheses
     CheckOptions:
       misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
       readability-function-cognitive-complexity.IgnoreMacros: true
