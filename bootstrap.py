@@ -83,6 +83,7 @@ else:
     print("")
     if (
         not pm.install("fnm", verbose=True)
+        or not pm.install("uv", verbose=True)
         or not pm.install("nix: eget", verbose=True)
         or not pm.install("nix: cargo", verbose=True)
         or not pm.install("bob", verbose=True)
