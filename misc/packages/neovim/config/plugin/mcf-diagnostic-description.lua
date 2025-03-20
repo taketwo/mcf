@@ -1,4 +1,4 @@
-function _G.show_diagnostic_description()
+local function show_diagnostic_description()
   local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
   if #diagnostics == 0 then return end
   for _, v in ipairs(diagnostics) do
@@ -8,4 +8,8 @@ function _G.show_diagnostic_description()
   end
 end
 
-vim.cmd('command! DiagnosticDescription lua _G.show_diagnostic_description()')
+vim.api.nvim_create_user_command(
+  'DiagnosticDescription',
+  show_diagnostic_description,
+  { desc = 'Show description of the diagnostic under the cursor' }
+)
