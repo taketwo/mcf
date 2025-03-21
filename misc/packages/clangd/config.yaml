@@ -1,3 +1,5 @@
+InlayHints:
+  DefaultArguments: true
 Diagnostics:
   UnusedIncludes: Strict
   ClangTidy:
