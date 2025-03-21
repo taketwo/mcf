@@ -2,6 +2,9 @@ local M = {}
 
 M._server_configs = nil
 
+---Retrieve all LSP server configurations from the servers directory
+---Caches the result for subsequent calls
+---@return table<string, table> Table of server configurations with server names as keys
 function M.get_server_configs()
   if M._server_configs then return M._server_configs end
   local servers_dir = vim.fn.stdpath('config') .. '/lua/mcf/config/lsp/servers'
@@ -14,8 +17,13 @@ function M.get_server_configs()
   return M._server_configs
 end
 
+---Attach LSP-related keymaps to a buffer when an LSP client connects
+---@param client table The LSP client that attached
+---@param buffer integer The buffer number that the client attached to
 function M.on_attach(client, buffer) require('mcf.config.lsp.keymaps').on_attach(client, buffer) end
 
+---Display the capabilities of all LSP clients attached to the current buffer
+---Shows results in a floating window with markdown formatting
 function M.capabilities()
   local current_buf = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = current_buf })
@@ -42,6 +50,8 @@ function M.capabilities()
   LazyVim.info(table.concat(lines, '\n'), { title = 'LSP Capabilities' })
 end
 
+---Set up the LSP configuration for the Neovim instance
+---Configures formatters, keymaps, diagnostics appearance, and loads server configurations
 function M.setup()
   -- Register LSP formatter
   LazyVim.format.register(LazyVim.lsp.formatter())
