@@ -127,6 +127,14 @@ function restore_plugins() {
     cp "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL"
     nvim --headless "+Lazy! restore" "+TSUpdateSync" +qa
     echo "" # TSUpdateSync always prints a message without newline, so we add one
+    (
+      echo "Ensuring Mason packages are installed"
+      # Mason installs some of its packages using pip. It disregards python3_host_prog and always
+      # picks the default Python version. Therefore, we need to explicitly activate the virtualenv
+      # before a command that triggers package installation using Mason.
+      source "$HOME/.local/share/nvim/.venv/bin/activate"
+      nvim --headless "+MasonUpdate" "+MasonEnsureInstalled" +qa
+    )
     if diff --brief "$LAZY_LOCK_FILE_PATH_REMOTE" "$LAZY_LOCK_FILE_PATH_LOCAL" >/dev/null; then
       echo "Restoration succeeded"
       break
