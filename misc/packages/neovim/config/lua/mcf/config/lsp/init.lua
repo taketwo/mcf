@@ -17,6 +17,24 @@ function M.get_server_configs()
   return M._server_configs
 end
 
+---Resolves a table of server configurations to a list of Mason packages to install
+---Servers that are disabled, not managed by Mason, or not found in the mason-lspconfig mappings are ignored
+---@param server_configs table<string, table> Table of server configurations with server names as keys
+---@return string[] List of Mason packages to install
+function M.resolve_mason_packages(server_configs)
+  local lspconfig_to_package = require('mason-lspconfig.mappings.server').lspconfig_to_package
+  local packages = {}
+  for server, server_opts in pairs(server_configs) do
+    if server_opts then
+      server_opts = server_opts == true and {} or server_opts
+      if server_opts.enabled ~= false and server_opts.mason ~= false and lspconfig_to_package[server] ~= nil then
+        packages[#packages + 1] = lspconfig_to_package[server]
+      end
+    end
+  end
+  return packages
+end
+
 ---Attach LSP-related keymaps to a buffer when an LSP client connects
 ---@param client table The LSP client that attached
 ---@param buffer integer The buffer number that the client attached to
