@@ -99,6 +99,60 @@ class Pipx(Install):
         ).is_file()
 
 
+class Uvx(Install):
+    CMD = "uv tool install --force"
+
+    def __init__(self, packages, args=None):
+        args = args or []
+        for package in packages:
+            # We support package specs with multiple entries separated by spaces.
+            # First entry is the main app that is to be installed with uv tool.
+            # The remaining entries are additional packages that are to be injected
+            # into the same virtual environment.
+            # Example: "pygments pygments-style-solarized"
+            entries = package.split(" ")
+            args += [e for e in entries if e.startswith("-")]
+            main, *extras = [e for e in entries if not e.startswith("-")]
+            if self.is_local_python_package(entries[0]):
+                args.append("--editable")
+            for extra in extras:
+                args.append("--with")
+                args.append(extra)
+            package = self.install(main, args)
+
+    def install(self, package, args):
+        """
+        Run uv tool install.
+        Returns package name (without [] spec).
+        """
+        import re
+
+        cmd = self.CMD + " " + package + " " + " ".join(args)
+        subprocess.check_output(cmd.split())
+        m = re.match(r"(.*)\[.*\]", package)
+        return package if m is None else m.groups()[0]
+
+    @classmethod
+    def is_local_python_package(cls, package: str) -> bool:
+        """Check if the given path contains a Python package.
+
+        Parameters
+        ----------
+        package: str
+            Path to the potential package directory.
+
+        Returns
+        -------
+        bool
+            True if the given path contains a Python package, False otherwise.
+
+        """
+        package_path = Path(package)
+        return (package_path / "setup.py").is_file() or (
+            package_path / "pyproject.toml"
+        ).is_file()
+
+
 class Cabal(Install):
     CMD = "cabal v2-install --overwrite-policy=always"
 
@@ -146,7 +200,9 @@ class Cargo(Install):
 INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
-INSTALL.update({"nix": Nix, "pipx": Pipx, "cabal": Cabal, "eget": Eget, "cargo": Cargo})
+INSTALL.update(
+    {"nix": Nix, "pipx": Pipx, "uvx": Uvx, "cabal": Cabal, "eget": Eget, "cargo": Cargo}
+)
 
 
 class PackageManager:
@@ -235,7 +291,7 @@ class PackageManager:
         Arguments:
         ---------
         manager: str
-            Name of a package manager to use (apt, pacman, pipx, cabal, eget).
+            Name of a package manager to use (apt, pipx, cabal, eget).
         package: str | list
             Package name or list of package names.
         args: list:
