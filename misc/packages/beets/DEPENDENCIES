@@ -5,4 +5,4 @@ gobject-introspection
 gir1.2-gstreamer-1.0
 # Some of the plugins needs pycairo, which in turn requires dev library.
 libcairo2-dev
-pipx: beets[fetchart] pygobject
+uvx: beets[fetchart] pygobject

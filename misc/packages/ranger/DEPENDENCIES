@@ -1,2 +1,2 @@
-pipx: ranger-fm
+uvx: ranger-fm
 nix: ueberzugpp

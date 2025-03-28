@@ -14,7 +14,7 @@ clang
 clangd                                 # only the config file, the server is managed by Mason
 build-essential
 nix: ninja
-pipx: poetry
+uvx: poetry
 nix: delta                             # syntax highlighting for diffs
 pudb
 lnav                                   # log viewer
@@ -48,7 +48,7 @@ ncdu
 
 # Util
 unrar                                    # for unpack command
-pipx: pygments                           # for fv command
+uvx: pygments                            # for fv command
 python3-click                            # for mpm and *-sync commands
 ministat                                 # for quick statistical analysis of data
-pipx: pypipe-ppp                         # for ppp command to process stdin line by line
+uvx: pypipe-ppp                          # for ppp command to process stdin line by line
