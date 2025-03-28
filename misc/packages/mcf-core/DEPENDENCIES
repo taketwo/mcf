@@ -14,7 +14,6 @@ clang
 clangd                                 # only the config file, the server is managed by Mason
 build-essential
 nix: ninja
-pipx: pipenv
 pipx: poetry
 nix: delta                             # syntax highlighting for diffs
 pudb
