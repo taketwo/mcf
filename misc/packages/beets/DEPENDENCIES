@@ -1,6 +1,6 @@
 # ReplayGain plugin uses Gstreamer, which requires pygobject to be installed into
 # the virtual environment. This, in turn, requires these other two ubuntu libs.
-libgirepository1.0-dev
+libgirepository-2.0-dev
 gobject-introspection
 gir1.2-gstreamer-1.0
 # Some of the plugins needs pycairo, which in turn requires dev library.
