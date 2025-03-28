@@ -45,60 +45,6 @@ class Nix(Install):
             subprocess.check_call(cmd.split(), env=env)
 
 
-class Pipx(Install):
-    CMD = "pipx install --force"
-
-    def __init__(self, packages, args=None):
-        args = args or []
-        for package in packages:
-            # We support package specs with multiple entries separated by spaces.
-            # First entry is the main app that is to be installed with Pipx.
-            # The remaining entries are additional packages that are to be injected
-            # into the virtual environment created by Pipx.
-            # Example: "pygments pygments-style-solarized"
-            entries = package.split(" ")
-            args += [e for e in entries if e.startswith("-")]
-            entries = [e for e in entries if not e.startswith("-")]
-            if self.is_local_python_package(entries[0]):
-                args.append("--editable")
-            package = self.install(entries[0], args)
-            if len(entries) > 1:
-                for entry in entries[1:]:
-                    subprocess.check_output(["pipx", "inject", package, entry])
-
-    def install(self, package, args):
-        """
-        Run Pipx install.
-        Returns package name (without [] spec).
-        """
-        import re
-
-        cmd = self.CMD + " " + package + " " + " ".join(args)
-        subprocess.check_output(cmd.split())
-        m = re.match(r"(.*)\[.*\]", package)
-        return package if m is None else m.groups()[0]
-
-    @classmethod
-    def is_local_python_package(cls, package: str) -> bool:
-        """Check if the given path contains a Python package.
-
-        Parameters
-        ----------
-        package: str
-            Path to the potential package directory.
-
-        Returns
-        -------
-        bool
-            True if the given path contains a Python package, False otherwise.
-
-        """
-        package_path = Path(package)
-        return (package_path / "setup.py").is_file() or (
-            package_path / "pyproject.toml"
-        ).is_file()
-
-
 class Uvx(Install):
     CMD = "uv tool install --force"
 
@@ -200,9 +146,7 @@ class Cargo(Install):
 INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
-INSTALL.update(
-    {"nix": Nix, "pipx": Pipx, "uvx": Uvx, "cabal": Cabal, "eget": Eget, "cargo": Cargo}
-)
+INSTALL.update({"nix": Nix, "uvx": Uvx, "cabal": Cabal, "eget": Eget, "cargo": Cargo})
 
 
 class PackageManager:
@@ -240,8 +184,8 @@ class PackageManager:
         nix_expression = join(directory, "default.nix")
         if os.path.isfile(nix_expression):
             commands.append(("nix", "-f {}".format(nix_expression)))
-        if Pipx.is_local_python_package(directory):
-            commands.append(("pipx", directory))
+        if Uvx.is_local_python_package(directory):
+            commands.append(("uvx", directory))
         pre_install_script = join(directory, "pre-install")
         if os.path.isfile(pre_install_script):
             commands.append(("pre-install", pre_install_script))
@@ -291,7 +235,7 @@ class PackageManager:
         Arguments:
         ---------
         manager: str
-            Name of a package manager to use (apt, pipx, cabal, eget).
+            Name of a package manager to use (apt, uvx, cabal, eget).
         package: str | list
             Package name or list of package names.
         args: list:

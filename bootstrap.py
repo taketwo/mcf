@@ -68,11 +68,7 @@ if "MCF" not in os.environ:
     print("[*] Install core package managers")
     print("")
 
-    if (
-        not pm.install("nix", verbose=True)
-        or not pm.install("pyenv", verbose=True)
-        or not pm.install("pipx", verbose=True)
-    ):
+    if not pm.install("nix", verbose=True) or not pm.install("pyenv", verbose=True):
         sys.exit("First part of bootstrapping procedure failed!")
     else:
         print("First part of bootstrapping procedure is completed.")

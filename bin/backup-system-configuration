@@ -27,8 +27,8 @@ fi
 echo "Logging installed Nix packages..."
 nix-env -qs >"$output_dir/nix_packages.txt"
 
-echo "Logging installed pipx packages..."
-pipx list >"$output_dir/pipx_packages.txt"
+echo "Logging installed uv tools..."
+uv tool list >"$output_dir/uv_tools.txt"
 
 echo "Logging Pyenv Python versions and virtual environments..."
 pyenv versions >"$output_dir/pyenv_versions.txt"

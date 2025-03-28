@@ -1,4 +1,0 @@
-curl
-python3-pip
-# We need python3-venv package, but currently there is a problem on Bionic
-python3-venv
