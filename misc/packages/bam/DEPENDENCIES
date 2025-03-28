@@ -1,1 +1,1 @@
-pipx: $MCF/apps/bam
+uvx: $MCF/apps/bam
