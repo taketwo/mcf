@@ -14,11 +14,9 @@ clang
 clangd                                 # only the config file, the server is managed by Mason
 build-essential
 nix: ninja
-pipx: cmakelint
 pipx: pipenv
 pipx: poetry
 nix: delta                             # syntax highlighting for diffs
-pipx: codespell                        # spell checking for C++
 pudb
 lnav                                   # log viewer
 
