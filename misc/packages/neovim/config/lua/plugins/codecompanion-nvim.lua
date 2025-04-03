@@ -21,7 +21,11 @@ return {
       { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
       {
         '<C-g>',
-        function() require('codecompanion').prompt('commit_message') end,
+        function()
+          -- HACK: This is a workaround for Neogit overriding wrapping settings configured through ftplugin.
+          vim.opt_local.wrap = true
+          require('codecompanion').prompt('commit_message')
+        end,
         desc = 'Generate commit message',
         ft = 'gitcommit',
         mode = { 'n', 'i' },
