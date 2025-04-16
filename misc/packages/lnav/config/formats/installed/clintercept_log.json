@@ -1,0 +1,52 @@
+{
+  "$schema": "https://lnav.org/schemas/format-v1.schema.json",
+  "clintercept_log": {
+    "title": "CLIntercept Log Format",
+    "description": "Format for OpenCL Intercept Layer logs",
+    "url": "https://github.com/intel/opencl-intercept-layer",
+    "regex": {
+      "call_line": {
+        "pattern": "^>>>> Time: (?<timestamp>\\d+) TID = (?<tid>\\d+) (?<function>\\w+)(\\( (?<kernel>.+) \\))?(?:$|: (?P<body>.+)$)"
+      },
+      "return_line": {
+        "pattern": "^<<<< Time: (?<timestamp>\\d+) TID = (?<tid>\\d+) (?<function>\\w+)([^-]*)? -> (?<status>.+?)$"
+      }
+    },
+    "timestamp-format": [
+      "%6"
+    ],
+    "value": {
+      "tid": {
+        "kind": "integer",
+        "identifier": true
+      },
+      "function": {
+        "kind": "string",
+        "identifier": true
+      },
+      "kernel": {
+        "kind": "string",
+        "identifier": true
+      },
+      "status": {
+        "kind": "string"
+      }
+    },
+    "sample": [
+      {
+        "line": ">>>> Time: 37873 TID = 66173 clGetPlatformIDs"
+      },
+      {
+        "line": ">>>> Time: 416475021 TID = 98640 clSetKernelArg( RegisterDepth ): kernel = 0x6435bdcaab40, index = 0, size = 8, value = 0x6435bfda5b40"
+      },
+      {
+        "line": "<<<< Time: 37893 TID = 66173 clGetPlatformIDs -> CL_SUCCESS"
+      },
+      {
+        "line": "<<<< Time: 416475153 TID = 98640 clReleaseContext: [ ref count = 7 ] -> CL_SUCCESS"
+      }
+    ],
+    "opid-field": "tid",
+    "file-pattern": "clintercept_log.txt"
+  }
+}
