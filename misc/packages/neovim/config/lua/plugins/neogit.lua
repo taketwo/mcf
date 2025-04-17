@@ -2,7 +2,7 @@ return {
   'NeogitOrg/neogit',
   cmd = { 'Neogit' },
   keys = {
-    { '<Leader>gn', '<cmd>Neogit<cr>', desc = 'Neogit' },
+    { '<Leader>g<Space>', '<cmd>Neogit<cr>', desc = 'Neogit' },
     { '<Leader>gc', '<cmd>Neogit commit<cr>', desc = 'Commit' },
   },
   dependencies = { 'nvim-lua/plenary.nvim' },
