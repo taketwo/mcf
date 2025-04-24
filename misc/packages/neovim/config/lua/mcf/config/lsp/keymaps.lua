@@ -47,9 +47,9 @@ M._keys = {
   { '[d', function() require('lspsaga.diagnostic'):goto_prev() end, desc = 'Previous diagnostic' },
   { ']d', function() require('lspsaga.diagnostic'):goto_next() end, desc = 'Next diagnostic' },
   {
-    '<F5>',
-    function() vim.lsp.buf.signature_help() end,
-    mode = 'i',
+    '<C-k>',
+    function() return vim.lsp.buf.signature_help() end,
+    mode = { 'i', 'n' },
     desc = 'Display LSP signature help',
     has = 'signatureHelp',
   },
