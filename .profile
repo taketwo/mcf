@@ -84,7 +84,7 @@ export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 #---------------------------------------------------------------------#
 
 # Local bin directory
-[ -d "${HOME}/.local/bin" ] && PATH="${HOME}/.local/bin:${PATH}"
+PATH="${HOME}/.local/bin:${PATH}"
 
 # Load Git secrets
 if [ -f "${HOME}/.config/git/secrets" ]; then
