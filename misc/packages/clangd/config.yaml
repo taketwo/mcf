@@ -25,6 +25,7 @@ Diagnostics:
       - readability-uppercase-literal-suffix # because all my code has lowercase literal suffixes
       - readability-math-missing-parentheses # suggests useless parentheses
     CheckOptions:
+      cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
       misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
       readability-function-cognitive-complexity.IgnoreMacros: true
       readability-identifier-length.IgnoredLoopCounterNames: "^[ijk_xyz]$"
