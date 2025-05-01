@@ -13,7 +13,8 @@
       }
     },
     "timestamp-format": [
-      "%s.%N"
+      "%s.%N",
+      "%s.%f"
     ],
     "level": {
       "fatal": "FATAL",
@@ -34,6 +35,10 @@
       {
         "line": "[DEBUG] [1685644820.834500241]: Looking up transform between odom_vis and rgb_optical_frame",
         "level": "debug"
+      },
+      {
+        "line": "[INFO] [1746111466.327364]: /dnn_inference: Process PIDs: {docker: 1311715, host: 1971527}",
+        "level": "info"
       },
       {
         "line": "1738317834.103403767 INFO /deadlock_monitor [/code/ros_comm/clients/roscpp/src/libros/service.cpp:80(service::exists)] waitForService: Service [/node/ok] has not been advertised, waiting...",
