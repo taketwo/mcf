@@ -27,12 +27,12 @@ parser.add_argument(
 args = parser.parse_args()
 
 print("[*] Bootstrap MCF")
-print("")
+print()
 print(f"    Installation path: {dest}")
-print("")
+print()
 
 print("[*] Obtain MCF sources")
-print("")
+print()
 if args.no_git:
     if dest.is_dir():
         print("    .mcf folder exists")
@@ -55,18 +55,18 @@ else:
             subprocess.check_call(cmd.split())
     except subprocess.CalledProcessError:
         sys.exit("Failed to obtain MCF sources, aborting...")
-print("")
+print()
 
 print("[*] Import MPM")
 library = str(dest / "scripts" / "library")
 os.environ["PYTHONPATH"] = library
 sys.path.append(library)
 pm = __import__("package_manager")
-print("")
+print()
 
 if "MCF" not in os.environ:
     print("[*] Install core package managers")
-    print("")
+    print()
 
     if not pm.install("nix", verbose=True) or not pm.install("pyenv", verbose=True):
         sys.exit("First part of bootstrapping procedure failed!")
@@ -76,7 +76,7 @@ if "MCF" not in os.environ:
         print("Now re-run this script to complete bootstrapping.")
 else:
     print("[*] Install extra package managers")
-    print("")
+    print()
     if (
         not pm.install("fnm", verbose=True)
         or not pm.install("uv", verbose=True)
@@ -87,7 +87,7 @@ else:
         sys.exit("Second part of bootstrapping procedure failed!")
 
     print("[*] Install MCF")
-    print("")
+    print()
 
     mcf_package = "mcf-core" if args.core else "mcf"
 
@@ -96,7 +96,7 @@ else:
     else:
         if not args.no_git:
             print("[*] Change MCF remote to use Git")
-            print("")
+            print()
             cmd = "git remote set-url origin git@github.com:taketwo/mcf.git"
             subprocess.check_call(cmd.split())
 
