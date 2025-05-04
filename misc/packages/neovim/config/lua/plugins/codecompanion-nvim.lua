@@ -54,6 +54,12 @@ return {
                   n = 'q',
                 },
               },
+              options = {
+                modes = { n = '?' },
+                callback = function() require('which-key').show({ global = false }) end,
+                description = 'Show CodeCompanion keymaps',
+                hide = true,
+              },
             },
             roles = {
               llm = function(adapter)
