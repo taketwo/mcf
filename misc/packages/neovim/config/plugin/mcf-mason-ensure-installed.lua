@@ -5,7 +5,6 @@ local ensure_installed = {
   'black',
   'cpptools',
   'gersemi',
-  'json-lsp',
   'shellcheck',
   'shfmt',
   'stylua',
