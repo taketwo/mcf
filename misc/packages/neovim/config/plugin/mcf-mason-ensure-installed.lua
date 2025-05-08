@@ -12,11 +12,26 @@ local ensure_installed = {
   'usort',
 }
 
+---Retrieve package names corresponding to all configured LSP servers
+---@return string[] List of package names
+local function get_configured_lsp_packages()
+  local lsp_config_dir = vim.fn.stdpath('config') .. '/after/lsp'
+  local files = require('plenary.scandir').scan_dir(lsp_config_dir, { add_dirs = false })
+  local package_names = {}
+  local lspconfig_to_package = require('mason-lspconfig').get_mappings().lspconfig_to_package
+  for _, file in ipairs(files) do
+    local server = file:match('([^/]+)%.lua$')
+    if server and lspconfig_to_package[server] ~= nil then
+      package_names[#package_names + 1] = lspconfig_to_package[server]
+    end
+  end
+  return package_names
+end
+
 local function mason_ensure_installed()
   local registry = require('mason-registry')
 
-  local ConfigLsp = require('mcf.config.lsp')
-  local packages = ConfigLsp.resolve_mason_packages(ConfigLsp.get_server_configs())
+  local packages = get_configured_lsp_packages()
   vim.list_extend(packages, ensure_installed)
 
   registry.refresh(function()

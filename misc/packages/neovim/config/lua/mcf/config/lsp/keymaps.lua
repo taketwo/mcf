@@ -125,11 +125,10 @@ end
 function M.resolve(buffer)
   local Keys = require('lazy.core.handler.keys')
   if not Keys.resolve then return {} end
-  local server_configs = require('mcf.config.lsp').get_server_configs()
   local spec = M._keys
   local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
   for _, client in ipairs(clients) do
-    local maps = server_configs[client.name] and server_configs[client.name].keys or {}
+    local maps = vim.lsp.config[client.name] and vim.lsp.config[client.name].keys or {}
     vim.list_extend(spec, maps)
   end
   return Keys.resolve(spec)
