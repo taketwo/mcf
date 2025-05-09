@@ -5,7 +5,6 @@ return {
     dependencies = {
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = false, dependencies = { 'nvim-lspconfig' } },
       'mason.nvim',
-      'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
       require('neoconf').setup()

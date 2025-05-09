@@ -64,17 +64,16 @@ function M.setup()
     },
   })
 
-  local has_cmp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+  -- Add global capabilities
   vim.lsp.config('*', {
-    capabilities = vim.tbl_deep_extend('force', {}, has_cmp and cmp_nvim_lsp.default_capabilities() or {}, {
-      -- Global capabilities
+    capabilities = {
       workspace = {
         fileOperations = {
           didRename = true,
           willRename = true,
         },
       },
-    }),
+    },
   })
 
   require('mason-lspconfig').setup()
