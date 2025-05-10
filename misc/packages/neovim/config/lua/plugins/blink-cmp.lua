@@ -43,20 +43,27 @@ return {
         documentation = {
           auto_show = true,
           auto_show_delay_ms = 1000,
-          window = {
-            border = 'single',
-          },
         },
         ghost_text = { enabled = false },
         menu = {
-          border = 'single',
-          -- TODO: This is copied from colorful-menu.nvim documentation; understand and tweak when time permits
           draw = {
-            columns = { { 'kind_icon' }, { 'label', gap = 1 } },
+            columns = {
+              { 'kind_icon' },
+              { 'label' },
+              { 'source_name' },
+            },
             components = {
               label = {
+                width = { fill = true, min = 60, max = 60 },
                 text = function(ctx) return require('colorful-menu').blink_components_text(ctx) end,
                 highlight = function(ctx) return require('colorful-menu').blink_components_highlight(ctx) end,
+              },
+              kind_icon = {
+                width = { min = 3 },
+                text = function(ctx)
+                  local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return kind_icon
+                end,
               },
             },
           },
