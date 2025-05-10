@@ -3,7 +3,7 @@ return {
     'clangd',
     '--background-index',
     '--clang-tidy',
-    '--completion-style=bundled', -- TODO: Check if detailed style is better
+    '--completion-style=detailed',
   },
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'gtest.cpp' },
   capabilities = {
