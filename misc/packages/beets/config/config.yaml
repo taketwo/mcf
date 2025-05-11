@@ -30,3 +30,5 @@ ftintitle:
 permissions:
   file: 664
   dir: 775
+lyrics:
+  sources: [lrclib, genius]
