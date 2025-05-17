@@ -10,12 +10,12 @@ return {
       theme = 'onedark',
       sections = {
         lualine_x = {
-          { 'overseer' },
-          { 'copilot', separator = ' ' },
+          { 'overseer', separator = '' },
           { 'codecompanion', separator = '' },
-          'encoding',
-          'fileformat',
-          'filetype',
+          { 'copilot' },
+          { 'encoding' },
+          { 'fileformat' },
+          { 'filetype' },
         },
         lualine_y = {
           { 'progress', separator = '' },
