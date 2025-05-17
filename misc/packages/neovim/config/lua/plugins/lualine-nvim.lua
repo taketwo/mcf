@@ -22,6 +22,9 @@ return {
           { 'searchcount' },
         },
       },
+      extensions = {
+        'codecompanion',
+      },
     },
     init = function()
       -- Do not show search count message when searching, it is a part of the statusline
