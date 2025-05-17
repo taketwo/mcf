@@ -60,6 +60,15 @@ return {
                 description = 'Show CodeCompanion keymaps',
                 hide = true,
               },
+              -- Customized send command that stops insert mode before submitting the message
+              send = {
+                callback = function(chat)
+                  vim.cmd('stopinsert')
+                  chat:submit()
+                end,
+                index = 1,
+                description = 'Send',
+              },
             },
             roles = {
               llm = function(adapter)
