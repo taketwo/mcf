@@ -12,6 +12,7 @@ return {
         lualine_x = {
           { 'overseer' },
           { 'copilot', separator = ' ' },
+          { 'codecompanion', separator = '' },
           'encoding',
           'fileformat',
           'filetype',
