@@ -45,6 +45,15 @@ return {
             })
           end,
         },
+        display = {
+          chat = {
+            icons = {
+              pinned_buffer = ' ',
+              watched_buffer = ' ',
+            },
+            intro_message = '',
+          },
+        },
         strategies = {
           chat = {
             adapter = 'copilot',
