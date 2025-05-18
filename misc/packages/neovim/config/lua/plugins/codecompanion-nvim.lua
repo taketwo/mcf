@@ -152,7 +152,6 @@ return {
       }
     end,
     init = function()
-      require('mcf.extensions.codecompanion.fidget'):init()
       -- Expand 'cc' into 'CodeCompanion' in the command line
       vim.cmd([[cab cc CodeCompanion]])
       -- Expand 'ccc' into 'CodeCompanionCmd' in the command line
