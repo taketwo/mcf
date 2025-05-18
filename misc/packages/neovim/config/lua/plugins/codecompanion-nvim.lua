@@ -94,10 +94,20 @@ return {
                 opts = {
                   provider = 'snacks',
                 },
+                keymaps = {
+                  modes = {
+                    n = '<LocalLeader>b',
+                  },
+                },
               },
               ['file'] = {
                 opts = {
                   provider = 'snacks',
+                },
+                keymaps = {
+                  modes = {
+                    n = '<LocalLeader>f',
+                  },
                 },
               },
             },
