@@ -6,6 +6,7 @@ function display_help {
   echo "Options:"
   echo "-c codec       Specify the codec (h264 or h265). If not provided, the input video's codec is used."
   echo "-r resolution  Specify the resolution (1080p, 720p, 480p, 360p, or 240p). If not provided, the input video's resolution is used."
+  echo "-a stream      Specify which audio stream to copy (single stream index, e.g. 1)"
   echo "-d             Perform a dry run printing command(s) that would be executed without actually executing them."
   echo "-h             Display this help message."
   echo
@@ -18,11 +19,13 @@ function display_help {
 codec=""
 resolution=""
 dry_run=false
+audio_stream=""
 
-while getopts c:r:dh option; do
+while getopts c:r:a:dh option; do
   case "${option}" in
     c) codec=${OPTARG} ;;
     r) resolution=${OPTARG} ;;
+    a) audio_stream=${OPTARG} ;;
     d) dry_run=true ;;
     h)
       display_help
@@ -114,7 +117,14 @@ function recode_video() {
   echo "Input file: $input_file"
   echo "Output file: $output_file"
   ffmpeg_cmd=("ffmpeg" "-i" "$input_file")
-  ffmpeg_cmd+=("-map" "0")  # Select all streams from input
+  if [[ -n $audio_stream ]]; then
+    echo "Using only audio stream: $audio_stream"
+    ffmpeg_cmd+=("-map" "0:v")             # Map video streams
+    ffmpeg_cmd+=("-map" "0:$audio_stream") # Map only the specified audio stream
+    ffmpeg_cmd+=("-map" "0:s?")            # Map any subtitle streams if present
+  else
+    ffmpeg_cmd+=("-map" "0") # Use all streams (default)
+  fi
   ffmpeg_cmd+=("-c" "copy") # Set default codec to "copy"
   input_height=$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=s=x:p=0 "$input_file")
   echo "Input resolution: ${input_height}p"
