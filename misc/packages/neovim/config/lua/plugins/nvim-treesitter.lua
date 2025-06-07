@@ -22,6 +22,7 @@ return {
         end,
       },
     },
+    branch = 'master', -- Freeze to 'master' until we are ready to migrate to 'main'
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     cmd = { 'TSUpdateSync' },
