@@ -56,6 +56,9 @@ return {
         },
         strategies = {
           chat = {
+            tools = {
+              opts = { wait_timeout = 3600000 }, -- Timeout waiting for user input/confirmation (1 hour)
+            },
             adapter = 'copilot',
             keymaps = {
               close = {
