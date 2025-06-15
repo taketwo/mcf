@@ -23,6 +23,11 @@ return {
         },
       },
       extensions = {
+        'lazy',
+        'mason',
+        'nvim-dap-ui',
+        'trouble',
+        'overseer',
         'codecompanion',
       },
     },
