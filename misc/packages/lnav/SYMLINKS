@@ -1,2 +1,3 @@
 config/config.json:.config/lnav/config.json:Lnav config file
 config/formats/installed:.config/lnav/formats/installed:Lnav custom log formats
+lnav.desktop:.local/share/applications/lnav.desktop:Application file for Lnav

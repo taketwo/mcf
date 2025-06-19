@@ -1,0 +1,10 @@
+[Desktop Entry]
+Comment=Log file navigator
+Type=Application
+Name=lnav
+Exec=alacritty -e lnav %F
+Icon=utilities-log-viewer
+Terminal=false
+Categories=Development;System;
+MimeType=text/x-log;text/plain;
+NoDisplay=false
