@@ -31,8 +31,7 @@ _FILES = [('.dircolors', 'Dircolors for Solarized palette'),
           ('.profile', 'Profile for login shells'),
           ('.inputrc', 'Readline configuration file'),
           ('.mime.types', 'Custom MIME types'),
-          ('.mailcap', 'Custom MIME type-to-program mappings'),
-          ('texmf', 'Latex packages')]
+          ('.mailcap', 'Custom MIME type-to-program mappings')]
 
 
 if __name__ == '__main__':
