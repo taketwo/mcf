@@ -1,0 +1,2 @@
+config:.dircolors:Dircolors for OneDark terminal theme
+dircolors.bash:.local/bash/20-dircolors.bash:Dircolors setup

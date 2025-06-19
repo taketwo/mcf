@@ -25,8 +25,7 @@ def _link(paths, desc):
     print('   ', dest, '->', src)
 
 
-_FILES = [('.dircolors', 'Dircolors for Solarized palette'),
-          ('.bashrc', 'Bash configuration file'),
+_FILES = [('.bashrc', 'Bash configuration file'),
           ('.bash_profile', 'Bash profile'),
           ('.profile', 'Profile for login shells'),
           ('.inputrc', 'Readline configuration file'),

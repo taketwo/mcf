@@ -25,6 +25,7 @@ starship
 bash-completion
 fzf
 xsel                                   # copy to clipboard
+dircolors
 
 # Git
 git
