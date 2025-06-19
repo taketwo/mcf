@@ -1,0 +1,19 @@
+[Default Applications]
+application/x-remmina=org.remmina.Remmina.desktop
+x-scheme-handler/claude=appimagekit_30bae27f86199883661d172a1b70a6e2-Claude.desktop
+x-scheme-handler/forticlient=FortiClient.desktop
+x-scheme-handler/http=firefox.desktop;
+x-scheme-handler/https=firefox.desktop;
+x-scheme-handler/msteams=teams.desktop
+x-scheme-handler/rdp=org.remmina.Remmina.desktop
+x-scheme-handler/remmina=org.remmina.Remmina.desktop
+x-scheme-handler/slack=Slack.desktop
+x-scheme-handler/spice=org.remmina.Remmina.desktop
+x-scheme-handler/vnc=org.remmina.Remmina.desktop
+
+[Added Associations]
+application/x-remmina=org.remmina.Remmina.desktop;
+x-scheme-handler/rdp=org.remmina.Remmina.desktop;
+x-scheme-handler/remmina=org.remmina.Remmina.desktop;
+x-scheme-handler/spice=org.remmina.Remmina.desktop;
+x-scheme-handler/vnc=org.remmina.Remmina.desktop;

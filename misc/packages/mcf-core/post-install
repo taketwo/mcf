@@ -29,6 +29,7 @@ _FILES = [('.bashrc', 'Bash configuration file'),
           ('.bash_profile', 'Bash profile'),
           ('.profile', 'Profile for login shells'),
           ('.inputrc', 'Readline configuration file'),
+          (('mimeapps.list', '.config/mimeapps.list'), 'XDG MIME applications'),
           ('.mime.types', 'Custom MIME types'),
           ('.mailcap', 'Custom MIME type-to-program mappings')]
 
