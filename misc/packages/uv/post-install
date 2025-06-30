@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+uv python install 3.13
