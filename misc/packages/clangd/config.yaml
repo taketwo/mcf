@@ -27,6 +27,7 @@ Diagnostics:
     CheckOptions:
       cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
       misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
+      readability-function-cognitive-complexity.DescribeBasicIncrements: false # too much noise
       readability-function-cognitive-complexity.IgnoreMacros: true
       readability-identifier-length.IgnoredLoopCounterNames: "^[ijk_xyz]$"
       readability-identifier-length.IgnoredParameterNames: "^[xyz]$"
