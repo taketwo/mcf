@@ -119,9 +119,10 @@ map('v', '<F2>', LazyVim.format.format, { desc = 'Format range' })
 
 -- Remove default LSP-related mappings
 -- These are not needed because we have our own custom mappings.
-vim.keymap.del('n', 'grn')
 vim.keymap.del('n', 'gra')
-vim.keymap.del('n', 'grr')
 vim.keymap.del('n', 'gri')
+vim.keymap.del('n', 'grn')
+vim.keymap.del('n', 'grr')
+vim.keymap.del('n', 'grt')
 vim.keymap.del('n', 'gO')
 -- TODO: There is also CTRL-S for signature help, perhaps we should remove it too
