@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send --app-name \"Claude Code\" \"Something happened, please have a look\""
+          }
+        ]
+      }
+    ]
+  }
+}

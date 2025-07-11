@@ -1,0 +1,2 @@
+fnm: @anthropic-ai/claude-code
+libnotify-bin                        # Notifications support
