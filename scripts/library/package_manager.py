@@ -140,13 +140,26 @@ class Cargo(Install):
             subprocess.check_call(cmd.split())
 
 
+class Fnm(Install):
+    NODE_VERSION = "20"
+    CMD = f"fnm exec --using {NODE_VERSION} npm install --location=global"
+
+    def __init__(self, packages, args=None):
+        args = args or []
+        for p in packages:
+            cmd = self.CMD + " " + p + " " + " ".join(args)
+            subprocess.check_call(cmd.split())
+
+
 # A dictionary mapping manager names to classes. The insertion order matters, we
 # want to install with the main system manager first and with secondary managers
 # (e.g. Cabal) last.
 INSTALL = {}
 if PLATFORM == "ubuntu":
     INSTALL["ubuntu"] = AptGet
-INSTALL.update({"nix": Nix, "uvx": Uvx, "cabal": Cabal, "eget": Eget, "cargo": Cargo})
+INSTALL.update(
+    {"nix": Nix, "uvx": Uvx, "cabal": Cabal, "eget": Eget, "cargo": Cargo, "fnm": Fnm}
+)
 
 
 class PackageManager:
