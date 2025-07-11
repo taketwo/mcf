@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-fnm exec --using 20 npm install --location=global repomix
