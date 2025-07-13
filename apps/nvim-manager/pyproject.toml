@@ -1,0 +1,79 @@
+[project]
+name = "nvim-manager"
+version = "0.1.0"
+description = "Python-based tool to manage Neovim installations and plugins using lock files"
+readme = "README.md"
+authors = [{ name = "Sergey Alexandrov", email = "alexandrov88@gmail.com" }]
+requires-python = ">=3.13"
+dependencies = [
+  "click>=8.2.1",
+  "gitpython>=3.1.44",
+  "pydantic>=2.11.7",
+  "requests>=2.32.4",
+  "rich>=14.0.0",
+]
+
+[project.scripts]
+nvim-manager = "nvim_manager.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+  "black>=25.1.0",
+  "mypy>=1.16.1",
+  "pytest>=8.4.1",
+  "pytest-cov>=6.2.1",
+  "ruff>=0.12.3",
+  "types-requests>=2.32.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py313']
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "ANN003", # kwargs argument without type annotation is okay
+  "C901",   # function complexity is okay
+  "D100",   # missing docstring in public module is okay
+  "E501",
+  "EM",     # noisy warnings about need to store exception messages in variables
+  "ERA001", # has false positives
+  "I",      # imports are sorted automatically by usort
+  "S603",   # calling subprocess with shell=True is okay
+  "T20",    # print statements are okay
+  "TD002",  # no need to mention author in TODO comments (use git blame instead)
+  "TD003",  # no need to create ticket for every TODO comment
+  "FA102",  # no need to import from __future__ to support fancy annotations
+  "FIX002", # not every TODO comment needs to be fixed
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_*.py" = [
+  "ANN",    # type annotations are not required in tests
+  "D",      # docstrings are not required in tests
+  "S101",   # asserts are allowed in tests
+  "ARG001", # "unused" function arguments are needed to pass mock objects
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=nvim_manager --cov-report=term-missing"
