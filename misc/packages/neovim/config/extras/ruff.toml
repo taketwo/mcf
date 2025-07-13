@@ -5,11 +5,8 @@ indent-width = 4
 select = ["ALL"]
 ignore = [
   "ANN003", # kwargs argument without type annotation is okay
-  "ANN101", # missing type annotation for self in method is okay, it is self-evident
-  "ANN102", # missing type annotation for cls argument is okay, it is self-evident
   "D100",   # missing docstring in public module is okay
   "E501",
-  "E999",   # syntax errors will be reported by jedi-language-server
   "EM",     # noisy warnings about need to store exception messages in variables
   "ERA001", # has false positives
   "I",      # imports are sorted automatically by usort
