@@ -20,6 +20,8 @@ return {
       keymaps = {
         openNextLocation = { n = '>' },
         openPrevLocation = { n = '<' },
+        nextInput = { n = '<Tab', i = '<Tab>' },
+        prevInput = { n = '<S-Tab', i = '<S-Tab>' },
         close = { n = 'q' },
       },
     },
