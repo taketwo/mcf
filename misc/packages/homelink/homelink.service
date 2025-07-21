@@ -1,0 +1,17 @@
+[Unit]
+Description=HomeLink VPN
+After=network-online.target
+Wants=network-online.target
+BindsTo=sys-subsystem-net-devices-wg0.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/wg-quick up wg0
+ExecStop=/usr/bin/wg-quick down wg0
+ExecReload=/bin/bash -c 'wg-quick down wg0; wg-quick up wg0'
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

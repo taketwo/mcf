@@ -1,0 +1,10 @@
+[Unit]
+Description=Run HomeLink Monitor every 5 minutes
+Requires=homelink-monitor.service
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

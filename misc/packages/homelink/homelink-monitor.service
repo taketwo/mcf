@@ -1,0 +1,7 @@
+[Unit]
+Description=HomeLink Connectivity Monitor
+After=homelink.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/homelink-monitor.sh

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+echo "Copy homelink.service -> /etc/systemd/system/homelink.service"
+sudo cp "$script_dir/homelink.service" /etc/systemd/system/homelink.service
+sudo chmod 644 /etc/systemd/system/homelink.service
+
+echo "Copy homelink-monitor.service -> /etc/systemd/system/homelink-monitor.service"
+sudo cp "$script_dir/homelink-monitor.service" /etc/systemd/system/homelink-monitor.service
+sudo chmod 644 /etc/systemd/system/homelink-monitor.service
+
+echo "Copy homelink-monitor.timer -> /etc/systemd/system/homelink-monitor.timer"
+sudo cp "$script_dir/homelink-monitor.timer" /etc/systemd/system/homelink-monitor.timer
+sudo chmod 644 /etc/systemd/system/homelink-monitor.timer
+
+echo "Copy homelink-monitor.sh -> /usr/local/bin/homelink-monitor.sh"
+sudo cp "$script_dir/homelink-monitor.sh" /usr/local/bin/homelink-monitor.sh
+sudo chmod 755 /usr/local/bin/homelink-monitor.sh
+
+echo "Reload systemd and enable services..."
+sudo systemctl daemon-reload
+sudo systemctl enable homelink.service
+sudo systemctl enable homelink-monitor.timer
+
+echo "Start services..."
+sudo systemctl start homelink.service
+sudo systemctl start homelink-monitor.timer
