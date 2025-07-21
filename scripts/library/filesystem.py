@@ -28,10 +28,18 @@ def link(src, dest, description=None, verbose=False):
     """
     Create symlink pointing from dest to src.
 
-    Removes whatever existed in the destination before. Creates directories as
-    necessary.
+    If dest already exists and points to src, it's a no-op. Otherwise, removes
+    whatever existed in the destination before. Creates directories as necessary.
     """
     if os.path.lexists(dest):
+        if os.path.islink(dest) and os.readlink(dest) == src:
+            if description:
+                print("[+]", description)
+                print("   ", dest, "->", src, "(already linked)")
+            elif verbose:
+                print("[+]", dest)
+                print("   ", "->", src, "(already linked)")
+            return
         remove(dest)
     path, fl = os.path.split(os.path.realpath(dest))
     if not os.path.isdir(path):
