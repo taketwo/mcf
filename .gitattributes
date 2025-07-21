@@ -4,6 +4,7 @@ misc/packages/git/credentials filter=git-crypt diff=git-crypt
 misc/packages/git/secrets filter=git-crypt diff=git-crypt
 misc/packages/hishtory/secret filter=git-crypt diff=git-crypt
 misc/packages/jira-cl/jira-cli.json filter=git-crypt diff=git-crypt
+misc/packages/mcf-host-alpaca/wg0.conf filter=git-crypt diff=git-crypt
 misc/packages/mpdas/mpdasrc filter=git-crypt diff=git-crypt
 misc/packages/nb/post-install filter=git-crypt diff=git-crypt
 misc/packages/xmonad/config/gmail.token filter=git-crypt diff=git-crypt
