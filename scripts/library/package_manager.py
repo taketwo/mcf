@@ -141,7 +141,7 @@ class Cargo(Install):
 
 
 class Fnm(Install):
-    NODE_VERSION = "20"
+    NODE_VERSION = "default"
     CMD = f"fnm exec --using {NODE_VERSION} npm install --location=global"
 
     def __init__(self, packages, args=None):
