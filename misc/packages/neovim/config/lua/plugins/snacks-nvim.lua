@@ -26,9 +26,9 @@ return {
         input = {
           keys = {
             ['<A-c>'] = { 'list_up', mode = { 'n', 'i' } },
-            ['<A-h>'] = { 'preview_scroll_up', mode = { 'n', 'i' } },
-            ['<A-n>'] = { 'preview_scroll_down', mode = { 'n', 'i' } },
             ['<A-t>'] = { 'list_down', mode = { 'n', 'i' } },
+            ['<C-h>'] = { 'preview_scroll_up', mode = { 'n', 'i' } },
+            ['<C-n>'] = { 'preview_scroll_down', mode = { 'n', 'i' } },
             ['<Esc>'] = { 'close', mode = { 'n', 'i' } },
             ['<PageDown>'] = { 'list_scroll_down', mode = { 'n', 'i' } },
             ['<PageUp>'] = { 'list_scroll_up', mode = { 'n', 'i' } },
