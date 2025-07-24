@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# Install Node 20
-fnm install 20
-fnm alias 20 node-nvim
-fnm default 20
+# LTS (maintained until April 2027)
+NODE_VERSION=22
+
+fnm install $NODE_VERSION
+fnm alias $NODE_VERSION node-nvim
+fnm default $NODE_VERSION
