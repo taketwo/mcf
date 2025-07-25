@@ -1,4 +1,4 @@
-bob            # For Neovim version management
+nvim-manager   # For Neovim version management
 fnm            # For node.js provider and copilot plugin
 xsel           # For clipboard provider
 nix: curl      # For CopilotChat plugin which needs fresh version

@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-bob install nightly
-bob use nightly

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Actually install Neovim, has to happen in post-install to make sure nvim-manager is available
+nvim-manager restore --editor
+
 PYTHON_VERSION=3.13
 DATA_DIR=$HOME/.local/share/nvim
 
@@ -15,6 +18,6 @@ mkdir -p "$DATA_DIR"
 fnm exec --using=node-nvim npm install --location=global neovim
 
 # Ensure that plugins are installed
-if ! nvim-sync restore; then
-  echo "Failed to install Neovim plugins, run 'nvim-sync restore' manually to retry"
+if ! nvim-sync restore plugins; then
+  echo "Failed to install Neovim plugins, run 'nvim-sync restore plugins' manually to retry"
 fi
