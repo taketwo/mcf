@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 from collections import defaultdict
+from copy import deepcopy
 from os.path import isdir, join
 from pathlib import Path
 
@@ -49,22 +50,22 @@ class Uvx(Install):
     CMD = "uv tool install --force"
 
     def __init__(self, packages, args=None):
-        args = args or []
         for package in packages:
+            package_args = deepcopy(args) if args else []
             # We support package specs with multiple entries separated by spaces.
             # First entry is the main app that is to be installed with uv tool.
             # The remaining entries are additional packages that are to be injected
             # into the same virtual environment.
             # Example: "pygments pygments-style-solarized"
             entries = package.split(" ")
-            args += [e for e in entries if e.startswith("-")]
+            package_args += [e for e in entries if e.startswith("-")]
             main, *extras = [e for e in entries if not e.startswith("-")]
             if self.is_local_python_package(entries[0]):
-                args.append("--editable")
+                package_args.append("--editable")
             for extra in extras:
-                args.append("--with")
-                args.append(extra)
-            package = self.install(main, args)
+                package_args.append("--with")
+                package_args.append(extra)
+            package = self.install(main, package_args)
 
     def install(self, package, args):
         """
