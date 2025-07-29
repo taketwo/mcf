@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+NAME_DEB="sunshine-ubuntu-24.04-amd64.deb"
+TEMP_DEB=$(mktemp /tmp/$NAME_DEB.XXXXXX)
+
+gh release download --repo LizardByte/Sunshine --pattern "$NAME_DEB" -O "$TEMP_DEB" --clobber
+if [ $? -ne 0 ]; then
+  echo "Failed to download the latest release of Sunshine"
+  exit 1
+fi
+
+sudo dpkg -i "$TEMP_DEB"
+sudo apt --fix-broken install -y
+
+systemctl --user enable sunshine
+systemctl --user start sunshine
