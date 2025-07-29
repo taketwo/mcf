@@ -1,79 +1,450 @@
-#!/bin/bash
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "click>=8.0.0",
+#     "rich>=13.0.0",
+# ]
+# ///
 
-function show_help() {
-  cat <<EOF
-  Usage: ${0##*/} [-h] layout
+"""Screen layout manager - configures display layouts using kscreen-doctor."""
 
-  This script configures the screen layout according to predefined rules.
-  Supported layouts: lemur, lemur-ext, alpaca.
+from __future__ import annotations
 
-  If layout is not specified, the script will try to automatically select
-  it based on the hostname and the number of connected/active displays.
+import json
+import subprocess
+import sys
+import time
+from socket import gethostname
+from typing import Any
 
-  Options:
+import click
+from rich.console import Console
 
-    -h        Display this help and exit.
-EOF
+KSCREEN_DOCTOR = "kscreen-doctor"
+XMONAD = "xmonad"
+DEFAULT_MODE = "2560x1440@60"
+LAPTOP_MODE = "1920x1080@60"
+
+console = Console()
+
+CONFIG: dict[str, dict[str, dict[str, Any]]] = {
+    "lemur": {
+        "roaming": {
+            "connected_displays": ["eDP"],
+            "layouts": {
+                "default": {
+                    "eDP": {
+                        "enabled": True,
+                        "mode": LAPTOP_MODE,
+                        "position": (0, 0),
+                        "primary": True,
+                    },
+                    "DP-1-0": {"enabled": False},
+                },
+            },
+        },
+        "office": {
+            "connected_displays": ["eDP", "DP-1-0"],
+            "layouts": {
+                "default": {
+                    "eDP": {"enabled": False},
+                    "DP-1-0": {
+                        "enabled": True,
+                        "mode": DEFAULT_MODE,
+                        "position": (0, 0),
+                        "primary": True,
+                    },
+                },
+                "laptop": {
+                    "eDP": {
+                        "enabled": True,
+                        "mode": LAPTOP_MODE,
+                        "position": (0, 0),
+                        "primary": True,
+                    },
+                    "DP-1-0": {"enabled": False},
+                },
+                "mirror": {
+                    "eDP": {
+                        "enabled": True,
+                        "mode": LAPTOP_MODE,
+                        "position": (0, 0),
+                        "primary": True,
+                    },
+                    "DP-1-0": {
+                        "enabled": True,
+                        "mode": LAPTOP_MODE,
+                        "position": (0, 0),
+                    },
+                },
+            },
+        },
+    },
+    "alpaca": {
+        "office": {
+            "connected_displays": ["USB-C-0", "DP-2", "DP-4", "HDMI-0"],
+            "layouts": {
+                "default": {
+                    "DP-2": {
+                        "enabled": True,
+                        "mode": DEFAULT_MODE,
+                        "position": (0, 0),
+                        "rotation": "left",
+                    },
+                    "DP-4": {
+                        "enabled": True,
+                        "mode": DEFAULT_MODE,
+                        "position": (1440, 0),
+                        "primary": True,
+                    },
+                    "USB-C-0": {
+                        "enabled": True,
+                        "mode": DEFAULT_MODE,
+                        "position": (4000, 0),
+                    },
+                    "HDMI-0": {"enabled": False},
+                },
+                "single": {
+                    "DP-2": {"enabled": False},
+                    "DP-4": {
+                        "enabled": True,
+                        "mode": DEFAULT_MODE,
+                        "position": (0, 0),
+                        "primary": True,
+                    },
+                    "USB-C-0": {"enabled": False},
+                    "HDMI-0": {"enabled": False},
+                },
+                "sunshine": {
+                    "DP-2": {"enabled": False},
+                    "DP-4": {"enabled": False},
+                    "USB-C-0": {"enabled": False},
+                    "HDMI-0": {
+                        "enabled": True,
+                        "mode": DEFAULT_MODE,
+                        "position": (0, 0),
+                        "primary": True,
+                    },
+                },
+            },
+        },
+    },
 }
 
-function set_layout() {
-  case $1 in
-    lemur) xrandr --output "$EDP1" --primary --mode "$EDP1_MODE" --pos 0x0 --rotate normal --output "$DP1" --off ;;
-    lemur-ext) xrandr --output "$EDP1" --off --output "$DP1" --primary --mode "$DP1_MODE" --pos 0x0 --rotate normal ;;
-    lemur-dual) xrandr --output "$EDP1" --primary --mode "$EDP1_MODE" --pos 0x0 --rotate normal --output "$DP1" --mode "$DP1_MODE" --pos 1920x0 --rotate normal ;;
-    alpaca-0) xrandr --output HDMI-0 --off --output DP-4 --primary --mode 2560x1440 --pos 0x0 --rotate normal ;;
-    alpaca) xrandr --output HDMI-0 --mode 2560x1440 --pos 4000x0 --rotate normal --output DP-4 --primary --mode 2560x1440 --pos 1440x0 --rotate normal --output DP-2 --mode 2560x1440 --pos 0x0 --rotate left ;;
-  esac
-  sleep 7
-}
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-    -h)
-      show_help
-      exit 0
-      ;;
-    *)
-      layout=$1
-      ;;
-  esac
-  shift
-done
+class DisplayManager:
+    """Manages display configuration detection and application."""
 
-EDP1="eDP"
-EDP1_MODE="1920x1080"
-DP1="DP-1-0"
-DP1_MODE="2560x1440"
+    def __init__(self) -> None:
+        """Initialize DisplayManager with current hostname."""
+        self.host = gethostname()
 
-if [[ $layout == "" ]]; then
-  host=$(hostname)
-  connected=$(xrandr --query | grep -c " connected ")
-  active=$(xrandr --query | grep -c "*")
-  echo -n "Hostname: $host, number of connected/active displays: $connected/$active, "
-  if [[ $host == "alpaca" ]]; then
-    layout="alpaca"
-  elif [[ $host == "lemur" ]]; then
-    if [[ $connected == 1 ]]; then
-      layout="lemur"
-    elif [[ $connected == 2 ]]; then
-      DP1=$(xrandr --query | grep " connected" | grep -o "DP-[0-9]-[0-9]*")
-      layout="lemur-ext"
-    else
-      echo "unable to auto select layout for lemur with $connected displays"
-      exit 1
-    fi
-  else
-    echo "unable to auto select layout"
-    exit 1
-  fi
-  echo "selected layout: $layout"
-fi
+    def get_current_display_state(self) -> dict[str, Any]:
+        """Get current display configuration from kscreen-doctor."""
+        try:
+            result = subprocess.run(
+                [KSCREEN_DOCTOR, "--json"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return json.loads(result.stdout)
+        except subprocess.CalledProcessError as e:
+            console.print(f"[red]Error running kscreen-doctor: {e}[/red]")
+            sys.exit(1)
+        except json.JSONDecodeError as e:
+            console.print(f"[red]Error parsing kscreen-doctor output: {e}[/red]")
+            sys.exit(1)
 
-if [[ $layout == "alpaca" ]]; then
-  set_layout "alpaca-0"
-  set_layout "alpaca"
-else
-  set_layout "$layout"
-fi
+    def detect_configuration(self, display_state: dict[str, Any]) -> tuple[str, bool]:
+        """Detect current screen configuration for the host."""
+        if self.host not in CONFIG:
+            return "unknown", False
 
-xmonad --restart
+        connected_displays = [
+            output["name"]
+            for output in display_state.get("outputs", [])
+            if output.get("connected", False)
+        ]
+        connected_displays.sort()
+
+        # Try to match against known configurations
+        for config_name, config in CONFIG[self.host].items():
+            expected_displays = sorted(config["connected_displays"])
+            if connected_displays == expected_displays:
+                return config_name, True
+
+        return "unknown", False
+
+    def detect_current_layout(
+        self,
+        config: str,
+        display_state: dict[str, Any],
+    ) -> tuple[str, bool]:
+        """Detect if current display state matches any known layout."""
+        if self.host not in CONFIG or config not in CONFIG[self.host]:
+            return "custom", False
+
+        config_data = CONFIG[self.host][config]
+
+        # Check each available layout to see if it matches current state
+        for layout_key, layout_definition in config_data["layouts"].items():
+            if self._layout_matches_state(layout_definition, display_state):
+                return layout_key, True
+
+        return "custom", False
+
+    def _layout_matches_state(
+        self,
+        layout_definition: dict[str, Any],
+        display_state: dict[str, Any],
+    ) -> bool:
+        """Check if current display state matches the given layout."""
+        outputs_by_name = {
+            output["name"]: output for output in display_state.get("outputs", [])
+        }
+
+        for display_name, display_config in layout_definition.items():
+            if display_name not in outputs_by_name:
+                continue
+
+            output = outputs_by_name[display_name]
+
+            # Check enabled state
+            if output.get("enabled", False) != display_config.get("enabled", True):
+                return False
+
+            if display_config.get("enabled", True):
+                # Check position
+                expected_pos = display_config.get("position", (0, 0))
+                actual_pos = (
+                    output.get("pos", {}).get("x", 0),
+                    output.get("pos", {}).get("y", 0),
+                )
+                if expected_pos != actual_pos:
+                    return False
+
+        return True
+
+    def apply_layout(
+        self,
+        config: str,
+        layout_name: str,
+        *,
+        dry_run: bool = False,
+    ) -> None:
+        """Apply the specified layout."""
+        # Validate that this layout is available for the current host/config
+        if self.host not in CONFIG:
+            console.print(f"[red]Error: Unknown host '{self.host}'[/red]")
+            sys.exit(1)
+
+        if config not in CONFIG[self.host]:
+            console.print(
+                f"[red]Error: Unknown configuration '{config}' "
+                f"for host '{self.host}'[/red]",
+            )
+            sys.exit(1)
+
+        host_config = CONFIG[self.host][config]
+        if layout_name not in host_config["layouts"]:
+            available_layouts = list(host_config["layouts"].keys())
+            console.print(
+                f"[red]Error: Layout '{layout_name}' not available "
+                f"for {self.host}/{config}[/red]",
+            )
+            console.print(
+                f"[yellow]Available layouts: {', '.join(available_layouts)}[/yellow]",
+            )
+            sys.exit(1)
+
+        # Get the actual layout definition
+        layout_definition = host_config["layouts"][layout_name]
+
+        try:
+            # Generate kscreen-doctor commands
+            commands = self._layout_to_kscreen_commands(layout_definition)
+            console.print(
+                f"[yellow]Applying layout '{layout_name}' "
+                f"for {self.host}/{config}...[/yellow]",
+            )
+
+            # Execute kscreen-doctor command
+            full_command = [KSCREEN_DOCTOR, *commands]
+
+            if dry_run:
+                console.print(f"[dim]Would run: {' '.join(full_command)}[/dim]")
+                console.print("[yellow]DRY RUN MODE - not actually executing[/yellow]")
+                return
+
+            console.print(f"[dim]Running: {' '.join(full_command)}[/dim]")
+            subprocess.run(
+                full_command,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            console.print(
+                f"[green]Layout '{layout_name}' applied successfully![/green]",
+            )
+
+            # Wait for display changes to settle, then restart window manager
+            console.print("[dim]Waiting for display changes to settle...[/dim]")
+            time.sleep(2)
+            console.print("[dim]Restarting xmonad...[/dim]")
+            subprocess.run([XMONAD, "--restart"], check=False)
+
+        except ValueError as e:
+            console.print(f"[red]Error: {e}[/red]")
+            sys.exit(1)
+        except subprocess.CalledProcessError as e:
+            console.print(f"[red]Error applying layout: {e}[/red]")
+            if e.stderr:
+                console.print(f"[red]Details: {e.stderr}[/red]")
+            sys.exit(1)
+
+    def _layout_to_kscreen_commands(
+        self,
+        layout_definition: dict[str, Any],
+    ) -> list[str]:
+        """Convert a layout definition to kscreen-doctor command arguments."""
+        commands = []
+
+        for display_name, display_config in layout_definition.items():
+            prefix = f"output.{display_name}"
+
+            # Enable/disable
+            if display_config.get("enabled", True):
+                commands.append(f"{prefix}.enable")
+            else:
+                commands.append(f"{prefix}.disable")
+                continue  # Skip other settings for disabled displays
+
+            # Mode (resolution and refresh rate)
+            if "mode" in display_config:
+                mode = display_config["mode"]
+                commands.append(f"{prefix}.mode.{mode}")
+
+            # Position
+            if "position" in display_config:
+                x, y = display_config["position"]
+                commands.append(f"{prefix}.position.{x},{y}")
+
+            # Rotation
+            if "rotation" in display_config:
+                rotation = display_config["rotation"]
+                commands.append(f"{prefix}.rotation.{rotation}")
+
+            # Scale
+            if "scale" in display_config:
+                scale = display_config["scale"]
+                commands.append(f"{prefix}.scale.{scale}")
+
+        return commands
+
+
+class StatusDisplay:
+    """Handles status display formatting."""
+
+    @staticmethod
+    def show_status(
+        host: str,
+        config: str,
+        layout: str,
+        *,
+        config_known: bool,
+        layout_known: bool,
+    ) -> None:
+        """Display the 3-line status output."""
+        # Line 1: Hosts
+        known_hosts = list(CONFIG.keys())
+        if host in known_hosts:
+            host_parts = [f"[bold]{h}[/bold]" if h == host else h for h in known_hosts]
+        else:
+            host_parts = [*known_hosts, f"[bold yellow]{host}[/bold yellow]"]
+        console.print(f"Host: {', '.join(host_parts)}")
+
+        # Line 2: Configurations
+        if host in CONFIG:
+            available_configs = list(CONFIG[host].keys())
+            if config_known:
+                config_parts = [
+                    f"[bold]{c}[/bold]" if c == config else c for c in available_configs
+                ]
+            else:
+                config_parts = [
+                    *available_configs,
+                    f"[bold yellow]{config}[/bold yellow]",
+                ]
+        else:
+            config_parts = [f"[bold yellow]{config}[/bold yellow]"]
+        console.print(f"Config: {', '.join(config_parts)}")
+
+        # Line 3: Layouts
+        if host in CONFIG and config in CONFIG[host]:
+            available_layouts = list(CONFIG[host][config]["layouts"].keys())
+            if layout_known:
+                layout_parts = [
+                    (
+                        f"[bold]{layout_name}[/bold]"
+                        if layout_name == layout
+                        else layout_name
+                    )
+                    for layout_name in available_layouts
+                ]
+            else:
+                layout_parts = [
+                    *available_layouts,
+                    f"[bold yellow]{layout}[/bold yellow]",
+                ]
+        else:
+            layout_parts = [f"[bold yellow]{layout}[/bold yellow]"]
+        console.print(f"Layout: {', '.join(layout_parts)}")
+
+
+@click.command()
+@click.argument("layout_name", required=False)
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would be executed without actually running it",
+)
+@click.version_option(version="1.0.0")
+def main(layout_name: str | None, *, dry_run: bool) -> None:
+    """Screen layout manager - configures display layouts.
+
+    Without arguments: Show current status.
+    With layout name: Apply the specified layout.
+    """
+    display_manager = DisplayManager()
+    display_state = display_manager.get_current_display_state()
+    current_config, config_known = display_manager.detect_configuration(display_state)
+    current_layout, layout_known = display_manager.detect_current_layout(
+        current_config,
+        display_state,
+    )
+
+    if layout_name is None:
+        # Show status
+        StatusDisplay.show_status(
+            display_manager.host,
+            current_config,
+            current_layout,
+            config_known=config_known,
+            layout_known=layout_known,
+        )
+    else:
+        # Apply layout
+        display_manager.apply_layout(
+            current_config,
+            layout_name,
+            dry_run=dry_run,
+        )
+
+
+if __name__ == "__main__":
+    main()
+
+# vim: ft=python
