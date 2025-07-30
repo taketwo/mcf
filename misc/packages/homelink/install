@@ -18,11 +18,11 @@ echo "Copy homelink-monitor.sh -> /usr/local/bin/homelink-monitor.sh"
 sudo cp "$script_dir/homelink-monitor.sh" /usr/local/bin/homelink-monitor.sh
 sudo chmod 755 /usr/local/bin/homelink-monitor.sh
 
-echo "Reload systemd and enable services..."
+echo "Reload systemd and enable monitor service/timer..."
 sudo systemctl daemon-reload
-sudo systemctl enable homelink.service
+sudo systemctl enable homelink-monitor.service
 sudo systemctl enable homelink-monitor.timer
 
-echo "Start services..."
-sudo systemctl start homelink.service
+echo "Start monitor service/timer..."
+sudo systemctl start homelink-monitor.service
 sudo systemctl start homelink-monitor.timer
