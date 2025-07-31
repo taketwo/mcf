@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+exec ghc --make "$HOME/.xmonad/xmonad.hs" \
+  -i \
+  -ilib \
+  -fforce-recomp \
+  -main-is main \
+  -outputdir "$HOME/.xmonad/build-x86_64-linux" \
+  -o "$HOME/.xmonad/xmonad-x86_64-linux" \
+  -package directory \
+  -package filepath \
+  -package containers
