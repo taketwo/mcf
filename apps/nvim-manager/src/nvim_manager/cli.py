@@ -64,14 +64,9 @@ def main(ctx: click.Context, config: Path | None, *, debug: bool = False) -> Non
         raise click.Abort from e
 
 
-@main.group()
-def config() -> None:
-    """Config management operations."""
-
-
-@config.command()
+@main.command()
 @pass_context
-def show(ctx: dict[str, Any]) -> None:
+def config(ctx: dict[str, Any]) -> None:
     """Display the loaded config."""
     console.print(
         Pretty(
