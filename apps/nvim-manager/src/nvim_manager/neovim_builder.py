@@ -13,41 +13,53 @@ from .utils import run_command
 logger = get_logger(__name__)
 
 
+class NeovimBuildError(Exception):
+    """Base exception for Neovim build failures."""
+
+
+class NeovimCloneError(NeovimBuildError):
+    """Exception raised when git clone operations fail."""
+
+
+class NeovimCompileError(NeovimBuildError):
+    """Exception raised when compilation fails."""
+
+
 class NeovimBuilder:
-    """Builds Neovim from source code at specified Git commits.
+    """Builds Neovim from source code at specified Git commit.
 
-    This class manages the complete build process for Neovim, including
-    dependency compilation, source code management, and installation.
-    It implements Neovim's official two-stage build process using CMake
-    and Ninja, with build isolation and caching for efficiency.
-
-    The builder maintains a persistent source repository clone and creates
-    isolated temporary build directories for each build operation. Built
-    executables are cached by commit hash to avoid redundant builds.
+    This class manages the complete build process for Neovim using optimized shallow
+    clones and caching. Build artifacts and logs are preserved for debugging.
 
     Attributes
     ----------
     build_cache : Path
-        Root directory for caching source code and built installations.
-    source_dir : Path
-        Directory containing the shared Neovim source repository.
+        Root directory for caching built installations.
+    repository : str
+        GitHub repository in format 'owner/repo' (e.g., 'neovim/neovim').
 
     """
 
-    def __init__(self, build_cache: Path) -> None:
-        """Initialize Neovim builder with cache directory.
+    def __init__(self, build_cache: Path, repository: str) -> None:
+        """Initialize Neovim builder with cache directory and repository.
 
         Parameters
         ----------
         build_cache : Path
-            Root directory for caching source code and installations.
+            Root directory for caching built Neovim installations.
+        repository : str
+            GitHub repository in format 'owner/repo' (e.g., 'neovim/neovim').
 
         """
         self.build_cache = build_cache
-        self.source_dir = build_cache / "neovim"
+        self.build_cache.mkdir(parents=True, exist_ok=True)
+        self.repository = repository
 
     def build_commit(self, commit_hash: str) -> Path:
         """Build Neovim from a specific commit hash.
+
+        Creates an optimized shallow clone of the specific commit, builds Neovim using
+        the standard two-stage CMake process, and installs to the build cache.
 
         Parameters
         ----------
@@ -61,22 +73,18 @@ class NeovimBuilder:
 
         Raises
         ------
-        git.exc.GitCommandError
+        NeovimCloneError
             If git operations fail.
-        subprocess.CalledProcessError
-            If build process fails.
-        RuntimeError
-            If required build tools are not available.
+        NeovimCompileError
+            If build process fails or executable not found.
 
         """
         short_hash = commit_hash[:8]
         logger.debug("Building Neovim from commit %s", short_hash)
 
-        # Install to cache directory named after commit hash
-        install_cache_dir = self.build_cache / "installs" / short_hash
+        # Check cache first
+        install_cache_dir = self.build_cache / short_hash
         nvim_executable = install_cache_dir / "bin" / "nvim"
-
-        # Check if already built
         if nvim_executable.exists():
             logger.debug(
                 "Found cached Neovim binary for commit %s at %s",
@@ -85,26 +93,34 @@ class NeovimBuilder:
             )
             return nvim_executable
 
-        self._ensure_source_at_commit(commit_hash)
+        # Perform fresh build
+        install_cache_dir = self.build_cache / short_hash
+        nvim_executable = install_cache_dir / "bin" / "nvim"
 
+        # Create temporary directory for this build (preserved for debugging)
         with tempfile.TemporaryDirectory(
-            prefix=f"nvim-build-{short_hash}-",
+            prefix=f"nvim-manager-{short_hash}-",
             delete=False,
-        ) as isolated_build_dir:
-            build_success = self._build_and_install(
-                Path(isolated_build_dir),
-                install_cache_dir,
+        ) as temp_dir_str:
+            temp_dir = Path(temp_dir_str)
+            logger.debug(
+                "Using temporary directory: %s (preserved for debugging)",
+                temp_dir,
             )
 
-        if not build_success:
-            msg = f"Build failed for commit {short_hash}"
-            logger.error(msg)
-            raise RuntimeError(msg)
+            # Setup build directories
+            source_dir = temp_dir / "source"
+            build_dir = temp_dir / "build"
 
+            # Clone and build
+            self._shallow_clone_commit(commit_hash, source_dir)
+            self._compile_and_install(source_dir, build_dir, install_cache_dir)
+
+        # Verify executable was created
         if not nvim_executable.exists():
             msg = f"Build completed but executable not found at {nvim_executable}"
             logger.error(msg)
-            raise RuntimeError(msg)
+            raise NeovimCompileError(msg)
 
         logger.debug(
             "Successfully built Neovim for commit %s: %s",
@@ -113,41 +129,158 @@ class NeovimBuilder:
         )
         return nvim_executable
 
-    def _ensure_source_at_commit(self, commit_hash: str) -> None:
-        """Ensure source code is available and checked out to specific commit."""
+    def _shallow_clone_commit(self, commit_hash: str, target_dir: Path) -> None:
+        """Create a minimal clone for the specific commit.
+
+        Uses shallow clone approach to minimize download:
+        1. Shallow clone with depth=1 to get repo structure
+        2. Fetch only the specific commit
+        3. Checkout the commit
+
+        This preserves git information for version generation while minimizing
+        data transfer.
+
+        Parameters
+        ----------
+        commit_hash : str
+            Git commit hash to clone.
+        target_dir : Path
+            Directory to clone into.
+
+        Raises
+        ------
+        NeovimCloneError
+            If git operations fail.
+
+        """
         short_hash = commit_hash[:8]
+        logger.debug("Creating minimal clone for commit %s", short_hash)
 
-        if not self.source_dir.exists():
-            logger.info(
-                "Cloning Neovim repository to %s",
-                self.source_dir,
-            )
-            self.build_cache.mkdir(parents=True, exist_ok=True)
-            Repo.clone_from("https://github.com/neovim/neovim.git", self.source_dir)
-        else:
-            logger.debug("Neovim repository already exists at %s", self.source_dir)
+        try:
+            repo_url = f"https://github.com/{self.repository}.git"
 
-        repo = Repo(self.source_dir)
-        logger.debug("Fetching latest changes from remote")
-        repo.remotes.origin.fetch()
+            # Shallow clone to get repo structure
+            repo = Repo.clone_from(repo_url, target_dir, depth=1)
 
-        logger.debug("Checking out commit %s", short_hash)
-        repo.git.checkout(commit_hash)
+            # Fetch the specific commit
+            logger.debug("Fetching specific commit %s", short_hash)
+            repo.git.fetch("--depth=1", "origin", commit_hash)
 
-    def _run_command_with_logging(
+            # Checkout the commit
+            logger.debug("Checking out commit %s", short_hash)
+            repo.git.checkout(commit_hash)
+
+            logger.debug("Shallow clone completed for commit %s", short_hash)
+
+        except Exception as e:
+            msg = f"Failed to clone commit {short_hash}: {e}"
+            logger.exception(msg)
+            raise NeovimCloneError(msg) from e
+
+    def _compile_and_install(
+        self,
+        source_dir: Path,
+        build_dir: Path,
+        install_dir: Path,
+    ) -> None:
+        """Compile and install Neovim using the two-stage CMake process.
+
+        Parameters
+        ----------
+        source_dir : Path
+            Directory containing Neovim source code.
+        build_dir : Path
+            Directory for building.
+        install_dir : Path
+            Directory to install the built executable.
+
+        Raises
+        ------
+        NeovimCompileError
+            If any build step fails.
+
+        """
+        logger.debug("Starting compilation and install process")
+        logger.debug("Source directory: %s", source_dir)
+        logger.debug("Build directory: %s", build_dir)
+        logger.debug("Install directory: %s", install_dir)
+
+        build_dir.mkdir(parents=True, exist_ok=True)
+        deps_build_dir = build_dir / "deps"
+
+        # Build command sequence for Neovim two-stage process
+        commands = [
+            # Stage 1: Build dependencies
+            [
+                "cmake",
+                "-S",
+                str(source_dir / "cmake.deps"),
+                "-B",
+                str(deps_build_dir),
+                "-G",
+                "Ninja",
+                "-D",
+                "CMAKE_BUILD_TYPE=Release",
+            ],
+            ["cmake", "--build", str(deps_build_dir)],
+            # Stage 2: Build Neovim
+            [
+                "cmake",
+                "-S",
+                str(source_dir),
+                "-B",
+                str(build_dir),
+                "-G",
+                "Ninja",
+                "-D",
+                "CMAKE_BUILD_TYPE=Release",
+                f"-DDEPS_PREFIX={deps_build_dir}/usr",
+                f"-DCMAKE_INSTALL_PREFIX={install_dir}",
+            ],
+            ["cmake", "--build", str(build_dir)],
+            # Install Neovim
+            ["cmake", "--install", str(build_dir)],
+        ]
+
+        logger.debug("Executing %d build commands", len(commands))
+        logger.debug("Build logs will be preserved in %s for debugging", build_dir)
+
+        # Execute commands with logging
+        stdout_log = build_dir / "build_stdout.log"
+        stderr_log = build_dir / "build_stderr.log"
+
+        with stdout_log.open("w") as stdout_f, stderr_log.open("w") as stderr_f:
+            for i, command in enumerate(commands, 1):
+                logger.debug(
+                    "Executing command %d/%d: %s",
+                    i,
+                    len(commands),
+                    " ".join(command),
+                )
+                if not self._execute_build_command(
+                    command,
+                    source_dir,
+                    stdout_f,
+                    stderr_f,
+                ):
+                    msg = f"Build failed at step {i}/{len(commands)}; logs preserved in {build_dir}"
+                    logger.error(msg)
+                    raise NeovimCompileError(msg)
+
+    def _execute_build_command(
         self,
         args: list[str],
-        cwd: Path | None,
+        cwd: Path,
         stdout_file: TextIO,
         stderr_file: TextIO,
     ) -> bool:
-        """Run command and log output to files.
+        """Execute build command and preserve output for debugging.
 
         Parameters
         ----------
         args : list[str]
             Command and arguments to execute.
-        cwd : Path | None
+        cwd : Path
             Working directory for command execution.
         stdout_file : TextIO
             File handle to write stdout output to.
@@ -162,111 +295,37 @@ class NeovimBuilder:
         """
         command_str = " ".join(args)
 
-        # Write command header to both files
-        stdout_file.write(f"\n=== Running: {command_str} ===\n")
-        stderr_file.write(f"\n=== Running: {command_str} ===\n")
-
-        def write_output(stdout: str | None, stderr: str | None) -> None:
-            """Write output to files and flush."""
-            if stdout:
-                stdout_file.write(stdout)
-                stdout_file.write("\n")
-            if stderr:
-                stderr_file.write(stderr)
-                stderr_file.write("\n")
-            stdout_file.flush()
-            stderr_file.flush()
+        # Log command execution to both files
+        header = f"\n=== Executing: {command_str} ===\n"
+        stdout_file.write(header)
+        stderr_file.write(header)
+        stdout_file.flush()
+        stderr_file.flush()
 
         try:
             result = run_command(args, cwd=cwd, capture_output=True)
         except subprocess.CalledProcessError as e:
-            # Write error information for command failures
-            stderr_file.write(f"Command failed with exit code {e.returncode}: {e}\n")
-            write_output(e.stdout, e.stderr)
+            # Preserve error details for debugging
+            error_msg = f"Command failed with exit code {e.returncode}: {e}\n"
+            stderr_file.write(error_msg)
+
+            # Extract output from CalledProcessError
+            if e.stdout:
+                stdout_file.write(e.stdout)
+            if e.stderr:
+                stderr_file.write(e.stderr)
+
+            stdout_file.flush()
+            stderr_file.flush()
             return False
         else:
-            write_output(result.stdout, result.stderr)
+            # Write successful output
+            if result.stdout:
+                stdout_file.write(result.stdout)
+                stdout_file.write("\n")
+            if result.stderr:
+                stderr_file.write(result.stderr)
+                stderr_file.write("\n")
+            stdout_file.flush()
+            stderr_file.flush()
             return True
-
-    def _build_and_install(self, build_path: Path, install_dir: Path) -> bool:
-        """Configure, build, and install Neovim using the two-stage process.
-
-        Parameters
-        ----------
-        build_path : Path
-            Temporary directory for building.
-        install_dir : Path
-            Directory to install the built executable.
-
-        Returns
-        -------
-        bool
-            True if build succeeded, False otherwise.
-
-        """
-        logger.debug("Starting build and install process")
-        logger.debug("Build directory: %s", build_path)
-        logger.debug("Install directory: %s", install_dir)
-
-        deps_dir = build_path / "deps"
-        nvim_build_dir = build_path / "build"
-
-        commands = [
-            # Stage 1: Build dependencies
-            [
-                "cmake",
-                "-S",
-                "cmake.deps",
-                "-B",
-                str(deps_dir),
-                "-G",
-                "Ninja",
-                "-D",
-                "CMAKE_BUILD_TYPE=Release",
-            ],
-            ["cmake", "--build", str(deps_dir)],
-            # Stage 2: Build Neovim
-            [
-                "cmake",
-                "-B",
-                str(nvim_build_dir),
-                "-G",
-                "Ninja",
-                "-D",
-                "CMAKE_BUILD_TYPE=Release",
-                f"-DDEPS_PREFIX={deps_dir}/usr",
-                f"-DCMAKE_INSTALL_PREFIX={install_dir}",
-            ],
-            ["cmake", "--build", str(nvim_build_dir)],
-            # Install Neovim
-            ["cmake", "--install", str(nvim_build_dir)],
-        ]
-
-        logger.debug("Executing %d build commands", len(commands))
-        logger.debug("Stdout and stderr will be logged to files in %s", build_path)
-
-        with (
-            (build_path / "stdout.txt").open("w") as stdout_f,
-            (build_path / "stderr.txt").open("w") as stderr_f,
-        ):
-            for i, command in enumerate(commands, 1):
-                logger.debug(
-                    "Executing command %d/%d: %s",
-                    i,
-                    len(commands),
-                    " ".join(command),
-                )
-                if not self._run_command_with_logging(
-                    command,
-                    self.source_dir,
-                    stdout_f,
-                    stderr_f,
-                ):
-                    logger.error(
-                        "Build command failed at step %d/%d; check logs in %s",
-                        i,
-                        len(commands),
-                        build_path,
-                    )
-                    return False
-        return True
