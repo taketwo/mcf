@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 pass_context = click.make_pass_decorator(dict)
 
 
-@click.group(invoke_without_command=True)
+@click.group(invoke_without_command=True, chain=True)
 @click.option(
     "--config",
     type=click.Path(exists=True, path_type=Path),
@@ -32,7 +32,13 @@ pass_context = click.make_pass_decorator(dict)
 )
 @click.pass_context
 def main(ctx: click.Context, config: Path | None, *, debug: bool = False) -> None:
-    """Manage Neovim installations and plugins using lock files."""
+    """Manage Neovim installations and plugins using lock files.
+
+    Commands can be chained together for workflow efficiency:
+
+        nvim-manager update --editor commit --editor
+        nvim-manager restore --plugins update --plugins commit --plugins
+    """
     # Configure logging before doing anything else
     configure_logging(level=DEBUG if debug else INFO, concise=not debug)
 
