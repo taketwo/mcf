@@ -330,6 +330,11 @@
         }
       }
     },
-    "theme": "onedark"
+    "theme": "onedark",
+    "views": {
+      "log": {
+        "time-column": "enabled"
+      }
+    }
   }
 }
