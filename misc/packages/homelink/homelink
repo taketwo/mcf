@@ -1,0 +1,542 @@
+#!/usr/bin/env python3
+
+"""HomeLink - WireGuard VPN management tool."""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import json
+import logging
+import os
+import signal
+import socket
+import subprocess
+import sys
+import threading
+import time
+from collections import deque
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from types import FrameType
+
+
+# Constants
+SOCKET_PATH = "/run/homelink/monitor.sock"
+DNS_SERVERS = ["8.8.8.8", "1.1.1.1"]
+VIRTUAL_INTERFACE_PREFIXES = (
+    "wg",
+    "tun",
+    "tap",
+    "veth",
+    "docker",
+    "br-",
+    "lo",
+    "virbr",
+    "vmbr",
+)
+
+
+class HomeLinkMonitor:
+    """WireGuard VPN monitor."""
+
+    def __init__(self) -> None:
+        """Initialize the HomeLink monitor."""
+        # Configuration from environment
+        self.interface = os.getenv("HOMELINK_INTERFACE", "wg0")
+        self.home_router = os.getenv("HOMELINK_HOME_ROUTER", "192.168.114.1")
+        self.check_interval = int(os.getenv("HOMELINK_CHECK_INTERVAL", "15"))
+        self.internet_failure_threshold = int(
+            os.getenv("HOMELINK_INTERNET_FAILURE_THRESHOLD", "3"),
+        )
+        self.internet_history_size = int(
+            os.getenv("HOMELINK_INTERNET_HISTORY_SIZE", "5"),
+        )
+        self.ping_timeout = int(os.getenv("HOMELINK_PING_TIMEOUT", "3"))
+
+        # State tracking
+        self.state = {
+            "location": "remote",
+            "internet": "down",
+            "vpn": "down",
+            "vpn_control_signal": "noop",
+            "internet_connectivity_history": deque(maxlen=self.internet_history_size),
+            "next_check_at": None,
+        }
+        self.running = True
+        self.socket_server = None
+        self.logger = self._setup_logging()
+
+    def _setup_logging(self) -> logging.Logger:
+        """Set up structured logging for systemd journal."""
+        log_level = os.getenv("HOMELINK_LOG_LEVEL", "INFO").upper()
+        logging.basicConfig(
+            level=getattr(logging, log_level, logging.INFO),
+            format="%(message)s",
+            handlers=[logging.StreamHandler(sys.stdout)],
+        )
+        return logging.getLogger("homelink-monitor")
+
+    def _ping(self, host: str, interface: str | None = None) -> bool:
+        """Ping a host, optionally through specific interface."""
+        cmd = ["ping", "-c", "1", "-W", str(self.ping_timeout)]
+        if interface:
+            cmd.extend(["-I", interface])
+        cmd.append(host)
+
+        try:
+            result = subprocess.run(
+                cmd,
+                check=False,
+                capture_output=True,
+                timeout=self.ping_timeout + 2,
+            )
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            return False
+        else:
+            return result.returncode == 0
+
+    def _run_command(
+        self,
+        cmd: list[str],
+        timeout: int = 5,
+    ) -> subprocess.CompletedProcess[str] | None:
+        """Run a command and return result, or None on error."""
+        try:
+            return subprocess.run(
+                cmd,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+            )
+        except subprocess.TimeoutExpired:
+            return None
+
+    def _systemctl(self, action: str) -> bool:
+        """Execute systemctl command."""
+        try:
+            subprocess.run(
+                ["systemctl", action, "homelink.service"],  # noqa: S607
+                timeout=30,
+                check=True,
+            )
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            self.logger.exception("Failed to %s homelink service", action)
+            return False
+        else:
+            return True
+
+    def _get_physical_interfaces(self) -> list[str]:
+        """Get list of physical network interfaces (excluding virtual ones)."""
+        result = self._run_command(["ip", "link", "show"])
+        if not result:
+            return []
+
+        interfaces = []
+
+        for line in result.stdout.split("\n"):
+            if ": " in line and "state UP" in line:
+                # Extract interface name from lines like "2: eth0: <BROADCAST,...>"
+                parts = line.split(": ")
+                if len(parts) >= 2:  # noqa: PLR2004
+                    iface_name = parts[1].split("@")[
+                        0
+                    ]  # Handle vlan interfaces like eth0@if2
+                    # Exclude virtual interfaces and our WG interface
+                    if (
+                        not iface_name.startswith(VIRTUAL_INTERFACE_PREFIXES)
+                        and iface_name != self.interface
+                    ):
+                        interfaces.append(iface_name)
+
+        return interfaces
+
+    def _check_location(self) -> str:
+        """Check if we're at home by checking if home router is our default gateway."""
+        # Get default route through physical interfaces only
+        physical_ifaces = self._get_physical_interfaces()
+
+        for iface in physical_ifaces:
+            # Check if this interface has a default route via home router
+            result = self._run_command(["ip", "route", "show", "default", "dev", iface])
+            if result and self.home_router in result.stdout:
+                return "home"
+
+        return "remote"
+
+    def _check_vpn(self) -> str:
+        """Check VPN status: down, degraded, or up."""
+        # Check if WireGuard interface exists
+        wg_result = self._run_command(["ip", "link", "show", self.interface])
+        if not wg_result or wg_result.returncode != 0:
+            return "down"
+
+        # Interface is up, now check tunnel health
+        # 1. Try to ping home router
+        if self._ping(self.home_router):
+            return "up"
+
+        # 2. Check if we have a route through the WG interface
+        result = self._run_command(["ip", "route", "show", "dev", self.interface])
+        if result and result.stdout.strip():
+            # If we have routes through WG interface, assume it's working
+            # This is more reliable than ping which might be blocked
+            return "up"
+
+        # 3. Check if the interface has an IP assigned
+        result = self._run_command(["ip", "addr", "show", self.interface])
+        if result and "inet " in result.stdout:
+            return "up"
+
+        # Interface exists but tunnel is broken
+        return "degraded"
+
+    def _check_internet(self) -> str:
+        """Check internet status with hysteresis: down, degraded, or up."""
+        # Check current internet connectivity
+        internet_working = any(self._ping(target) for target in DNS_SERVERS)
+
+        # Update history
+        self.state["internet_connectivity_history"].append(internet_working)
+
+        # Count recent failures
+        recent_failures = list(self.state["internet_connectivity_history"]).count(False)
+
+        if recent_failures >= self.internet_failure_threshold:
+            return "down"  # Consistently failing
+        if recent_failures > 0:
+            return "degraded"  # Some recent failures
+        return "up"  # No recent failures
+
+    def _check_network_state(self) -> dict[str, str]:
+        """Check all network conditions using 3-variable model."""
+        location = self._check_location()
+        internet = self._check_internet()
+        vpn = self._check_vpn()
+
+        return {
+            "location": location,
+            "internet": internet,
+            "vpn": vpn,
+        }
+
+    def _determine_desired_state(self) -> str:
+        """Determine VPN control signal using 3-variable model."""
+        location = self.state["location"]
+        internet = self.state["internet"]
+        vpn = self.state["vpn"]
+
+        if location == "home":
+            # At home, VPN should be down
+            return "down" if vpn != "down" else "noop"
+
+        if internet == "down":
+            # No internet, VPN should be down
+            return "down" if vpn != "down" else "noop"
+
+        # Remote with some internet (up or degraded)
+        if vpn == "down":
+            return "up"
+        if vpn == "degraded":
+            return "restart"
+        return "noop"
+
+    def update_and_act(self) -> None:
+        """Update state and take action - main logic loop."""
+        old_signal = self.state["vpn_control_signal"]
+
+        # Set next check time
+        self.state["next_check_at"] = datetime.now(timezone.utc) + timedelta(
+            seconds=self.check_interval,
+        )
+
+        # Update network state (includes connectivity history update)
+        self.state.update(self._check_network_state())
+
+        # Determine what we want
+        control_signal = self._determine_desired_state()
+        self.state["vpn_control_signal"] = control_signal
+
+        # Log control signal changes
+        if old_signal != control_signal:
+            self.logger.info(
+                "Control signal change: %s -> %s",
+                old_signal,
+                control_signal,
+            )
+
+        # Take action based on control signal
+        location, internet, vpn = (
+            self.state["location"],
+            self.state["internet"],
+            self.state["vpn"],
+        )
+
+        if control_signal == "down" and vpn != "down":
+            self.logger.info(
+                "Bringing down HomeLink (location=%s, internet=%s)",
+                location,
+                internet,
+            )
+            self._systemctl("stop")
+        elif control_signal == "up" and vpn == "down":
+            self.logger.info(
+                "Starting HomeLink (location=%s, internet=%s)",
+                location,
+                internet,
+            )
+            self._systemctl("start")
+        elif control_signal == "restart":
+            self.logger.warning("Restarting HomeLink (vpn=%s)", vpn)
+            self._systemctl("restart")
+        elif control_signal == "noop":
+            self.logger.debug(
+                "No VPN action needed (location=%s, internet=%s, vpn=%s)",
+                location,
+                internet,
+                vpn,
+            )
+
+    def get_status(self) -> dict[str, str | bool]:
+        """Get current status for API."""
+        internet_history = self.state["internet_connectivity_history"]
+        score = list(internet_history).count(True)
+        total = len(internet_history) or 1
+
+        # Create status dict with computed fields
+        status = {
+            **self.state,
+            "internet_connectivity_score": f"{score}/{total}",
+        }
+
+        # Format next_check_at as ISO string if available
+        if self.state["next_check_at"]:
+            status["next_check_at"] = self.state["next_check_at"].isoformat()
+
+        # Remove internal objects from status output
+        return {k: v for k, v in status.items() if k != "internet_connectivity_history"}
+
+    def _handle_socket_client(self, client_socket: socket.socket) -> None:
+        """Handle socket client - always return status."""
+        try:
+            client_socket.settimeout(5.0)
+            client_socket.recv(1024)  # Read and ignore request
+            response = self.get_status()
+            client_socket.send((json.dumps(response) + "\n").encode())
+        except socket.timeout:
+            self.logger.debug("Socket client timeout")
+        except Exception:
+            self.logger.exception("Error handling socket client")
+        finally:
+            client_socket.close()
+
+    def _setup_socket_server(self) -> None:
+        """Set up Unix domain socket server."""
+        socket_dir = Path(SOCKET_PATH).parent
+        socket_dir.mkdir(parents=True, exist_ok=True)
+
+        with contextlib.suppress(FileNotFoundError):
+            Path(SOCKET_PATH).unlink()
+
+        self.socket_server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.socket_server.bind(SOCKET_PATH)
+        self.socket_server.listen(5)
+        self.socket_server.settimeout(1.0)
+        Path(SOCKET_PATH).chmod(0o666)
+
+        self.logger.info("Socket server listening on %s", SOCKET_PATH)
+
+    def _socket_server_loop(self) -> None:
+        """Run socket server loop."""
+        while self.running:
+            try:
+                self.socket_server.settimeout(1.0)
+                client_socket, _ = self.socket_server.accept()
+                threading.Thread(
+                    target=self._handle_socket_client,
+                    args=(client_socket,),
+                    daemon=True,
+                ).start()
+            except socket.timeout:  # noqa: PERF203
+                continue
+            except Exception:
+                if self.running:
+                    self.logger.exception("Socket server error")
+
+    def _signal_handler(self, signum: int, _frame: FrameType | None) -> None:
+        """Handle shutdown signals."""
+        signal_names = {signal.SIGTERM: "SIGTERM", signal.SIGINT: "SIGINT"}
+        self.logger.info(
+            "Received %s, shutting down...",
+            signal_names.get(signum, signum),
+        )
+        self.running = False
+
+    def _status_signal_handler(self, _signum: int, _frame: FrameType | None) -> None:
+        """Handle status request signal (SIGUSR1)."""
+        status = self.get_status()
+        self.logger.info("Status: %s", json.dumps(status, indent=2))
+
+    def cleanup(self) -> None:
+        """Clean up resources."""
+        if self.socket_server:
+            self.socket_server.close()
+        with contextlib.suppress(FileNotFoundError):
+            Path(SOCKET_PATH).unlink()
+
+    def run(self) -> None:
+        """Run main daemon loop."""
+        # Setup signal handlers
+        signal.signal(signal.SIGTERM, self._signal_handler)
+        signal.signal(signal.SIGINT, self._signal_handler)
+        signal.signal(signal.SIGUSR1, self._status_signal_handler)
+
+        self.logger.info("HomeLink Monitor daemon starting")
+
+        try:
+            # Setup socket server
+            self._setup_socket_server()
+
+            # Start socket server thread
+            threading.Thread(target=self._socket_server_loop, daemon=True).start()
+
+            # Main monitoring loop
+            while self.running:
+                try:
+                    self.update_and_act()
+                    time.sleep(self.check_interval)
+                except KeyboardInterrupt:  # noqa: PERF203
+                    break
+                except Exception:
+                    self.logger.exception("Error in main loop")
+                    time.sleep(self.check_interval)
+
+        finally:
+            self.cleanup()
+            self.logger.info("HomeLink Monitor daemon stopped")
+
+
+def cmd_monitor() -> None:
+    """Run HomeLink monitor daemon."""
+    if os.geteuid() != 0:
+        sys.stderr.write(
+            "Warning: HomeLink Monitor should typically run as root "
+            "to manage systemd services\n",
+        )
+    HomeLinkMonitor().run()
+
+
+def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
+    """Get HomeLink status from socket."""
+    try:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(5)
+        sock.connect(SOCKET_PATH)
+        sock.send(b"status")
+
+        response = ""
+        while True:
+            chunk = sock.recv(4096).decode()
+            if not chunk:
+                break
+            response += chunk
+            if response.endswith("\n"):
+                break
+        sock.close()
+
+        status = json.loads(response.strip())
+    except socket.timeout:
+        status = {"error": "Timeout connecting to daemon"}
+    except FileNotFoundError:
+        status = {"error": f"Socket not found: {SOCKET_PATH}"}
+    except ConnectionRefusedError:
+        status = {"error": "Daemon not running"}
+    except json.JSONDecodeError:
+        status = {"error": "Invalid JSON response"}
+    except Exception as e:  # noqa: BLE001
+        status = {"error": f"Connection error: {e!s}"}
+
+    if "error" in status:
+        print(f"Error: {status['error']}")
+        return 1
+
+    if json_output:
+        print(json.dumps(status, indent=2))
+        return 0
+
+    lines = [
+        f"Location: {status.get('location', 'unknown')}",
+        f"Internet: {status.get('internet', 'unknown')} "
+        f"({status.get('internet_connectivity_score', '?/?')})",
+        f"VPN: {status.get('vpn', 'unknown')}",
+        f"VPN Control Signal: {status.get('vpn_control_signal', 'unknown')}",
+    ]
+
+    if "next_check_at" in status:
+        try:
+            next_check = datetime.fromisoformat(
+                status["next_check_at"].replace("Z", "+00:00"),
+            )
+            seconds_until = int(
+                (next_check - datetime.now(timezone.utc)).total_seconds(),
+            )
+            next_text = (
+                f"in {seconds_until} seconds" if seconds_until > 0 else "overdue"
+            )
+            lines.append(f"Next check: {next_text}")
+        except (ValueError, TypeError):
+            lines.append(f"Next check: {status['next_check_at']}")
+
+    print("\n".join(lines))
+    return 0
+
+
+def cmd_logs() -> int:
+    """Tail HomeLink logs."""
+    with contextlib.suppress(KeyboardInterrupt):
+        subprocess.run(
+            ["journalctl", "-u", "homelink-monitor.service", "-f"],  # noqa: S607
+            check=False,
+        )
+    return 0
+
+
+def main() -> int:
+    """Parse arguments and run the appropriate command."""
+    parser = argparse.ArgumentParser(
+        prog="homelink",
+        description="HomeLink - WireGuard VPN management tool",
+    )
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
+    subparsers.add_parser("monitor", help="Start HomeLink monitor daemon")
+    status_parser = subparsers.add_parser(
+        "status",
+        help="Show detailed HomeLink status",
+    )
+    status_parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output raw JSON data",
+    )
+    subparsers.add_parser("logs", help="Tail HomeLink monitor logs")
+
+    args = parser.parse_args()
+
+    if args.command == "monitor":
+        cmd_monitor()
+        return 0
+    if args.command == "status":
+        return cmd_status(json_output=args.json)
+    if args.command == "logs":
+        return cmd_logs()
+    parser.print_help()
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

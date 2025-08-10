@@ -10,19 +10,13 @@ echo "Copy homelink-monitor.service -> /etc/systemd/system/homelink-monitor.serv
 sudo cp "$script_dir/homelink-monitor.service" /etc/systemd/system/homelink-monitor.service
 sudo chmod 644 /etc/systemd/system/homelink-monitor.service
 
-echo "Copy homelink-monitor.timer -> /etc/systemd/system/homelink-monitor.timer"
-sudo cp "$script_dir/homelink-monitor.timer" /etc/systemd/system/homelink-monitor.timer
-sudo chmod 644 /etc/systemd/system/homelink-monitor.timer
+echo "Copy homelink script -> /usr/local/bin/homelink"
+sudo cp "$script_dir/homelink" /usr/local/bin/homelink
+sudo chmod 755 /usr/local/bin/homelink
 
-echo "Copy homelink-monitor.sh -> /usr/local/bin/homelink-monitor.sh"
-sudo cp "$script_dir/homelink-monitor.sh" /usr/local/bin/homelink-monitor.sh
-sudo chmod 755 /usr/local/bin/homelink-monitor.sh
-
-echo "Reload systemd and enable monitor service/timer..."
+echo "Reload systemd and enable monitor service..."
 sudo systemctl daemon-reload
 sudo systemctl enable homelink-monitor.service
-sudo systemctl enable homelink-monitor.timer
 
-echo "Start monitor service/timer..."
+echo "Start monitor service..."
 sudo systemctl start homelink-monitor.service
-sudo systemctl start homelink-monitor.timer

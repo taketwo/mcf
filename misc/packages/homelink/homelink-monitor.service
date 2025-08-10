@@ -1,11 +1,32 @@
 [Unit]
-Description=HomeLink Connectivity Monitor
+Description=HomeLink Connectivity Monitor Daemon
 After=network-online.target
 Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
 
 [Service]
-Type=oneshot
-ExecStart=/usr/local/bin/homelink-monitor.sh
+Type=simple
+ExecStart=/usr/local/bin/homelink monitor
+Restart=always
+RestartSec=10
+User=root
+Group=root
+
+# Create runtime directory for socket
+RuntimeDirectory=homelink
+RuntimeDirectoryMode=0755
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/run/homelink
+
+# Systemd integration
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=homelink-monitor
 
 [Install]
 WantedBy=multi-user.target
