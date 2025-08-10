@@ -9,6 +9,9 @@
         "pattern": "(?P<timestamp>[\\d.]+)(, [\\d.]+)?: (?P<level>\\w+)\\s+: (?P<thread>\\d+)\\s+: (?P<nodelet>[\\w.]+)\\s+: (?P<body>.*)"
       }
     },
+    "timestamp-format": [
+      "%s.%N"
+    ],
     "level": {
       "critical": "Critical|Crt",
       "error": "Error|error|Err",
