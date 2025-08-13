@@ -9,7 +9,6 @@ plugins = "$MCF/misc/packages/neovim/config/lazy-lock.json"
 [editor]
 install_path = "$HOME/.local/bin/nvim"
 build_cache = "$HOME/.cache/nvim-manager/builds"
-lock_file = "bob-lock.json"
 
 [plugins]
 restore_retry_count = 3
