@@ -1,3 +1,4 @@
+logitech-wake.rules:/etc/udev/rules.d/50-logitech-wake.rules:Udev rule to enable wake on wireless logitech devices
 mute-audio.service:.local/share/systemd/user/mute-audio.service:Mute audio systemd unit
 mute-audio.timer:.local/share/systemd/user/mute-audio.timer:Mute audio systemd timer
-logitech-wake.rules:/etc/udev/rules.d/50-logitech-wake.rules:Udev rule to enable wake on wireless logitech devices
+wg0.conf:/etc/wireguard/wg0.conf:WireGuard configuration
