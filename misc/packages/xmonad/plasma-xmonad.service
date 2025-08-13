@@ -3,7 +3,7 @@ Description=Plasma with XMonad window manager
 Before=plasma-workspace.target
 
 [Service]
-ExecStart=%h/.cabal/bin/xmonad
+ExecStart=%h/.local/bin/xmonad
 Slice=session.slice
 Restart=on-failure
 

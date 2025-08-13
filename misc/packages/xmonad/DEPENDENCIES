@@ -10,7 +10,7 @@ cabal: xmonad-contrib
 cabal: dbus
 # For clickable workspace names
 cabal: split
-# Othervise XMonad config does not compile
+# Otherwise XMonad config does not compile
 cabal: utf8-string
 
 nix: xmonad-log
