@@ -19,8 +19,6 @@ LOCK_REPO_PATH="$MCF/external/$LOCK_REPO_NAME"
 LAZY_LOCK_FILE_NAME="lazy-lock.json"
 LAZY_LOCK_FILE_PATH_LOCAL="$MCF/misc/packages/neovim/config/$LAZY_LOCK_FILE_NAME"
 LAZY_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$LAZY_LOCK_FILE_NAME"
-BOB_LOCK_FILE_NAME="bob-lock.json"
-BOB_LOCK_FILE_PATH_REMOTE="$LOCK_REPO_PATH/$BOB_LOCK_FILE_NAME"
 
 # Parse revision of the installed Neovim
 function neovim_parse_revision() {
@@ -173,26 +171,8 @@ function restore_plugins() {
 
 # Install Neovim version stored in the remote lock file
 function restore_editor() {
-  echo "Restoring editor version"
-  lock_hash=$(jq -r '.hash' "$BOB_LOCK_FILE_PATH_REMOTE")
-  lock_date=$(jq -r '.date' "$BOB_LOCK_FILE_PATH_REMOTE")
-  echo "Lock file hash/date: $lock_hash/$lock_date"
-  revision=$(neovim_parse_revision)
-  echo "Installed revision: $revision"
-  # Check if lock hash starts with installed revision
-  if [[ $lock_hash == "$revision"* ]]; then
-    echo "Installed version matches the lock file"
-    return
-  fi
-  echo "Installed version/revision does not match the lock file"
-  latest_nightly_hash=$(neovim_retrieve_nightly_hash)
-  if [[ $lock_hash == "$latest_nightly_hash" ]]; then
-    echo "Installing Neovim nightly"
-    bob use nightly
-  else
-    echo "Installing Neovim from commit $lock_hash"
-    bob use "$lock_hash"
-  fi
+  echo "Restoring editor version using nvim-manager"
+  nvim-manager restore --editor
 }
 
 # Update Neovim plugins
@@ -203,8 +183,8 @@ function update_plugins() {
 
 # Update Neovim editor
 function update_editor() {
-  echo "Updating editor to the latest nightly build"
-  bob use nightly
+  echo "Updating editor to the latest commit using nvim-manager"
+  nvim-manager update --editor
 }
 
 # Commit changes in the local lock file
@@ -215,17 +195,8 @@ function commit_plugins() {
 
 # Commit installed Neovim version to the lock file
 function commit_editor() {
-  revision=$(neovim_parse_revision)
-  if [[ $revision == "none" ]]; then
-    echo "Neovim is not installed, cannot commit the lock file"
-    exit 1
-  fi
-  read hash date <<<$(neovim_retrieve_commit_info "$revision")
-  echo "{
-  \"hash\": \"$hash\",
-  \"date\": \"$date\"
-}" >"$BOB_LOCK_FILE_PATH_REMOTE"
-  repo_commit_if_changed "$BOB_LOCK_FILE_NAME"
+  echo "Committing Neovim version to the lock file using nvim-manager"
+  nvim-manager commit --editor
 }
 
 # Parse and validate the input arguments
