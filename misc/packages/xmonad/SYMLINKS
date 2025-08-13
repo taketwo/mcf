@@ -1,3 +1,2 @@
-set_window_manager.sh:.config/plasma-workspace/env/set_window_manager.sh:KDEWM switch
 plasma-xmonad.service:.local/share/systemd/user/plasma-xmonad.service:Plasma with Xmonad systemd unit
 config:.xmonad:XMonad config directory

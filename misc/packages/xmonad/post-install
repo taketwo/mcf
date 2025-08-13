@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# encoding: utf-8
 
 from subprocess import call
 
@@ -7,8 +6,6 @@ from subprocess import call
 if __name__ == "__main__":
     # KDE 5.25 and newer use systemd to start Plasma
     # See: https://maxnatt.gitlab.io/posts/kde-plasma-with-i3wm/#kde-525-and-newer
-    # TODO: drop set_window_manager.sh script once all my computers have been updated
-    #       to Ubuntu 22.10 or newer.
     print("Masking default Plasma startup service...")
     call(["systemctl", "--user", "mask", "plasma-kwin_x11.service"])
     print("Enabling startup service for Plasma with XMonad service...")
