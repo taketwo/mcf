@@ -53,3 +53,4 @@ uvx: pygments                            # for fv command
 python3-click                            # for mpm and *-sync commands
 ministat                                 # for quick statistical analysis of data
 uvx: pypipe-ppp                          # for ppp command to process stdin line by line
+nix: jq
