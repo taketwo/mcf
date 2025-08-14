@@ -319,5 +319,57 @@ def restore(
         raise click.Abort from e
 
 
+@main.command()
+@pass_context
+def sync(ctx: dict[str, Any]) -> None:
+    """Execute predefined sync sequence.
+
+    Runs the complete sync workflow:
+    1. Update editor to latest version
+    2. Commit editor version to lock file
+    3. Restore plugins from lock file
+    4. Update plugins interactively
+    5. Commit plugin state to lock file
+    """
+    try:
+        console.print("[bold]Starting sync workflow...[/bold]")
+
+        # Step 1: Update editor
+        console.print("\n[bold]Step 1/5:[/bold] Updating editor to latest version")
+        editor_manager = ctx["editor_manager"]
+        editor_manager.update()
+        console.print("[green]✓ Editor updated[/green]")
+
+        # Step 2: Commit editor
+        console.print("\n[bold]Step 2/5:[/bold] Committing editor version")
+        editor_manager.commit()
+        console.print("[green]✓ Editor version committed to lock file[/green]")
+
+        # Step 3: Restore plugins
+        console.print("\n[bold]Step 3/5:[/bold] Restoring plugins from lock file")
+        plugin_manager = ctx["plugin_manager"]
+        plugin_manager.restore()
+        console.print("[green]✓ Plugins restored from lock file[/green]")
+
+        # Step 4: Update plugins
+        console.print("\n[bold]Step 4/5:[/bold] Updating plugins interactively")
+        plugin_manager.update()
+        console.print("[green]✓ Plugin update completed[/green]")
+
+        # Step 5: Commit plugins
+        console.print("\n[bold]Step 5/5:[/bold] Committing plugin state")
+        plugin_manager.commit()
+        console.print("[green]✓ Plugin state committed to lock file[/green]")
+
+        console.print(
+            "\n[bold green]🎉 Sync workflow completed successfully![/bold green]",
+        )
+
+    except Exception as e:
+        logger.exception("Sync workflow failed")
+        console.print(f"\n[red]Sync failed:[/red] {e}")
+        raise click.Abort from e
+
+
 if __name__ == "__main__":
     main()
