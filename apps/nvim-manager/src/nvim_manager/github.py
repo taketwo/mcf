@@ -22,7 +22,8 @@ def get_commit_info(repo: str, commit_hash: str | None = None) -> CommitInfo:
     """Get commit information from GitHub API.
 
     Fetches commit details and extracts hash and commit datetime. If no commit_hash
-    is provided, fetches the latest commit from the default branch.
+    is provided, fetches the latest commit from the default branch. For commit hashes,
+    uses GitHub's search API for reliable resolution of partial hashes.
 
     Parameters
     ----------
@@ -42,19 +43,42 @@ def get_commit_info(repo: str, commit_hash: str | None = None) -> CommitInfo:
         If GitHub API request fails.
     KeyError
         If response doesn't contain expected fields.
+    RuntimeError
+        If search returns no matches or multiple matches.
 
     """
     if commit_hash is None:
+        # For latest commit, use direct API
         url = f"https://api.github.com/repos/{repo}/commits/HEAD"
         logger.debug("Fetching latest commit from GitHub API: %s", url)
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()
+        data = response.json()
     else:
+        # For specific commits, use search API for reliable partial hash resolution
+        search_url = (
+            f"https://api.github.com/search/commits?q=repo:{repo}+hash:{commit_hash}"
+        )
+        logger.debug("Searching for commit via GitHub search API: %s", search_url)
+        response = requests.get(
+            search_url,
+            timeout=30,
+            headers={"Accept": "application/vnd.github.cloak-preview"},
+        )
+        response.raise_for_status()
+        search_data = response.json()
 
-        url = f"https://api.github.com/repos/{repo}/commits/{commit_hash}"
-        logger.debug("Fetching commit info from GitHub API: %s", url)
+        total_count = search_data.get("total_count", 0)
+        if total_count == 0:
+            msg = f"No commit found for hash: {commit_hash}"
+            raise RuntimeError(msg)
+        if total_count > 1:
+            msg = (
+                f"Multiple commits found for hash: {commit_hash} (found {total_count})"
+            )
+            raise RuntimeError(msg)
 
-    response = requests.get(url, timeout=30)
-    response.raise_for_status()
-    data = response.json()
+        data = search_data["items"][0]
 
     full_hash = str(data["sha"])
     commit_date_iso = str(data["commit"]["committer"]["date"])
