@@ -1,0 +1,341 @@
+"""Plugin management operations for Neovim plugins."""
+
+import json
+from typing import Any
+
+from .config import PluginsConfig
+from .lock_repository import LockRepository
+from .logging import get_logger
+from .utils import run_command
+
+logger = get_logger(__name__)
+
+
+class PluginManager:
+    """Manages Neovim plugin installation and versioning.
+
+    Handles plugin operations including interactive updates, restoring from lock files,
+    committing current state to lock files, and status reporting. Works with Lazy.nvim
+    plugin manager and lazy-lock.json format.
+
+    Attributes
+    ----------
+    config : PluginsConfig
+        Configuration for plugin management including retry count and local lock file path.
+    lock_repo : LockRepository
+        Repository for storing and retrieving lock files.
+
+    """
+
+    def __init__(self, config: PluginsConfig, lock_repo: LockRepository) -> None:
+        """Initialize PluginManager.
+
+        Parameters
+        ----------
+        config : PluginsConfig
+            Configuration for plugin management.
+        lock_repo : LockRepository
+            Repository for storing and retrieving lock files.
+
+        """
+        self.config = config
+        self.lock_repo = lock_repo
+
+    @property
+    def lock_file_name(self) -> str:
+        """Get the lock file name from the local path."""
+        return self.config.local_lock_path.name
+
+    def update(self) -> None:
+        """Update plugins interactively.
+
+        Launches Neovim with Lazy plugin manager interface for interactive plugin
+        updates.
+
+        Raises
+        ------
+        RuntimeError
+            If Neovim launch fails.
+
+        """
+        logger.info("Launching Neovim for interactive plugin updates")
+        try:
+            run_command(["nvim", "-c", "autocmd User VeryLazy Lazy check"])
+            logger.info("Plugin update completed")
+        except Exception as e:
+            msg = f"Failed to launch Neovim for plugin updates: {e}"
+            logger.exception("Plugin update failed")
+            raise RuntimeError(msg) from e
+
+    def restore(self) -> None:
+        """Restore plugins to versions specified in lock file.
+
+        Copies lock file from repository to local location and runs Lazy restore
+        command. Includes retry logic for handling plugin restoration failures.
+
+        Raises
+        ------
+        FileNotFoundError
+            If lock file doesn't exist in repository.
+        RuntimeError
+            If restoration fails after all retry attempts.
+
+        """
+        logger.info("Restoring plugins from lock file: %s", self.lock_file_name)
+
+        # Copy lock file from remote to local (only once)
+        self.lock_repo.get_file(
+            self.lock_file_name,
+            self.config.local_lock_path,
+        )
+
+        # Retry Lazy plugin restoration
+        for attempt in range(1, self.config.restore_retry_count + 1):
+            logger.debug(
+                "Plugin restore attempt %d/%d",
+                attempt,
+                self.config.restore_retry_count,
+            )
+
+            try:
+                # Run headless restore commands
+                run_command(
+                    [
+                        "nvim",
+                        "--headless",
+                        "+Lazy! restore",
+                        "+TSUpdateSync",
+                        "+qa",
+                    ],
+                )
+
+                # Check if restoration succeeded by comparing files
+                if self._files_match():
+                    logger.info("Plugin restoration succeeded on attempt %d", attempt)
+                    break
+
+                if attempt < self.config.restore_retry_count:
+                    logger.warning("Lock file changed during restore, retrying")
+
+            except Exception as e:
+                if attempt < self.config.restore_retry_count:
+                    logger.warning("Plugin restore attempt %d failed: %s", attempt, e)
+                else:
+                    msg = f"Plugin restoration failed after {self.config.restore_retry_count} attempts: {e}"
+                    logger.exception("Plugin restoration failed")
+                    raise RuntimeError(msg) from e
+        else:
+            # If we get here, all attempts failed
+            logger.error(
+                "Plugin restoration failed after %d attempts",
+                self.config.restore_retry_count,
+            )
+            msg = "Plugin restoration failed after all retry attempts"
+            raise RuntimeError(msg)
+
+        # Run Mason commands once after successful Lazy restoration
+        # Need to activate virtualenv for Mason's pip operations
+        try:
+            run_command(
+                [
+                    "bash",
+                    "-c",
+                    "source $HOME/.local/share/nvim/.venv/bin/activate && "
+                    "nvim --headless +MasonUpdate +MasonEnsureInstalled +qa",
+                ],
+            )
+            logger.info("Mason packages updated successfully")
+        except (OSError, RuntimeError) as e:
+            logger.warning("Mason package update failed: %s", e)
+            # Don't fail the whole restoration for Mason issues
+
+    def commit(self) -> None:
+        """Save current plugin state to lock file.
+
+        Copies the current local lazy-lock.json to the lock repository.
+
+        Raises
+        ------
+        FileNotFoundError
+            If local lock file doesn't exist.
+        RuntimeError
+            If commit operation fails.
+
+        """
+        logger.info("Committing current plugin state to lock file")
+
+        if not self.config.local_lock_path.exists():
+            msg = f"Local lock file not found: {self.config.local_lock_path}"
+            logger.error(msg)
+            raise FileNotFoundError(msg)
+
+        try:
+            self.lock_repo.put_file(self.config.local_lock_path, self.lock_file_name)
+            logger.info("Successfully committed plugin state to lock file")
+        except Exception as e:
+            msg = f"Failed to commit plugin state: {e}"
+            logger.exception("Plugin commit failed")
+            raise RuntimeError(msg) from e
+
+    def status(self) -> dict[str, Any]:
+        """Get current plugin status vs lock file.
+
+        Compares the local lazy-lock.json with the version in the lock repository
+        and provides detailed information about plugin differences.
+
+        Returns
+        -------
+        dict[str, Any]
+            Status information including sync status and detailed plugin differences.
+
+        """
+        logger.debug("Getting plugin status")
+
+        try:
+            # Read both files
+            local_content = self.config.local_lock_path.read_text()
+            remote_content = self.lock_repo.read_file(self.lock_file_name)
+
+            # Parse JSON
+            local_data = json.loads(local_content)
+            remote_data = json.loads(remote_content)
+
+            # Compare and find differences
+            differences = self._find_plugin_differences(local_data, remote_data)
+            in_sync = len(differences) == 0
+
+            return {
+                "in_sync": in_sync,
+                "differences": differences,
+                "total_plugins_local": len(local_data),
+                "total_plugins_remote": len(remote_data),
+            }
+
+        except FileNotFoundError as e:
+            if "local" in str(e).lower() or str(self.config.local_lock_path) in str(e):
+                return {
+                    "in_sync": False,
+                    "error": "Local lock file not found",
+                    "differences": [],
+                    "total_plugins_local": 0,
+                    "total_plugins_remote": 0,
+                }
+            return {
+                "in_sync": False,
+                "error": "Remote lock file not found",
+                "differences": [],
+                "total_plugins_local": 0,
+                "total_plugins_remote": 0,
+            }
+        except json.JSONDecodeError as e:
+            return {
+                "in_sync": False,
+                "error": f"Invalid JSON in lock file: {e}",
+                "differences": [],
+                "total_plugins_local": 0,
+                "total_plugins_remote": 0,
+            }
+        except Exception as e:
+            logger.exception("Failed to get plugin status")
+            return {
+                "in_sync": False,
+                "error": f"Error getting status: {e}",
+                "differences": [],
+                "total_plugins_local": 0,
+                "total_plugins_remote": 0,
+            }
+
+    def _files_match(self) -> bool:
+        """Check if local and remote lock files have the same content.
+
+        Returns
+        -------
+        bool
+            True if files have identical content, False otherwise.
+
+        """
+        try:
+            if not self.config.local_lock_path.exists():
+                return False
+
+            local_content = self.config.local_lock_path.read_text()
+            remote_content = self.lock_repo.read_file(self.lock_file_name)
+
+            # Normalize JSON for comparison (handle formatting differences)
+            local_data = json.loads(local_content)
+            remote_data = json.loads(remote_content)
+
+            return bool(local_data == remote_data)
+
+        except (FileNotFoundError, json.JSONDecodeError, Exception) as e:
+            logger.debug("File comparison failed: %s", e)
+            return False
+
+    def _find_plugin_differences(
+        self,
+        local_data: dict[str, Any],
+        remote_data: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        """Find differences between local and remote plugin lock data.
+
+        Parameters
+        ----------
+        local_data : dict[str, Any]
+            Local lazy-lock.json data.
+        remote_data : dict[str, Any]
+            Remote lazy-lock.json data.
+
+        Returns
+        -------
+        list[dict[str, Any]]
+            List of plugin differences with details.
+
+        """
+        differences = []
+        all_plugins = set(local_data.keys()) | set(remote_data.keys())
+
+        for plugin in sorted(all_plugins):
+            local_info = local_data.get(plugin)
+            remote_info = remote_data.get(plugin)
+
+            if local_info is None:
+                differences.append(
+                    {
+                        "plugin": plugin,
+                        "status": "missing_locally",
+                        "remote_commit": (
+                            remote_info.get("commit", "unknown")
+                            if remote_info
+                            else "unknown"
+                        ),
+                    },
+                )
+            elif remote_info is None:
+                differences.append(
+                    {
+                        "plugin": plugin,
+                        "status": "missing_remotely",
+                        "local_commit": (
+                            local_info.get("commit", "unknown")
+                            if local_info
+                            else "unknown"
+                        ),
+                    },
+                )
+            elif local_info != remote_info:
+                local_commit = (
+                    local_info.get("commit", "unknown") if local_info else "unknown"
+                )
+                remote_commit = (
+                    remote_info.get("commit", "unknown") if remote_info else "unknown"
+                )
+                differences.append(
+                    {
+                        "plugin": plugin,
+                        "status": "different_commits",
+                        "local_commit": local_commit,
+                        "remote_commit": remote_commit,
+                    },
+                )
+
+        return differences

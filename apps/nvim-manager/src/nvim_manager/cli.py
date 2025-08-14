@@ -11,9 +11,52 @@ from .config import Config, ConfigLoadError
 from .editor_manager import EditorManager
 from .lock_repository import LockRepository
 from .logging import configure_logging, DEBUG, get_logger, INFO
+from .plugin_manager import PluginManager
 
 console = Console()
 logger = get_logger(__name__)
+
+
+def _display_plugin_status(plugin_status: dict[str, Any]) -> None:
+    """Display plugin status information with detailed differences."""
+    console.print("\n[bold]Plugin Status:[/bold]")
+
+    # Handle error cases
+    if "error" in plugin_status:
+        console.print(f"  [red]Error: {plugin_status['error']}[/red]")
+        return
+
+    console.print(f"  Local plugins: {plugin_status['total_plugins_local']}")
+    console.print(f"  Remote plugins: {plugin_status['total_plugins_remote']}")
+
+    if plugin_status["in_sync"]:
+        console.print("  [green]✓ In sync[/green]")
+    else:
+        console.print("  [yellow]⚠ Out of sync[/yellow]")
+
+        differences = plugin_status["differences"]
+        if differences:
+            console.print(
+                f"\n  [bold]Differences ({len(differences)} plugins):[/bold]",
+            )
+            for diff in differences:
+                plugin_name = diff["plugin"]
+                status = diff["status"]
+
+                if status == "missing_locally":
+                    console.print(
+                        f"    [red]- {plugin_name}[/red] (missing locally, remote: {diff['remote_commit'][:8]})",
+                    )
+                elif status == "missing_remotely":
+                    console.print(
+                        f"    [yellow]+ {plugin_name}[/yellow] (missing remotely, local: {diff['local_commit'][:8]})",
+                    )
+                elif status == "different_commits":
+                    local_short = diff["local_commit"][:8]
+                    remote_short = diff["remote_commit"][:8]
+                    console.print(
+                        f"    [blue]~ {plugin_name}[/blue] (local: {local_short}, remote: {remote_short})",
+                    )
 
 
 pass_context = click.make_pass_decorator(dict)
@@ -50,11 +93,13 @@ def main(ctx: click.Context, config: Path | None, *, debug: bool = False) -> Non
         # Create shared objects and store in context
         lock_repo = LockRepository(config_obj.lock_repository)
         editor_manager = EditorManager(config_obj.editor, lock_repo)
+        plugin_manager = PluginManager(config_obj.plugins, lock_repo)
 
         ctx.ensure_object(dict)
         ctx.obj["config"] = config_obj
         ctx.obj["lock_repo"] = lock_repo
         ctx.obj["editor_manager"] = editor_manager
+        ctx.obj["plugin_manager"] = plugin_manager
 
     except ConfigLoadError as e:
         logger.exception("Configuration loading failed")
@@ -131,8 +176,12 @@ def status(
                 console.print("  [yellow]⚠ Out of sync[/yellow]")
 
         if plugins:
-            # TODO: Implement plugin status functionality
-            console.print("\n[yellow]Plugin status not yet implemented[/yellow]")
+            # Use pre-instantiated objects from context
+            plugin_manager = ctx["plugin_manager"]
+
+            # Get status and display
+            plugin_status = plugin_manager.status()
+            _display_plugin_status(plugin_status)
 
     except Exception as e:
         logger.exception("Failed to get status")
@@ -168,8 +217,9 @@ def update(
             editor_manager = ctx["editor_manager"]
             editor_manager.update()
         if plugins:
-            # TODO: Implement plugin update functionality
-            console.print("\n[yellow]Plugin update not yet implemented[/yellow]")
+            plugin_manager = ctx["plugin_manager"]
+            plugin_manager.update()
+            console.print("[green]✓ Plugin update completed[/green]")
 
     except Exception as e:
         logger.exception("Failed to update")
@@ -209,8 +259,11 @@ def commit(
             console.print("[green]✓ Editor version committed to lock file[/green]")
 
         if plugins:
-            # TODO: Implement plugin commit functionality
-            logger.warning("Plugin commit functionality not yet implemented")
+            # Use pre-instantiated objects from context
+            plugin_manager = ctx["plugin_manager"]
+
+            plugin_manager.commit()
+            console.print("[green]✓ Plugin state committed to lock file[/green]")
 
     except Exception as e:
         logger.exception("Failed to commit")
@@ -253,8 +306,12 @@ def restore(
             )
 
         if plugins:
-            # TODO: Implement plugin restore functionality
-            console.print("\n[yellow]Plugin restore not yet implemented[/yellow]")
+            # Use pre-instantiated objects from context
+            plugin_manager = ctx["plugin_manager"]
+
+            console.print("\n[bold]Restoring plugin versions...[/bold]")
+            plugin_manager.restore()
+            console.print("[green]✓ Plugins restored from lock file[/green]")
 
     except Exception as e:
         logger.exception("Failed to restore")
