@@ -3,12 +3,10 @@ https_uri = "https://gitlab.com/taketwo/mcf-nvim-lock.git"
 ssh_uri = "git@gitlab.com:taketwo/mcf-nvim-lock.git"
 path = "$MCF/external/mcf-nvim-lock"
 
-[lock_files]
-plugins = "$MCF/misc/packages/neovim/config/lazy-lock.json"
-
 [editor]
 install_path = "$HOME/.local/bin/nvim"
 build_cache = "$HOME/.cache/nvim-manager/builds"
 
 [plugins]
 restore_retry_count = 3
+local_lock_path = "$MCF/misc/packages/neovim/config/lazy-lock.json"

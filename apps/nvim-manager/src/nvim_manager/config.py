@@ -6,7 +6,7 @@ from pathlib import Path
 
 from typing import Annotated
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, ConfigDict
 
 from .logging import get_logger
 
@@ -61,21 +61,6 @@ class LockRepositoryConfig(BaseModel):
     path: ExpandedPath
 
 
-class LockFilesConfig(BaseModel):
-    """Configuration for lock file locations.
-
-    Attributes
-    ----------
-    plugins : Path
-        Path to local Lazy plugin manager lock file (lazy-lock.json).
-
-    """
-
-    model_config = ConfigDict(frozen=True)
-
-    plugins: ExpandedPath
-
-
 class EditorConfig(BaseModel):
     """Configuration for Neovim editor management.
 
@@ -107,12 +92,15 @@ class PluginsConfig(BaseModel):
     ----------
     restore_retry_count : int
         Number of times to retry plugin restoration on failure.
+    local_lock_path : Path
+        Path to local Lazy plugin manager lock file (lazy-lock.json).
 
     """
 
     model_config = ConfigDict(frozen=True)
 
     restore_retry_count: int = 3
+    local_lock_path: ExpandedPath
 
 
 class Config(BaseModel):
@@ -122,8 +110,6 @@ class Config(BaseModel):
     ----------
     lock_repository : LockRepositoryConfig
         Configuration for lock repository operations.
-    lock_files : LockFilesConfig
-        Configuration for lock file locations.
     editor : EditorConfig
         Configuration for Neovim editor management.
     plugins : PluginsConfig
@@ -134,9 +120,8 @@ class Config(BaseModel):
     model_config = ConfigDict(validate_assignment=True, frozen=False)
 
     lock_repository: LockRepositoryConfig
-    lock_files: LockFilesConfig
     editor: EditorConfig
-    plugins: PluginsConfig = Field(default_factory=PluginsConfig)
+    plugins: PluginsConfig
 
     @classmethod
     def from_path_or_default(cls, path: Path | None = None) -> "Config":
