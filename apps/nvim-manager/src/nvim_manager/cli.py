@@ -14,6 +14,7 @@ from .editor_manager import EditorManager
 from .lock_repository import LockRepository
 from .logging import configure_logging, DEBUG, get_logger, INFO
 from .plugin_manager import PluginManager
+from .tools_manager import ToolsManager
 
 console = Console()
 logger = get_logger(__name__)
@@ -115,12 +116,14 @@ def main(ctx: click.Context, config: Path | None, *, debug: bool = False) -> Non
         lock_repo = LockRepository(config_obj.lock_repository)
         editor_manager = EditorManager(config_obj.editor, lock_repo)
         plugin_manager = PluginManager(config_obj.plugins, lock_repo)
+        tools_manager = ToolsManager(config_obj.tools, lock_repo)
 
         ctx.ensure_object(dict)
         ctx.obj["config"] = config_obj
         ctx.obj["lock_repo"] = lock_repo
         ctx.obj["editor_manager"] = editor_manager
         ctx.obj["plugin_manager"] = plugin_manager
+        ctx.obj["tools_manager"] = tools_manager
 
     except ConfigLoadError as e:
         logger.exception("Configuration loading failed")
@@ -267,17 +270,23 @@ def update(
     is_flag=True,
     help="Commit current plugin versions to lock file.",
 )
+@click.option(
+    "--tools",
+    is_flag=True,
+    help="Commit current tool versions to lock file.",
+)
 @pass_context
 def commit(
     ctx: dict[str, Any],
     *,
     editor: bool = False,
     plugins: bool = False,
+    tools: bool = False,
 ) -> None:
     """Save current state to lock files."""
     # If no specific targets are specified, commit all
-    if not editor and not plugins:
-        editor = plugins = True
+    if not editor and not plugins and not tools:
+        editor = plugins = tools = True
 
     try:
         if editor:
@@ -293,6 +302,13 @@ def commit(
 
             plugin_manager.commit()
             console.print("[green]✓ Plugin state committed to lock file[/green]")
+
+        if tools:
+            # Use pre-instantiated objects from context
+            tools_manager = ctx["tools_manager"]
+
+            tools_manager.commit()
+            console.print("[green]✓ Tool state committed to lock file[/green]")
 
     except Exception as e:
         logger.exception("Failed to commit")

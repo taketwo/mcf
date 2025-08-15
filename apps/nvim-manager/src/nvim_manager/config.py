@@ -103,6 +103,21 @@ class PluginsConfig(BaseModel):
     local_lock_path: ExpandedPath
 
 
+class ToolsConfig(BaseModel):
+    """Configuration for tools management.
+
+    Attributes
+    ----------
+    lock_file : str
+        Name of the lock file in the repository.
+
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    lock_file: str = "mason-lock.json"
+
+
 class Config(BaseModel):
     """Main configuration for nvim-manager.
 
@@ -114,6 +129,8 @@ class Config(BaseModel):
         Configuration for Neovim editor management.
     plugins : PluginsConfig
         Configuration for plugin management.
+    tools : ToolsConfig
+        Configuration for tools management.
 
     """
 
@@ -122,6 +139,7 @@ class Config(BaseModel):
     lock_repository: LockRepositoryConfig
     editor: EditorConfig
     plugins: PluginsConfig
+    tools: ToolsConfig = ToolsConfig()
 
     @classmethod
     def from_path_or_default(cls, path: Path | None = None) -> "Config":
