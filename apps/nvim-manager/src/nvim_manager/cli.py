@@ -5,7 +5,9 @@ from typing import Any
 
 import click
 from rich.console import Console
+from rich.panel import Panel
 from rich.pretty import Pretty
+from rich.syntax import Syntax
 
 from .config import Config, ConfigLoadError
 from .editor_manager import EditorManager
@@ -15,6 +17,25 @@ from .plugin_manager import PluginManager
 
 console = Console()
 logger = get_logger(__name__)
+
+
+def _display_news_diff(news_diff: str) -> None:
+    """Display formatted news diff using Rich.
+
+    Parameters
+    ----------
+    news_diff : str
+        Diff content for runtime/doc/news.txt between versions.
+
+    """
+    syntax = Syntax(news_diff, "diff", theme="monokai", line_numbers=False)
+    panel = Panel(
+        syntax,
+        title="[bold blue]Changes in runtime/doc/news.txt[/bold blue]",
+        border_style="blue",
+        expand=False,
+    )
+    console.print(panel)
 
 
 def _display_plugin_status(plugin_status: dict[str, Any]) -> None:
@@ -200,12 +221,18 @@ def status(
     is_flag=True,
     help="Update plugins to latest versions.",
 )
+@click.option(
+    "--show-news/--no-news",
+    default=True,
+    help="Show/hide news diff for editor updates (default: show).",
+)
 @pass_context
 def update(
     ctx: dict[str, Any],
     *,
     editor: bool = False,
     plugins: bool = False,
+    show_news: bool = True,
 ) -> None:
     """Update to latest versions."""
     # If no specific targets are specified, update all
@@ -215,7 +242,9 @@ def update(
     try:
         if editor:
             editor_manager = ctx["editor_manager"]
-            editor_manager.update()
+            editor_manager.update(
+                news_diff_callback=(_display_news_diff if show_news else None),
+            )
         if plugins:
             plugin_manager = ctx["plugin_manager"]
             plugin_manager.update()

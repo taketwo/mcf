@@ -92,3 +92,82 @@ def get_commit_info(repo: str, commit_hash: str | None = None) -> CommitInfo:
 
     logger.debug("Commit info fetched, hash: %s, date: %s", full_hash, commit_date)
     return CommitInfo(hash=full_hash, date=commit_date)
+
+
+def get_file_diff(
+    repo: str,
+    base_commit: str,
+    head_commit: str,
+    file_path: str,
+) -> str | None:
+    """Get diff for a specific file between two commits.
+
+    Uses GitHub compare API to fetch diff content for a specific file between two
+    commits. Returns None if no changes found or API call fails.
+
+    Parameters
+    ----------
+    repo : str
+        Repository in format "owner/name".
+    base_commit : str
+        Base commit hash (older version).
+    head_commit : str
+        Head commit hash (newer version).
+    file_path : str
+        Path to file within repository (e.g., "runtime/doc/news.txt").
+
+    Returns
+    -------
+    str | None
+        Diff content for the specific file, or None if no changes or error.
+
+    """
+    if base_commit == head_commit:
+        logger.debug("Base and head commits are identical, no diff needed")
+        return None
+
+    compare_url = (
+        f"https://api.github.com/repos/{repo}/compare/{base_commit}...{head_commit}"
+    )
+    logger.debug("Fetching file diff from GitHub API: %s", compare_url)
+
+    try:
+        response = requests.get(
+            compare_url,
+            timeout=30,
+            headers={"Accept": "application/vnd.github.v3.diff"},
+        )
+        response.raise_for_status()
+        full_diff = response.text
+
+        # Extract diff for specific file
+        diff_lines = full_diff.split("\n")
+        file_diff_lines = []
+        in_target_file = False
+
+        for line in diff_lines:
+            # Check for file header
+            if line.startswith("diff --git") and file_path in line:
+                in_target_file = True
+                file_diff_lines.append(line)
+            elif line.startswith("diff --git") and in_target_file:
+                # Started a new file, stop collecting
+                break
+            elif in_target_file:
+                file_diff_lines.append(line)
+
+        if not file_diff_lines:
+            logger.debug("No changes found for file %s", file_path)
+        else:
+            file_diff = "\n".join(file_diff_lines)
+            logger.debug(
+                "Found diff for file %s (%d lines)",
+                file_path,
+                len(file_diff_lines),
+            )
+            return file_diff
+
+    except requests.RequestException as e:
+        logger.debug("Failed to fetch diff from GitHub API: %s", e)
+
+    return None

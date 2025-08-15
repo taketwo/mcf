@@ -4,6 +4,7 @@ import json
 import re
 import shutil
 import tempfile
+from collections.abc import Callable
 from datetime import datetime, UTC
 from pathlib import Path
 from typing import Any
@@ -11,7 +12,7 @@ from typing import Any
 import requests
 
 from .config import EditorConfig
-from .github import get_commit_info
+from .github import get_commit_info, get_file_diff
 from .lock_repository import LockRepository
 from .logging import get_logger
 from .neovim_builder import NeovimBuilder
@@ -53,11 +54,16 @@ class EditorManager:
         self.lock_repo = lock_repo
         self.builder = NeovimBuilder(config.build_cache, config.repository)
 
-    def update(self) -> str:
+    def update(self, *, news_diff_callback: Callable[[str], None] | None = None) -> str:
         """Update to latest Neovim version.
 
         Gets the latest commit from GitHub, builds it, and installs to the configured
-        location.
+        location. Optionally displays news diff if callback provided.
+
+        Parameters
+        ----------
+        news_diff_callback : Callable[[str], None] | None
+            Optional callback to display news diff between current and latest versions.
 
         Returns
         -------
@@ -74,7 +80,25 @@ class EditorManager:
         """
         logger.info("Updating editor to latest version")
 
+        current_revision = self._parse_current_revision()
         latest_commit_info = get_commit_info(self.config.repository)
+
+        if news_diff_callback and current_revision:
+            try:
+                current_commit_info = get_commit_info(
+                    self.config.repository,
+                    current_revision,
+                )
+                news_diff = get_file_diff(
+                    self.config.repository,
+                    current_commit_info.hash,
+                    latest_commit_info.hash,
+                    "runtime/doc/news.txt",
+                )
+                if news_diff:
+                    news_diff_callback(news_diff)
+            except (requests.RequestException, RuntimeError, KeyError) as e:
+                logger.warning("Failed to get news diff: %s", e)
 
         executable = self.builder.build_commit(latest_commit_info.hash)
 
