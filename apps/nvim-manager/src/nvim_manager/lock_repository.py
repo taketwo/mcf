@@ -27,7 +27,9 @@ class LockRepository:
     def __init__(self, config: LockRepositoryConfig) -> None:
         """Initialize lock repository manager.
 
-        Ensures repository is cloned and configured upon instantiation.
+        Ensures repository is cloned, configured, and synced to latest remote state
+        upon instantiation. Post-condition guarantees the local repository is
+        up-to-date with the remote.
 
         Parameters
         ----------
@@ -91,6 +93,8 @@ class LockRepository:
                 self.config.ssh_uri,
             )
             origin.set_url(self.config.ssh_uri, push=True)
+
+        self.sync_from_remote()
 
     def sync_from_remote(self) -> None:
         """Sync local repository with remote state.
