@@ -1,7 +1,10 @@
 [Unit]
 Description=Run nb notebook sync
-Wants=nb-sync.timer
 
 [Service]
+Type=oneshot
 ExecStart=%h/.local/bin/nb sync --all --no-color
 Environment=NB_DIR=%h/.mcf/misc/packages/nb/notebooks TERM=xterm
+
+[Install]
+WantedBy=default.target

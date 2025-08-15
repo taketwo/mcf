@@ -1,13 +1,12 @@
 [Unit]
 Description=Run nb notebook sync every 10 minutes
-Requires=nb-sync.service
+After=graphical-session.target
 
 [Timer]
 Unit=nb-sync.service
-OnBootSec=5min
+OnStartupSec=5min
 OnUnitInactiveSec=10m
 RandomizedDelaySec=2m
-AccuracySec=1s
 
 [Install]
 WantedBy=timers.target
