@@ -1,13 +1,23 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 
-from subprocess import call
+# KDE 5.25 and newer use systemd to start Plasma
+# See: https://maxnatt.gitlab.io/posts/kde-plasma-with-i3wm/#kde-525-and-newer
 
+echo "Masking default Plasma startup service..."
+systemctl --user mask plasma-kwin_x11.service
 
-if __name__ == "__main__":
-    # KDE 5.25 and newer use systemd to start Plasma
-    # See: https://maxnatt.gitlab.io/posts/kde-plasma-with-i3wm/#kde-525-and-newer
-    print("Masking default Plasma startup service...")
-    call(["systemctl", "--user", "mask", "plasma-kwin_x11.service"])
-    print("Enabling startup service for Plasma with XMonad service...")
-    call(["systemctl", "--user", "daemon-reload"])
-    call(["systemctl", "--user", "enable", "plasma-xmonad.service"])
+echo "Enabling startup service for Plasma with XMonad service..."
+systemctl --user daemon-reload
+systemctl --user enable plasma-xmonad.service
+
+# Servicee file expects xmonad binary to be in $HOME/.local/bin
+# However, on Lemur host the binary ends up in $HOME/.cabal/bin for some reason
+
+XMONAD_LOCAL_BIN="$HOME/.local/bin/xmonad"
+XMONAD_CABAL_BIN="$HOME/.cabal/bin/xmonad"
+
+if [ -f "$XMONAD_CABAL_BIN" ] && [ ! -f "$XMONAD_LOCAL_BIN" ]; then
+  echo "Creating symlink for xmonad in $XMONAD_LOCAL_BIN"
+  mkdir -p "$(dirname "$XMONAD_LOCAL_BIN")"
+  ln -s "$XMONAD_CABAL_BIN" "$XMONAD_LOCAL_BIN"
+fi
