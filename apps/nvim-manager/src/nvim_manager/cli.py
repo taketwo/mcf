@@ -15,6 +15,7 @@ from .lock_repository import LockRepository
 from .logging import configure_logging, DEBUG, get_logger, INFO
 from .plugin_manager import PluginManager
 from .tools_manager import ToolsManager
+from .utils import LockComparison
 
 console = Console()
 logger = get_logger(__name__)
@@ -39,45 +40,69 @@ def _display_news_diff(news_diff: str) -> None:
     console.print(panel)
 
 
-def _display_plugin_status(plugin_status: dict[str, Any]) -> None:
-    """Display plugin status information with detailed differences."""
-    console.print("\n[bold]Plugin Status:[/bold]")
+def _display_lock_status(
+    status_data: dict[str, Any],
+    title: str,
+    item_type: str,
+) -> None:
+    """Display unified current vs lock status for any lock-based manager."""
+    console.print(f"\n[bold]{title}:[/bold]")
 
     # Handle error cases
-    if "error" in plugin_status:
-        console.print(f"  [red]Error: {plugin_status['error']}[/red]")
+    if "error" in status_data:
+        console.print(f"  [red]Error: {status_data['error']}[/red]")
         return
 
-    console.print(f"  Local plugins: {plugin_status['total_plugins_local']}")
-    console.print(f"  Remote plugins: {plugin_status['total_plugins_remote']}")
+    # Use standardized field names
+    total_current = status_data.get("total_current", 0)
+    total_lock = status_data.get("total_lock", 0)
 
-    if plugin_status["in_sync"]:
+    # Derive plural form for display
+    item_name = f"{item_type}s"
+
+    console.print(f"  Current {item_name}: {total_current}")
+    console.print(f"  Lock {item_name}: {total_lock}")
+
+    if status_data["in_sync"]:
         console.print("  [green]✓ In sync[/green]")
     else:
         console.print("  [yellow]⚠ Out of sync[/yellow]")
-
-        differences = plugin_status["differences"]
+        differences = status_data["differences"]
         if differences:
             console.print(
-                f"\n  [bold]Differences ({len(differences)} plugins):[/bold]",
+                f"\n  [bold]Differences ({len(differences)} {item_type}s):[/bold]",
             )
-            for diff in differences:
-                plugin_name = diff["plugin"]
-                status = diff["status"]
 
-                if status == "missing_locally":
+            def format_hash(value: str) -> str:
+                """Format hash for display, shortening plugin commit hashes."""
+                commit_hash_length = 40
+                return (
+                    value[:8]
+                    if item_type == "plugin"
+                    and len(value) == commit_hash_length
+                    and all(c in "0123456789abcdef" for c in value.lower())
+                    else value
+                )
+
+            for diff in differences:
+                name = diff.name
+                status = diff.status
+
+                if status == LockComparison.Status.MISSING_CURRENTLY:
+                    lock_hash = format_hash(diff.lock_value)
                     console.print(
-                        f"    [red]- {plugin_name}[/red] (missing locally, remote: {diff['remote_commit'][:8]})",
+                        f"    [red]- {name}[/red] (missing currently, lock: {lock_hash})",
                     )
-                elif status == "missing_remotely":
+                elif status == LockComparison.Status.MISSING_IN_LOCK:
+                    current_hash = format_hash(diff.current_value)
                     console.print(
-                        f"    [yellow]+ {plugin_name}[/yellow] (missing remotely, local: {diff['local_commit'][:8]})",
+                        f"    [yellow]+ {name}[/yellow] (missing in lock, current: {current_hash})",
                     )
-                elif status == "different_commits":
-                    local_short = diff["local_commit"][:8]
-                    remote_short = diff["remote_commit"][:8]
+                elif status == LockComparison.Status.DIFFERENT_VALUES:
+                    current_hash = format_hash(diff.current_value)
+                    lock_hash = format_hash(diff.lock_value)
                     console.print(
-                        f"    [blue]~ {plugin_name}[/blue] (local: {local_short}, remote: {remote_short})",
+                        f"    [blue]~ {name}[/blue] (current: {current_hash}, lock: {lock_hash})",
                     )
 
 
@@ -205,7 +230,7 @@ def status(
 
             # Get status and display
             plugin_status = plugin_manager.status()
-            _display_plugin_status(plugin_status)
+            _display_lock_status(plugin_status, "Plugin Status", "plugin")
 
     except Exception as e:
         logger.exception("Failed to get status")

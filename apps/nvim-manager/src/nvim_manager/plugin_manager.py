@@ -6,7 +6,7 @@ from typing import Any
 from .config import PluginsConfig
 from .lock_repository import LockRepository
 from .logging import get_logger
-from .utils import run_command
+from .utils import LockComparison, compare_lock_data, run_command
 
 logger = get_logger(__name__)
 
@@ -193,22 +193,22 @@ class PluginManager:
 
         try:
             # Read both files
-            local_content = self.config.local_lock_path.read_text()
-            remote_content = self.lock_repo.read_file(self.lock_file_name)
+            current_content = self.config.local_lock_path.read_text()
+            lock_content = self.lock_repo.read_file(self.lock_file_name)
 
             # Parse JSON
-            local_data = json.loads(local_content)
-            remote_data = json.loads(remote_content)
+            current_data = json.loads(current_content)
+            lock_data = json.loads(lock_content)
 
             # Compare and find differences
-            differences = self._find_plugin_differences(local_data, remote_data)
+            differences = self._find_plugin_differences(current_data, lock_data)
             in_sync = len(differences) == 0
 
             return {
                 "in_sync": in_sync,
                 "differences": differences,
-                "total_plugins_local": len(local_data),
-                "total_plugins_remote": len(remote_data),
+                "total_current": len(current_data),
+                "total_lock": len(lock_data),
             }
 
         except FileNotFoundError as e:
@@ -217,23 +217,23 @@ class PluginManager:
                     "in_sync": False,
                     "error": "Local lock file not found",
                     "differences": [],
-                    "total_plugins_local": 0,
-                    "total_plugins_remote": 0,
+                    "total_current": 0,
+                    "total_lock": 0,
                 }
             return {
                 "in_sync": False,
                 "error": "Remote lock file not found",
                 "differences": [],
-                "total_plugins_local": 0,
-                "total_plugins_remote": 0,
+                "total_current": 0,
+                "total_lock": 0,
             }
         except json.JSONDecodeError as e:
             return {
                 "in_sync": False,
                 "error": f"Invalid JSON in lock file: {e}",
                 "differences": [],
-                "total_plugins_local": 0,
-                "total_plugins_remote": 0,
+                "total_current": 0,
+                "total_lock": 0,
             }
         except Exception as e:
             logger.exception("Failed to get plugin status")
@@ -241,12 +241,12 @@ class PluginManager:
                 "in_sync": False,
                 "error": f"Error getting status: {e}",
                 "differences": [],
-                "total_plugins_local": 0,
-                "total_plugins_remote": 0,
+                "total_current": 0,
+                "total_lock": 0,
             }
 
     def _files_match(self) -> bool:
-        """Check if local and remote lock files have the same content.
+        """Check if current and lock files have the same content.
 
         Returns
         -------
@@ -258,14 +258,14 @@ class PluginManager:
             if not self.config.local_lock_path.exists():
                 return False
 
-            local_content = self.config.local_lock_path.read_text()
-            remote_content = self.lock_repo.read_file(self.lock_file_name)
+            current_content = self.config.local_lock_path.read_text()
+            lock_content = self.lock_repo.read_file(self.lock_file_name)
 
             # Normalize JSON for comparison (handle formatting differences)
-            local_data = json.loads(local_content)
-            remote_data = json.loads(remote_content)
+            current_data = json.loads(current_content)
+            lock_data = json.loads(lock_content)
 
-            return bool(local_data == remote_data)
+            return bool(current_data == lock_data)
 
         except (FileNotFoundError, json.JSONDecodeError, Exception) as e:
             logger.debug("File comparison failed: %s", e)
@@ -273,69 +273,30 @@ class PluginManager:
 
     def _find_plugin_differences(
         self,
-        local_data: dict[str, Any],
-        remote_data: dict[str, Any],
-    ) -> list[dict[str, Any]]:
-        """Find differences between local and remote plugin lock data.
+        current_data: dict[str, Any],
+        lock_data: dict[str, Any],
+    ) -> list[LockComparison]:
+        """Find differences between current and lock plugin data.
 
         Parameters
         ----------
-        local_data : dict[str, Any]
-            Local lazy-lock.json data.
-        remote_data : dict[str, Any]
-            Remote lazy-lock.json data.
+        current_data : dict[str, Any]
+            Current lazy-lock.json data.
+        lock_data : dict[str, Any]
+            Lock file lazy-lock.json data.
 
         Returns
         -------
-        list[dict[str, Any]]
-            List of plugin differences with details.
+        list[LockComparison]
+            List of plugin differences with type-safe comparison objects.
 
         """
-        differences = []
-        all_plugins = set(local_data.keys()) | set(remote_data.keys())
+        # Normalize plugin data from {name: {commit: "hash"}} to {name: "hash"}
+        normalized_current = {
+            name: info.get("commit", "unknown") for name, info in current_data.items()
+        }
+        normalized_lock = {
+            name: info.get("commit", "unknown") for name, info in lock_data.items()
+        }
 
-        for plugin in sorted(all_plugins):
-            local_info = local_data.get(plugin)
-            remote_info = remote_data.get(plugin)
-
-            if local_info is None:
-                differences.append(
-                    {
-                        "plugin": plugin,
-                        "status": "missing_locally",
-                        "remote_commit": (
-                            remote_info.get("commit", "unknown")
-                            if remote_info
-                            else "unknown"
-                        ),
-                    },
-                )
-            elif remote_info is None:
-                differences.append(
-                    {
-                        "plugin": plugin,
-                        "status": "missing_remotely",
-                        "local_commit": (
-                            local_info.get("commit", "unknown")
-                            if local_info
-                            else "unknown"
-                        ),
-                    },
-                )
-            elif local_info != remote_info:
-                local_commit = (
-                    local_info.get("commit", "unknown") if local_info else "unknown"
-                )
-                remote_commit = (
-                    remote_info.get("commit", "unknown") if remote_info else "unknown"
-                )
-                differences.append(
-                    {
-                        "plugin": plugin,
-                        "status": "different_commits",
-                        "local_commit": local_commit,
-                        "remote_commit": remote_commit,
-                    },
-                )
-
-        return differences
+        return compare_lock_data(normalized_current, normalized_lock)
