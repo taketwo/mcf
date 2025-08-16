@@ -2,11 +2,12 @@
 
 import json
 from importlib import resources
+from typing import Any
 
 from .config import ToolsConfig
 from .lock_repository import LockRepository
 from .logging import get_logger
-from .utils import run_command
+from .utils import LockComparison, compare_lock_data, run_command
 
 logger = get_logger(__name__)
 
@@ -146,3 +147,85 @@ class ToolsManager:
 
         logger.debug("Found %d installed Mason tools", len(tools))
         return tools
+
+    def status(self) -> dict[str, Any]:
+        """Get current tool status vs lock file.
+
+        Compares the currently installed Mason tools with the version in the lock
+        repository and provides detailed information about tool differences.
+
+        Returns
+        -------
+        dict[str, Any]
+            Status information including sync status and detailed tool differences.
+
+        """
+        logger.debug("Getting tools status")
+
+        try:
+            # Get currently installed tools
+            current_data = self._get_installed_tools()
+
+            # Read lock file
+            lock_content = self.lock_repo.read_file(self.config.lock_file)
+            lock_data = json.loads(lock_content)
+
+            # Compare and find differences
+            differences = self._find_tool_differences(current_data, lock_data)
+            in_sync = len(differences) == 0
+
+            return {
+                "in_sync": in_sync,
+                "differences": differences,
+                "total_current": len(current_data),
+                "total_lock": len(lock_data),
+            }
+
+        except FileNotFoundError:
+            return {
+                "in_sync": False,
+                "error": "Remote lock file not found",
+                "differences": [],
+                "total_current": 0,
+                "total_lock": 0,
+            }
+        except json.JSONDecodeError as e:
+            return {
+                "in_sync": False,
+                "error": f"Invalid JSON in lock file: {e}",
+                "differences": [],
+                "total_current": 0,
+                "total_lock": 0,
+            }
+        except Exception as e:
+            logger.exception("Error getting tools status")
+            return {
+                "in_sync": False,
+                "error": f"Error getting status: {e}",
+                "differences": [],
+                "total_current": 0,
+                "total_lock": 0,
+            }
+
+    def _find_tool_differences(
+        self,
+        current_data: dict[str, str],
+        lock_data: dict[str, str],
+    ) -> list[LockComparison]:
+        """Find differences between current and lock tool data.
+
+        Parameters
+        ----------
+        current_data : dict[str, str]
+            Currently installed tools mapping tool names to versions.
+        lock_data : dict[str, str]
+            Lock file mason-lock.json data mapping tool names to versions.
+
+        Returns
+        -------
+        list[LockComparison]
+            List of tool differences with type-safe comparison objects.
+
+        """
+        # Tools are already in normalized format {name: version}
+        return compare_lock_data(current_data, lock_data)

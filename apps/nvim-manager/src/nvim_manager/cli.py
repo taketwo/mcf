@@ -187,17 +187,23 @@ def config(ctx: dict[str, Any]) -> None:
     is_flag=True,
     help="Show plugins status.",
 )
+@click.option(
+    "--tools",
+    is_flag=True,
+    help="Show tools status.",
+)
 @pass_context
 def status(
     ctx: dict[str, Any],
     *,
     editor: bool = False,
     plugins: bool = False,
+    tools: bool = False,
 ) -> None:
     """Show current state vs lock files."""
     # If no specific targets are specified, show all
-    if not editor and not plugins:
-        editor = plugins = True
+    if not editor and not plugins and not tools:
+        editor = plugins = tools = True
 
     try:
         if editor:
@@ -231,6 +237,14 @@ def status(
             # Get status and display
             plugin_status = plugin_manager.status()
             _display_lock_status(plugin_status, "Plugin Status", "plugin")
+
+        if tools:
+            # Use pre-instantiated objects from context
+            tools_manager = ctx["tools_manager"]
+
+            # Get status and display
+            tools_status = tools_manager.status()
+            _display_lock_status(tools_status, "Tools Status", "tool")
 
     except Exception as e:
         logger.exception("Failed to get status")
