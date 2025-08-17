@@ -10,3 +10,6 @@ build_cache = "$HOME/.cache/nvim-manager/builds"
 [plugins]
 restore_retry_count = 3
 local_lock_path = "$MCF/misc/packages/neovim/config/lazy-lock.json"
+
+[tools]
+venv_path = "$HOME/.local/share/nvim/.venv"

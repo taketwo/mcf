@@ -264,6 +264,11 @@ def status(
     help="Update plugins to latest versions.",
 )
 @click.option(
+    "--tools",
+    is_flag=True,
+    help="Update tools to latest versions.",
+)
+@click.option(
     "--show-news/--no-news",
     default=True,
     help="Show/hide news diff for editor updates (default: show).",
@@ -274,12 +279,13 @@ def update(
     *,
     editor: bool = False,
     plugins: bool = False,
+    tools: bool = False,
     show_news: bool = True,
 ) -> None:
     """Update to latest versions."""
     # If no specific targets are specified, update all
-    if not editor and not plugins:
-        editor = plugins = True
+    if not editor and not plugins and not tools:
+        editor = plugins = tools = True
 
     try:
         if editor:
@@ -291,6 +297,14 @@ def update(
             plugin_manager = ctx["plugin_manager"]
             plugin_manager.update()
             console.print("[green]✓ Plugin update completed[/green]")
+        if tools:
+            tools_manager = ctx["tools_manager"]
+            try:
+                tools_manager.update()
+                console.print("[green]✓ Tools update completed[/green]")
+            except RuntimeError as e:
+                console.print(f"[red]✗ Tools update failed: {e}[/red]")
+                raise click.Abort from e
 
     except Exception as e:
         logger.exception("Failed to update")
@@ -346,8 +360,12 @@ def commit(
             # Use pre-instantiated objects from context
             tools_manager = ctx["tools_manager"]
 
-            tools_manager.commit()
-            console.print("[green]✓ Tool state committed to lock file[/green]")
+            try:
+                tools_manager.commit()
+                console.print("[green]✓ Tool state committed to lock file[/green]")
+            except RuntimeError as e:
+                console.print(f"[red]✗ Tool commit failed: {e}[/red]")
+                raise click.Abort from e
 
     except Exception as e:
         logger.exception("Failed to commit")
@@ -366,17 +384,23 @@ def commit(
     is_flag=True,
     help="Restore plugins to versions from lock file.",
 )
+@click.option(
+    "--tools",
+    is_flag=True,
+    help="Restore tools to versions from lock file.",
+)
 @pass_context
 def restore(
     ctx: dict[str, Any],
     *,
     editor: bool = False,
     plugins: bool = False,
+    tools: bool = False,
 ) -> None:
     """Restore to versions specified in lock files."""
     # If no specific targets are specified, restore all
-    if not editor and not plugins:
-        editor = plugins = True
+    if not editor and not plugins and not tools:
+        editor = plugins = tools = True
 
     try:
         if editor:
@@ -396,6 +420,32 @@ def restore(
             console.print("\n[bold]Restoring plugin versions...[/bold]")
             plugin_manager.restore()
             console.print("[green]✓ Plugins restored from lock file[/green]")
+
+        if tools:
+            # Use pre-instantiated objects from context
+            tools_manager = ctx["tools_manager"]
+
+            console.print("\n[bold]Restoring tool versions...[/bold]")
+            try:
+                tools_manager.restore()
+                console.print("[green]✓ Tools restored from lock file[/green]")
+            except RuntimeError as e:
+                # Handle tool installation failures gracefully
+                error_msg = str(e)
+                if "Tool installation failed:" in error_msg:
+                    console.print("[red]✗ Tool restoration failed[/red]")
+                    # Extract just the error details part
+                    if ":" in error_msg:
+                        details = error_msg.split(":", 1)[1].strip()
+                        console.print(f"[yellow]Error: {details}[/yellow]")
+                    console.print(
+                        "[yellow]Install the required dependencies and try again[/yellow]",
+                    )
+                else:
+                    console.print(f"[red]✗ Tool restoration failed: {e}[/red]")
+                # Don't raise - we've handled the error gracefully
+                # Just return early to avoid processing other targets
+                return
 
     except Exception as e:
         logger.exception("Failed to restore")

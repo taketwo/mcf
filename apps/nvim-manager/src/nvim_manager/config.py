@@ -110,12 +110,15 @@ class ToolsConfig(BaseModel):
     ----------
     lock_file : str
         Name of the lock file in the repository.
+    venv_path : Path
+        Path to the Python virtual environment for Mason operations.
 
     """
 
     model_config = ConfigDict(frozen=True)
 
     lock_file: str = "mason-lock.json"
+    venv_path: ExpandedPath
 
 
 class Config(BaseModel):
@@ -139,7 +142,7 @@ class Config(BaseModel):
     lock_repository: LockRepositoryConfig
     editor: EditorConfig
     plugins: PluginsConfig
-    tools: ToolsConfig = ToolsConfig()
+    tools: ToolsConfig
 
     @classmethod
     def from_path_or_default(cls, path: Path | None = None) -> "Config":

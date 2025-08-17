@@ -133,22 +133,6 @@ class PluginManager:
             msg = "Plugin restoration failed after all retry attempts"
             raise RuntimeError(msg)
 
-        # Run Mason commands once after successful Lazy restoration
-        # Need to activate virtualenv for Mason's pip operations
-        try:
-            run_command(
-                [
-                    "bash",
-                    "-c",
-                    "source $HOME/.local/share/nvim/.venv/bin/activate && "
-                    "nvim --headless +MasonUpdate +MasonEnsureInstalled +qa",
-                ],
-            )
-            logger.info("Mason packages updated successfully")
-        except (OSError, RuntimeError) as e:
-            logger.warning("Mason package update failed: %s", e)
-            # Don't fail the whole restoration for Mason issues
-
     def commit(self) -> None:
         """Save current plugin state to lock file.
 
