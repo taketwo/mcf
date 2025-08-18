@@ -21,189 +21,116 @@ local function mason_list_installed()
 end
 
 ---Install tools with specific versions in batch
----@param tools_spec string JSON string with {tool_name: version} mappings
+---@param tools_spec string Space-separated "tool@version" pairs
 local function mason_batch_install(tools_spec)
-  local registry = require('mason-registry')
-
-  -- Parse JSON input
-  local tools = vim.json.decode(tools_spec)
-  if not tools or type(tools) ~= 'table' then
-    vim.print('Error: Invalid tools specification')
-    vim.cmd('cquit 1')
-    return
-  end
-
-  registry.refresh(function()
-    local install_handles = {}
-    local install_names = {}
-    local failed_installs = {}
-
-    -- Prepare installation handles
-    for tool_name, version in pairs(tools) do
-      local package = registry.get_package(tool_name)
-      if package then
-        -- Check if already installed with correct version
-        local current_version = package:get_installed_version()
-        if current_version ~= version then
-          vim.print(
-            'Installing ' .. tool_name .. '@' .. version .. ' (current: ' .. (current_version or 'not installed') .. ')'
-          )
-          -- Use force flag to bypass lockfile conflicts
-          local handle = package:install({ version = version, force = true })
-          install_handles[#install_handles + 1] = handle
-          install_names[#install_names + 1] = tool_name .. '@' .. version
-
-          -- Capture stderr for better error reporting
-          local error_output = {}
-          handle:on('stderr', function(chunk) table.insert(error_output, chunk) end)
-
-          -- Store error output for later reference
-          install_handles.error_outputs = install_handles.error_outputs or {}
-          install_handles.error_outputs[#install_handles] = error_output
-        else
-          vim.print('Skipping ' .. tool_name .. '@' .. version .. ' (already installed)')
-        end
-      else
-        failed_installs[#failed_installs + 1] = tool_name .. ' (package not found in registry)'
+  local tools = {}
+  for tool_version in tools_spec:gmatch('%S+') do
+    local tool, version = tool_version:match('([^@]+)@(.+)')
+    if tool and version then
+      if tools[tool] then
+        vim.print(tool .. ': duplicate tool specification')
+        vim.cmd('cquit 1')
+        return
       end
-    end
-
-    -- Report any package lookup failures
-    if #failed_installs > 0 then
-      vim.print('Failed to find packages: ' .. table.concat(failed_installs, ', '))
+      tools[tool] = version
+    else
+      vim.print(tool_version .. ': invalid tool specification')
       vim.cmd('cquit 1')
       return
     end
+  end
 
-    -- If nothing to install, exit successfully
-    if #install_handles == 0 then
-      vim.print('All tools already installed with correct versions')
-      return
-    end
+  if next(tools) == nil then return end
 
-    -- In headless mode, wait for installations to complete
-    if require('mason-core.platform').is_headless then
-      vim.print('Installing packages with Mason: ' .. table.concat(install_names, ', '))
-      local a = require('mason-core.async')
-      local _ = require('mason-core.functional')
-
-      a.run_blocking(function()
-        a.wait_all(_.map(
-          ---@param handle InstallHandle
-          function(handle)
-            return function()
-              a.wait(function(resolve)
-                if handle:is_closed() then
-                  resolve()
-                else
-                  handle:once('closed', resolve)
-                end
-              end)
-            end
-          end,
-          install_handles
-        ))
-      end)
-
-      -- Verify installations after all operations complete (outside run_blocking)
-      local install_failures = {}
-      local failure_details = {}
-
-      local tool_index = 1
-      for tool_name, version in pairs(tools) do
-        local package = registry.get_package(tool_name)
-        if package and package:is_installed() then
-          local installed_version = package:get_installed_version()
-          if installed_version ~= version then
-            install_failures[#install_failures + 1] = tool_name
-              .. '@'
-              .. version
-              .. ' (got '
-              .. (installed_version or 'unknown')
-              .. ')'
-          end
-        else
-          install_failures[#install_failures + 1] = tool_name .. '@' .. version .. ' (not installed)'
-
-          -- Include error details if available
-          if install_handles.error_outputs and install_handles.error_outputs[tool_index] then
-            local errors = table.concat(install_handles.error_outputs[tool_index], '')
-            if errors and #errors > 0 then
-              -- Extract relevant error information
-              if errors:match('cargo') then
-                failure_details[#failure_details + 1] = tool_name .. ': missing cargo (Rust toolchain required)'
-              elseif errors:match('npm') then
-                failure_details[#failure_details + 1] = tool_name .. ': missing npm (Node.js required)'
-              elseif errors:match('go') then
-                failure_details[#failure_details + 1] = tool_name .. ': missing go (Go toolchain required)'
-              elseif errors:match('python') or errors:match('pip') then
-                failure_details[#failure_details + 1] = tool_name .. ': missing python/pip'
-              else
-                -- Include first line of error for other cases
-                local first_error_line = errors:match('([^\r\n]+)')
-                if first_error_line and #first_error_line > 0 then
-                  failure_details[#failure_details + 1] = tool_name .. ': ' .. first_error_line
-                end
-              end
-            end
-          end
-        end
-        tool_index = tool_index + 1
-      end
-
-      if #install_failures > 0 then
-        vim.print('Failed to install: ' .. table.concat(install_failures, ', '))
-        if #failure_details > 0 then
-          vim.print('Error details:')
-          for _, detail in ipairs(failure_details) do
-            vim.print('  ' .. detail)
-          end
-        end
+  local registry = require('mason-registry')
+  registry.refresh(function()
+    -- First pass: verify all packages exist and find tools that need installation
+    local tools_to_install = {}
+    for tool, version in pairs(tools) do
+      local package = registry.get_package(tool)
+      if not package then
+        vim.print(tool .. ': package not found in registry')
         vim.cmd('cquit 1')
-      else
-        vim.print('Successfully installed all packages')
+        return
+      end
+
+      local current_version = package:get_installed_version()
+      if current_version ~= version then
+        table.insert(tools_to_install, { tool = tool, package = package, version = version })
       end
     end
+
+    if #tools_to_install == 0 then return end
+
+    -- Second pass: start installations for tools that need them
+    for _, info in ipairs(tools_to_install) do
+      info.handle = info.package:install({ version = info.version, force = true })
+      info.error_output = {}
+      info.handle:on('stderr', function(chunk) table.insert(info.error_output, chunk) end)
+    end
+
+    -- Wait for installations to complete
+    local a = require('mason-core.async')
+    local _ = require('mason-core.functional')
+    a.run_blocking(function()
+      a.wait_all(_.map(
+        ---@param info table
+        function(info)
+          return function()
+            a.wait(function(resolve)
+              if info.handle:is_closed() then
+                resolve()
+              else
+                info.handle:once('closed', resolve)
+              end
+            end)
+          end
+        end,
+        tools_to_install
+      ))
+    end)
+
+    -- Third pass: verify installations and report failures
+    local has_failures = false
+    for _, info in ipairs(tools_to_install) do
+      local tool = info.tool
+      local package = info.package
+      local version = info.version
+
+      if not package:is_installed() or package:get_installed_version() ~= version then
+        local error_msg = 'installation failed'
+        if info.error_output and #info.error_output > 0 then
+          local captured = table.concat(info.error_output, ' '):gsub('\r?\n', ' ')
+          if captured and #captured > 0 then error_msg = captured end
+        end
+        vim.print(tool .. ': ' .. error_msg)
+        has_failures = true
+      end
+    end
+    if has_failures then vim.cmd('cquit 1') end
   end)
 end
 
 ---Uninstall tools in batch
----@param tools_spec string JSON string with array of tool names
+---@param tools_spec string Space-separated tool names
 local function mason_batch_uninstall(tools_spec)
-  local registry = require('mason-registry')
-
-  -- Parse JSON input
-  local tools = vim.json.decode(tools_spec)
-  if not tools or type(tools) ~= 'table' then
-    vim.print('Error: Invalid tools specification')
-    vim.cmd('cquit 1')
-    return
+  local tools = {}
+  for tool in tools_spec:gmatch('%S+') do
+    table.insert(tools, tool)
   end
 
+  if next(tools) == nil then return end
+
+  local registry = require('mason-registry')
   registry.refresh(function()
-    local uninstall_failures = {}
-    local uninstalled = {}
-
-    for _, tool_name in ipairs(tools) do
-      local package = registry.get_package(tool_name)
+    for _, tool in ipairs(tools) do
+      local package = registry.get_package(tool)
       if package and package:is_installed() then
-        local success = pcall(function() package:uninstall() end)
-        if success then
-          uninstalled[#uninstalled + 1] = tool_name
-        else
-          uninstall_failures[#uninstall_failures + 1] = tool_name
+        if not pcall(function() package:uninstall() end) then
+          vim.print(tool .. ': failed to uninstall')
+          vim.cmd('cquit 1')
+          return
         end
-      end
-    end
-
-    if #uninstall_failures > 0 then
-      vim.print('Failed to uninstall: ' .. table.concat(uninstall_failures, ', '))
-      vim.cmd('cquit 1')
-    else
-      if #uninstalled > 0 then
-        vim.print('Successfully uninstalled: ' .. table.concat(uninstalled, ', '))
-      else
-        vim.print('No tools were uninstalled (already absent)')
       end
     end
   end)

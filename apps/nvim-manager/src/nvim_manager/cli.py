@@ -426,26 +426,8 @@ def restore(
             tools_manager = ctx["tools_manager"]
 
             console.print("\n[bold]Restoring tool versions...[/bold]")
-            try:
-                tools_manager.restore()
-                console.print("[green]✓ Tools restored from lock file[/green]")
-            except RuntimeError as e:
-                # Handle tool installation failures gracefully
-                error_msg = str(e)
-                if "Tool installation failed:" in error_msg:
-                    console.print("[red]✗ Tool restoration failed[/red]")
-                    # Extract just the error details part
-                    if ":" in error_msg:
-                        details = error_msg.split(":", 1)[1].strip()
-                        console.print(f"[yellow]Error: {details}[/yellow]")
-                    console.print(
-                        "[yellow]Install the required dependencies and try again[/yellow]",
-                    )
-                else:
-                    console.print(f"[red]✗ Tool restoration failed: {e}[/red]")
-                # Don't raise - we've handled the error gracefully
-                # Just return early to avoid processing other targets
-                return
+            tools_manager.restore()
+            console.print("[green]✓ Tools restored from lock file[/green]")
 
     except Exception as e:
         logger.exception("Failed to restore")
