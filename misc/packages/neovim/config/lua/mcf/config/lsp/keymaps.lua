@@ -101,7 +101,7 @@ M._keys = {
 }
 
 -- Do not set LSP keymaps for these filetypes
-M._filetype_blacklist = { 'ctrlsf' }
+M._filetype_blacklist = {}
 
 -- Check if any of the LSP clients for the buffer support the given method
 -- Copied from LazyVim
