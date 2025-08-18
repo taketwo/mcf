@@ -107,6 +107,7 @@ class PluginManager:
                         "+TSUpdateSync",
                         "+qa",
                     ],
+                    capture_output=True,
                 )
 
                 # Check if restoration succeeded by comparing files

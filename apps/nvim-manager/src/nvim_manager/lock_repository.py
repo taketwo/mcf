@@ -262,7 +262,7 @@ class LockRepository:
 
         dest_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_path, dest_path)
-        logger.info(
+        logger.debug(
             "File copied from repository: %s -> %s",
             repo_relative_path,
             dest_path,
