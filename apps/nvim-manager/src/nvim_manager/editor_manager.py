@@ -83,15 +83,31 @@ class EditorManager:
         current_revision = self._parse_current_revision()
         latest_commit_info = get_commit_info(self.config.repository)
 
-        if news_diff_callback and current_revision:
+        # Get lock file revision as baseline for diff
+        lock_revision = None
+        try:
+            lock_content = self.lock_repo.read_file(self.config.lock_file)
+            lock_data = json.loads(lock_content)
+            lock_revision = lock_data["hash"]
+            logger.debug("Using lock revision as diff baseline: %s", lock_revision)
+        except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+            logger.debug(
+                "No valid lock file found, using current revision as baseline: %s",
+                e,
+            )
+
+        # Use lock revision as baseline, fall back to current revision if no lock file
+        baseline_revision = lock_revision if lock_revision else current_revision
+
+        if news_diff_callback and baseline_revision:
             try:
-                current_commit_info = get_commit_info(
+                baseline_commit_info = get_commit_info(
                     self.config.repository,
-                    current_revision,
+                    baseline_revision,
                 )
                 news_diff = get_file_diff(
                     self.config.repository,
-                    current_commit_info.hash,
+                    baseline_commit_info.hash,
                     latest_commit_info.hash,
                     "runtime/doc/news.txt",
                 )

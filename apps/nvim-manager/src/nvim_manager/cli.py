@@ -33,7 +33,7 @@ def _display_news_diff(news_diff: str) -> None:
     syntax = Syntax(news_diff, "diff", theme="monokai", line_numbers=False)
     panel = Panel(
         syntax,
-        title="[bold blue]Changes in runtime/doc/news.txt[/bold blue]",
+        title="[bold blue]Changes in runtime/doc/news.txt since lock version[/bold blue]",
         border_style="blue",
         expand=False,
     )
