@@ -436,8 +436,8 @@ def restore(
 
 
 @main.command()
-@pass_context
-def sync(ctx: dict[str, Any]) -> None:
+@click.pass_context
+def sync(ctx: click.Context) -> None:
     """Execute predefined sync sequence.
 
     Runs the complete sync workflow:
@@ -446,36 +446,28 @@ def sync(ctx: dict[str, Any]) -> None:
     3. Restore plugins from lock file
     4. Update plugins interactively
     5. Commit plugin state to lock file
+    6. Restore tools from lock file
+    7. Update tools interactively
+    8. Commit tool state to lock file
     """
     try:
         console.print("[bold]Starting sync workflow...[/bold]")
 
-        # Step 1: Update editor
-        console.print("\n[bold]Step 1/5:[/bold] Updating editor to latest version")
-        editor_manager = ctx["editor_manager"]
-        editor_manager.update()
-        console.print("[green]✓ Editor updated[/green]")
+        # Define sync steps as CLI command invocations
+        sync_steps: list[tuple[click.Command, dict[str, Any]]] = [
+            (update, {"editor": True, "plugins": False, "tools": False}),
+            (commit, {"editor": True, "plugins": False, "tools": False}),
+            (restore, {"editor": False, "plugins": True, "tools": False}),
+            (update, {"editor": False, "plugins": True, "tools": False}),
+            (commit, {"editor": False, "plugins": True, "tools": False}),
+            (restore, {"editor": False, "plugins": False, "tools": True}),
+            (update, {"editor": False, "plugins": False, "tools": True}),
+            (commit, {"editor": False, "plugins": False, "tools": True}),
+        ]
 
-        # Step 2: Commit editor
-        console.print("\n[bold]Step 2/5:[/bold] Committing editor version")
-        editor_manager.commit()
-        console.print("[green]✓ Editor version committed to lock file[/green]")
-
-        # Step 3: Restore plugins
-        console.print("\n[bold]Step 3/5:[/bold] Restoring plugins from lock file")
-        plugin_manager = ctx["plugin_manager"]
-        plugin_manager.restore()
-        console.print("[green]✓ Plugins restored from lock file[/green]")
-
-        # Step 4: Update plugins
-        console.print("\n[bold]Step 4/5:[/bold] Updating plugins interactively")
-        plugin_manager.update()
-        console.print("[green]✓ Plugin update completed[/green]")
-
-        # Step 5: Commit plugins
-        console.print("\n[bold]Step 5/5:[/bold] Committing plugin state")
-        plugin_manager.commit()
-        console.print("[green]✓ Plugin state committed to lock file[/green]")
+        for i, (cmd, kwargs) in enumerate(sync_steps, 1):
+            console.print(f"\n[bold]Step {i}/{len(sync_steps)}:[/bold]")
+            ctx.invoke(cmd, **kwargs)
 
         console.print(
             "\n[bold green]🎉 Sync workflow completed successfully![/bold green]",
