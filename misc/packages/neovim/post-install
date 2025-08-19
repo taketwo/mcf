@@ -17,7 +17,5 @@ mkdir -p "$DATA_DIR"
 # Node.js provider
 fnm exec --using=node-nvim npm install --location=global neovim
 
-# Ensure that plugins are installed
-if ! nvim-sync restore plugins; then
-  echo "Failed to install Neovim plugins, run 'nvim-sync restore plugins' manually to retry"
-fi
+# Install plugins and tools
+nvim-manager restore --plugins --tools
