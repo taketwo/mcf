@@ -56,6 +56,7 @@ class HomeLinkMonitor:
             os.getenv("HOMELINK_INTERNET_HISTORY_SIZE", "5"),
         )
         self.ping_timeout = int(os.getenv("HOMELINK_PING_TIMEOUT", "3"))
+        self.resume_delay = int(os.getenv("HOMELINK_RESUME_DELAY", "30"))
 
         # State tracking
         self.state = {
@@ -249,10 +250,22 @@ class HomeLinkMonitor:
         """Update state and take action - main logic loop."""
         old_signal = self.state["vpn_control_signal"]
 
-        # Set next check time
-        self.state["next_check_at"] = datetime.now(timezone.utc) + timedelta(
-            seconds=self.check_interval,
-        )
+        # Check for resume from suspend by detecting timing gap
+        now = datetime.now(timezone.utc)
+        if self.state["next_check_at"] and now > self.state[
+            "next_check_at"
+        ] + timedelta(seconds=self.check_interval * 2):
+            self.logger.info(
+                "System resume detected, delaying next check by %ds for stabilization",
+                self.resume_delay,
+            )
+            self.state["next_check_at"] = now + timedelta(
+                seconds=self.resume_delay,
+            )
+            return
+
+        # Set next check time for normal operation
+        self.state["next_check_at"] = now + timedelta(seconds=self.check_interval)
 
         # Update network state (includes connectivity history update)
         self.state.update(self._check_network_state())
@@ -398,17 +411,18 @@ class HomeLinkMonitor:
         self.logger.info("HomeLink Monitor daemon starting")
 
         try:
-            # Setup socket server
             self._setup_socket_server()
-
-            # Start socket server thread
             threading.Thread(target=self._socket_server_loop, daemon=True).start()
 
             # Main monitoring loop
             while self.running:
                 try:
                     self.update_and_act()
-                    time.sleep(self.check_interval)
+                    now = datetime.now(timezone.utc)
+                    time_until_next_check = self.state["next_check_at"] - now
+                    if sleep_duration := time_until_next_check.total_seconds() > 0:
+                        time.sleep(sleep_duration)
+
                 except KeyboardInterrupt:  # noqa: PERF203
                     break
                 except Exception:

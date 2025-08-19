@@ -6,9 +6,10 @@ HomeLink is an intelligent WireGuard VPN daemon that automatically manages VPN c
 
 ## Architecture
 
-HomeLink operates as a daemon with 15-second monitoring intervals, providing:
+HomeLink operates as a daemon with configurable monitoring intervals, providing:
 - **Fast response times**: Immediate detection of network changes
 - **Hysteresis logic**: Sliding window of connectivity checks prevents flapping
+- **Resume detection**: Automatic stabilization delay after system wake from suspend
 - **Real-time status**: Unix socket API for Polybar/desktop integration
 - **Structured logging**: SystemD journal integration for monitoring
 
@@ -73,6 +74,7 @@ If interface is up but tunnel health fails, status is marked as "degraded".
 - `HOMELINK_INTERNET_FAILURE_THRESHOLD` - Internet failures to trigger disable (default: 3)
 - `HOMELINK_INTERNET_HISTORY_SIZE` - Sliding window size (default: 5)
 - `HOMELINK_PING_TIMEOUT` - Ping timeout seconds (default: 3)
+- `HOMELINK_RESUME_DELAY` - Post-resume stabilization delay seconds (default: 30)
 - `HOMELINK_LOG_LEVEL` - Logging verbosity (default: INFO)
 
 ## Core State Model
@@ -145,6 +147,25 @@ The system assumes the home router is the default gateway when at home. Complex 
 ### Timing Considerations
 
 All network checks are performed atomically within a single method to prevent race conditions. Hysteresis logic requires multiple failed checks before triggering state changes.
+
+## Resume Detection
+
+HomeLink detects system resume from suspend using timing gap analysis to prevent VPN flapping during network interface stabilization.
+
+**Detection Logic:**
+```python
+if next_check_at and now > next_check_at + timedelta(seconds=check_interval * 2):
+    # Resume detected - delay next check for stabilization
+    next_check_at = now + timedelta(seconds=resume_stabilization_delay)
+```
+
+**How It Works:**
+1. **Gap Detection**: If current time exceeds expected check time by more than 2x check interval, assume system resumed
+2. **Stabilization Delay**: Set next check time to 30 seconds (configurable) in the future
+3. **Skip Control Logic**: Early return prevents VPN decisions during network stabilization
+4. **Dynamic Sleep**: Main loop sleeps until the extended next check time
+
+This prevents the common pattern of VPN start → immediate stop → stabilize that occurs when network interfaces haven't fully reconnected after resume.
 
 ---
 
