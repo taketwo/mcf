@@ -1,12 +1,11 @@
 [Unit]
 Description=Compositing manager
-After=xorg.target dbus.service
-Requires=dbus.service
+After=graphical-session.target
 
 [Service]
-ExecStart=/usr/bin/compton
-Environment=DISPLAY=:0
-Restart=always
+ExecStart=/usr/bin/compton --backend glx
+Restart=on-failure
+RestartSec=2
 
 [Install]
-WantedBy=wm.target
+WantedBy=graphical-session.target
