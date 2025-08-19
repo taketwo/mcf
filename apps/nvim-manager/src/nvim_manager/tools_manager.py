@@ -109,13 +109,13 @@ class ToolsManager:
             If Neovim launch fails.
 
         """
-        logger.info("Launching Neovim for interactive Mason tool updates")
+        logger.info("Launching Neovim for interactive Mason tools updates")
         try:
             self._run_with_venv(["nvim", "-c", "Mason"])
-            logger.info("Mason tool update completed")
+            logger.info("Mason tools update completed")
         except Exception as e:
             msg = f"Failed to launch Neovim for Mason tool updates: {e}"
-            logger.exception("Mason tool update failed")
+            logger.exception("Mason tools update failed")
             raise RuntimeError(msg) from e
 
     def restore(self) -> None:
@@ -134,7 +134,7 @@ class ToolsManager:
             If restoration operations fail.
 
         """
-        logger.debug("Restoring Mason tools from lock file: %s", self.config.lock_file)
+        logger.info("Restoring Mason tools from lock file")
 
         try:
             logger.debug("Updating Mason registry before restoration")
@@ -187,7 +187,7 @@ class ToolsManager:
             if not to_install and not to_uninstall:
                 logger.debug("All tools are already in sync with lock file")
 
-            logger.debug("Tool restoration completed successfully")
+            logger.info("Mason tools restoration succeeded")
 
         except FileNotFoundError:
             msg = f"Lock file not found: {self.config.lock_file}"
@@ -229,9 +229,8 @@ class ToolsManager:
         # Save to repository
         self.lock_repo.write_file(self.config.lock_file, lock_content)
         logger.info(
-            "Successfully committed %d tools to lock file: %s",
+            "Successfully committed %d tools to lock file",
             len(installed_tools),
-            self.config.lock_file,
         )
 
     def _get_installed_tools(self) -> dict[str, str]:

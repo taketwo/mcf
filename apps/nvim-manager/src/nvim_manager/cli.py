@@ -283,29 +283,18 @@ def update(
     show_news: bool = True,
 ) -> None:
     """Update to latest versions."""
-    # If no specific targets are specified, update all
     if not editor and not plugins and not tools:
         editor = plugins = tools = True
 
     try:
         if editor:
-            editor_manager = ctx["editor_manager"]
-            editor_manager.update(
+            ctx["editor_manager"].update(
                 news_diff_callback=(_display_news_diff if show_news else None),
             )
         if plugins:
-            plugin_manager = ctx["plugin_manager"]
-            plugin_manager.update()
-            console.print("[green]✓ Plugin update completed[/green]")
+            ctx["plugin_manager"].update()
         if tools:
-            tools_manager = ctx["tools_manager"]
-            try:
-                tools_manager.update()
-                console.print("[green]✓ Tools update completed[/green]")
-            except RuntimeError as e:
-                console.print(f"[red]✗ Tools update failed: {e}[/red]")
-                raise click.Abort from e
-
+            ctx["tools_manager"].update()
     except Exception as e:
         logger.exception("Failed to update")
         console.print(f"[red]Error:[/red] {e}")
@@ -337,36 +326,16 @@ def commit(
     tools: bool = False,
 ) -> None:
     """Save current state to lock files."""
-    # If no specific targets are specified, commit all
     if not editor and not plugins and not tools:
         editor = plugins = tools = True
 
     try:
         if editor:
-            # Use pre-instantiated objects from context
-            editor_manager = ctx["editor_manager"]
-
-            editor_manager.commit()
-            console.print("[green]✓ Editor version committed to lock file[/green]")
-
+            ctx["editor_manager"].commit()
         if plugins:
-            # Use pre-instantiated objects from context
-            plugin_manager = ctx["plugin_manager"]
-
-            plugin_manager.commit()
-            console.print("[green]✓ Plugin state committed to lock file[/green]")
-
+            ctx["plugin_manager"].commit()
         if tools:
-            # Use pre-instantiated objects from context
-            tools_manager = ctx["tools_manager"]
-
-            try:
-                tools_manager.commit()
-                console.print("[green]✓ Tool state committed to lock file[/green]")
-            except RuntimeError as e:
-                console.print(f"[red]✗ Tool commit failed: {e}[/red]")
-                raise click.Abort from e
-
+            ctx["tools_manager"].commit()
     except Exception as e:
         logger.exception("Failed to commit")
         console.print(f"[red]Error:[/red] {e}")
@@ -398,37 +367,16 @@ def restore(
     tools: bool = False,
 ) -> None:
     """Restore to versions specified in lock files."""
-    # If no specific targets are specified, restore all
     if not editor and not plugins and not tools:
         editor = plugins = tools = True
 
     try:
         if editor:
-            # Use pre-instantiated objects from context
-            editor_manager = ctx["editor_manager"]
-
-            console.print("\n[bold]Restoring editor version...[/bold]")
-            restored_commit = editor_manager.restore()
-            console.print(
-                f"[green]✓ Editor restored to commit: {restored_commit}[/green]",
-            )
-
+            ctx["editor_manager"].restore()
         if plugins:
-            # Use pre-instantiated objects from context
-            plugin_manager = ctx["plugin_manager"]
-
-            console.print("\n[bold]Restoring plugin versions...[/bold]")
-            plugin_manager.restore()
-            console.print("[green]✓ Plugins restored from lock file[/green]")
-
+            ctx["plugin_manager"].restore()
         if tools:
-            # Use pre-instantiated objects from context
-            tools_manager = ctx["tools_manager"]
-
-            console.print("\n[bold]Restoring tool versions...[/bold]")
-            tools_manager.restore()
-            console.print("[green]✓ Tools restored from lock file[/green]")
-
+            ctx["tools_manager"].restore()
     except Exception as e:
         logger.exception("Failed to restore")
         console.print(f"[red]Error:[/red] {e}")

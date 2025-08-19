@@ -6,7 +6,7 @@ from typing import Any
 from .config import PluginsConfig
 from .lock_repository import LockRepository
 from .logging import get_logger
-from .utils import LockComparison, compare_lock_data, run_command
+from .utils import compare_lock_data, LockComparison, run_command
 
 logger = get_logger(__name__)
 
@@ -81,7 +81,7 @@ class PluginManager:
             If restoration fails after all retry attempts.
 
         """
-        logger.info("Restoring plugins from lock file: %s", self.lock_file_name)
+        logger.info("Restoring plugins from lock file")
 
         # Copy lock file from remote to local (only once)
         self.lock_repo.get_file(
