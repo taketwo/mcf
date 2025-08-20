@@ -10,6 +10,21 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ccu hook format-ruff fix-ruff"
+          },
+          {
+            "type": "command",
+            "command": "ccu hook check-mypy"
+          }
+        ]
+      }
     ]
   }
 }
