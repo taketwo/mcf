@@ -31,7 +31,7 @@ return {
         cmake = { 'gersemi' },
         lua = { 'stylua' },
         proto = { 'clang-format' },
-        python = { 'black', 'usort' },
+        python = { 'ruff_format', 'ruff_organize_imports' },
         sh = { 'shfmt' },
         xml = { 'xmllint' },
       },
