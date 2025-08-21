@@ -39,19 +39,29 @@ This ensures compatibility across different systems without hardcoding interface
 
 ## Internet Connectivity Monitoring
 
-Internet connectivity is assessed using hysteresis logic to prevent flapping:
+Internet connectivity is assessed using consensus logic to prevent flapping:
 
 ```python
-recent_failures = list(connectivity_history).count(False)
-if recent_failures >= failure_threshold:
-    status = "down"  # Consistently failing
-elif recent_failures > 0:
-    status = "degraded"  # Some recent failures
-else:
-    status = "up"  # No recent failures
+class ConsensusTracker:
+    def add(self, current_value: Any) -> None:
+        """Add current value to the history."""
+        self.history.append(current_value)
+    
+    def get(self) -> Any | None:
+        """Get current consensus if all values agree, None otherwise."""
+        if len(self.history) < self.history.maxlen:
+            return None
+        first_value = self.history[0]
+        if all(val == first_value for val in self.history):
+            return first_value
+        return None
+
+# Usage
+internet_tracker.add(internet_working)
+consensus = internet_tracker.get()  # True/False/None
 ```
 
-Connectivity tests ping multiple DNS servers (8.8.8.8, 1.1.1.1) with configurable timeout.
+The system requires all values in the sliding window to be identical before declaring consensus. Connectivity tests ping multiple DNS servers (8.8.8.8, 1.1.1.1) with configurable timeout.
 
 ## VPN Tunnel Health Detection
 
@@ -70,9 +80,8 @@ If interface is up but tunnel health fails, status is marked as "degraded".
 
 - `HOMELINK_INTERFACE` - VPN interface name (default: wg0)
 - `HOMELINK_HOME_ROUTER` - Home router IP (default: 192.168.114.1)
-- `HOMELINK_CHECK_INTERVAL` - Check frequency seconds (default: 15)
-- `HOMELINK_INTERNET_FAILURE_THRESHOLD` - Internet failures to trigger disable (default: 3)
-- `HOMELINK_INTERNET_HISTORY_SIZE` - Sliding window size (default: 5)
+- `HOMELINK_CHECK_INTERVAL` - Check frequency seconds (default: 10)
+- `HOMELINK_INTERNET_HISTORY_SIZE` - Sliding window size (default: 3)
 - `HOMELINK_PING_TIMEOUT` - Ping timeout seconds (default: 3)
 - `HOMELINK_RESUME_DELAY` - Post-resume stabilization delay seconds (default: 30)
 - `HOMELINK_LOG_LEVEL` - Logging verbosity (default: INFO)
@@ -84,10 +93,10 @@ The system operates on **3 independent state variables**:
 1. **`location`**: `"home" | "remote"`
    - Determined by default gateway detection via physical interfaces
 
-2. **`internet`**: `"down" | "degraded" | "up"`
-   - `"down"` = consistently failing (≥ threshold failures in sliding window)
-   - `"degraded"` = intermittent failures (< threshold, but some recent failures)
-   - `"up"` = consistently working (no recent failures)
+2. **`internet`**: `"down" | "uncertain" | "up"`
+   - `"down"` = consensus that internet is not working (all recent checks failed)
+   - `"uncertain"` = mixed results, no consensus yet
+   - `"up"` = consensus that internet is working (all recent checks succeeded)
 
 3. **`vpn`**: `"down" | "degraded" | "up"`
    - `"down"` = WireGuard interface down
@@ -99,17 +108,20 @@ The system operates on **3 independent state variables**:
 The system determines VPN actions based on the current state variables:
 
 ```python
+internet_consensus = internet_tracker.get()  # True/False/None
+
 if location == "home":
     return "down" if vpn != "down" else "noop"    # Disable VPN at home
-if internet == "down":
+if internet_consensus is False:
     return "down" if vpn != "down" else "noop"    # Save resources when no internet
-if internet in ["up", "degraded"]:
-    if vpn == "down":
-        return "up"                               # Start VPN when remote with internet
-    if vpn == "degraded":
-        return "restart"                          # Fix broken tunnel
-    else:  # vpn == "up"
-        return "noop"                             # VPN working correctly
+if internet_consensus is None:
+    return "noop"                                 # Uncertain internet, maintain state
+# internet_consensus is True (working internet)
+if vpn == "down":
+    return "up"                                   # Start VPN when remote with internet
+if vpn == "degraded":
+    return "restart"                              # Fix broken tunnel
+return "noop"                                     # VPN working correctly
 ```
 
 **Control Signals:**
@@ -128,7 +140,6 @@ HomeLink provides real-time status through a Unix domain socket at `/run/homelin
   "location": "remote",
   "internet": "up",
   "vpn": "up",
-  "internet_connectivity_score": "4/5",
   "vpn_control_signal": "noop",
   "next_check_at": "2025-01-15T10:31:00+00:00"
 }

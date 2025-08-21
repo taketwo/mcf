@@ -18,7 +18,7 @@ import time
 from collections import deque
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from types import FrameType
@@ -38,6 +38,27 @@ VIRTUAL_INTERFACE_PREFIXES = (
     "virbr",
     "vmbr",
 )
+
+
+class ConsensusTracker:
+    """Track values in a sliding window and return consensus when all values agree."""
+
+    def __init__(self, history_size: int) -> None:
+        """Initialize tracker with specified history size."""
+        self.history: deque[Any] = deque(maxlen=history_size)
+
+    def add(self, current_value: Any) -> None:
+        """Add current value to the history."""
+        self.history.append(current_value)
+
+    def get(self) -> Any | None:
+        """Get current consensus without updating history."""
+        if len(self.history) < self.history.maxlen:
+            return None
+        first_value = self.history[0]
+        if all(val == first_value for val in self.history):
+            return first_value
+        return None
 
 
 def run_command(
@@ -65,12 +86,9 @@ class HomeLinkMonitor:
         # Configuration from environment
         self.interface = os.getenv("HOMELINK_INTERFACE", "wg0")
         self.home_router = os.getenv("HOMELINK_HOME_ROUTER", "192.168.114.1")
-        self.check_interval = int(os.getenv("HOMELINK_CHECK_INTERVAL", "15"))
-        self.internet_failure_threshold = int(
-            os.getenv("HOMELINK_INTERNET_FAILURE_THRESHOLD", "3"),
-        )
+        self.check_interval = int(os.getenv("HOMELINK_CHECK_INTERVAL", "10"))
         self.internet_history_size = int(
-            os.getenv("HOMELINK_INTERNET_HISTORY_SIZE", "5"),
+            os.getenv("HOMELINK_INTERNET_HISTORY_SIZE", "3"),
         )
         self.ping_timeout = int(os.getenv("HOMELINK_PING_TIMEOUT", "3"))
         self.resume_delay = int(os.getenv("HOMELINK_RESUME_DELAY", "30"))
@@ -78,10 +96,9 @@ class HomeLinkMonitor:
         # State tracking
         self.state = {
             "location": "remote",
-            "internet": "down",
+            "internet_tracker": ConsensusTracker(self.internet_history_size),
             "vpn": "down",
             "vpn_control_signal": "noop",
-            "internet_connectivity_history": deque(maxlen=self.internet_history_size),
             "next_check_at": None,
         }
         self.running = True
@@ -156,19 +173,6 @@ class HomeLinkMonitor:
 
         return interfaces
 
-    def _check_location(self) -> str:
-        """Check if we're at home by checking if home router is our default gateway."""
-        # Get default route through physical interfaces only
-        physical_ifaces = self._get_physical_interfaces()
-
-        for iface in physical_ifaces:
-            # Check if this interface has a default route via home router
-            result = run_command(["ip", "route", "show", "default", "dev", iface])
-            if result and self.home_router in result.stdout:
-                return "home"
-
-        return "remote"
-
     def _check_vpn(self) -> str:
         """Check VPN status: down, degraded, or up."""
         # Check if WireGuard interface exists
@@ -196,50 +200,52 @@ class HomeLinkMonitor:
         # Interface exists but tunnel is broken
         return "degraded"
 
-    def _check_internet(self) -> str:
-        """Check internet status with hysteresis: down, degraded, or up."""
-        # Check current internet connectivity
+    def _check_location(self) -> bool:
+        """Check if we're at home right now (instantaneous check)."""
+        # Get default route through physical interfaces only
+        physical_ifaces = self._get_physical_interfaces()
+
+        for iface in physical_ifaces:
+            # Check if this interface has a default route via home router
+            result = run_command(["ip", "route", "show", "default", "dev", iface])
+            if result and self.home_router in result.stdout:
+                return True
+
+        return False
+
+    def _update_network_state(self) -> None:
+        """Update network state by checking instantaneous values and feeding to trackers."""
+        # Check instantaneous values
+        location_is_home = self._check_location()
         internet_working = any(self._ping(target) for target in DNS_SERVERS)
+        vpn_status = self._check_vpn()
 
-        # Update history
-        self.state["internet_connectivity_history"].append(internet_working)
+        # Update trackers
+        self.state["internet_tracker"].add(internet_working)
 
-        # Count recent failures
-        recent_failures = list(self.state["internet_connectivity_history"]).count(False)
+        # Set state values
+        self.state["location"] = "home" if location_is_home else "remote"
+        self.state["vpn"] = vpn_status
 
-        if recent_failures >= self.internet_failure_threshold:
-            return "down"  # Consistently failing
-        if recent_failures > 0:
-            return "degraded"  # Some recent failures
-        return "up"  # No recent failures
-
-    def _check_network_state(self) -> dict[str, str]:
-        """Check all network conditions using 3-variable model."""
-        location = self._check_location()
-        internet = self._check_internet()
-        vpn = self._check_vpn()
-
-        return {
-            "location": location,
-            "internet": internet,
-            "vpn": vpn,
-        }
-
-    def _determine_desired_state(self) -> str:
+    def _determine_control_signal(self) -> str:
         """Determine VPN control signal using 3-variable model."""
         location = self.state["location"]
-        internet = self.state["internet"]
         vpn = self.state["vpn"]
+        internet_consensus = self.state["internet_tracker"].get()
 
         if location == "home":
             # At home, VPN should be down
             return "down" if vpn != "down" else "noop"
 
-        if internet == "down":
-            # No internet, VPN should be down
+        if internet_consensus is False:
+            # No internet consensus (consistently down), VPN should be down
             return "down" if vpn != "down" else "noop"
 
-        # Remote with some internet (up or degraded)
+        if internet_consensus is None:
+            # No internet consensus (uncertain), maintain current state
+            return "noop"
+
+        # Remote with working internet (internet_consensus is True)
         if vpn == "down":
             return "up"
         if vpn == "degraded":
@@ -268,10 +274,10 @@ class HomeLinkMonitor:
         self.state["next_check_at"] = now + timedelta(seconds=self.check_interval)
 
         # Update network state (includes connectivity history update)
-        self.state.update(self._check_network_state())
+        self._update_network_state()
 
         # Determine what we want
-        control_signal = self._determine_desired_state()
+        control_signal = self._determine_control_signal()
         self.state["vpn_control_signal"] = control_signal
 
         # Log control signal changes
@@ -285,9 +291,10 @@ class HomeLinkMonitor:
         # Take action based on control signal
         location, internet, vpn = (
             self.state["location"],
-            self.state["internet"],
+            self.state["internet_tracker"].get(),
             self.state["vpn"],
         )
+        internet = "up" if internet else ("uncertain" if internet is None else "down")
 
         if control_signal == "down" and vpn != "down":
             self.logger.info(
@@ -316,22 +323,26 @@ class HomeLinkMonitor:
 
     def get_status(self) -> dict[str, str | bool]:
         """Get current status for API."""
-        internet_history = self.state["internet_connectivity_history"]
-        score = list(internet_history).count(True)
-        total = len(internet_history) or 1
+        # Get internet status from tracker
+        internet_consensus = self.state["internet_tracker"].get()
+        if internet_consensus is None:
+            internet_status = "uncertain"
+        elif internet_consensus:
+            internet_status = "up"
+        else:
+            internet_status = "down"
 
-        # Create status dict with computed fields
+        # Create status dict with computed fields, excluding internal objects
         status = {
-            **self.state,
-            "internet_connectivity_score": f"{score}/{total}",
+            k: v for k, v in self.state.items() if not isinstance(v, ConsensusTracker)
         }
+        status["internet"] = internet_status
 
         # Format next_check_at as ISO string if available
         if self.state["next_check_at"]:
             status["next_check_at"] = self.state["next_check_at"].isoformat()
 
-        # Remove internal objects from status output
-        return {k: v for k, v in status.items() if k != "internet_connectivity_history"}
+        return status
 
     def _handle_socket_client(self, client_socket: socket.socket) -> None:
         """Handle socket client - always return status."""
@@ -477,8 +488,7 @@ def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
 
     lines = [
         f"Location: {status.get('location', 'unknown')}",
-        f"Internet: {status.get('internet', 'unknown')} "
-        f"({status.get('internet_connectivity_score', '?/?')})",
+        f"Internet: {status.get('internet', 'unknown')}",
         f"VPN: {status.get('vpn', 'unknown')}",
         f"VPN Control Signal: {status.get('vpn_control_signal', 'unknown')}",
     ]
