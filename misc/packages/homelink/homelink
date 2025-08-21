@@ -441,22 +441,21 @@ def cmd_monitor() -> None:
 def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
     """Get HomeLink status from socket."""
     try:
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        sock.settimeout(5)
-        sock.connect(SOCKET_PATH)
-        sock.send(b"status")
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+            sock.settimeout(5)
+            sock.connect(SOCKET_PATH)
+            sock.send(b"status")
 
-        response = ""
-        while True:
-            chunk = sock.recv(4096).decode()
-            if not chunk:
-                break
-            response += chunk
-            if response.endswith("\n"):
-                break
-        sock.close()
+            response = ""
+            while True:
+                chunk = sock.recv(4096).decode()
+                if not chunk:
+                    break
+                response += chunk
+                if response.endswith("\n"):
+                    break
 
-        status = json.loads(response.strip())
+            status = json.loads(response.strip())
     except socket.timeout:
         status = {"error": "Timeout connecting to daemon"}
     except FileNotFoundError:
