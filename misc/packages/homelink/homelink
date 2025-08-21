@@ -40,6 +40,23 @@ VIRTUAL_INTERFACE_PREFIXES = (
 )
 
 
+def run_command(
+    cmd: list[str],
+    timeout: int = 5,
+) -> subprocess.CompletedProcess[str] | None:
+    """Run a command and return result, or None on timeout."""
+    try:
+        return subprocess.run(
+            cmd,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        return None
+
+
 class HomeLinkMonitor:
     """WireGuard VPN monitor."""
 
@@ -100,23 +117,6 @@ class HomeLinkMonitor:
         else:
             return result.returncode == 0
 
-    def _run_command(
-        self,
-        cmd: list[str],
-        timeout: int = 5,
-    ) -> subprocess.CompletedProcess[str] | None:
-        """Run a command and return result, or None on error."""
-        try:
-            return subprocess.run(
-                cmd,
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-            )
-        except subprocess.TimeoutExpired:
-            return None
-
     def _systemctl(self, action: str) -> bool:
         """Execute systemctl command."""
         try:
@@ -133,7 +133,7 @@ class HomeLinkMonitor:
 
     def _get_physical_interfaces(self) -> list[str]:
         """Get list of physical network interfaces (excluding virtual ones)."""
-        result = self._run_command(["ip", "link", "show"])
+        result = run_command(["ip", "link", "show"])
         if not result:
             return []
 
@@ -163,7 +163,7 @@ class HomeLinkMonitor:
 
         for iface in physical_ifaces:
             # Check if this interface has a default route via home router
-            result = self._run_command(["ip", "route", "show", "default", "dev", iface])
+            result = run_command(["ip", "route", "show", "default", "dev", iface])
             if result and self.home_router in result.stdout:
                 return "home"
 
@@ -172,7 +172,7 @@ class HomeLinkMonitor:
     def _check_vpn(self) -> str:
         """Check VPN status: down, degraded, or up."""
         # Check if WireGuard interface exists
-        wg_result = self._run_command(["ip", "link", "show", self.interface])
+        wg_result = run_command(["ip", "link", "show", self.interface])
         if not wg_result or wg_result.returncode != 0:
             return "down"
 
@@ -182,14 +182,14 @@ class HomeLinkMonitor:
             return "up"
 
         # 2. Check if we have a route through the WG interface
-        result = self._run_command(["ip", "route", "show", "dev", self.interface])
+        result = run_command(["ip", "route", "show", "dev", self.interface])
         if result and result.stdout.strip():
             # If we have routes through WG interface, assume it's working
             # This is more reliable than ping which might be blocked
             return "up"
 
         # 3. Check if the interface has an IP assigned
-        result = self._run_command(["ip", "addr", "show", self.interface])
+        result = run_command(["ip", "addr", "show", self.interface])
         if result and "inet " in result.stdout:
             return "up"
 
