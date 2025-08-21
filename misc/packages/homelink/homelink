@@ -467,13 +467,13 @@ def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
     except Exception as e:  # noqa: BLE001
         status = {"error": f"Connection error: {e!s}"}
 
+    if json_output:
+        print(json.dumps(status, indent=2))
+        return 1 if "error" in status else 0
+
     if "error" in status:
         print(f"Error: {status['error']}")
         return 1
-
-    if json_output:
-        print(json.dumps(status, indent=2))
-        return 0
 
     lines = [
         f"Location: {status.get('location', 'unknown')}",
