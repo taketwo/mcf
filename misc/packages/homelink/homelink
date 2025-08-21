@@ -389,11 +389,6 @@ class HomeLinkMonitor:
         )
         self.running = False
 
-    def _status_signal_handler(self, _signum: int, _frame: FrameType | None) -> None:
-        """Handle status request signal (SIGUSR1)."""
-        status = self.get_status()
-        self.logger.info("Status: %s", json.dumps(status, indent=2))
-
     def cleanup(self) -> None:
         """Clean up resources."""
         if self.socket_server:
@@ -406,7 +401,6 @@ class HomeLinkMonitor:
         # Setup signal handlers
         signal.signal(signal.SIGTERM, self._signal_handler)
         signal.signal(signal.SIGINT, self._signal_handler)
-        signal.signal(signal.SIGUSR1, self._status_signal_handler)
 
         self.logger.info("HomeLink Monitor daemon starting")
 
