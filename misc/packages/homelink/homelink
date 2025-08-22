@@ -60,6 +60,10 @@ class ConsensusTracker:
             return first_value
         return None
 
+    def reset(self) -> None:
+        """Clear history to start fresh."""
+        self.history.clear()
+
 
 def run_command(
     cmd: list[str],
@@ -91,7 +95,6 @@ class HomeLinkMonitor:
             os.getenv("HOMELINK_INTERNET_HISTORY_SIZE", "3"),
         )
         self.ping_timeout = int(os.getenv("HOMELINK_PING_TIMEOUT", "3"))
-        self.resume_delay = int(os.getenv("HOMELINK_RESUME_DELAY", "30"))
 
         # State tracking
         self.state = {
@@ -261,14 +264,8 @@ class HomeLinkMonitor:
         if self.state["next_check_at"] and now > self.state[
             "next_check_at"
         ] + timedelta(seconds=self.check_interval * 2):
-            self.logger.info(
-                "System resume detected, delaying next check by %ds for stabilization",
-                self.resume_delay,
-            )
-            self.state["next_check_at"] = now + timedelta(
-                seconds=self.resume_delay,
-            )
-            return
+            self.logger.info("System resume detected, resetting consensus tracker")
+            self.state["internet_tracker"].reset()
 
         # Set next check time for normal operation
         self.state["next_check_at"] = now + timedelta(seconds=self.check_interval)

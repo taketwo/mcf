@@ -83,7 +83,6 @@ If interface is up but tunnel health fails, status is marked as "degraded".
 - `HOMELINK_CHECK_INTERVAL` - Check frequency seconds (default: 10)
 - `HOMELINK_INTERNET_HISTORY_SIZE` - Sliding window size (default: 3)
 - `HOMELINK_PING_TIMEOUT` - Ping timeout seconds (default: 3)
-- `HOMELINK_RESUME_DELAY` - Post-resume stabilization delay seconds (default: 30)
 - `HOMELINK_LOG_LEVEL` - Logging verbosity (default: INFO)
 
 ## Core State Model
@@ -161,22 +160,22 @@ All network checks are performed atomically within a single method to prevent ra
 
 ## Resume Detection
 
-HomeLink detects system resume from suspend using timing gap analysis to prevent VPN flapping during network interface stabilization.
+HomeLink detects system resume from suspend using timing gap analysis and resets consensus state to prevent VPN flapping during network interface stabilization.
 
 **Detection Logic:**
 ```python
 if next_check_at and now > next_check_at + timedelta(seconds=check_interval * 2):
-    # Resume detected - delay next check for stabilization
-    next_check_at = now + timedelta(seconds=resume_stabilization_delay)
+    # Resume detected - reset consensus tracker
+    internet_tracker.reset()
 ```
 
 **How It Works:**
 1. **Gap Detection**: If current time exceeds expected check time by more than 2x check interval, assume system resumed
-2. **Stabilization Delay**: Set next check time to 30 seconds (configurable) in the future
-3. **Skip Control Logic**: Early return prevents VPN decisions during network stabilization
-4. **Dynamic Sleep**: Main loop sleeps until the extended next check time
+2. **State Reset**: Clear consensus tracker history, forcing "uncertain" state
+3. **Natural Stabilization**: Normal consensus-building process provides stabilization delay
+4. **No VPN Actions**: Control logic maintains current state until consensus is reached
 
-This prevents the common pattern of VPN start → immediate stop → stabilize that occurs when network interfaces haven't fully reconnected after resume.
+This approach is self-consistent with the consensus model and naturally prevents premature VPN decisions during network stabilization.
 
 ---
 
