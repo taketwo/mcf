@@ -1,8 +1,9 @@
 """Ruff auto-fix hook for Python files."""
 
+import subprocess
 from typing import ClassVar
 
-from ccu.hooks import BaseHook, ExitCode, HookResult
+from ccu.hooks import BaseHook
 from ccu.logging import get_logger
 
 logger = get_logger(__name__)
@@ -11,18 +12,22 @@ logger = get_logger(__name__)
 class FixRuffHook(BaseHook):
     """Ruff auto-fix hook for Python files.
 
-    This hook runs Ruff auto-fix when Python files are modified.
+    Runs Ruff auto-fix to automatically resolve linting issues when Python files are
+    modified.
 
-    Exit codes:
+    Tool return codes:
     - 0: All issues fixed successfully, no diagnostics remain
-    - 2: Fixes applied but unfixable issues remain (blocking, diagnostics in output)
-    - 2: Unexpected error occurred (blocking, error details in output)
+    - 1: Fixes applied but unfixable issues remain (blocking)
+    - Other: Unexpected error (blocking)
     """
 
     SUPPORTED_EXTENSIONS: ClassVar[list[str]] = [".py"]
+    SUCCESS_CODES: ClassVar[list[int]] = [0]
+    BLOCKING_CODES: ClassVar[list[int]] = [1]
+    TOOL_NAME: ClassVar[str] = "Ruff auto-fix"
 
-    def _execute(self, file_path: str) -> HookResult:
-        """Execute Ruff auto-fix for the given Python file.
+    def _execute(self, file_path: str) -> subprocess.CompletedProcess[str]:
+        """Execute Ruff auto-fix command.
 
         Parameters
         ----------
@@ -31,41 +36,10 @@ class FixRuffHook(BaseHook):
 
         Returns
         -------
-        HookResult
-            The result of the Ruff auto-fix execution.
+        subprocess.CompletedProcess[str]
+            The result of the command execution.
 
         """
-        fix_result = self.run_command(
+        return self.run_command(
             ["uv", "run", "ruff", "check", file_path, "--fix"],
-        )
-
-        if fix_result.returncode == 0:
-            # All issues fixed, no diagnostics left
-            return HookResult(
-                exit_code=ExitCode.SUCCESS,
-                file_path=file_path,
-                tool_name="Ruff auto-fix",
-                output="",
-            )
-        if fix_result.returncode == 1:
-            # Fixes applied but diagnostics still remain - blocking for Claude
-            return HookResult(
-                exit_code=ExitCode.BLOCKING_ERROR,
-                file_path=file_path,
-                tool_name="Ruff auto-fix",
-                output=fix_result.stdout,  # Send diagnostics to output for Claude
-            )
-        # Other error codes (unexpected)
-        logger.debug(
-            "Unexpected ruff exit code for %s: %d (stdout: %r, stderr: %r)",
-            file_path,
-            fix_result.returncode,
-            fix_result.stdout,
-            fix_result.stderr,
-        )
-        return HookResult(
-            exit_code=ExitCode.BLOCKING_ERROR,
-            file_path=file_path,
-            tool_name="Ruff auto-fix",
-            output=fix_result.stderr or fix_result.stdout,
         )

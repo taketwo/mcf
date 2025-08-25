@@ -14,6 +14,10 @@ from enum import IntEnum
 from pathlib import Path
 from typing import Any, ClassVar, cast
 
+from ccu.logging import get_logger
+
+logger = get_logger(__name__)
+
 
 class ExitCode(IntEnum):
     """Exit codes for hook execution."""
@@ -63,7 +67,9 @@ def find_project_root() -> str:
     TODO: Improve this to look for root markers such as .git, pyproject.toml,
     setup.py, etc.
     """
-    return os.environ.get("CLAUDE_PROJECT_DIR", ".")
+    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", ".")
+    logger.debug("Using project root: %s", project_dir)
+    return project_dir
 
 
 class BaseHook(ABC):
@@ -75,6 +81,9 @@ class BaseHook(ABC):
     """
 
     SUPPORTED_EXTENSIONS: ClassVar[list[str]] = []
+    SUCCESS_CODES: ClassVar[list[int]] = [0]
+    BLOCKING_CODES: ClassVar[list[int]] = [1]
+    TOOL_NAME: ClassVar[str] = ""
 
     def run_command(
         self,
@@ -106,13 +115,37 @@ class BaseHook(ABC):
         if cwd is None:
             cwd = Path(find_project_root())
 
-        return subprocess.run(
-            command,
-            check=False,
-            capture_output=True,
-            text=True,
-            cwd=cwd,
-        )
+        cmd_str = " ".join(command)
+        logger.debug("Running command: %s in %s", cmd_str, cwd)
+
+        try:
+            result = subprocess.run(
+                command,
+                check=False,
+                capture_output=True,
+                text=True,
+                cwd=cwd,
+            )
+            logger.debug(
+                "Command completed: exit_code=%d, stdout_len=%d, stderr_len=%d",
+                result.returncode,
+                len(result.stdout),
+                len(result.stderr),
+            )
+            if result.returncode != 0:
+                logger.info(
+                    "Command failed with exit code %d: %s",
+                    result.returncode,
+                    cmd_str,
+                )
+        except OSError:
+            logger.exception("Failed to execute command %s", cmd_str)
+            raise
+        except subprocess.SubprocessError:
+            logger.exception("Subprocess error for command %s", cmd_str)
+            raise
+        else:
+            return result
 
     def should_execute(self, file_path: str) -> bool:
         """Check if this hook should execute for the given file.
@@ -129,10 +162,20 @@ class BaseHook(ABC):
 
         """
         if not file_path:
+            logger.warning("Empty file path provided to %s", self.__class__.__name__)
             return False
 
         file_extension = Path(file_path).suffix
-        return file_extension in self.SUPPORTED_EXTENSIONS
+        should_run = file_extension in self.SUPPORTED_EXTENSIONS
+        logger.debug(
+            "%s should_execute(%s): %s (extension: %s, supported: %s)",
+            self.__class__.__name__,
+            file_path,
+            should_run,
+            file_extension,
+            self.SUPPORTED_EXTENSIONS,
+        )
+        return should_run
 
     def execute(self, input_data: dict[str, Any]) -> HookResult:
         """Execute the hook with input parsing and validation.
@@ -149,9 +192,9 @@ class BaseHook(ABC):
 
         """
         file_path = input_data["tool_input"]["file_path"]
+        logger.info("Executing %s for file: %s", self.__class__.__name__, file_path)
 
         if not self.should_execute(file_path):
-            # Return success for files we don't process
             return HookResult(
                 exit_code=0,
                 file_path=file_path,
@@ -159,10 +202,48 @@ class BaseHook(ABC):
                 output="",
             )
 
-        return self._execute(file_path)
+        try:
+            result = self._execute(file_path)
+            tool_name = self.TOOL_NAME or self.__class__.__name__
+
+            if result.returncode in self.SUCCESS_CODES:
+                logger.info("%s completed successfully for: %s", tool_name, file_path)
+                return HookResult(
+                    exit_code=ExitCode.SUCCESS,
+                    file_path=file_path,
+                    tool_name=tool_name,
+                    output=result.stdout + result.stderr,
+                )
+            if result.returncode in self.BLOCKING_CODES:
+                logger.info("%s found issues for: %s (blocking)", tool_name, file_path)
+                return HookResult(
+                    exit_code=ExitCode.BLOCKING_ERROR,
+                    file_path=file_path,
+                    tool_name=tool_name,
+                    output=result.stdout + result.stderr,
+                )
+            logger.warning(
+                "Unexpected %s exit code %d for %s",
+                tool_name.lower(),
+                result.returncode,
+                file_path,
+            )
+            return HookResult(
+                exit_code=ExitCode.BLOCKING_ERROR,
+                file_path=file_path,
+                tool_name=tool_name,
+                output=result.stderr or result.stdout,
+            )
+        except Exception:
+            logger.exception(
+                "Unexpected error in %s._execute for %s",
+                self.__class__.__name__,
+                file_path,
+            )
+            raise
 
     @abstractmethod
-    def _execute(self, file_path: str) -> HookResult:
+    def _execute(self, file_path: str) -> subprocess.CompletedProcess[str]:
         """Execute the hook logic for the given file.
 
         This method must be implemented by derived classes to perform the
@@ -175,8 +256,8 @@ class BaseHook(ABC):
 
         Returns
         -------
-        HookResult
-            The result of the hook execution.
+        subprocess.CompletedProcess[str]
+            The result of the command execution.
 
         """
 
@@ -192,20 +273,30 @@ def list_available_hooks() -> list[str]:
     """
     hooks_dir = Path(__file__).parent
     available_hooks = []
+    logger.debug("Scanning hooks directory: %s", hooks_dir)
 
     for file_path in hooks_dir.glob("*.py"):
         if file_path.name.startswith("_"):
+            logger.debug("Skipping private module: %s", file_path.name)
             continue
 
         module_name = file_path.stem
         hook_name = module_name.replace("_", "-")
+        logger.debug("Checking hook: %s (from %s)", hook_name, file_path.name)
 
         try:
             get_hook(hook_name)  # this validates the hook exists and works
             available_hooks.append(hook_name)
+            logger.debug("Hook %s is available", hook_name)
         except UnknownHookError:
+            logger.debug("Hook %s is not valid", hook_name)
             continue
 
+    logger.info(
+        "Found %d available hooks: %s",
+        len(available_hooks),
+        sorted(available_hooks),
+    )
     return sorted(available_hooks)
 
 
@@ -228,13 +319,19 @@ def get_hook(hook_name: str) -> BaseHook:
         If the hook name is not recognized.
 
     """
+    logger.debug("Loading hook: %s", hook_name)
     try:
         module_name = hook_name.replace("-", "_")
         class_name = (
             "".join(word.capitalize() for word in hook_name.split("-")) + "Hook"
         )
+        logger.debug("Importing module: %s, class: %s", module_name, class_name)
         module = importlib.import_module(f".{module_name}", package=__package__)
         hook_class = getattr(module, class_name)
-        return cast("BaseHook", hook_class())
+        hook_instance = cast("BaseHook", hook_class())
+        logger.debug("Successfully loaded hook: %s", hook_name)
     except (ImportError, AttributeError) as e:
+        logger.debug("Failed to load hook %s: %s", hook_name, e)
         raise UnknownHookError(hook_name) from e
+    else:
+        return hook_instance

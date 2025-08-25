@@ -1,8 +1,9 @@
 """MyPy type checking hook for Python files."""
 
+import subprocess
 from typing import ClassVar
 
-from ccu.hooks import BaseHook, ExitCode, HookResult, find_project_root
+from ccu.hooks import BaseHook, find_project_root
 from ccu.logging import get_logger
 
 logger = get_logger(__name__)
@@ -11,58 +12,34 @@ logger = get_logger(__name__)
 class CheckMypyHook(BaseHook):
     """MyPy type checking hook for Python files.
 
-    This hook runs MyPy type checking when Python files are modified.
+    Runs MyPy type checker to validate type annotations when Python files are modified.
+
+    Tool return codes:
+    - 0: Type checking passed, no errors found
+    - 1: Type errors found (blocking)
+    - Other: Unexpected error (blocking)
     """
 
     SUPPORTED_EXTENSIONS: ClassVar[list[str]] = [".py"]
+    SUCCESS_CODES: ClassVar[list[int]] = [0]
+    BLOCKING_CODES: ClassVar[list[int]] = [1]
+    TOOL_NAME: ClassVar[str] = "MyPy type checking"
 
-    def _execute(self, file_path: str) -> HookResult:
-        """Execute MyPy type checking for the given Python file.
+    def _execute(self, file_path: str) -> subprocess.CompletedProcess[str]:  # noqa: ARG002
+        """Execute MyPy type checking command.
 
         Parameters
         ----------
         file_path : str
-            The Python file path to process.
+            The Python file path that triggered the check.
 
         Returns
         -------
-        HookResult
-            The result of the MyPy execution.
+        subprocess.CompletedProcess[str]
+            The result of the command execution.
 
         """
-        # Run mypy on the project directory
         project_root = find_project_root()
-        result = self.run_command(
+        return self.run_command(
             ["uv", "run", "mypy", project_root],
-        )
-
-        if result.returncode == 0:
-            # Type checking passed
-            return HookResult(
-                exit_code=ExitCode.SUCCESS,
-                file_path=file_path,
-                tool_name="MyPy type checking",
-                output=result.stdout + result.stderr,
-            )
-        if result.returncode == 1:
-            # Type errors found - blocking for Claude
-            return HookResult(
-                exit_code=ExitCode.BLOCKING_ERROR,
-                file_path=file_path,
-                tool_name="MyPy type checking",
-                output=result.stdout + result.stderr,
-            )
-        # Other error codes (unexpected)
-        logger.debug(
-            "Unexpected mypy exit code for %s: %d (stdout: %r, stderr: %r)",
-            file_path,
-            result.returncode,
-            result.stdout,
-            result.stderr,
-        )
-        return HookResult(
-            exit_code=ExitCode.BLOCKING_ERROR,
-            file_path=file_path,
-            tool_name="MyPy type checking",
-            output=result.stdout + result.stderr,
         )
