@@ -3,7 +3,7 @@ name = "ccu"
 version = "0.1.0"
 description = "ClaudeCode Utilities"
 requires-python = ">=3.13"
-dependencies = ["click>=8.2.1"]
+dependencies = ["click>=8.2.1", "rich>=14.1.0"]
 
 [project.scripts]
 ccu = "ccu.cli:main"

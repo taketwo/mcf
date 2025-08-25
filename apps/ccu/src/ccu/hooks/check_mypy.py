@@ -3,9 +3,9 @@
 from typing import ClassVar
 
 from ccu.hooks import BaseHook, ExitCode, HookResult, find_project_root
-from ccu.logging import get_debug_logger
+from ccu.logging import get_logger
 
-logger = get_debug_logger(__name__)
+logger = get_logger(__name__)
 
 
 class CheckMypyHook(BaseHook):

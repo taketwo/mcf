@@ -3,20 +3,25 @@ import sys
 
 import click
 
-from ccu.logging import get_debug_logger
+from ccu.logging import configure_logging, get_logger
 
-logger = get_debug_logger(__name__)
+logger = get_logger(__name__)
 
 
 @click.group()
-def main() -> None:
+@click.option("--debug", is_flag=True, envvar="CCU_DEBUG", help="Enable debug logging")
+def main(*, debug: bool = False) -> None:
     """ClaudeCode Utilities CLI."""
+    configure_logging(debug=debug)
 
 
 @main.command()
 @click.argument("hook_names", nargs=-1, required=False)
 def hook(hook_names: tuple[str, ...] | None = None) -> None:
-    """Execute one or more hook commands. If no arguments provided, list available hooks."""
+    """Execute one or more hook commands.
+
+    If no arguments provided, list available hooks.
+    """
     try:
         # Import hooks module only when needed
         from . import hooks  # noqa: PLC0415
