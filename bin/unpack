@@ -13,7 +13,16 @@ function print_help {
 }
 
 # Parse command line options
-while [[ $# -gt 0 ]]; do
+ARGS=$(getopt -o dcth -l delete,clipboard,remove-top-dir,help -n "$0" -- "$@")
+if [ $? != 0 ]; then
+  echo "Error: Invalid arguments"
+  print_help
+  exit 1
+fi
+
+eval set -- "$ARGS"
+
+while true; do
   case "$1" in
     -d | --delete)
       DELETE_ARCHIVE=true
@@ -36,17 +45,31 @@ while [[ $# -gt 0 ]]; do
       print_help
       exit 0
       ;;
-    *)
-      if [ -n "${ARCHIVE_PATH}" ]; then
-        echo "Error: only one ARCHIVE_PATH can be provided"
-        print_help
-        exit 1
-      fi
-      ARCHIVE_PATH="$1"
+    --)
       shift
+      break
+      ;;
+    *)
+      echo "Error: Unknown option $1"
+      print_help
+      exit 1
       ;;
   esac
 done
+
+# Handle remaining positional arguments (ARCHIVE_PATH)
+if [ $# -gt 1 ]; then
+  echo "Error: only one ARCHIVE_PATH can be provided"
+  print_help
+  exit 1
+elif [ $# -eq 1 ]; then
+  if [ -n "${ARCHIVE_PATH}" ]; then
+    echo "Error: cannot use both ARCHIVE_PATH and --clipboard options"
+    print_help
+    exit 1
+  fi
+  ARCHIVE_PATH="$1"
+fi
 
 # Extracts an archive if it has one of the known types
 function unpack() {
