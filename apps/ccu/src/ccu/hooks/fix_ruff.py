@@ -40,6 +40,4 @@ class FixRuffHook(BaseHook):
             The result of the command execution.
 
         """
-        return self.run_command(
-            ["uv", "run", "ruff", "check", file_path, "--fix"],
-        )
+        return self.run_command(["uvx", "--quiet", "ruff", "check", file_path, "--fix"])

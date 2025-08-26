@@ -39,6 +39,4 @@ class FormatRuffHook(BaseHook):
             The result of the command execution.
 
         """
-        return self.run_command(
-            ["uv", "run", "ruff", "format", file_path],
-        )
+        return self.run_command(["uvx", "--quiet", "ruff", "format", file_path])

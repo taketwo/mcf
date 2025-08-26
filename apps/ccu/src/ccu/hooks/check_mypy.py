@@ -41,5 +41,5 @@ class CheckMypyHook(BaseHook):
         """
         project_root = find_project_root()
         return self.run_command(
-            ["uv", "run", "mypy", project_root],
+            ["uvx", "--quiet", "mypy", project_root],
         )
