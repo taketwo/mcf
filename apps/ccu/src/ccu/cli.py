@@ -80,5 +80,44 @@ def hook(hook_names: tuple[str, ...] | None = None) -> None:
         sys.exit(2)
 
 
+@main.command()
+@click.argument("hook_name")
+@click.argument("file_path")
+def debug_hook(hook_name: str, file_path: str) -> None:
+    """Debug hook execution.
+
+    Automatically enables debug logging and simulates Claude Code hook execution
+    for the specified file.
+    """
+    configure_logging(debug=True)
+    try:
+        # Import hooks module only when needed
+        from . import hooks  # noqa: PLC0415
+
+        try:
+            hook_instance = hooks.get_hook(hook_name)
+        except hooks.UnknownHookError as e:
+            print(str(e), file=sys.stderr)
+            sys.exit(2)
+
+        result = hook_instance.execute({"tool_input": {"file_path": file_path}})
+        logger.debug(
+            "Hook %s executed with exit code %d for file %s",
+            hook_instance.__class__.__name__,
+            result.exit_code,
+            result.file_path,
+        )
+        if result.output:
+            print(
+                f"\n{result.tool_name} output:\n{result.output}",
+                file=(sys.stderr if result.exit_code else sys.stdout),
+            )
+        sys.exit(result.exit_code)
+
+    except Exception:
+        logger.exception("Unexpected error in debug hook execution")
+        sys.exit(2)
+
+
 if __name__ == "__main__":
     main()
