@@ -1,25 +1,4 @@
 {
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "uv run black ."
-          },
-          {
-            "type": "command",
-            "command": "cd .claude/hooks && uv run python ruff_check.py"
-          },
-          {
-            "type": "command",
-            "command": "cd .claude/hooks && uv run python mypy_check.py"
-          }
-        ]
-      }
-    ]
-  },
   "permissions": {
     "allow": [
       "Bash(uv run pytest:*)",
