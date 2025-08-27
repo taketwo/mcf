@@ -1,8 +1,7 @@
 [project]
 name = "nvim-manager"
-version = "0.1.0"
-description = "Python-based tool to manage Neovim installations and plugins using lock files"
-readme = "README.md"
+version = "0.2.0"
+description = "Python-based tool to manage Neovim installations with plugins and tools using lock files"
 authors = [{ name = "Sergey Alexandrov", email = "alexandrov88@gmail.com" }]
 requires-python = ">=3.13"
 dependencies = [
