@@ -24,17 +24,12 @@ packages = ["src/nvim_manager"]
 
 [dependency-groups]
 dev = [
-  "black>=25.1.0",
   "mypy>=1.16.1",
   "pytest>=8.4.1",
   "pytest-cov>=6.2.1",
   "ruff>=0.12.3",
   "types-requests>=2.32.0",
 ]
-
-[tool.black]
-line-length = 88
-target-version = ['py313']
 
 [tool.mypy]
 python_version = "3.13"
