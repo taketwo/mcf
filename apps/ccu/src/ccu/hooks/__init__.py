@@ -6,7 +6,6 @@ be used by a superapp that handles hook execution.
 """
 
 import importlib
-import os
 import subprocess
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -15,6 +14,7 @@ from pathlib import Path
 from typing import Any, ClassVar, cast
 
 from ccu.logging import get_logger
+from ccu.project import Project
 
 logger = get_logger(__name__)
 
@@ -59,19 +59,6 @@ class HookResult:
     output: str = ""
 
 
-def find_project_root() -> str:
-    """Find the project root directory.
-
-    Currently uses CLAUDE_PROJECT_DIR environment variable.
-
-    TODO: Improve this to look for root markers such as .git, pyproject.toml,
-    setup.py, etc.
-    """
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", ".")
-    logger.debug("Using project root: %s", project_dir)
-    return project_dir
-
-
 class BaseHook(ABC):
     """Abstract base class for all hooks.
 
@@ -81,9 +68,20 @@ class BaseHook(ABC):
     """
 
     SUPPORTED_EXTENSIONS: ClassVar[list[str]] = []
-    SUCCESS_CODES: ClassVar[list[int]] = [0]
-    BLOCKING_CODES: ClassVar[list[int]] = [1]
+    SUCCESS_CODES: ClassVar[list[int]] = []
+    BLOCKING_CODES: ClassVar[list[int]] = []
     TOOL_NAME: ClassVar[str] = ""
+
+    def __init__(self, project: Project) -> None:
+        """Initialize hook with project context.
+
+        Parameters
+        ----------
+        project : Project
+            The project context for this hook execution.
+
+        """
+        self.project = project
 
     def run_command(
         self,
@@ -113,7 +111,7 @@ class BaseHook(ABC):
 
         """
         if cwd is None:
-            cwd = Path(find_project_root())
+            cwd = self.project.root
 
         cmd_str = " ".join(command)
         logger.debug("Running command: %s in %s", cmd_str, cwd)
@@ -168,7 +166,7 @@ class BaseHook(ABC):
         file_extension = Path(file_path).suffix
         should_run = file_extension in self.SUPPORTED_EXTENSIONS
         logger.debug(
-            "%s should_execute(%s): %s (extension: %s, supported: %s)",
+            "%s should_execute(%s): %s (extension: '%s', supported: %s)",
             self.__class__.__name__,
             file_path,
             should_run,
@@ -285,7 +283,12 @@ def list_available_hooks() -> list[str]:
         logger.debug("Checking hook: %s (from %s)", hook_name, file_path.name)
 
         try:
-            get_hook(hook_name)  # this validates the hook exists and works
+            # Create temporary project for validation
+            temp_project = Project(Path())
+            get_hook(
+                hook_name,
+                temp_project,
+            )  # this validates the hook exists and works
             available_hooks.append(hook_name)
             logger.debug("Hook %s is available", hook_name)
         except UnknownHookError:
@@ -300,13 +303,15 @@ def list_available_hooks() -> list[str]:
     return sorted(available_hooks)
 
 
-def get_hook(hook_name: str) -> BaseHook:
+def get_hook(hook_name: str, project: Project) -> BaseHook:
     """Get a hook instance by name.
 
     Parameters
     ----------
     hook_name : str
         Name of the hook (e.g., "fix-ruff", "format-ruff", "check-mypy").
+    project : Project
+        The project context to pass to the hook constructor.
 
     Returns
     -------
@@ -328,7 +333,7 @@ def get_hook(hook_name: str) -> BaseHook:
         logger.debug("Importing module: %s, class: %s", module_name, class_name)
         module = importlib.import_module(f".{module_name}", package=__package__)
         hook_class = getattr(module, class_name)
-        hook_instance = cast("BaseHook", hook_class())
+        hook_instance = cast("BaseHook", hook_class(project))
         logger.debug("Successfully loaded hook: %s", hook_name)
     except (ImportError, AttributeError) as e:
         logger.debug("Failed to load hook %s: %s", hook_name, e)

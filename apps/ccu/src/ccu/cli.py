@@ -4,6 +4,7 @@ import sys
 import click
 
 from ccu.logging import configure_logging, get_logger
+from ccu.project import get_project
 
 logger = get_logger(__name__)
 
@@ -40,8 +41,11 @@ def hook(hook_names: tuple[str, ...] | None = None) -> None:
             print(f"Error parsing hook input from stdin: {e}", file=sys.stderr)
             sys.exit(2)
 
+        project = get_project()
         try:
-            hook_instances = [hooks.get_hook(hook_name) for hook_name in hook_names]
+            hook_instances = [
+                hooks.get_hook(hook_name, project) for hook_name in hook_names
+            ]
         except hooks.UnknownHookError as e:
             print(str(e), file=sys.stderr)
             sys.exit(2)
@@ -95,7 +99,8 @@ def debug_hook(hook_name: str, file_path: str) -> None:
         from . import hooks  # noqa: PLC0415
 
         try:
-            hook_instance = hooks.get_hook(hook_name)
+            project = get_project()
+            hook_instance = hooks.get_hook(hook_name, project)
         except hooks.UnknownHookError as e:
             print(str(e), file=sys.stderr)
             sys.exit(2)
