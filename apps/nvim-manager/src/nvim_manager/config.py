@@ -70,6 +70,9 @@ class EditorConfig(BaseModel):
         Path where Neovim binary will be installed.
     build_cache : Path
         Directory for storing Neovim source code and build artifacts.
+    build_cache_size_limit : int
+        Maximum number of cached builds to retain. When exceeded, oldest
+        builds are automatically pruned.
     lock_file : str
         Name of the lock file in the repository.
     repository : str
@@ -81,6 +84,7 @@ class EditorConfig(BaseModel):
 
     install_path: ExpandedPath
     build_cache: ExpandedPath
+    build_cache_size_limit: int = 3
     lock_file: str = "neovim-lock.json"
     repository: str = "neovim/neovim"
 

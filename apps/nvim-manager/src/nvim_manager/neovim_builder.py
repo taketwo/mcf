@@ -1,5 +1,6 @@
 """Neovim build system."""
 
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -40,7 +41,12 @@ class NeovimBuilder:
 
     """
 
-    def __init__(self, build_cache: Path, repository: str) -> None:
+    def __init__(
+        self,
+        build_cache: Path,
+        repository: str,
+        build_cache_size_limit: int,
+    ) -> None:
         """Initialize Neovim builder with cache directory and repository.
 
         Parameters
@@ -49,11 +55,15 @@ class NeovimBuilder:
             Root directory for caching built Neovim installations.
         repository : str
             GitHub repository in format 'owner/repo' (e.g., 'neovim/neovim').
+        build_cache_size_limit : int
+            Maximum number of cached builds to retain. When exceeded, oldest
+            builds are automatically pruned.
 
         """
         self.build_cache = build_cache
         self.build_cache.mkdir(parents=True, exist_ok=True)
         self.repository = repository
+        self.build_cache_size_limit = build_cache_size_limit
 
     def build_commit(self, commit_hash: str) -> Path:
         """Build Neovim from a specific commit hash.
@@ -127,6 +137,9 @@ class NeovimBuilder:
             short_hash,
             nvim_executable,
         )
+
+        self._prune_build_cache()
+
         return nvim_executable
 
     def _shallow_clone_commit(self, commit_hash: str, target_dir: Path) -> None:
@@ -329,3 +342,35 @@ class NeovimBuilder:
             stdout_file.flush()
             stderr_file.flush()
             return True
+
+    def _prune_build_cache(self) -> None:
+        """Remove old cached builds to stay within size limit.
+
+        Removes the oldest builds when the total count exceeds the configured
+        limit. Uses filesystem modification time to determine age.
+
+        """
+        if not self.build_cache.exists():
+            return
+
+        cached_builds = [
+            d
+            for d in self.build_cache.iterdir()
+            if d.is_dir() and (d / "bin" / "nvim").exists()
+        ]
+
+        if len(cached_builds) <= self.build_cache_size_limit:
+            return
+
+        builds_to_remove = len(cached_builds) - self.build_cache_size_limit
+        logger.debug(
+            "Cache size limit exceeded (%d > %d), removing %d oldest builds",
+            len(cached_builds),
+            self.build_cache_size_limit,
+            builds_to_remove,
+        )
+
+        cached_builds.sort(key=lambda d: d.stat().st_mtime)
+        for build_dir in cached_builds[:builds_to_remove]:
+            logger.debug("Removing cached build: %s", build_dir.name)
+            shutil.rmtree(build_dir)

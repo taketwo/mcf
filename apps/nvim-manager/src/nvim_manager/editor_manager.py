@@ -52,7 +52,9 @@ class EditorManager:
         """
         self.config = config
         self.lock_repo = lock_repo
-        self.builder = NeovimBuilder(config.build_cache, config.repository)
+        self.builder = NeovimBuilder(
+            config.build_cache, config.repository, config.build_cache_size_limit,
+        )
 
     def update(self, *, news_diff_callback: Callable[[str], None] | None = None) -> str:
         """Update to latest Neovim version.
