@@ -141,6 +141,23 @@ return {
               },
             },
           },
+          ['Edit buffer'] = {
+            strategy = 'chat',
+            description = 'Edit the current buffer',
+            opts = {
+              short_name = 'edit_buffer',
+              auto_submit = false,
+            },
+            prompts = {
+              {
+                role = 'user',
+                content = '#{buffer} @{insert_edit_into_file}\n\n ',
+                opts = {
+                  contains_code = true,
+                },
+              },
+            },
+          },
         },
         extensions = {
           mcphub = {
