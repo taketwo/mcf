@@ -84,8 +84,6 @@ return {
     { '<Leader>.w', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word', mode = { 'n', 'x' } },
     -- Picker: Git
     { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout branch' },
-    { '<Leader>gL', function() Snacks.picker.git_log() end, desc = 'Log (repository)' },
-    { '<Leader>gl', function() Snacks.picker.git_log_file() end, desc = 'Log (buffer only)' },
   },
   config = function(_, opts)
     local Snacks = require('snacks')

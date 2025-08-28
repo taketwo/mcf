@@ -9,6 +9,8 @@ return {
     },
     cmd = { 'Telescope' },
     keys = {
+      { '<Leader>gL', '<cmd>Telescope git_bcommits<cr>', desc = 'Log (current file)' },
+      { '<Leader>gl', '<cmd>Telescope git_commits<cr>', desc = 'Log (repository)' },
       {
         '<space>',
         '<cmd>Telescope buffers show_all_buffers=true sort_mru=true sort_lastused=true<cr>',
