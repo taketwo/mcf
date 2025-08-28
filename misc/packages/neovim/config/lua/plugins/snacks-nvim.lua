@@ -61,7 +61,7 @@ return {
     -- Picker: Search
     { '<Leader>."', function() Snacks.picker.registers() end, desc = 'Registers' },
     { '<Leader>.,', function() Snacks.picker.resume() end, desc = 'Resume last picker' },
-    { '<Leader>..', function() Snacks.picker.smart() end, desc = 'Smart files' },
+    { '<Leader>..', function() Snacks.picker.files() end, desc = 'Files' },
     { '<Leader>./', function() Snacks.picker.search_history() end, desc = 'Search history' },
     { '<Leader>.;', function() Snacks.picker.command_history() end, desc = 'Command history' },
     { '<Leader>.D', function() Snacks.picker.diagnostics_buffer() end, desc = 'Diagnostics (buffer only)' },
@@ -79,6 +79,7 @@ return {
     { '<Leader>.m', function() Snacks.picker.marks() end, desc = 'Marks' },
     { '<Leader>.q', function() Snacks.picker.qflist() end, desc = 'Quickfix list' },
     { '<Leader>.r', function() Snacks.picker.recent() end, desc = 'Recent files' },
+    { '<Leader>.s', function() Snacks.picker.smart() end, desc = 'Smart files' },
     { '<Leader>.u', function() Snacks.picker.undo() end, desc = 'Undo history' },
     { '<Leader>.w', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word', mode = { 'n', 'x' } },
     -- Picker: Git
