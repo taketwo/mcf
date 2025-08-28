@@ -90,13 +90,12 @@ class PluginManager:
         )
 
         # Parse expected lock data such that we can validate restoration
-        expected_content = self.config.local_lock_path.read_text()
-        expected_data = json.loads(expected_content)
-        expected_normalized = {
-            name: info.get("commit", "unknown") for name, info in expected_data.items()
-        }
+        expected = self._parse_lock_data(
+            self.config.local_lock_path.read_text(),
+        )
 
         # Retry Lazy plugin restoration
+        differences = []
         for attempt in range(1, self.config.restore_retry_count + 1):
             logger.debug(
                 "Plugin restore attempt %d/%d",
@@ -117,12 +116,12 @@ class PluginManager:
                     capture_output=True,
                 )
 
-                # Check if restoration succeeded by comparing against expected data
-                if self._compare_with_expected(expected_normalized):
+                current = self._parse_lock_data(self.config.local_lock_path.read_text())
+                if not (differences := compare_lock_data(current, expected)):
                     logger.info("Plugin restoration succeeded on attempt %d", attempt)
                     break
 
-                if attempt < self.config.restore_retry_count:
+                if attempt != self.config.restore_retry_count:
                     logger.warning("Lock file changed during restore, retrying")
 
             except Exception as e:
@@ -133,13 +132,26 @@ class PluginManager:
                     logger.exception("Plugin restoration failed")
                     raise RuntimeError(msg) from e
         else:
-            # If we get here, all attempts failed
             logger.error(
                 "Plugin restoration failed after %d attempts",
                 self.config.restore_retry_count,
             )
-            msg = "Plugin restoration failed after all retry attempts"
-            raise RuntimeError(msg)
+            for diff in differences:
+                if diff.status == LockComparison.Status.DIFFERENT_VALUES:
+                    logger.error(
+                        "Different versions: %s (expected: %s, current: %s)",
+                        diff.name,
+                        diff.lock_value,
+                        diff.current_value,
+                    )
+                elif diff.status == LockComparison.Status.MISSING_CURRENTLY:
+                    logger.error("Missing plugin: %s", diff.name)
+                elif diff.status == LockComparison.Status.MISSING_IN_LOCK:
+                    logger.error("Unexpected plugin: %s", diff.name)
+
+            raise RuntimeError(
+                f"Plugin restoration failed after {self.config.restore_retry_count} attempts",
+            )
 
     def commit(self) -> None:
         """Save current plugin state to lock file.
@@ -184,23 +196,17 @@ class PluginManager:
         logger.debug("Getting plugin status")
 
         try:
-            # Read both files
-            current_content = self.config.local_lock_path.read_text()
-            lock_content = self.lock_repo.read_file(self.lock_file_name)
-
-            # Parse JSON
-            current_data = json.loads(current_content)
-            lock_data = json.loads(lock_content)
-
-            # Compare and find differences
-            differences = self._find_plugin_differences(current_data, lock_data)
+            # Parse and compare lock files
+            current = self._parse_lock_data(self.config.local_lock_path.read_text())
+            lock = self._parse_lock_data(self.lock_repo.read_file(self.lock_file_name))
+            differences = compare_lock_data(current, lock)
             in_sync = len(differences) == 0
 
             return {
                 "in_sync": in_sync,
                 "differences": differences,
-                "total_current": len(current_data),
-                "total_lock": len(lock_data),
+                "total_current": len(current),
+                "total_lock": len(lock),
             }
 
         except FileNotFoundError as e:
@@ -237,65 +243,24 @@ class PluginManager:
                 "total_lock": 0,
             }
 
-    def _compare_with_expected(self, expected_normalized: dict[str, str]) -> bool:
-        """Check if current file matches expected lock data.
+    def _parse_lock_data(self, content: str) -> dict[str, str]:
+        """Parse and normalize lock file content to {name: commit} format.
 
         Parameters
         ----------
-        expected_normalized : dict[str, str]
-            Expected lock data in normalized {name: commit} format.
+        content : str
+            Raw lock file content as JSON string.
 
         Returns
         -------
-        bool
-            True if current file matches expected data, False otherwise.
+        dict[str, str]
+            Normalized data in {name: commit} format.
+
+        Raises
+        ------
+        json.JSONDecodeError
+            If content is not valid JSON.
 
         """
-        try:
-            if not self.config.local_lock_path.exists():
-                return False
-
-            current_content = self.config.local_lock_path.read_text()
-            current_data = json.loads(current_content)
-            current_normalized = {
-                name: info.get("commit", "unknown")
-                for name, info in current_data.items()
-            }
-
-            # Use existing comparison utility - empty differences means match
-            differences = compare_lock_data(current_normalized, expected_normalized)
-            return len(differences) == 0
-
-        except (FileNotFoundError, json.JSONDecodeError, Exception) as e:
-            logger.debug("File comparison with expected data failed: %s", e)
-            return False
-
-    def _find_plugin_differences(
-        self,
-        current_data: dict[str, Any],
-        lock_data: dict[str, Any],
-    ) -> list[LockComparison]:
-        """Find differences between current and lock plugin data.
-
-        Parameters
-        ----------
-        current_data : dict[str, Any]
-            Current lazy-lock.json data.
-        lock_data : dict[str, Any]
-            Lock file lazy-lock.json data.
-
-        Returns
-        -------
-        list[LockComparison]
-            List of plugin differences with type-safe comparison objects.
-
-        """
-        # Normalize plugin data from {name: {commit: "hash"}} to {name: "hash"}
-        normalized_current = {
-            name: info.get("commit", "unknown") for name, info in current_data.items()
-        }
-        normalized_lock = {
-            name: info.get("commit", "unknown") for name, info in lock_data.items()
-        }
-
-        return compare_lock_data(normalized_current, normalized_lock)
+        data = json.loads(content)
+        return {name: info.get("commit", "unknown") for name, info in data.items()}
