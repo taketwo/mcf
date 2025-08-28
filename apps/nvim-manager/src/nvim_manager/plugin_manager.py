@@ -6,7 +6,7 @@ from typing import Any
 from .config import PluginsConfig
 from .lock_repository import LockRepository
 from .logging import get_logger
-from .utils import compare_lock_data, LockComparison, run_command
+from .utils import LockComparison, compare_lock_data, run_command
 
 logger = get_logger(__name__)
 
@@ -83,11 +83,18 @@ class PluginManager:
         """
         logger.info("Restoring plugins from lock file")
 
-        # Copy lock file from remote to local (only once)
+        # Copy lock file from remote to local
         self.lock_repo.get_file(
             self.lock_file_name,
             self.config.local_lock_path,
         )
+
+        # Parse expected lock data such that we can validate restoration
+        expected_content = self.config.local_lock_path.read_text()
+        expected_data = json.loads(expected_content)
+        expected_normalized = {
+            name: info.get("commit", "unknown") for name, info in expected_data.items()
+        }
 
         # Retry Lazy plugin restoration
         for attempt in range(1, self.config.restore_retry_count + 1):
@@ -110,8 +117,8 @@ class PluginManager:
                     capture_output=True,
                 )
 
-                # Check if restoration succeeded by comparing files
-                if self._files_match():
+                # Check if restoration succeeded by comparing against expected data
+                if self._compare_with_expected(expected_normalized):
                     logger.info("Plugin restoration succeeded on attempt %d", attempt)
                     break
 
@@ -230,13 +237,18 @@ class PluginManager:
                 "total_lock": 0,
             }
 
-    def _files_match(self) -> bool:
-        """Check if current and lock files have the same content.
+    def _compare_with_expected(self, expected_normalized: dict[str, str]) -> bool:
+        """Check if current file matches expected lock data.
+
+        Parameters
+        ----------
+        expected_normalized : dict[str, str]
+            Expected lock data in normalized {name: commit} format.
 
         Returns
         -------
         bool
-            True if files have identical content, False otherwise.
+            True if current file matches expected data, False otherwise.
 
         """
         try:
@@ -244,16 +256,18 @@ class PluginManager:
                 return False
 
             current_content = self.config.local_lock_path.read_text()
-            lock_content = self.lock_repo.read_file(self.lock_file_name)
-
-            # Normalize JSON for comparison (handle formatting differences)
             current_data = json.loads(current_content)
-            lock_data = json.loads(lock_content)
+            current_normalized = {
+                name: info.get("commit", "unknown")
+                for name, info in current_data.items()
+            }
 
-            return bool(current_data == lock_data)
+            # Use existing comparison utility - empty differences means match
+            differences = compare_lock_data(current_normalized, expected_normalized)
+            return len(differences) == 0
 
         except (FileNotFoundError, json.JSONDecodeError, Exception) as e:
-            logger.debug("File comparison failed: %s", e)
+            logger.debug("File comparison with expected data failed: %s", e)
             return False
 
     def _find_plugin_differences(
