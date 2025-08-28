@@ -280,12 +280,20 @@ class DisplayManager:
                 return
 
             console.print(f"[dim]Running: {' '.join(full_command)}[/dim]")
-            subprocess.run(
+            result = subprocess.run(
                 full_command,
                 capture_output=True,
                 text=True,
                 check=True,
             )
+
+            # Check for error messages in output since kscreen-doctor doesn't use exit codes
+            if result.stdout and (
+                "not found" in result.stdout.lower() or "error" in result.stdout.lower()
+            ):
+                console.print("[red]kscreen-doctor reported errors:[/red]")
+                console.print(f"[red]{result.stdout}[/red]")
+                sys.exit(1)
 
             console.print(
                 f"[green]Layout '{layout_name}' applied successfully![/green]",
