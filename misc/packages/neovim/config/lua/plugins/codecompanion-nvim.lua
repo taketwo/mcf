@@ -35,15 +35,17 @@ return {
       local user = (vim.env.USER or 'me'):gsub('^%l', string.upper)
       return {
         adapters = {
-          copilot = function()
-            return require('codecompanion.adapters').extend('copilot', {
-              schema = {
-                model = {
-                  default = 'claude-sonnet-4',
+          http = {
+            copilot = function()
+              return require('codecompanion.adapters').extend('copilot', {
+                schema = {
+                  model = {
+                    default = 'claude-sonnet-4',
+                  },
                 },
-              },
-            })
-          end,
+              })
+            end,
+          },
         },
         display = {
           chat = {
