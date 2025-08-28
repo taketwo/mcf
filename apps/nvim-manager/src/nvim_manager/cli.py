@@ -12,7 +12,7 @@ from rich.syntax import Syntax
 from .config import Config, ConfigLoadError
 from .editor_manager import EditorManager
 from .lock_repository import LockRepository
-from .logging import configure_logging, DEBUG, get_logger, INFO
+from .logging import DEBUG, INFO, configure_logging, get_logger
 from .plugin_manager import PluginManager
 from .tools_manager import ToolsManager
 from .utils import LockComparison
@@ -384,43 +384,76 @@ def restore(
 
 
 @main.command()
+@click.option(
+    "--editor",
+    is_flag=True,
+    help="Sync editor only.",
+)
+@click.option(
+    "--plugins",
+    is_flag=True,
+    help="Sync plugins only.",
+)
+@click.option(
+    "--tools",
+    is_flag=True,
+    help="Sync tools only.",
+)
 @click.pass_context
-def sync(ctx: click.Context) -> None:
+def sync(
+    ctx: click.Context,
+    *,
+    editor: bool = False,
+    plugins: bool = False,
+    tools: bool = False,
+) -> None:
     """Execute predefined sync sequence.
 
     Runs the complete sync workflow:
-    1. Update editor to latest version
-    2. Commit editor version to lock file
-    3. Restore plugins from lock file
-    4. Update plugins interactively
-    5. Commit plugin state to lock file
-    6. Restore tools from lock file
-    7. Update tools interactively
-    8. Commit tool state to lock file
+    1. Update to latest version
+    2. Commit version to lock file
+    3. Restore from lock file (plugins/tools only)
+    4. Update interactively
+    5. Commit state to lock file
     """
+    # If no specific targets are specified, sync all
+    if not editor and not plugins and not tools:
+        editor = plugins = tools = True
+
+    console.print("[bold]Starting sync workflow...[/bold]")
+
+    sync_steps: list[tuple[click.Command, dict[str, Any]]] = []
+    if editor:
+        sync_steps.extend(
+            [
+                (update, {"editor": True, "plugins": False, "tools": False}),
+                (commit, {"editor": True, "plugins": False, "tools": False}),
+            ],
+        )
+    if plugins:
+        sync_steps.extend(
+            [
+                (restore, {"editor": False, "plugins": True, "tools": False}),
+                (update, {"editor": False, "plugins": True, "tools": False}),
+                (commit, {"editor": False, "plugins": True, "tools": False}),
+            ],
+        )
+    if tools:
+        sync_steps.extend(
+            [
+                (restore, {"editor": False, "plugins": False, "tools": True}),
+                (update, {"editor": False, "plugins": False, "tools": True}),
+                (commit, {"editor": False, "plugins": False, "tools": True}),
+            ],
+        )
+
     try:
-        console.print("[bold]Starting sync workflow...[/bold]")
-
-        # Define sync steps as CLI command invocations
-        sync_steps: list[tuple[click.Command, dict[str, Any]]] = [
-            (update, {"editor": True, "plugins": False, "tools": False}),
-            (commit, {"editor": True, "plugins": False, "tools": False}),
-            (restore, {"editor": False, "plugins": True, "tools": False}),
-            (update, {"editor": False, "plugins": True, "tools": False}),
-            (commit, {"editor": False, "plugins": True, "tools": False}),
-            (restore, {"editor": False, "plugins": False, "tools": True}),
-            (update, {"editor": False, "plugins": False, "tools": True}),
-            (commit, {"editor": False, "plugins": False, "tools": True}),
-        ]
-
         for i, (cmd, kwargs) in enumerate(sync_steps, 1):
             console.print(f"\n[bold]Step {i}/{len(sync_steps)}:[/bold]")
             ctx.invoke(cmd, **kwargs)
-
         console.print(
             "\n[bold green]🎉 Sync workflow completed successfully![/bold green]",
         )
-
     except Exception as e:
         logger.exception("Sync workflow failed")
         console.print(f"\n[red]Sync failed:[/red] {e}")
