@@ -20,6 +20,7 @@ from typing import Any
 
 import click
 from rich.console import Console
+from rich.markup import escape
 
 KSCREEN_DOCTOR = "kscreen-doctor"
 XMONAD = "xmonad"
@@ -345,63 +346,72 @@ class DisplayManager:
         return commands
 
 
-class StatusDisplay:
-    """Handles status display formatting."""
+def _format_item(item: str, *, is_current: bool, is_known: bool = True) -> str:
+    """Format an item with consistent current/non-current styling."""
+    if is_current:
+        bracketed_item = escape(f"[{item}]")
+        if is_known:
+            return f"[bold]{bracketed_item}[/bold]"
+        return f"[bold yellow]{bracketed_item}[/bold yellow]"
+    return item
 
-    @staticmethod
-    def show_status(
-        host: str,
-        config: str,
-        layout: str,
-        *,
-        config_known: bool,
-        layout_known: bool,
-    ) -> None:
-        """Display the 3-line status output."""
-        # Line 1: Hosts
-        known_hosts = list(CONFIG.keys())
-        if host in known_hosts:
-            host_parts = [f"[bold]{h}[/bold]" if h == host else h for h in known_hosts]
-        else:
-            host_parts = [*known_hosts, f"[bold yellow]{host}[/bold yellow]"]
-        console.print(f"Host: {', '.join(host_parts)}")
 
-        # Line 2: Configurations
-        if host in CONFIG:
-            available_configs = list(CONFIG[host].keys())
-            if config_known:
-                config_parts = [
-                    f"[bold]{c}[/bold]" if c == config else c for c in available_configs
-                ]
-            else:
-                config_parts = [
-                    *available_configs,
-                    f"[bold yellow]{config}[/bold yellow]",
-                ]
-        else:
-            config_parts = [f"[bold yellow]{config}[/bold yellow]"]
-        console.print(f"Config: {', '.join(config_parts)}")
+def show_status(
+    host: str,
+    config: str,
+    layout: str,
+    *,
+    config_known: bool,
+    layout_known: bool,
+) -> None:
+    """Display the 3-line status output."""
+    # Line 1: Hosts
+    known_hosts = list(CONFIG.keys())
+    if host in known_hosts:
+        host_parts = [
+            _format_item(h, is_current=h == host, is_known=True) for h in known_hosts
+        ]
+    else:
+        host_parts = [*known_hosts, _format_item(host, is_current=True, is_known=False)]
+    console.print(f"Host: {', '.join(host_parts)}")
 
-        # Line 3: Layouts
-        if host in CONFIG and config in CONFIG[host]:
-            available_layouts = list(CONFIG[host][config]["layouts"].keys())
-            if layout_known:
-                layout_parts = [
-                    (
-                        f"[bold]{layout_name}[/bold]"
-                        if layout_name == layout
-                        else layout_name
-                    )
-                    for layout_name in available_layouts
-                ]
-            else:
-                layout_parts = [
-                    *available_layouts,
-                    f"[bold yellow]{layout}[/bold yellow]",
-                ]
+    # Line 2: Configurations
+    if host in CONFIG:
+        available_configs = list(CONFIG[host].keys())
+        if config_known:
+            config_parts = [
+                _format_item(c, is_current=c == config, is_known=True)
+                for c in available_configs
+            ]
         else:
-            layout_parts = [f"[bold yellow]{layout}[/bold yellow]"]
-        console.print(f"Layout: {', '.join(layout_parts)}")
+            config_parts = [
+                *available_configs,
+                _format_item(config, is_current=True, is_known=False),
+            ]
+    else:
+        config_parts = [_format_item(config, is_current=True, is_known=False)]
+    console.print(f"Config: {', '.join(config_parts)}")
+
+    # Line 3: Layouts
+    if host in CONFIG and config in CONFIG[host]:
+        available_layouts = list(CONFIG[host][config]["layouts"].keys())
+        if layout_known:
+            layout_parts = [
+                _format_item(
+                    layout_name,
+                    is_current=layout_name == layout,
+                    is_known=True,
+                )
+                for layout_name in available_layouts
+            ]
+        else:
+            layout_parts = [
+                *available_layouts,
+                _format_item(layout, is_current=True, is_known=False),
+            ]
+    else:
+        layout_parts = [_format_item(layout, is_current=True, is_known=False)]
+    console.print(f"Layout: {', '.join(layout_parts)}")
 
 
 @click.command()
@@ -428,7 +438,7 @@ def main(layout_name: str | None, *, dry_run: bool) -> None:
 
     if layout_name is None:
         # Show status
-        StatusDisplay.show_status(
+        show_status(
             display_manager.host,
             current_config,
             current_layout,
