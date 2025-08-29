@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# If homelink is not installed, do nothing
+if ! hash homelink 2>/dev/null; then
+  exit 0
+fi
+
 # shellcheck source=polybar.bash
 source "$HOME/.xmonad/polybar.bash"
 # shellcheck source=onedark.bash
@@ -7,11 +12,6 @@ source "$HOME/.xmonad/onedark.bash"
 
 ICON_GOOD=" "
 ICON_BAD=" "
-
-# If homelink is not installed, do nothing
-if ! hash homelink 2>/dev/null; then
-  exit 0
-fi
 
 # Get status from homelink daemon
 status=$(homelink status --json 2>/dev/null)
