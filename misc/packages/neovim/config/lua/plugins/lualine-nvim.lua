@@ -4,7 +4,7 @@ return {
     event = 'VeryLazy',
     dependencies = {
       { 'AndreM222/copilot-lualine' },
-      { 'echasnovski/mini.icons' },
+      { 'nvim-mini/mini.icons' },
     },
     opts = {
       theme = 'onedark',

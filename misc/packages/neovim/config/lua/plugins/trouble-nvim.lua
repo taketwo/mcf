@@ -29,7 +29,7 @@ return {
       },
     },
     dependencies = {
-      { 'echasnovski/mini.icons' },
+      { 'nvim-mini/mini.icons' },
     },
     opts = {
       auto_close = true, -- Auto close when there are no items

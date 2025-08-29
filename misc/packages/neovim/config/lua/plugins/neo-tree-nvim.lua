@@ -3,7 +3,7 @@ return {
     'nvim-neo-tree/neo-tree.nvim',
     dependencies = {
       { 'MunifTanjim/nui.nvim' },
-      { 'echasnovski/mini.icons' },
+      { 'nvim-mini/mini.icons' },
       { 'nvim-lua/plenary.nvim' },
     },
     cmd = 'Neotree',

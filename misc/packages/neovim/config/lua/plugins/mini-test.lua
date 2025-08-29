@@ -1,6 +1,6 @@
 return {
   {
-    'echasnovski/mini.test',
+    'nvim-mini/mini.test',
     lazy = true,
   },
 }

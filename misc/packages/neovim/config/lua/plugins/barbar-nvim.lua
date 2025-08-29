@@ -3,7 +3,7 @@ return {
     'romgrk/barbar.nvim',
     event = 'VeryLazy',
     dependencies = {
-      { 'echasnovski/mini.icons' },
+      { 'nvim-mini/mini.icons' },
     },
     keys = {
       { 'H', '<cmd>BufferPrevious<cr>', desc = 'Previous buffer' },

@@ -17,7 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   {
-    'echasnovski/mini.test',
+    'nvim-mini/mini.test',
     config = function()
       require('mini.test').setup({
         collect = {
