@@ -251,7 +251,7 @@ table =
   , k "0"            gotoPrevWorkspace       __                      __                      __
   , k "]"            windowOpacityUp         __                      __                      __
   , k "["            windowOpacityDown       __                      __                      __
-  , k "<F5>"         __                      restartXMonad           __                      __
+  , k "<F5>"         restartPolybar          restartXMonad           __                      __
   , k "<F9>"         __                      __                      __                      lockScreen
   , k "<F10>"        __                      __                      __                      logout
   , k "<F11>"        toggleStruts            __                      __                      reboot
@@ -337,6 +337,7 @@ table =
     -- Misc
     toggleStruts            = Unbound "Toggle struts"                                      (sendMessage ToggleStruts)
     scratchTerminal         = Unbound "Open scratch terminal"                              (namedScratchpadAction myScratchPads "terminal")
+    restartPolybar          = Unbound "Restart polybar"                                    (spawn "killall polybar" <+> spawn pathPolybar)
     restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour def W.view)
     jumpToPrevScreen        = Unbound "Jump to previous physical screen"                   (onPrevNeighbour def W.view)
