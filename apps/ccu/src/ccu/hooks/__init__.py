@@ -13,6 +13,7 @@ from enum import IntEnum
 from pathlib import Path
 from typing import Any, ClassVar, cast
 
+from ccu.languages import is_file_in_language
 from ccu.logging import get_logger
 from ccu.project import Project
 
@@ -64,10 +65,10 @@ class BaseHook(ABC):
 
     This class provides common functionality for parsing input, filtering files,
     and orchestrating hook execution. Derived classes need to define supported
-    file extensions and implement the actual hook logic.
+    languages and implement the actual hook logic.
     """
 
-    SUPPORTED_EXTENSIONS: ClassVar[list[str]] = []
+    SUPPORTED_LANGUAGES: ClassVar[list[str]] = []
     SUCCESS_CODES: ClassVar[list[int]] = []
     BLOCKING_CODES: ClassVar[list[int]] = []
     TOOL_NAME: ClassVar[str] = ""
@@ -145,12 +146,12 @@ class BaseHook(ABC):
         else:
             return result
 
-    def should_execute(self, file_path: str) -> bool:
+    def should_execute(self, file_path: Path) -> bool:
         """Check if this hook should execute for the given file.
 
         Parameters
         ----------
-        file_path : str
+        file_path : Path
             The file path to check.
 
         Returns
@@ -163,15 +164,16 @@ class BaseHook(ABC):
             logger.warning("Empty file path provided to %s", self.__class__.__name__)
             return False
 
-        file_extension = Path(file_path).suffix
-        should_run = file_extension in self.SUPPORTED_EXTENSIONS
+        should_run = any(
+            is_file_in_language(file_path, language)
+            for language in self.SUPPORTED_LANGUAGES
+        )
         logger.debug(
-            "%s should_execute(%s): %s (extension: '%s', supported: %s)",
+            "%s should_execute(%s): %s (supported languages: %s)",
             self.__class__.__name__,
             file_path,
             should_run,
-            file_extension,
-            self.SUPPORTED_EXTENSIONS,
+            self.SUPPORTED_LANGUAGES,
         )
         return should_run
 
@@ -192,7 +194,7 @@ class BaseHook(ABC):
         file_path = input_data["tool_input"]["file_path"]
         logger.info("Executing %s for file: %s", self.__class__.__name__, file_path)
 
-        if not self.should_execute(file_path):
+        if not self.should_execute(Path(file_path)):
             return HookResult(
                 exit_code=0,
                 file_path=file_path,

@@ -22,7 +22,7 @@ class FixRuffHook(BaseHook):
     - Other: Unexpected error (blocking)
     """
 
-    SUPPORTED_EXTENSIONS: ClassVar[list[str]] = [".py"]
+    SUPPORTED_LANGUAGES: ClassVar[list[str]] = ["python"]
     SUCCESS_CODES: ClassVar[list[int]] = [0]
     BLOCKING_CODES: ClassVar[list[int]] = [1]
     TOOL_NAME: ClassVar[str] = "Ruff auto-fix"
