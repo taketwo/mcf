@@ -45,7 +45,7 @@ def is_file_in_language(file_path: Path, language: str) -> bool:
     if file_path.suffix in definitions["extensions"]:
         logger.debug(
             "File %s matches '%s' via extension %s",
-            file_path,
+            file_path.name,
             language,
             file_path.suffix,
         )
@@ -60,13 +60,17 @@ def is_file_in_language(file_path: Path, language: str) -> bool:
                 if pattern in first_line:
                     logger.debug(
                         "File %s matches '%s' via shebang pattern '%s'",
-                        file_path,
+                        file_path.name,
                         language,
                         pattern,
                     )
                     return True
         except (OSError, IndexError) as e:
-            logger.debug("Could not read file %s for shebang check: %s", file_path, e)
+            logger.debug(
+                "Could not read file %s for shebang check: %s",
+                file_path.name,
+                e,
+            )
 
-    logger.debug("File %s does not match language '%s'", file_path, language)
+    logger.debug("File %s does not match language '%s'", file_path.name, language)
     return False

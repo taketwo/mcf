@@ -164,18 +164,10 @@ class BaseHook(ABC):
             logger.warning("Empty file path provided to %s", self.__class__.__name__)
             return False
 
-        should_run = any(
+        return any(
             is_file_in_language(file_path, language)
             for language in self.SUPPORTED_LANGUAGES
         )
-        logger.debug(
-            "%s should_execute(%s): %s (supported languages: %s)",
-            self.__class__.__name__,
-            file_path,
-            should_run,
-            self.SUPPORTED_LANGUAGES,
-        )
-        return should_run
 
     def execute(self, input_data: dict[str, Any]) -> HookResult:
         """Execute the hook with input parsing and validation.
