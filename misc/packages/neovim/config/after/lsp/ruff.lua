@@ -3,6 +3,7 @@ return {
     -- List of supported settings: https://docs.astral.sh/ruff/editors/settings/
     settings = {
       configuration = vim.fn.stdpath('config') .. '/extras/ruff.toml',
+      configurationPreference = 'filesystemFirst',
       fixAll = false,
       organizeImports = false,
     },
