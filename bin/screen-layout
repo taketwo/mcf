@@ -288,12 +288,12 @@ class DisplayManager:
             )
 
             # Check for error messages in output since kscreen-doctor doesn't use exit codes
-            if result.stdout and (
-                "not found" in result.stdout.lower() or "error" in result.stdout.lower()
-            ):
-                console.print("[red]kscreen-doctor reported errors:[/red]")
-                console.print(f"[red]{result.stdout}[/red]")
-                sys.exit(1)
+            for stream in (result.stdout, result.stderr):
+                stream_lower = stream.lower() if stream else ""
+                if "not found" in stream_lower or "error" in stream_lower:
+                    console.print("[red]kscreen-doctor reported errors:[/red]")
+                    console.print(f"[red]{stream}[/red]")
+                    sys.exit(1)
 
             console.print(
                 f"[green]Layout '{layout_name}' applied successfully![/green]",
