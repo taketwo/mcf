@@ -51,10 +51,9 @@ class Project:
                 indicator.exists() for indicator in python_indicators
             )
             logger.debug(
-                "Project %s has_python: %s (checked: %s)",
+                "Project %s has_python: %s",
                 self.root,
                 self._has_python,
-                [str(p) for p in python_indicators],
             )
         return self._has_python
 
