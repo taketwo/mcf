@@ -26,12 +26,13 @@ class CheckMypyHook(BaseHook):
     Tool return codes:
     - 0: Type checking passed, no errors found
     - 1: Type errors found (blocking)
+    - 2: Errors preventing type checking found (blocking)
     - Other: Unexpected error (blocking)
     """
 
     SUPPORTED_LANGUAGES: ClassVar[list[str]] = ["python"]
     SUCCESS_CODES: ClassVar[list[int]] = [0]
-    BLOCKING_CODES: ClassVar[list[int]] = [1]
+    BLOCKING_CODES: ClassVar[list[int]] = [1, 2]
     TOOL_NAME: ClassVar[str] = "MyPy type checking"
 
     def __init__(self, project: Project) -> None:
