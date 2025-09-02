@@ -55,3 +55,56 @@ function cdf() {
     cd "$1" || return
   fi
 }
+
+# Copy with progress
+cpp() {
+  if [ $# -lt 2 ]; then
+    echo "Usage: cpp SOURCE... DEST"
+    return 1
+  fi
+
+  local dest="${@: -1}"         # last arg is destination
+  local sources=("${@:1:$#-1}") # all but last are sources
+
+  # rsync options used:
+  # -a   : archive mode (recursive, preserve permissions, symlinks, timestamps, etc.)
+  # -h   : human-readable sizes (e.g. 1.1K, 2.3M)
+  # --info=progress2 : show a single aggregated progress bar instead of per-file updates
+  # --inplace        : write updated data directly to the destination file
+  # --no-whole-file  : avoid rewriting entire files unnecessarily (faster for big files)
+  rsync -a -h --info=progress2 --inplace --no-whole-file \
+    -- "${sources[@]}" "$dest"
+}
+
+# Move with progress
+mvp() {
+  if [ $# -lt 2 ]; then
+    echo "Usage: mvp SOURCE... DEST"
+    return 1
+  fi
+
+  local dest="${@: -1}"         # last arg is destination
+  local sources=("${@:1:$#-1}") # all but last are sources
+
+  # Check if source and destination are on the same filesystem.
+  # If they are, use native mv (much faster, just updates inodes).
+  if [ $(df -P "${sources[0]}" | tail -1 | awk '{print $1}') = \
+    $(df -P "$dest" | tail -1 | awk '{print $1}') ]; then
+    command mv -- "${sources[@]}" "$dest"
+    return $?
+  fi
+
+  # rsync options used (first pass):
+  # -a   : archive mode (recursive + preserve attributes)
+  # -h   : human-readable numbers
+  # --info=progress2 : show overall progress
+  # --inplace        : write directly to destination file
+  # --no-whole-file  : avoid rewriting entire files unnecessarily
+  # --remove-source-files : remove each file after successful copy
+  rsync -a -h --info=progress2 --inplace --no-whole-file \
+    --remove-source-files -- "${sources[@]}" "$dest"
+
+  # Second pass with:
+  # --delete : remove empty source directories left behind
+  rsync -a -h --delete -- "${sources[@]}" "$dest"
+}
