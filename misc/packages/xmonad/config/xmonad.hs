@@ -274,7 +274,8 @@ table =
   , [bind "" "<XF86Launch9>"           (audioRate 5)]
   , [bind "" "<XF86MonBrightnessDown>" brightnessDown]
   , [bind "" "<XF86MonBrightnessUp>"   brightnessUp]
-  , [bind "" "<Print>"                 printScreen]
+  , [bind "" "<Print>"                 flameshotGUI]
+  , [bind "M1-" "<Print>"              flameshotLauncher]
   ]
   where
     k key m ms mc msc =
@@ -351,7 +352,8 @@ table =
     closeWindow             = Unbound "Close the focused window"                           (kill)
     goToGridSelection       = Unbound "Go to grid selection"                               (goToSelected $ gridSelectConfig)
     bringGridSelection      = Unbound "Bring grid selection"                               (bringSelected $ gridSelectConfig)
-    printScreen             = Unbound "Print screen using Flameshot"                       (spawn "flameshot gui")
+    flameshotGUI            = Unbound "Run Flameshot GUI"                                  (spawn "flameshot gui")
+    flameshotLauncher       = Unbound "Run Flameshot launcher"                             (spawn "flameshot launcher")
     -- Keyboard control
     nextKeyboardLayout      = Unbound "Next keyboard layout"                               (spawn "keyboard -n")
     -- Audio control
