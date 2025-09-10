@@ -149,10 +149,11 @@ def mode(device_name: str | None, mode: AudioMode | None) -> None:
             click.echo("Unable to automatically select device, please specify name")
         return
 
-    if mode:
-        manager.set_device_mode(device, mode)
-    else:
+    # Click sets mode to "False" string if no flags were provided
+    if mode == "False":
         manager.toggle_mode(device)
+    else:
+        manager.set_device_mode(device, mode)
 
 
 @cli.command()
