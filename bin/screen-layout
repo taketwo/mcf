@@ -84,7 +84,7 @@ CONFIG: dict[str, dict[str, dict[str, Any]]] = {
     },
     "alpaca": {
         "office": {
-            "connected_displays": ["USB-C-0", "DP-2", "DP-4", "HDMI-0"],
+            "connected_displays": ["HDMI-0", "DP-2", "DP-4", "USB-C-0"],
             "layouts": {
                 "default": {
                     "DP-2": {
@@ -99,12 +99,12 @@ CONFIG: dict[str, dict[str, dict[str, Any]]] = {
                         "position": (1440, 0),
                         "primary": True,
                     },
-                    "USB-C-0": {
+                    "HDMI-0": {
                         "enabled": True,
                         "mode": DEFAULT_MODE,
                         "position": (4000, 0),
                     },
-                    "HDMI-0": {"enabled": False},
+                    "USB-C-0": {"enabled": False},
                 },
                 "single": {
                     "DP-2": {"enabled": False},
@@ -114,16 +114,16 @@ CONFIG: dict[str, dict[str, dict[str, Any]]] = {
                         "position": (0, 0),
                         "primary": True,
                     },
-                    "USB-C-0": {"enabled": False},
                     "HDMI-0": {"enabled": False},
+                    "USB-C-0": {"enabled": False},
                 },
                 "sunshine": {
                     "DP-2": {"enabled": False},
                     "DP-4": {"enabled": False},
-                    "USB-C-0": {"enabled": False},
-                    "HDMI-0": {
+                    "HDMI-0": {"enabled": False},
+                    "USB-C-0": {
                         "enabled": True,
-                        "mode": DEFAULT_MODE,
+                        "mode": LAPTOP_MODE,
                         "position": (0, 0),
                         "primary": True,
                     },
