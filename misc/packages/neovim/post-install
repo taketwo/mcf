@@ -18,4 +18,5 @@ mkdir -p "$DATA_DIR"
 fnm exec --using=node-nvim npm install --location=global neovim
 
 # Install plugins and tools
-nvim-manager restore --plugins --tools
+# TODO: Tools installation fails because Mason does not find npm in PATH, figure out how to fix this
+nvim-manager restore --plugins #--tools
