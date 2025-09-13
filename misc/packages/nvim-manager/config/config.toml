@@ -12,4 +12,4 @@ restore_retry_count = 3
 local_lock_path = "$MCF/misc/packages/neovim/config/lazy-lock.json"
 
 [tools]
-venv_path = "$HOME/.local/share/nvim/.venv"
+venv_path = "$HOME/.local/share/uv/tools/pynvim"

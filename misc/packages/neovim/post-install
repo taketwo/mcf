@@ -3,17 +3,6 @@
 # Actually install Neovim, has to happen in post-install to make sure nvim-manager is available
 nvim-manager restore --editor
 
-PYTHON_VERSION=3.13
-DATA_DIR=$HOME/.local/share/nvim
-
-# Python provider in a dedicated virtual environment
-mkdir -p "$DATA_DIR"
-(
-  cd "$DATA_DIR" || exit
-  uv venv --python=$PYTHON_VERSION
-  uv pip install --upgrade pip pynvim
-)
-
 # Node.js provider
 fnm exec --using=node-nvim npm install --location=global neovim
 
