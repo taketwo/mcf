@@ -95,10 +95,6 @@ LazyVim.format.snacks_toggle(true):map('<Leader>uF')
 Snacks.toggle.treesitter():map('<Leader>uT')
 Snacks.toggle.indent():map('<Leader>ug')
 
--- Command-line completion
-map('c', '<C-n>', '<C-y>', { desc = 'Accept currently selected completion', silent = false })
-map('c', '<C-h>', '<C-e>', { desc = 'End completion', silent = false })
-
 -- Floating terminal
 local lazyterm = function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root() }) end
 map('n', '<C-/>', lazyterm, { desc = 'Show terminal' })

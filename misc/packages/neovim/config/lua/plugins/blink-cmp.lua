@@ -10,7 +10,7 @@ return {
       'disrupted/blink-cmp-conventional-commits',
       'folke/lazydev.nvim',
     },
-    event = 'InsertEnter',
+    event = { 'InsertEnter', 'CmdlineEnter' },
 
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -31,7 +31,24 @@ return {
         ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
       },
 
-      cmdline = { enabled = false }, -- TODO: Enable when time permits to test and configure
+      cmdline = {
+        enabled = true,
+        keymap = {
+          preset = 'none',
+          ['<C-c>'] = { 'select_prev', 'fallback' },
+          ['<C-h>'] = { 'cancel', 'fallback' },
+          ['<C-n>'] = { 'select_and_accept', 'fallback' },
+          ['<C-t>'] = { 'select_next', 'fallback' },
+          ['<S-Tab>'] = { 'select_prev', 'fallback' },
+          ['<Tab>'] = { 'select_next', 'fallback' },
+        },
+        completion = {
+          list = { selection = { preselect = false } },
+          menu = {
+            auto_show = function(_) return vim.fn.getcmdtype() == ':' end,
+          },
+        },
+      },
 
       completion = {
         list = {
