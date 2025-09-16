@@ -114,7 +114,7 @@ function M.has(buffer, method)
     return false
   end
   method = method:find('/') and method or 'textDocument/' .. method
-  local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
+  local clients = vim.lsp.get_clients({ bufnr = buffer })
   for _, client in ipairs(clients) do
     if client:supports_method(method) then return true end
   end
@@ -126,7 +126,7 @@ function M.resolve(buffer)
   local Keys = require('lazy.core.handler.keys')
   if not Keys.resolve then return {} end
   local spec = M._keys
-  local clients = LazyVim.lsp.get_clients({ bufnr = buffer })
+  local clients = vim.lsp.get_clients({ bufnr = buffer })
   for _, client in ipairs(clients) do
     local maps = vim.lsp.config[client.name] and vim.lsp.config[client.name].keys or {}
     vim.list_extend(spec, maps)
