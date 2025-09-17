@@ -318,7 +318,7 @@ table =
     shrinkHorizontal        = Unbound "Shrink floating window horizontally"                (withFocused (keysResizeWindow (-10, 0) (1%2, 0)))
     snapMoveFloat dir       = Unbound "Snap floating window"                               (withFocused $ snapMove dir Nothing)
     snapGrowFloat dir       = Unbound "Snap and grow floating window"                      (withFocused $ snapGrow dir Nothing)
-    -- Layout management
+    -- Workspace layout management
     shrinkMaster            = Unbound "Shrink master window"                               (sendMessage Shrink)
     expandMaster            = Unbound "Expand master window"                               (sendMessage Expand)
     nextLayout              = Unbound "Switch to next layout"                              (sendMessage NextLayout)
@@ -343,10 +343,6 @@ table =
     restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour def W.view)
     jumpToPrevScreen        = Unbound "Jump to previous physical screen"                   (onPrevNeighbour def W.view)
-    lockScreen              = Unbound "Lock screen"                                        (spawn "session lock")
-    logout                  = Unbound "Logout"                                             (spawn "session logout")
-    reboot                  = Unbound "Reboot the system"                                  (spawn "session reboot")
-    shutdown                = Unbound "Power off the system"                               (spawn "session shutdown")
     promptZealSearch        = Unbound "Prompt Zeal search"                                 (myPromptZealSearch)
     promptWebSearch         = Unbound "Prompt web search"                                  (submap . mySearchMap $ myPromptWebSearch)
     selectWebSearch         = Unbound "X selection web search"                             (submap . mySearchMap $ mySelectWebSearch)
@@ -371,6 +367,11 @@ table =
     -- Window opacity control
     windowOpacityUp         = Unbound "Window opacity up"                                  (spawn "transset -a --inc 0.1")
     windowOpacityDown       = Unbound "Window opacity down"                                (spawn "transset -a --dec 0.1")
+    -- Session control
+    lockScreen              = Unbound "Lock screen"                                        (spawn "session lock")
+    logout                  = Unbound "Logout"                                             (spawn "session logout")
+    reboot                  = Unbound "Reboot the system"                                  (spawn "session reboot")
+    shutdown                = Unbound "Power off the system"                               (spawn "session shutdown")
 
 -- Two varieties of Action: B(ound) is aware of the key that was used to
 -- invoke it, U(nbound) is not aware of the key.
