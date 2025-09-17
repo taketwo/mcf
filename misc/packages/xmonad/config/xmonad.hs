@@ -213,54 +213,54 @@ myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
 
 myKeyBindingsTable = concat $ table
 
---    key             M-                     M-S-                    M-C-                    M-S-C-
+--    key             M-                       M-S-                      M-C-                      M-S-C-
 table =
-  [ k "<Return>"     launchTmux              __                      __                      __
-  , k "a"            __                      __                      __                      __
-  , k "b"            __                      __                      __                      __
-  , k "c"            goUp                    swapUp                  expandVertical          moveUp
-  , k "d"            __                      __                      __                      __
-  , k "e"            __                      __                      __                      __
-  , k "f"            __                      tileFloating            __                      resizeFloatingWindow
-  , k "g"            __                      __                      __                      __
-  , k "h"            goLeft                  swapLeft                shrinkHorizontal        moveLeft
-  , k "i"            __                      __                      __                      __
-  , k "j"            __                      __                      __                      __
-  , k "k"            __                      __                      __                      __
-  , k "l"            __                      __                      __                      __
-  , k "m"            gotoMaster              swapMaster              __                      toggleMagnifier
-  , k "n"            goRight                 swapRight               expandHorizontal        moveRight
-  , k "o"            __                      __                      __                      __
-  , k "p"            __                      __                      __                      __
-  , k "q"            closeWindow             deleteWorkspace         __                      __
-  , k "r"            __                      __                      __                      __
-  , k "s"            jumpToNextScreen        jumpToPrevScreen        __                      __
-  , k "t"            goDown                  swapDown                shrinkVertical          moveDown
-  , k "u"            __                      __                      __                      __
-  , k "v"            __                      shiftToWorkspace        __                      shiftAndGoToWorkspace
-  , k "w"            gotoWorkspace'          shiftToWorkspace'       createWorkspace         shiftAndGoToWorkspace'
-  , k "x"            __                      __                      __                      deleteWorkspace
-  , k "y"            __                      __                      __                      __
-  , k "z"            promptZealSearch        __                      __                      __
-  , k "<Backspace>"  renameWorkspace         __                      __                      __
-  , k "<Space>"      launchRofi              nextKeyboardLayout      __                      __
-  , k "<Tab>"        nextLayout              resetLayout             __                      __
-  , k "`"            scratchTerminal         __                      __                      __
-  , k "'"            goToGridSelection       bringGridSelection      __                      __
-  , k "/"            promptWebSearch         selectWebSearch         __                      __
-  , k "0"            gotoPrevWorkspace       __                      __                      __
-  , k "]"            windowOpacityUp         __                      __                      __
-  , k "["            windowOpacityDown       __                      __                      __
-  , k "<F4>"         (screenLayout "default")  (screenLayout "laptop")   __                          __
-  , k "<F5>"         restartPolybar          restartXMonad           __                      __
-  , k "<F9>"         __                      __                      __                      lockScreen
-  , k "<F10>"        __                      __                      __                      logout
-  , k "<F11>"        toggleStruts            __                      __                      reboot
-  , k "<F12>"        __                      __                      __                      shutdown
-  , k "<Left>"       (snapMoveFloat L)       (snapGrowFloat L)       __                      __
-  , k "<Right>"      (snapMoveFloat R)       (snapGrowFloat R)       __                      __
-  , k "<Up>"         (snapMoveFloat U)       (snapGrowFloat U)       __                      __
-  , k "<Down>"       (snapMoveFloat D)       (snapGrowFloat D)       __                      __
+  [ k "<Return>"     launchTmux                __                        __                        __
+  , k "a"            __                        __                        __                        __
+  , k "b"            __                        __                        __                        __
+  , k "c"            goUp                      swapUp                    expandVertical            moveUp
+  , k "d"            __                        __                        __                        __
+  , k "e"            __                        __                        __                        __
+  , k "f"            __                        tileFloating              __                        resizeFloatingWindow
+  , k "g"            __                        __                        __                        __
+  , k "h"            goLeft                    swapLeft                  shrinkHorizontal          moveLeft
+  , k "i"            __                        __                        __                        __
+  , k "j"            __                        __                        __                        __
+  , k "k"            __                        __                        __                        __
+  , k "l"            __                        __                        __                        __
+  , k "m"            gotoMaster                swapMaster                __                        toggleMagnifier
+  , k "n"            goRight                   swapRight                 expandHorizontal          moveRight
+  , k "o"            __                        __                        __                        __
+  , k "p"            __                        __                        __                        __
+  , k "q"            closeWindow               deleteWorkspace           __                        __
+  , k "r"            __                        __                        __                        __
+  , k "s"            jumpToNextScreen          jumpToPrevScreen          __                        __
+  , k "t"            goDown                    swapDown                  shrinkVertical            moveDown
+  , k "u"            __                        __                        __                        __
+  , k "v"            __                        shiftToWorkspace          __                        shiftAndGoToWorkspace
+  , k "w"            gotoWorkspace'            shiftToWorkspace'         createWorkspace           shiftAndGoToWorkspace'
+  , k "x"            __                        __                        __                        deleteWorkspace
+  , k "y"            __                        __                        __                        __
+  , k "z"            promptZealSearch          __                        __                        __
+  , k "<Backspace>"  renameWorkspace           __                        __                        __
+  , k "<Space>"      launchRofi                nextKeyboardLayout        __                        __
+  , k "<Tab>"        nextLayout                resetLayout               __                        __
+  , k "`"            scratchTerminal           __                        __                        __
+  , k "'"            goToGridSelection         bringGridSelection        __                        __
+  , k "/"            promptWebSearch           selectWebSearch           __                        __
+  , k "0"            gotoPrevWorkspace         __                        __                        __
+  , k "]"            windowOpacityUp           __                        __                        __
+  , k "["            windowOpacityDown         __                        __                        __
+  , k "<F4>"         (screenLayout "default")  (screenLayout "laptop")   __                        __
+  , k "<F5>"         restartPolybar            restartXMonad             __                        __
+  , k "<F9>"         __                        __                        __                        lockScreen
+  , k "<F10>"        __                        __                        __                        logout
+  , k "<F11>"        toggleStruts              __                        __                        reboot
+  , k "<F12>"        __                        __                        __                        shutdown
+  , k "<Left>"       (snapMoveFloat L)         (snapGrowFloat L)         __                        __
+  , k "<Right>"      (snapMoveFloat R)         (snapGrowFloat R)         __                        __
+  , k "<Up>"         (snapMoveFloat U)         (snapGrowFloat U)         __                        __
+  , k "<Down>"       (snapMoveFloat D)         (snapGrowFloat D)         __                        __
   , [bind "M1-" "<Tab>" gotoNextWindow]
   -- Multimedia keys
   , [bind "" "<XF86AudioMute>"         audioMute]
