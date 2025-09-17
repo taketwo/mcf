@@ -251,6 +251,7 @@ table =
   , k "0"            gotoPrevWorkspace       __                      __                      __
   , k "]"            windowOpacityUp         __                      __                      __
   , k "["            windowOpacityDown       __                      __                      __
+  , k "<F4>"         (screenLayout "default")  (screenLayout "laptop")   __                          __
   , k "<F5>"         restartPolybar          restartXMonad           __                      __
   , k "<F9>"         __                      __                      __                      lockScreen
   , k "<F10>"        __                      __                      __                      logout
@@ -354,6 +355,7 @@ table =
     bringGridSelection      = Unbound "Bring grid selection"                               (bringSelected $ gridSelectConfig)
     flameshotGUI            = Unbound "Run Flameshot GUI"                                  (spawn "flameshot gui")
     flameshotLauncher       = Unbound "Run Flameshot launcher"                             (spawn "flameshot launcher")
+    screenLayout layout     = Unbound "Set screen layout"                                  (spawn ("screen-layout " ++ layout))
     -- Keyboard control
     nextKeyboardLayout      = Unbound "Next keyboard layout"                               (spawn "keyboard -n")
     -- Audio control
