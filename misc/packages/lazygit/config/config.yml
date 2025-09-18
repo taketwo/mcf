@@ -21,5 +21,8 @@ gui:
     defaultFgColor:
       - "#a7aab0"
   nerdFontsVersion: "3"
+git:
+  autoFetch: false
+  autoForwardBranches: none
 os:
   editPreset: "nvim-remote"
