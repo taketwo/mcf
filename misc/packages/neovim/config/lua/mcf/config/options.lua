@@ -23,10 +23,9 @@ opt.fillchars = {
   msgsep = '─', -- Message separator
 }
 opt.foldenable = false -- Disable folding by default
-opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
-opt.foldmethod = 'expr'
+opt.foldmethod = 'indent'
 opt.foldnestmax = 3 -- Maximum number of nested folds
-opt.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
+opt.formatexpr = 'v:lua.LazyVim.format.formatexpr()'
 opt.formatoptions = 'tcro/qnljp'
 opt.grepformat = '%f:%l:%c:%m'
 opt.grepprg = 'rg --vimgrep'

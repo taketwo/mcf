@@ -2,7 +2,71 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
-      { 'nvim-treesitter/nvim-treesitter-textobjects' },
+      {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        branch = 'main',
+        event = 'VeryLazy',
+        opts = {},
+        keys = function()
+          local ret = {} ---@type LazyKeysSpec[]
+          local moves = {
+            goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer', [']p'] = '@parameter.inner' },
+            goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer', [']P'] = '@parameter.inner' },
+            goto_previous_start = { ['[f'] = '@function.outer', ['[c'] = '@class.outer', ['[p'] = '@parameter.inner' },
+            goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer', ['[P'] = '@parameter.inner' },
+          }
+          for method, keymaps in pairs(moves) do
+            for key, query in pairs(keymaps) do
+              local desc = query:gsub('@', ''):gsub('%..*', '')
+              desc = (key:sub(1, 1) == '[' and 'Previous ' or 'Next ') .. desc
+              desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and ' end' or ' start')
+              ret[#ret + 1] = {
+                key,
+                function()
+                  -- don't use treesitter if in diff mode and the key is one of the c/C keys
+                  if vim.wo.diff and key:find('[cC]') then return vim.cmd('normal! ' .. key) end
+                  require('nvim-treesitter-textobjects.move')[method](query, 'textobjects')
+                end,
+                desc = desc,
+                mode = { 'n', 'x', 'o' },
+                silent = true,
+              }
+            end
+          end
+          local swaps = {
+            swap_next = {
+              ['<Leader>sn'] = { query = '@parameter.inner', desc = 'Shift parameter right' },
+              ['<Leader>st'] = { query = '@function.outer', desc = 'Shift function down' },
+              ['<Leader>sT'] = { query = '@class.outer', desc = 'Shift class down' },
+            },
+            swap_previous = {
+              ['<Leader>sh'] = { query = '@parameter.inner', desc = 'Shift parameter left' },
+              ['<Leader>sc'] = { query = '@function.outer', desc = 'Shift function up' },
+              ['<Leader>sC'] = { query = '@class.outer', desc = 'Shift class up' },
+            },
+          }
+          for method, keymaps in pairs(swaps) do
+            for key, opts in pairs(keymaps) do
+              ret[#ret + 1] = {
+                key,
+                function() require('nvim-treesitter-textobjects.swap')[method](opts['query']) end,
+                desc = opts['desc'],
+                mode = { 'n', 'x' },
+                silent = true,
+              }
+            end
+          end
+          return ret
+        end,
+        config = function(_, opts)
+          local TS = require('nvim-treesitter-textobjects')
+          if not TS.setup then
+            LazyVim.error('Please use `:Lazy` and update `nvim-treesitter`')
+            return
+          end
+          TS.setup(opts)
+        end,
+      },
       {
         'nvim-treesitter/nvim-treesitter-context',
         opts = function()
@@ -22,20 +86,19 @@ return {
         end,
       },
     },
-    branch = 'master', -- Freeze to 'master' until we are ready to migrate to 'main'
-    build = ':TSUpdate',
-    event = { 'BufReadPost', 'BufNewFile' },
-    cmd = { 'TSUpdateSync' },
-    init = function(plugin)
-      -- NOTE: This hack is taken from LazyVim and should be kept in sync.
-      -- PERF: Add nvim-treesitter queries to the rtp and it's custom query predicates early
-      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-      -- no longer trigger the **nvim-treeitter** module to be loaded in time.
-      -- Luckily, the only thins that those plugins need are the custom queries, which we make available
-      -- during startup.
-      require('lazy.core.loader').add_to_rtp(plugin)
-      require('nvim-treesitter.query_predicates')
+    branch = 'main',
+    build = function()
+      local TS = require('nvim-treesitter')
+      if not TS.get_installed then
+        LazyVim.error('Please restart Neovim and run `:TSUpdate` to use the `nvim-treesitter` **main** branch.')
+        return
+      end
+      LazyVim.treesitter.ensure_treesitter_cli(function() TS.update(nil, { summary = true }) end)
     end,
+    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    event = { 'BufReadPost', 'BufNewFile' },
+    cmd = { 'TSUpdate', 'TSUpdateSync', 'TSInstall', 'TSLog', 'TSUninstall' },
+    ---@class lazyvim.TSConfig: TSConfig
     opts = {
       -- Some of the following parsers are installed by default, but we want to ensure that our config is
       -- not affected by future changes to the default parsers.
@@ -75,58 +138,62 @@ return {
       },
       highlight = { enable = true },
       indent = { enable = true },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = '=',
-          node_incremental = '=',
-          scope_incremental = '/',
-          node_decremental = '+',
-        },
-      },
+      folds = { enable = true },
       matchup = {
         enable = true,
         disable_virtual_text = true,
       },
-      textobjects = {
-        select = { enable = false },
-        swap = {
-          enable = true,
-          swap_next = {
-            ['<leader>sn'] = { query = '@parameter.inner', desc = 'Shift parameter right' },
-            ['<leader>st'] = { query = '@function.outer', desc = 'Shift function down' },
-            ['<leader>sT'] = { query = '@class.outer', desc = 'Shift class down' },
-          },
-          swap_previous = {
-            ['<leader>sh'] = { query = '@parameter.inner', desc = 'Shift parameter left' },
-            ['<leader>sc'] = { query = '@function.outer', desc = 'Shift function up' },
-            ['<leader>sC'] = { query = '@class.outer', desc = 'Shift class up' },
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            [']m'] = { query = '@function.outer', desc = 'Next method start' },
-            [']c'] = { query = '@class.outer', desc = 'Next class start' },
-            [']p'] = { query = '@parameter.inner', desc = 'Next parameter start' },
-          },
-          goto_next_end = {
-            [']M'] = { query = '@function.outer', desc = 'Next method end' },
-            [']C'] = { query = '@class.outer', desc = 'Next class end' },
-          },
-          goto_previous_start = {
-            ['[m'] = { query = '@function.outer', desc = 'Previous method start' },
-            ['[c'] = { query = '@class.outer', desc = 'Previous class start' },
-            ['[p'] = { query = '@parameter.inner', desc = 'Previous parameter start' },
-          },
-          goto_previous_end = {
-            ['[M'] = { query = '@function.outer', desc = 'Previous method end' },
-            ['[C'] = { query = '@class.outer', desc = 'Previous class end' },
-          },
-        },
-      },
     },
-    config = function(_, opts) require('nvim-treesitter.configs').setup(opts) end,
+    ---@param opts lazyvim.TSConfig
+    config = function(_, opts)
+      -- NOTE: This function was copied without changes from LazyVim
+
+      local TS = require('nvim-treesitter')
+
+      -- some quick sanity checks
+      if not TS.get_installed then
+        return LazyVim.error('Please use `:Lazy` and update `nvim-treesitter`')
+      elseif type(opts.ensure_installed) ~= 'table' then
+        return LazyVim.error('`nvim-treesitter` opts.ensure_installed must be a table')
+      end
+
+      -- setup treesitter
+      TS.setup(opts)
+      LazyVim.treesitter.get_installed(true) -- initialize the installed langs
+
+      -- install missing parsers
+      local install = vim.tbl_filter(
+        function(lang) return not LazyVim.treesitter.have(lang) end,
+        opts.ensure_installed or {}
+      )
+      if #install > 0 then
+        LazyVim.treesitter.ensure_treesitter_cli(function()
+          TS.install(install, { summary = true }):await(function()
+            LazyVim.treesitter.get_installed(true) -- refresh the installed langs
+          end)
+        end)
+      end
+
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('lazyvim_treesitter', { clear = true }),
+        callback = function(ev)
+          if not LazyVim.treesitter.have(ev.match) then return end
+
+          -- highlighting
+          if vim.tbl_get(opts, 'highlight', 'enable') ~= false then pcall(vim.treesitter.start) end
+
+          -- indents
+          if vim.tbl_get(opts, 'indent', 'enable') ~= false then
+            vim.bo[ev.buf].indentexpr = 'v:lua.LazyVim.treesitter.indentexpr()'
+          end
+
+          -- folds
+          if vim.tbl_get(opts, 'folds', 'enable') ~= false then
+            vim.wo.foldmethod = 'expr'
+            vim.wo.foldexpr = 'v:lua.LazyVim.treesitter.foldexpr()'
+          end
+        end,
+      })
+    end,
   },
 }
