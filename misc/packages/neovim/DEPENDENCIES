@@ -1,6 +1,14 @@
-nvim-manager   # For Neovim version management
-fnm            # For node.js provider and copilot plugin
-xsel           # For clipboard provider
-nix: curl      # For CopilotChat plugin which needs fresh version
-nix: cargo     # Mason needs cargo to install tools (e.g. pbls)
-uvx: pynvim    # For Python provider
+nvim-manager           # For Neovim version management
+fnm                    # For node.js provider and copilot plugin
+xsel                   # For clipboard provider
+nix: curl              # For CopilotChat plugin which needs fresh version
+nix: cargo             # Mason needs cargo to install tools (e.g. pbls)
+uvx: pynvim            # For Python provider
+
+# tree-sitter-cli is necessary for installing tree-sitter parsers
+# Mason can handle installation of this tool, however it tends to download
+# a pre-compiled binary which is incompatible with Ubuntu 20.04
+# Since we still need to support Ubuntu 20.04, we explicitly install the
+# tool from source using cargo. Note that a corresponding symlink needs
+# to be created.
+cargo: tree-sitter-cli
