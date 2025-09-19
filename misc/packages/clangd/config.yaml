@@ -1,3 +1,4 @@
+# Configuration parameter reference: https://clangd.llvm.org/config
 InlayHints:
   DefaultArguments: true
 Diagnostics:
