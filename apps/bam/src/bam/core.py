@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
-from .bluetooth import BluetoothController
+from .audio import AudioMode
+from .bluetooth import BluetoothController, BluetoothError
 from .logging import get_logger
 from .pulseaudio import PulseAudioController
-from .audio import AudioMode
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -116,26 +116,33 @@ class BTManager:
 
         need_connect = True
         need_set_mode = True
-        if self.bluetooth.is_device_connected(device.mac_address):
-            logger.debug("Device %s is already connected", device.name)
-            current_mode = self.pulseaudio.get_device_mode(device.mac_address)
-            if current_mode is not None:
-                need_connect = False
-                if current_mode == mode:
-                    logger.debug("Device %s is already in requested mode", device.name)
-                    need_set_mode = False
-            else:
-                logger.debug(
-                    "Device %s is in unknown mode, need to reconnect",
-                    device.name,
-                )
-                self.bluetooth.disconnect_device(device.mac_address)
+        try:
+            if self.bluetooth.is_device_connected(device.mac_address):
+                logger.debug("Device %s is already connected", device.name)
+                current_mode = self.pulseaudio.get_device_mode(device.mac_address)
+                if current_mode is not None:
+                    need_connect = False
+                    if current_mode == mode:
+                        logger.debug(
+                            "Device %s is already in requested mode",
+                            device.name,
+                        )
+                        need_set_mode = False
+                else:
+                    logger.debug(
+                        "Device %s is in unknown mode, need to reconnect",
+                        device.name,
+                    )
+                    self.bluetooth.disconnect_device(device.mac_address)
 
-        if need_connect:
-            self.bluetooth.connect_device(device.mac_address)
-        if need_set_mode:
-            self.set_device_mode(device, mode)
-        self.pulseaudio.set_default_sink(device.mac_address)
+            if need_connect:
+                self.bluetooth.connect_device(device.mac_address)
+            if need_set_mode:
+                self.set_device_mode(device, mode)
+            self.pulseaudio.set_default_sink(device.mac_address)
+        except BluetoothError:
+            logger.exception("Failed to activate device %s", device.name)
+            raise
 
     def deactivate_device(self, device: BTDevice) -> None:
         """Deactivate a device.
@@ -143,7 +150,11 @@ class BTManager:
         This ensures that the device is disconnected.
         """
         logger.info("Deactivating %s...", device.name)
-        self.bluetooth.disconnect_device(device.mac_address)
+        try:
+            self.bluetooth.disconnect_device(device.mac_address)
+        except BluetoothError:
+            logger.exception("Failed to deactivate device %s", device.name)
+            raise
 
     def set_device_mode(self, device: BTDevice, mode: AudioMode) -> None:
         """Switch device to specified audio mode."""

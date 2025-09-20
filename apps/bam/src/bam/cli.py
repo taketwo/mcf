@@ -6,9 +6,10 @@ from pathlib import Path
 
 import click
 
+from .audio import AudioMode
+from .bluetooth import BluetoothError
 from .core import BTManager
 from .logging import configure_logging, get_logger
-from .audio import AudioMode
 
 logger = get_logger(__name__)
 
@@ -96,7 +97,10 @@ def activate(device_name: str, mode: AudioMode | None) -> None:
     manager = get_manager()
 
     if device := manager.find_device(device_name):
-        manager.activate_device(device, mode)
+        try:
+            manager.activate_device(device, mode)
+        except BluetoothError as e:
+            raise click.Abort from e
         return
 
     logger.error("Device '%s' is unknown", device_name)
@@ -116,7 +120,10 @@ def deactivate(device_name: str | None) -> None:
             click.echo("No default device found. Please specify device name.")
         return
 
-    manager.deactivate_device(device)
+    try:
+        manager.deactivate_device(device)
+    except BluetoothError as e:
+        raise click.Abort from e
 
 
 @cli.command()
