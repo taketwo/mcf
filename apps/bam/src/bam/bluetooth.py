@@ -11,6 +11,10 @@ from .utils import run_command
 logger = get_logger(__name__)
 
 
+class BluetoothError(Exception):
+    """Bluetooth operation failed."""
+
+
 @dataclass
 class ConnectedDevice:
     """Information about a connected Bluetooth device."""
@@ -24,7 +28,10 @@ class BluetoothController:
 
     def get_connected_devices(self) -> list[ConnectedDevice]:
         """Get list of currently connected Bluetooth devices."""
-        stdout, _, _ = run_command("bluetoothctl devices Connected")
+        stdout, stderr, returncode = run_command("bluetoothctl devices Connected")
+        if returncode != 0:
+            raise BluetoothError(f"Failed to list connected devices: {stderr.strip()}")
+
         devices = []
         for line in stdout.splitlines():
             if not line.strip() or not line.startswith("Device"):
@@ -41,7 +48,9 @@ class BluetoothController:
 
     def get_battery_level(self, mac_address: str) -> int | None:
         """Get battery level for a device if available."""
-        stdout, _, _ = run_command(f"bluetoothctl info {mac_address}")
+        stdout, _, returncode = run_command(f"bluetoothctl info {mac_address}")
+        if returncode != 0:
+            raise BluetoothError(f"Failed to query device {mac_address}")
 
         for line in stdout.splitlines():
             if "Battery Percentage:" in line:
@@ -55,14 +64,20 @@ class BluetoothController:
 
     def connect_device(self, mac_address: str) -> None:
         """Connect to a Bluetooth device."""
-        run_command(f"bluetoothctl connect {mac_address}")
+        _, _, returncode = run_command(f"bluetoothctl connect {mac_address}")
+        if returncode != 0:
+            raise BluetoothError(f"Failed to connect to {mac_address}")
         time.sleep(0.5)  # Wait for connection to establish
 
     def disconnect_device(self, mac_address: str) -> None:
         """Disconnect a Bluetooth device."""
-        run_command(f"bluetoothctl disconnect {mac_address}")
+        _, _, returncode = run_command(f"bluetoothctl disconnect {mac_address}")
+        if returncode != 0:
+            raise BluetoothError(f"Failed to disconnect {mac_address}")
 
     def is_device_connected(self, mac_address: str) -> bool:
         """Check if a device is currently connected."""
-        stdout, _, _ = run_command(f"bluetoothctl info {mac_address}")
+        stdout, _, returncode = run_command(f"bluetoothctl info {mac_address}")
+        if returncode != 0:
+            raise BluetoothError(f"Failed to query device {mac_address}")
         return "Connected: yes" in stdout
