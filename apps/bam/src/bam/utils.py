@@ -7,8 +7,8 @@ from .logging import logging
 logger = logging.getLogger(__name__)
 
 
-def run_command(command: str) -> tuple[str, str]:
-    """Run command and return its output."""
+def run_command(command: str) -> tuple[str, str, int]:
+    """Run command and return its output and exit code."""
     logger.debug("Running command: %s", command)
     process = subprocess.Popen(
         command,
@@ -28,4 +28,4 @@ def run_command(command: str) -> tuple[str, str]:
             logger.error("Stdout: %s", stdout.strip())
         if stderr:
             logger.error("Stderr: %s", stderr.strip())
-    return stdout, stderr
+    return stdout, stderr, process.returncode

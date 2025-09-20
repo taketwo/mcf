@@ -104,7 +104,7 @@ class PulseAudioController:
 
     def _get_card_info(self, mac_address: str) -> str | None:
         """Get card info for a device from PulseAudio."""
-        stdout, _ = run_command("pactl list cards")
+        stdout, _, _ = run_command("pactl list cards")
         cards = stdout.split("Card #")
         mac_normalized = self._normalize_mac(mac_address)
 
@@ -131,7 +131,7 @@ class PulseAudioController:
             logger.debug("Getting available sinks")
         else:
             logger.debug("Getting available sinks for device with MAC %s", mac_address)
-        stdout, _ = run_command("pactl list short sinks")
+        stdout, _, _ = run_command("pactl list short sinks")
         sinks = [
             parts[1]
             for parts in (

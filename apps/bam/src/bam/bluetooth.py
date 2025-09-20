@@ -24,7 +24,7 @@ class BluetoothController:
 
     def get_connected_devices(self) -> list[ConnectedDevice]:
         """Get list of currently connected Bluetooth devices."""
-        stdout, _ = run_command("bluetoothctl devices Connected")
+        stdout, _, _ = run_command("bluetoothctl devices Connected")
         devices = []
         for line in stdout.splitlines():
             if not line.strip() or not line.startswith("Device"):
@@ -41,7 +41,7 @@ class BluetoothController:
 
     def get_battery_level(self, mac_address: str) -> int | None:
         """Get battery level for a device if available."""
-        stdout, _ = run_command(f"bluetoothctl info {mac_address}")
+        stdout, _, _ = run_command(f"bluetoothctl info {mac_address}")
 
         for line in stdout.splitlines():
             if "Battery Percentage:" in line:
@@ -64,5 +64,5 @@ class BluetoothController:
 
     def is_device_connected(self, mac_address: str) -> bool:
         """Check if a device is currently connected."""
-        stdout, _ = run_command(f"bluetoothctl info {mac_address}")
+        stdout, _, _ = run_command(f"bluetoothctl info {mac_address}")
         return "Connected: yes" in stdout
