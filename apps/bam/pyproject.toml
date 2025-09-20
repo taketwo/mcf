@@ -3,7 +3,7 @@ name = "bam"
 version = "0.1.0"
 description = "Bluetooth Audio Manager"
 authors = [{ name = "Sergey Alexandrov", email = "alexandrov88@gmail.com" }]
-requires-python = "~=3.11"
+requires-python = ">=3.13"
 dependencies = [
   "click>=8.1.8,<9",
   "pyyaml>=6.0.2,<7",
@@ -31,7 +31,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
