@@ -6,7 +6,7 @@ from enum import Enum
 
 from .logging import logging
 
-from .types import AudioMode
+from .audio import AudioMode
 from .utils import run_command
 
 logger = logging.getLogger(__name__)

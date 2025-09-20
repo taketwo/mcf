@@ -8,7 +8,7 @@ import click
 
 from .core import BTManager
 from .logging import configure_logging, get_logger
-from .types import AudioMode
+from .audio import AudioMode
 
 logger = get_logger(__name__)
 

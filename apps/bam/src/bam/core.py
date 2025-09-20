@@ -10,7 +10,7 @@ import yaml
 from .bluetooth import BluetoothController
 from .logging import get_logger
 from .pulseaudio import PulseAudioController
-from .types import AudioMode
+from .audio import AudioMode
 
 if TYPE_CHECKING:
     from pathlib import Path
