@@ -25,6 +25,7 @@ gui:
 git:
   autoFetch: false
   autoForwardBranches: none
+  overrideGpg: true # we use gpg-agent, so this can be enabled to allow commit rewording
 os:
   editPreset: "nvim-remote"
   copyToClipboardCmd: printf {{text}} | xsel --clipboard --input
