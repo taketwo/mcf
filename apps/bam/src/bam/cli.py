@@ -14,6 +14,16 @@ from .logging import configure_logging, get_logger
 logger = get_logger(__name__)
 
 
+def mode_argument() -> click.Argument:
+    """Add an optional AudioMode argument."""
+    return click.argument(
+        "mode",
+        type=click.Choice([m.name.lower() for m in AudioMode], case_sensitive=False),
+        callback=lambda _, __, value: AudioMode[value.upper()] if value else None,
+        required=False,
+    )
+
+
 def get_manager() -> BTManager:
     """Create BTManager with default config path."""
     config_path = Path.home() / ".config" / "bam" / "config.yaml"
@@ -77,22 +87,11 @@ def status() -> None:
 
 @cli.command()
 @click.argument("device_name", required=False)
-@click.option(
-    "--music",
-    "mode",
-    flag_value=AudioMode.MUSIC,
-    help="Connect in high-quality audio mode",
-)
-@click.option(
-    "--call",
-    "mode",
-    flag_value=AudioMode.CALL,
-    help="Connect in bidirectional audio mode",
-)
+@mode_argument()
 def activate(device_name: str, mode: AudioMode | None) -> None:
     """Connect to a device and set it as default audio device.
 
-    If mode not specified, uses device's default mode from config.
+    If mode is not specified, uses device's default mode from config.
     """
     manager = get_manager()
 
@@ -128,23 +127,12 @@ def deactivate(device_name: str | None) -> None:
 
 @cli.command()
 @click.argument("device_name", required=False)
-@click.option(
-    "--music",
-    "mode",
-    flag_value=AudioMode.MUSIC,
-    help="Switch to high-quality audio",
-)
-@click.option(
-    "--call",
-    "mode",
-    flag_value=AudioMode.CALL,
-    help="Switch to bidirectional audio",
-)
+@mode_argument()
 def mode(device_name: str | None, mode: AudioMode | None) -> None:
     """Switch device mode.
 
-    If no mode specified, toggles between music/call. If no device specified, acts on
-    the only connected device.
+    If no mode is specified, toggles between music/call. If no device isspecified, acts
+    on the only connected device.
     """
     manager = get_manager()
     device = manager.find_device(device_name)
@@ -156,8 +144,7 @@ def mode(device_name: str | None, mode: AudioMode | None) -> None:
             click.echo("Unable to automatically select device, please specify name")
         return
 
-    # Click sets mode to "False" string if no flags were provided
-    if mode == "False":
+    if not mode:
         manager.toggle_mode(device)
     else:
         manager.set_device_mode(device, mode)
