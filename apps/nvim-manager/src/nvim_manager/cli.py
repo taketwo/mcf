@@ -385,6 +385,38 @@ def restore(
 
 @main.command()
 @click.option(
+    "--force",
+    is_flag=True,
+    help="Skip confirmation prompt.",
+)
+@pass_context
+def revert(ctx: dict[str, Any], *, force: bool = False) -> None:
+    """Revert the last commit in lock repository.
+
+    Drops the most recent commit from the lock repository and force-pushes the change
+    to remote. After reverting, you should run restore commands to sync your system to
+    the new lock state.
+    """
+    try:
+        if not force:
+            console.print(
+                "[yellow]Warning:[/yellow] This will permanently remove the last commit "
+                "from the lock repository.",
+            )
+            if not click.confirm("Do you want to continue?"):
+                console.print("Revert cancelled.")
+                return
+
+        ctx["lock_repo"].revert_and_push()
+        console.print("[green]✓[/green] Lock repository reverted successfully.")
+    except Exception as e:
+        logger.exception("Failed to revert lock repository")
+        console.print(f"[red]Error:[/red] {e}")
+        raise click.Abort from e
+
+
+@main.command()
+@click.option(
     "--editor",
     is_flag=True,
     help="Sync editor only.",
