@@ -175,6 +175,39 @@ class LockRepository:
             origin.push("main", force=True)
             logger.info("Changes pushed to remote repository")
 
+    def revert_and_push(self) -> None:
+        """Drop the last commit and force-push to remote.
+
+        Reverts the repository to the previous commit by resetting HEAD to HEAD~1
+        and force-pushing the change to the remote repository. If there are no
+        commits or only the initial commit, logs a warning and returns early.
+
+        Raises
+        ------
+        git.exc.GitCommandError
+            If git operations fail.
+
+        """
+        logger.debug("Reverting last commit in lock repository")
+        try:
+            current_commit = self.repo.head.commit
+            logger.debug("Current HEAD commit: %s", current_commit.hexsha)
+        except (AttributeError, ValueError):
+            logger.warning("Repository has no commits to revert")
+            return
+
+        if not current_commit.parents:
+            logger.warning("Cannot revert because this is the initial commit")
+            return
+
+        parent_commit = current_commit.parents[0]
+        logger.debug("Reverting to parent commit: %s", parent_commit.hexsha)
+        self.repo.head.reset(parent_commit, index=True, working_tree=True)
+
+        logger.debug("Pushing changes to remote repository")
+        self.repo.remotes.origin.push("main", force=True)
+        logger.info("Changes pushed to remote repository")
+
     def read_file(self, repo_relative_path: str) -> str:
         """Read file content from repository with auto-sync.
 
