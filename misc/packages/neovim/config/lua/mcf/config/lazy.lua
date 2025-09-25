@@ -18,10 +18,24 @@ require('lazy').setup({
     -- before importing our plugins.
     {
       'LazyVim/LazyVim',
-      -- By providing an explicit config function we avoid the complete LazyVim setup
+      -- By providing an explicit config function we avoid the complete LazyVim setup. Instead, we
+      -- will only import the utils module and make it available in the global scope.
       config = function()
-        -- Make sure that LazyVim utils are available in the global scope
         _G.LazyVim = require('lazyvim.util')
+        -- Commit https://github.com/LazyVim/LazyVim/commit/9c611b0c5758d0d659e7fdb29119b7083a56f989
+        -- introduced a dependency between LazyVim utils and LazyVim config. Specifically, the
+        -- set_default function uses the _options field from the config module. To avoid errors, we
+        -- initialize this field in the same way as importing 'lazyvim.config' would. Somewhat
+        -- confusingly, LazyVim stores the config module as a field in the LazyVim global (which is
+        -- just an alias for 'lazyvim.util'), so we respect that here. Of coures, we do not import
+        -- the actual config module, instead create a minimal stub table.
+        _G.LazyVim.config = {
+          _options = {
+            indentexpr = vim.o.indentexpr,
+            foldmethod = vim.o.foldmethod,
+            foldexpr = vim.o.foldexpr,
+          },
+        }
       end,
       submodules = false, -- Do not waste time cloning and updating submodules that we do not use
     },
