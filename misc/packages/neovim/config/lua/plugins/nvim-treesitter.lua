@@ -7,57 +7,6 @@ return {
         branch = 'main',
         event = 'VeryLazy',
         opts = {},
-        keys = function()
-          local ret = {} ---@type LazyKeysSpec[]
-          local moves = {
-            goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer', [']p'] = '@parameter.inner' },
-            goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer', [']P'] = '@parameter.inner' },
-            goto_previous_start = { ['[f'] = '@function.outer', ['[c'] = '@class.outer', ['[p'] = '@parameter.inner' },
-            goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer', ['[P'] = '@parameter.inner' },
-          }
-          for method, keymaps in pairs(moves) do
-            for key, query in pairs(keymaps) do
-              local desc = query:gsub('@', ''):gsub('%..*', '')
-              desc = (key:sub(1, 1) == '[' and 'Previous ' or 'Next ') .. desc
-              desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and ' end' or ' start')
-              ret[#ret + 1] = {
-                key,
-                function()
-                  -- don't use treesitter if in diff mode and the key is one of the c/C keys
-                  if vim.wo.diff and key:find('[cC]') then return vim.cmd('normal! ' .. key) end
-                  require('nvim-treesitter-textobjects.move')[method](query, 'textobjects')
-                end,
-                desc = desc,
-                mode = { 'n', 'x', 'o' },
-                silent = true,
-              }
-            end
-          end
-          local swaps = {
-            swap_next = {
-              ['<Leader>sn'] = { query = '@parameter.inner', desc = 'Shift parameter right' },
-              ['<Leader>st'] = { query = '@function.outer', desc = 'Shift function down' },
-              ['<Leader>sT'] = { query = '@class.outer', desc = 'Shift class down' },
-            },
-            swap_previous = {
-              ['<Leader>sh'] = { query = '@parameter.inner', desc = 'Shift parameter left' },
-              ['<Leader>sc'] = { query = '@function.outer', desc = 'Shift function up' },
-              ['<Leader>sC'] = { query = '@class.outer', desc = 'Shift class up' },
-            },
-          }
-          for method, keymaps in pairs(swaps) do
-            for key, opts in pairs(keymaps) do
-              ret[#ret + 1] = {
-                key,
-                function() require('nvim-treesitter-textobjects.swap')[method](opts['query']) end,
-                desc = opts['desc'],
-                mode = { 'n', 'x' },
-                silent = true,
-              }
-            end
-          end
-          return ret
-        end,
         config = function(_, opts)
           local TS = require('nvim-treesitter-textobjects')
           if not TS.setup then
@@ -65,6 +14,60 @@ return {
             return
           end
           TS.setup(opts)
+          vim.api.nvim_create_autocmd('FileType', {
+            group = vim.api.nvim_create_augroup('lazyvim_treesitter_textobjects', { clear = true }),
+            callback = function(ev)
+              if not LazyVim.treesitter.have(ev.match, 'textobjects') then return end
+              local moves = {
+                goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer', [']p'] = '@parameter.inner' },
+                goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer', [']P'] = '@parameter.inner' },
+                goto_previous_start = {
+                  ['[f'] = '@function.outer',
+                  ['[c'] = '@class.outer',
+                  ['[p'] = '@parameter.inner',
+                },
+                goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer', ['[P'] = '@parameter.inner' },
+              }
+              for method, keymaps in pairs(moves) do
+                for key, query in pairs(keymaps) do
+                  local desc = query:gsub('@', ''):gsub('%..*', '')
+                  desc = (key:sub(1, 1) == '[' and 'Previous ' or 'Next ') .. desc
+                  desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and ' end' or ' start')
+                  --Only set the keymap if we are not in diff mode with a c/C key
+                  if not (vim.wo.diff and key:find('[cC]')) then
+                    vim.keymap.set(
+                      { 'n', 'x', 'o' },
+                      key,
+                      function() require('nvim-treesitter-textobjects.move')[method](query, 'textobjects') end,
+                      { desc = desc, buffer = ev.buf, silent = true }
+                    )
+                  end
+                end
+              end
+              local swaps = {
+                swap_next = {
+                  ['<Leader>sn'] = { query = '@parameter.inner', desc = 'Shift parameter right' },
+                  ['<Leader>st'] = { query = '@function.outer', desc = 'Shift function down' },
+                  ['<Leader>sT'] = { query = '@class.outer', desc = 'Shift class down' },
+                },
+                swap_previous = {
+                  ['<Leader>sh'] = { query = '@parameter.inner', desc = 'Shift parameter left' },
+                  ['<Leader>sc'] = { query = '@function.outer', desc = 'Shift function up' },
+                  ['<Leader>sC'] = { query = '@class.outer', desc = 'Shift class up' },
+                },
+              }
+              for method, keymaps in pairs(swaps) do
+                for key, qd in pairs(keymaps) do
+                  vim.keymap.set(
+                    { 'n', 'x' },
+                    key,
+                    function() require('nvim-treesitter-textobjects.swap')[method](qd['query']) end,
+                    { desc = qd['desc'], buffer = ev.buf, silent = true }
+                  )
+                end
+              end
+            end,
+          })
         end,
       },
       {
