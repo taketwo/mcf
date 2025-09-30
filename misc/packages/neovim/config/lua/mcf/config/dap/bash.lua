@@ -2,8 +2,8 @@ local M = {}
 
 function M.setup()
   local dap = require('dap')
-  local bashdb_dir = require('mason-registry').get_package('bash-debug-adapter'):get_install_path()
-    .. '/extension/bashdb_dir'
+  local install_root_dir = require('mason.settings').current.install_root_dir
+  local bashdb_dir = install_root_dir .. '/packages/bash-debug-adapter/extension/bashdb_dir'
   dap.configurations.sh = {
     {
       type = 'bashdb',
