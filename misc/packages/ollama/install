@@ -16,6 +16,12 @@ if [ "$LATEST_VERSION" == "$INSTALLED_VERSION" ]; then
   exit 0
 fi
 
+if [ "$INSTALLED_VERSION" != "not installed" ]; then
+  echo "Removing old version of Ollama..."
+  rm -f ~/.local/ollama
+  rm ~/.local/bin/ollama
+fi
+
 echo "Downloading Ollama $LATEST_VERSION..."
 TMP_FILE=$(mktemp)
 gh --repo ollama/ollama release download --clobber --pattern ollama-linux-amd64.tgz --output "$TMP_FILE"
