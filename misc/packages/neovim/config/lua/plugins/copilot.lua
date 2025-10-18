@@ -17,6 +17,7 @@ return {
           dismiss = '<C-]>',
         },
       },
+      panel = { enabled = false },
       copilot_node_command = vim.g.node_path .. '/node',
     },
   },
