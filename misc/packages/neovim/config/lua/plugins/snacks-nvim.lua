@@ -22,9 +22,13 @@ return {
       layout = {
         preset = function() return vim.o.columns >= 120 and 'telescope' or 'vertical' end,
       },
+      actions = {
+        sidekick_send = function(...) return require('sidekick.cli.snacks').send(...) end,
+      },
       win = {
         input = {
           keys = {
+            ['<A-a>'] = { 'sidekick_send', mode = { 'n', 'i' } },
             ['<A-c>'] = { 'list_up', mode = { 'n', 'i' } },
             ['<A-t>'] = { 'list_down', mode = { 'n', 'i' } },
             ['<C-h>'] = { 'preview_scroll_up', mode = { 'n', 'i' } },
