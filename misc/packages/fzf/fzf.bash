@@ -56,21 +56,25 @@ export FZF_COLORS="
   --color hl:$blue
   --color fg+:-1
   --color bg+:$bg3
-  --color gutter:-1
+  --color gutter:$bg0
   --color hl+:$blue
   --color info:$yellow
   --color border:$bg3
   --color prompt:$blue
   --color pointer:$blue
-  --color marker:$blue
+  --color marker:$dark_red
   --color spinner:$yellow
+"
+
+export FZF_INDICATORS="
+  --marker '⚫'
 "
 
 # Set ripgrep as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
 
 # Default options
-export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,alt-s:toggle-sort '$FZF_COLORS
+export FZF_DEFAULT_OPTS='--ansi --select-1 --bind=alt-c:up,alt-t:down,alt-h:backward-char,alt-n:forward-char,alt-s:toggle-sort '$FZF_COLORS' '$FZF_INDICATORS
 
 # CTRL-R - Paste the selected command from history into the command line
 bind -x '"\C-r": __fzf_history__'
