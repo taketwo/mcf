@@ -4,7 +4,6 @@ return {
     dependencies = {
       {
         'nvim-lualine/lualine.nvim',
-        optional = true,
         event = 'VeryLazy',
         opts = function(_, opts)
           local icons = {
@@ -13,6 +12,7 @@ return {
             Warning = { ' ', 'DiagnosticWarn' },
             Normal = { ' ', 'Special' },
           }
+          -- TODO: Unify with copilot lualine status and possibly move to lualine plugin config
           table.insert(opts.sections.lualine_x, 2, {
             function()
               local status = require('sidekick.status').get()
@@ -37,6 +37,7 @@ return {
       },
     },
     keys = {
+      -- Next Edit Suggestion keybindings
       {
         '<Tab>',
         function()
@@ -48,34 +49,46 @@ return {
         expr = true,
         desc = 'Go to or apply NES',
       },
+      { '<Leader>an', '', desc = 'Next Edit Suggestions (NES)' },
       {
-        '<leader>At',
-        function() require('sidekick.cli').send({ msg = '{this}' }) end,
-        mode = { 'x', 'n' },
-        desc = 'Send This',
+        '<Leader>anc',
+        function() require('sidekick.nes').clear() end,
+        desc = 'Clear suggestions',
       },
       {
-        '<leader>Af',
-        function() require('sidekick.cli').send({ msg = '{file}' }) end,
-        desc = 'Send File',
+        '<Leader>ant',
+        function() require('sidekick.nes').toggle() end,
+        desc = 'Toggle suggestions',
       },
-      {
-        '<leader>Av',
-        function() require('sidekick.cli').send({ msg = '{selection}' }) end,
-        mode = { 'x' },
-        desc = 'Send Visual Selection',
-      },
-      {
-        '<leader>Ap',
-        function() require('sidekick.cli').prompt() end,
-        mode = { 'n', 'x' },
-        desc = 'Sidekick Select Prompt',
-      },
-      -- Example of a keybinding to open Claude directly
+      -- CLI keybindings
       {
         '<Leader>ac',
         function() require('sidekick.cli').toggle({ name = 'claude', focus = true }) end,
         desc = 'Toggle ClaudeCode',
+      },
+      { '<Leader>as', '', desc = 'Send to ClaudeCode' },
+      {
+        '<Leader>ast',
+        function() require('sidekick.cli').send({ msg = '{this}' }) end,
+        mode = { 'x', 'n' },
+        desc = 'Send this',
+      },
+      {
+        '<Leader>asf',
+        function() require('sidekick.cli').send({ msg = '{file}' }) end,
+        desc = 'Send file',
+      },
+      {
+        '<Leader>ass',
+        function() require('sidekick.cli').send({ msg = '{selection}' }) end,
+        mode = { 'x' },
+        desc = 'Send visual selection',
+      },
+      {
+        '<Leader>ap',
+        function() require('sidekick.cli').prompt() end,
+        mode = { 'n', 'x' },
+        desc = 'Select Sidekick prompt',
       },
     },
   },
