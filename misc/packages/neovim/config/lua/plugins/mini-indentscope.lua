@@ -22,6 +22,7 @@ return {
           'mason',
           'neo-tree',
           'notify',
+          'sidekick_terminal',
           'snacks_notif',
           'snacks_terminal',
           'snacks_win',
