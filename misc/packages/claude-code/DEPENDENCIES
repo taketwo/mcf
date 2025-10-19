@@ -1,3 +1,4 @@
 fnm: @anthropic-ai/claude-code
 libnotify-bin                        # Notifications support
 uvx: $MCF/apps/ccu                   # Hooks and other utilities
+fnm: ccstatusline@latest             # Status line
