@@ -18,6 +18,7 @@ uvx: poetry
 nix: delta                             # syntax highlighting for diffs
 pudb
 lnav                                   # log viewer
+claude-code
 
 # Terminal
 tmux
