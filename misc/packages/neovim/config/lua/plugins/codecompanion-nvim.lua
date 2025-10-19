@@ -16,7 +16,6 @@ return {
       'CodeCompanionCmd',
     },
     keys = {
-      { '<Leader>a', '', desc = 'AI support', mode = { 'n', 'v' } },
       { '<Leader>a<Space>', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle chat window', mode = { 'n', 'v' } },
       { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
       {
