@@ -29,3 +29,7 @@ git:
 os:
   editPreset: "nvim-remote"
   copyToClipboardCmd: printf {{text}} | xsel --clipboard --input
+keybinding:
+  commits:
+    moveDownCommit: <c-t>
+    moveUpCommit: <c-c>
