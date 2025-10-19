@@ -7,7 +7,7 @@ return {
       config = true,
     },
   },
-  ft = { 'markdown' },
+  cmd = { 'MermaidPreviewStart' },
   config = function()
     require('mermaid_playground').setup({
       workspace_dir = nil,
