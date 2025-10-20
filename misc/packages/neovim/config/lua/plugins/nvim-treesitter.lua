@@ -191,7 +191,7 @@ return {
           if not LazyVim.treesitter.have(ev.match) then return end
 
           -- highlighting
-          if vim.tbl_get(opts, 'highlight', 'enable') ~= false then pcall(vim.treesitter.start) end
+          if vim.tbl_get(opts, 'highlight', 'enable') ~= false then pcall(vim.treesitter.start, ev.buf) end
 
           -- indents
           if vim.tbl_get(opts, 'indent', 'enable') ~= false and LazyVim.treesitter.have(ev.match, 'indents') then
