@@ -17,6 +17,7 @@ return {
     opts = {
       snippets = {
         preset = 'default',
+        expand = function(snippet, _) return LazyVim.cmp.expand(snippet) end,
       },
       keymap = {
         preset = 'none',
