@@ -1,6 +1,7 @@
 return {
   {
     'stevearc/overseer.nvim',
+    commit = '9334595f850a301ef8bd1d19fc46dca688f677b3',
     cmd = { 'OverseerRun', 'OverseerToggle' },
     keys = {
       { '<Leader>o', '', desc = 'Overseer' },
