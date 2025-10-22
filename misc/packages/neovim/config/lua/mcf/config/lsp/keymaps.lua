@@ -53,7 +53,6 @@ M._keys = {
     desc = 'Display LSP signature help',
     has = 'signatureHelp',
   },
-  { '<Leader>lD', '<cmd>Lspsaga show_line_diagnostics<cr>', desc = 'Line diagnostics' },
   {
     '<Leader>lN',
     function()
@@ -75,8 +74,6 @@ M._keys = {
   },
   { '<Leader>lT', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Show workspace diagnostics in Trouble' },
   { '<Leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
-  { '<Leader>ld', '<cmd>Lspsaga peek_definition<cr>', desc = 'Definition preview' },
-  { '<Leader>lf', '<cmd>Lspsaga lsp_finder<cr>', desc = 'Finder' },
   { '<Leader>li', Snacks.picker.lsp_config, desc = 'Show info' },
   { '<Leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
   { '<Leader>lr', '<cmd>Telescope lsp_references<cr>', desc = 'References', has = 'references' },
