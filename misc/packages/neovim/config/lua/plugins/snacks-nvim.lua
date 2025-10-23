@@ -23,7 +23,7 @@ return {
         preset = function() return vim.o.columns >= 120 and 'telescope' or 'vertical' end,
       },
       actions = {
-        sidekick_send = function(...) return require('sidekick.cli.snacks').send(...) end,
+        sidekick_send = function(...) return require('sidekick.cli.picker.snacks').send(...) end,
       },
       win = {
         input = {
