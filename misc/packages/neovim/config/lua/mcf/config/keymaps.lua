@@ -36,7 +36,7 @@ map('n', 'L', 'Nzz', { desc = 'Previous search result' })
 map('c', '<C-c>', '<C-t>', { desc = 'Next search result', silent = false })
 map('c', '<C-t>', '<C-g>', { desc = 'Previous search result', silent = false })
 -- Clear search highlight
-map('n', '<Esc>', ':nohlsearch<Bar>:echo<CR>', { desc = 'Clear search highlight' })
+map('n', '<Leader>/', ':nohlsearch<Bar>:echo<CR>', { desc = 'Clear search highlight' })
 
 -- Window management
 -- Move between windows without releasing Ctrl
