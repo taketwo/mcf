@@ -31,5 +31,10 @@
     "type": "command",
     "command": "ccstatusline",
     "padding": 0
-  }
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true,
+    "example-skills@anthropic-agent-skills": true
+  },
+  "alwaysThinkingEnabled": false
 }

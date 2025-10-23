@@ -1,3 +1,2 @@
-settings.json:.claude/settings.json:Claude Code settings
-skills:.claude/skills:Claude Code skills
+config:.claude:Claude Code configuration
 ccstatusline:.config/ccstatusline:CC Statusline configuration
