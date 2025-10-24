@@ -88,6 +88,10 @@ return {
     { '<Leader>.w', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word', mode = { 'n', 'x' } },
     -- Picker: Git
     { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout branch' },
+    { '<Leader>gL', function() Snacks.picker.git_log_file() end, desc = 'Log (current file)' },
+    { '<Leader>gl', function() Snacks.picker.git_log() end, desc = 'Log' },
+    -- Picker: Misc
+    { 'z=', function() Snacks.picker.spelling() end, desc = 'Spelling suggestions' },
   },
   config = function(_, opts)
     local Snacks = require('snacks')
