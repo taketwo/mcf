@@ -36,6 +36,14 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require('sidekick').setup(opts)
+      Snacks.toggle({
+        name = 'Next edit suggestions',
+        get = function() return require('sidekick.nes').enabled end,
+        set = function(state) require('sidekick.nes').enable(state) end,
+      }):map('<leader>uN')
+    end,
     keys = {
       -- Next Edit Suggestion keybindings
       {
@@ -48,17 +56,6 @@ return {
         end,
         expr = true,
         desc = 'Go to or apply NES',
-      },
-      { '<Leader>an', '', desc = 'Next Edit Suggestions (NES)' },
-      {
-        '<Leader>anc',
-        function() require('sidekick.nes').clear() end,
-        desc = 'Clear suggestions',
-      },
-      {
-        '<Leader>ant',
-        function() require('sidekick.nes').toggle() end,
-        desc = 'Toggle suggestions',
       },
       -- CLI keybindings
       {
