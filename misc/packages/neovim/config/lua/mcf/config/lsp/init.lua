@@ -73,7 +73,7 @@ function M.setup()
   )
   vim.api.nvim_create_user_command(
     'LspLogClear',
-    function() os.remove(vim.lsp.get_log_path()) end,
+    function() os.remove(vim.lsp.log.get_filename()) end,
     { desc = 'Clear LSP log file' }
   )
 end
