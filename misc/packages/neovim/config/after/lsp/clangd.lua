@@ -16,7 +16,4 @@ return {
     usePlaceholders = true, -- TODO: Understand whether this is useful
     completeUnimported = true, -- TODO: Understand whether this is useful
   },
-  keys = {
-    { '<LocalLeader>\\', '<cmd>LspClangdSwitchSourceHeader<cr>', desc = 'Alternate between source/header' },
-  },
 }

@@ -27,6 +27,7 @@ return {
         { '<Leader>a', group = 'AI support' },
         { '<Leader>f', group = 'Filename' },
         { '<Leader>g', group = 'Git' },
+        { '<Leader>l', group = 'LSP', mode = { 'n', 'v' } },
         { '<Leader>s', group = 'Shift/swap object' },
         { '<Leader>u', group = 'Toggle buffer options' },
         { ']', group = 'Jump next' },

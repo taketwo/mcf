@@ -1,10 +1,5 @@
 local M = {}
 
----Attach LSP-related keymaps to a buffer when an LSP client connects
----@param client table The LSP client that attached
----@param buffer integer The buffer number that the client attached to
-function M.on_attach(client, buffer) require('mcf.config.lsp.keymaps').on_attach(client, buffer) end
-
 ---Display the capabilities of all LSP clients attached to the current buffer
 ---Shows results in a floating window with markdown formatting
 function M.capabilities()
@@ -38,13 +33,8 @@ end
 function M.setup()
   -- Register LSP formatter
   LazyVim.format.register(LazyVim.lsp.formatter())
-
-  -- Setup dynamic capability registration provided by LazyVim
-  LazyVim.lsp.setup()
-
-  -- Setup keymaps on attach and when new capability is registered
-  LazyVim.lsp.on_attach(function(client, buffer) M.on_attach(client, buffer) end)
-  LazyVim.lsp.on_dynamic_capability(M.on_attach)
+  -- Register keymaps for all known LSP servers
+  require('mcf.config.lsp.keymaps').setup()
 
   -- TODO: Enable inlay hints and code lens for selected LSP servers
 

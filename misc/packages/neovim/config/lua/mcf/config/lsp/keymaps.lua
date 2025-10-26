@@ -40,121 +40,109 @@ local goto_prev = function()
   end
 end
 
----@type LazyKeysLspSpec[]|nil
+---LSP keymaps organized by language server name.
+---The special key '*' contains generic keymaps applied to all LSP servers. Server-specific keys
+---(e.g., 'clangd', 'ruff') contain keymaps that are only applied in buffers where that specific
+---server is active.
+---@type table<string, LazyKeysLspSpec[]>|nil
 M._keys = {
-  { '<', goto_prev, desc = 'Go to previous LSP item' },
-  { '>', goto_next, desc = 'Go to next LSP item' },
-  { '[d', function() require('lspsaga.diagnostic'):goto_prev() end, desc = 'Previous diagnostic' },
-  { ']d', function() require('lspsaga.diagnostic'):goto_next() end, desc = 'Next diagnostic' },
-  {
-    '<C-k>',
-    function() return vim.lsp.buf.signature_help() end,
-    mode = { 'i', 'n' },
-    desc = 'Display LSP signature help',
-    has = 'signatureHelp',
+  ['*'] = {
+    { '<', goto_prev, desc = 'Go to previous LSP item' },
+    { '>', goto_next, desc = 'Go to next LSP item' },
+    { '[d', function() require('lspsaga.diagnostic'):goto_prev() end, desc = 'Previous diagnostic' },
+    { ']d', function() require('lspsaga.diagnostic'):goto_next() end, desc = 'Next diagnostic' },
+    {
+      '<C-k>',
+      function() return vim.lsp.buf.signature_help() end,
+      mode = { 'i', 'n' },
+      desc = 'Display LSP signature help',
+      has = 'signatureHelp',
+    },
+    {
+      '<Leader>lN',
+      function()
+        vim.ui.input({ prompt = 'New Name:' }, function(input)
+          if not input or #input == 0 then return end
+          vim.lsp.buf.rename(input)
+        end)
+      end,
+      desc = 'Rename symbol (no placeholder)',
+      mode = { 'n', 'v' },
+      has = 'rename',
+    },
+    {
+      '<Leader>lR',
+      function() Snacks.rename.rename_file() end,
+      desc = 'Rename file',
+      mode = { 'n' },
+      has = { 'workspace/didRenameFiles', 'workspace/willRenameFiles' },
+    },
+    { '<Leader>lT', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Show workspace diagnostics in Trouble' },
+    { '<Leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
+    { '<Leader>li', Snacks.picker.lsp_config, desc = 'Show info' },
+    { '<Leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
+    { '<Leader>lr', '<cmd>Telescope lsp_references<cr>', desc = 'References', has = 'references' },
+    { '<Leader>ls', vim.lsp.buf.signature_help, desc = 'Signature help', has = 'signatureHelp' },
+    { '<Leader>lt', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'Show document diagnostics in Trouble' },
+    { '<leader>lL', vim.lsp.codelens.refresh, desc = 'Refresh and display Codelens', mode = { 'n' }, has = 'codeLens' },
+    { '<leader>ll', vim.lsp.codelens.run, desc = 'Run Codelens', mode = { 'n', 'v' }, has = 'codeLens' },
+    {
+      '<Leader>.S',
+      '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>',
+      desc = 'Jump to symbol (workspace)',
+      has = 'workspaceSymbol',
+    },
+    { '<Leader>.s', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Jump to symbol', has = 'documentSymbol' },
+    { 'K', function() vim.lsp.buf.hover() end, desc = 'Display LSP hover information', has = 'hover' },
+    { 'gD', '<cmd>Trouble lsp_declarations<cr>', desc = 'Go to declaration', has = 'declaration' },
+    { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
+    { 'gd', '<cmd>Trouble lsp_definitions<cr>', desc = 'Go to definition', has = 'definition' },
+    { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
+    { 'gT', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
+    {
+      '<Leader>ui',
+      function() Snacks.toggle.inlay_hints():toggle() end,
+      desc = 'Toggle inlay hints',
+      has = 'inlayHint',
+    },
   },
-  {
-    '<Leader>lN',
-    function()
-      vim.ui.input({ prompt = 'New Name:' }, function(input)
-        if not input or #input == 0 then return end
-        vim.lsp.buf.rename(input)
-      end)
-    end,
-    desc = 'Rename symbol (no placeholder)',
-    mode = { 'n', 'v' },
-    has = 'rename',
+  ['clangd'] = {
+    { '<LocalLeader>\\', '<cmd>LspClangdSwitchSourceHeader<cr>', desc = 'Alternate between source/header' },
   },
-  {
-    '<Leader>lR',
-    function() Snacks.rename.rename_file() end,
-    desc = 'Rename file',
-    mode = { 'n' },
-    has = { 'workspace/didRenameFiles', 'workspace/willRenameFiles' },
-  },
-  { '<Leader>lT', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Show workspace diagnostics in Trouble' },
-  { '<Leader>la', vim.lsp.buf.code_action, desc = 'Code action', mode = { 'n', 'v' }, has = 'codeAction' },
-  { '<Leader>li', Snacks.picker.lsp_config, desc = 'Show info' },
-  { '<Leader>ln', vim.lsp.buf.rename, desc = 'Rename symbol', mode = { 'n', 'v' }, has = 'rename' },
-  { '<Leader>lr', '<cmd>Telescope lsp_references<cr>', desc = 'References', has = 'references' },
-  { '<Leader>ls', vim.lsp.buf.signature_help, desc = 'Signature help', has = 'signatureHelp' },
-  { '<Leader>lt', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'Show document diagnostics in Trouble' },
-  { '<leader>lL', vim.lsp.codelens.refresh, desc = 'Refresh and display Codelens', mode = { 'n' }, has = 'codeLens' },
-  { '<leader>ll', vim.lsp.codelens.run, desc = 'Run Codelens', mode = { 'n', 'v' }, has = 'codeLens' },
-  {
-    '<Leader>.S',
-    '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>',
-    desc = 'Jump to symbol (workspace)',
-    has = 'workspaceSymbol',
-  },
-  { '<Leader>.s', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Jump to symbol', has = 'documentSymbol' },
-  { 'K', function() vim.lsp.buf.hover() end, desc = 'Display LSP hover information', has = 'hover' },
-  { 'gD', '<cmd>Trouble lsp_declarations<cr>', desc = 'Go to declaration', has = 'declaration' },
-  { 'gI', '<cmd>Trouble lsp_implementations<cr>', desc = 'Go to implementation', has = 'implementation' },
-  { 'gd', '<cmd>Trouble lsp_definitions<cr>', desc = 'Go to definition', has = 'definition' },
-  { 'gr', '<cmd>Trouble lsp_references<cr>', desc = 'Go to references', has = 'references' },
-  { 'gT', '<cmd>Trouble lsp_type_definitions<cr>', desc = 'Go to type definition', has = 'typeDefinition' },
-  { '<Leader>ui', function() Snacks.toggle.inlay_hints():toggle() end, desc = 'Toggle inlay hints', has = 'inlayHint' },
 }
 
--- Do not set LSP keymaps for these filetypes
-M._filetype_blacklist = {}
+---Copied from LazyVim
+---@param filter vim.lsp.get_clients.Filter
+---@param spec LazyKeysLspSpec[]
+function M.set(filter, spec)
+  local Keys = require('lazy.core.handler.keys')
+  for _, keys in pairs(Keys.resolve(spec)) do
+    ---@cast keys LazyKeysLsp
+    if keys.cond == nil or keys.cond() then
+      local filters = {} ---@type vim.lsp.get_clients.Filter[]
+      if keys.has then
+        local methods = type(keys.has) == 'string' and { keys.has } or keys.has --[[@as string[] ]]
+        for _, method in ipairs(methods) do
+          method = method:find('/') and method or ('textDocument/' .. method)
+          filters[#filters + 1] = vim.tbl_extend('force', vim.deepcopy(filter), { method = method })
+        end
+      else
+        filters[#filters + 1] = filter
+      end
 
--- Check if any of the LSP clients for the buffer support the given method
--- Copied from LazyVim
----@param method string|string[]
-function M.has(buffer, method)
-  if type(method) == 'table' then
-    for _, m in ipairs(method) do
-      if M.has(buffer, m) then return true end
+      for _, f in ipairs(filters) do
+        local opts = Keys.opts(keys)
+        ---@cast opts snacks.keymap.set.Opts
+        opts.lsp = f
+        Snacks.keymap.set(keys.mode or 'n', keys.lhs, keys.rhs, opts)
+      end
     end
-    return false
   end
-  method = method:find('/') and method or 'textDocument/' .. method
-  local clients = vim.lsp.get_clients({ bufnr = buffer })
-  for _, client in ipairs(clients) do
-    if client:supports_method(method) then return true end
-  end
-  return false
 end
 
----@return LazyKeysLsp[]
-function M.resolve(buffer)
-  local Keys = require('lazy.core.handler.keys')
-  if not Keys.resolve then return {} end
-  local spec = M._keys
-  local clients = vim.lsp.get_clients({ bufnr = buffer })
-  for _, client in ipairs(clients) do
-    local maps = vim.lsp.config[client.name] and vim.lsp.config[client.name].keys or {}
-    vim.list_extend(spec, maps)
-  end
-  return Keys.resolve(spec)
-end
-
-function M.on_attach(_, buffer)
-  require('which-key').add({
-    buffer = buffer,
-    {
-      { '<Leader>l', group = 'LSP', mode = { 'n', 'v' } },
-    },
-  })
-  if vim.tbl_contains(M._filetype_blacklist, vim.bo.filetype) then return end
-
-  -- The rest is copied from LazyVim
-  local Keys = require('lazy.core.handler.keys')
-  local keymaps = M.resolve(buffer)
-  for _, keys in pairs(keymaps) do
-    local has = not keys.has or M.has(buffer, keys.has)
-    local cond = not (keys.cond == false or ((type(keys.cond) == 'function') and not keys.cond()))
-
-    if has and cond then
-      local opts = Keys.opts(keys)
-      opts.cond = nil
-      opts.has = nil
-      opts.silent = opts.silent ~= false
-      opts.buffer = buffer
-      vim.keymap.set(keys.mode or 'n', keys.lhs, keys.rhs, opts)
-    end
+function M.setup()
+  for server, keys in pairs(M._keys) do
+    M.set(server == '*' and {} or { name = server }, keys)
   end
 end
 
