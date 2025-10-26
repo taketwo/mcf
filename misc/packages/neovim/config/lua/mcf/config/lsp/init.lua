@@ -36,8 +36,6 @@ function M.setup()
   -- Register keymaps for all known LSP servers
   require('mcf.config.lsp.keymaps').setup()
 
-  -- TODO: Enable inlay hints and code lens for selected LSP servers
-
   -- Setup appearance of diagnostics
   vim.diagnostic.config({
     underline = true,
