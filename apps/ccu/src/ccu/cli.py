@@ -1,5 +1,6 @@
 import json
 import sys
+from collections.abc import Callable
 
 import click
 
@@ -121,6 +122,86 @@ def debug_hook(hook_name: str, file_path: str) -> None:
 
     except Exception:
         logger.exception("Unexpected error in debug hook execution")
+        sys.exit(2)
+
+
+@main.command()
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would be done without executing",
+)
+def plugins(*, dry_run: bool = False) -> None:
+    """Align local plugin configuration with reference.
+
+    Ensures configured marketplaces and installed plugins match the reference
+    configuration by adding any missing items. Reports extra items but does not
+    remove them.
+    """
+    reference_config = {
+        "marketplaces": [
+            "obra/superpowers-marketplace",
+        ],
+        "plugins": [
+            "superpowers@superpowers-marketplace",
+        ],
+    }
+
+    try:
+        from . import plugins  # noqa: PLC0415
+
+        current_marketplaces = plugins.get_marketplaces()
+        current_plugins = plugins.get_plugins()
+
+        errors = []
+
+        def process_items(
+            title: str,
+            reference_items: list[str],
+            current_items: set[str],
+            add_func: Callable[[str], tuple[bool, str]],
+        ) -> None:
+            item_type = title.lower().rstrip("s")
+            print(f"{title}:")
+            for item in reference_items:
+                if item in current_items:
+                    print(f"  ✓ {item}")
+                elif dry_run:
+                    logger.info("[DRY RUN] Would add %s: %s", item_type, item)
+                    print(f"  ⊕ {item}")
+                else:
+                    logger.info("Adding %s: %s", item_type, item)
+                    success, error = add_func(item)
+                    if success:
+                        print(f"  ✚ {item}")
+                    else:
+                        error_msg = f"Failed to add {item_type} {item}: {error}"
+                        logger.error(error_msg)
+                        errors.append(error_msg)
+                        print(f"  ✗ {item}", file=sys.stderr)
+            for item in current_items - set(reference_items):
+                print(f"  ⚠ {item}")
+
+        process_items(
+            "Marketplaces",
+            reference_config["marketplaces"],
+            current_marketplaces,
+            plugins.add_marketplace,
+        )
+        process_items(
+            "Plugins",
+            reference_config["plugins"],
+            current_plugins,
+            plugins.add_plugin,
+        )
+
+        if errors:
+            print("\nSome operations failed", file=sys.stderr)
+            sys.exit(1)
+
+    except Exception:
+        logger.exception("Unexpected error in plugins command")
+        print("Internal error during plugin alignment", file=sys.stderr)
         sys.exit(2)
 
 
