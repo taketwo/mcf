@@ -53,7 +53,7 @@ return {
         function() require('sidekick.cli').toggle({ name = 'claude', focus = true }) end,
         desc = 'Toggle ClaudeCode',
       },
-      { '<Leader>as', '', desc = 'Send to ClaudeCode' },
+      { '<Leader>as', '', mode = { 'n', 'x' }, desc = 'Send to ClaudeCode' },
       {
         '<Leader>ast',
         function() require('sidekick.cli').send({ msg = '{this}' }) end,
