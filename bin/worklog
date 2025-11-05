@@ -1,0 +1,541 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#   "rich",
+#   "textual",
+# ]
+# ///
+
+from __future__ import annotations
+
+import argparse
+from collections import defaultdict
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from pathlib import Path
+
+from rich.text import Text
+from textual.app import App, ComposeResult
+from textual.containers import Container, Vertical
+from textual.reactive import reactive
+from textual.screen import ModalScreen
+from textual.widgets import DataTable, Footer, Static
+
+
+@dataclass
+class Interval:
+    start: datetime = field(default_factory=datetime.now)
+    end: datetime | None = None
+
+    @property
+    def is_complete(self) -> bool:
+        return self.end is not None
+
+    @property
+    def duration(self) -> timedelta:
+        return (self.end or datetime.now()) - self.start
+
+    def complete(self, when: datetime | None = None) -> None:
+        """Complete this interval by setting end time."""
+        self.end = when or datetime.now()
+
+    def format(self) -> str:
+        """Format interval as 'HH:MM-HH:MM' or 'HH:MM-' if incomplete."""
+        start_str = self.start.strftime("%H:%M")
+        end_str = self.end.strftime("%H:%M") if self.end else ""
+        return f"{start_str}-{end_str}"
+
+    @staticmethod
+    def parse(line: str, current_date: datetime) -> Interval | None:
+        """Parse an interval from a line string."""
+
+        def parse_time(time_str: str, date: datetime) -> datetime:
+            return datetime.combine(
+                date.date(), datetime.strptime(time_str, "%H:%M").time()
+            )
+
+        start_str, _, end_str = line.partition("-")
+        try:
+            start = parse_time(start_str.strip(), current_date)
+            end = parse_time(end_str.strip(), current_date) if end_str.strip() else None
+            return Interval(start, end)
+        except ValueError:
+            return None
+
+    @staticmethod
+    def load(file_path: Path) -> list[Interval]:
+        """Load intervals from file."""
+        if not file_path.exists():
+            return []
+
+        intervals = []
+        current_date = None
+        for line in file_path.read_text().splitlines():
+            if not (line := line.strip()):
+                continue
+
+            if line.startswith("==="):
+                try:
+                    current_date = datetime.strptime(line.strip("= "), "%A, %Y-%m-%d")
+                except ValueError:
+                    current_date = None
+            elif "-" in line and current_date:
+                if interval := Interval.parse(line, current_date):
+                    intervals.append(interval)
+
+        return intervals
+
+    @staticmethod
+    def save(intervals: list[Interval], file_path: Path) -> None:
+        """Save intervals to file."""
+        by_date = defaultdict(list)
+        for interval in sorted(intervals, key=lambda i: i.start):
+            by_date[interval.start.date()].append(interval)
+
+        lines = []
+        for date in sorted(by_date):
+            lines.append(f"=== {date.strftime('%A, %Y-%m-%d')} ===\n")
+            lines.extend(f"{interval.format()}\n" for interval in by_date[date])
+            lines.append("\n")
+
+        file_path.write_text("".join(lines))
+
+
+def format_duration(td: timedelta) -> str:
+    """Format timedelta as 'Xh Ym' or 'Xm' with space-padded numbers."""
+    minutes = int(td.total_seconds() / 60)
+    hours = minutes // 60
+    return f"{hours:2d}h {minutes % 60:2d}m" if hours else f"{minutes:2d}m"
+
+
+class SessionInfo(Static):
+    """Widget displaying current/last session duration."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._label = "Last Session: "
+        self._duration = timedelta()
+
+    def update_info(self, label: str, duration: timedelta) -> None:
+        """Update the session info and refresh."""
+        self._label = label
+        self._duration = duration
+        self.refresh()
+
+    def render(self) -> Text:
+        """Render the session info."""
+        result = Text()
+        result.append(self._label, style="dim")
+        result.append(format_duration(self._duration), style="bold cyan")
+        return result
+
+
+class BannerDisplay(Static):
+    """Widget displaying ASCII art banner for working/paused modes."""
+
+    WORKING_BANNER = """
+                                    █████       ███
+                                   ▒▒███       ▒▒▒
+ █████ ███ █████  ██████  ████████  ▒███ █████ ████  ████████    ███████
+▒▒███ ▒███▒▒███  ███▒▒███▒▒███▒▒███ ▒███▒▒███ ▒▒███ ▒▒███▒▒███  ███▒▒███
+ ▒███ ▒███ ▒███ ▒███ ▒███ ▒███ ▒▒▒  ▒██████▒   ▒███  ▒███ ▒███ ▒███ ▒███
+ ▒▒███████████  ▒███ ▒███ ▒███      ▒███▒▒███  ▒███  ▒███ ▒███ ▒███ ▒███
+  ▒▒████▒████   ▒▒██████  █████     ████ █████ █████ ████ █████▒▒███████
+   ▒▒▒▒ ▒▒▒▒     ▒▒▒▒▒▒  ▒▒▒▒▒     ▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒  ▒▒▒▒▒███
+                                                                ███ ▒███
+                                                               ▒▒██████
+                                                                ▒▒▒▒▒▒  """
+
+    PAUSED_BANNER = """
+          █████       ███  ████  ████   ███
+         ▒▒███       ▒▒▒  ▒▒███ ▒▒███  ▒▒▒
+  ██████  ▒███████   ████  ▒███  ▒███  ████  ████████    ███████
+ ███▒▒███ ▒███▒▒███ ▒▒███  ▒███  ▒███ ▒▒███ ▒▒███▒▒███  ███▒▒███
+▒███ ▒▒▒  ▒███ ▒███  ▒███  ▒███  ▒███  ▒███  ▒███ ▒███ ▒███ ▒███
+▒███  ███ ▒███ ▒███  ▒███  ▒███  ▒███  ▒███  ▒███ ▒███ ▒███ ▒███
+▒▒██████  ████ █████ █████ █████ █████ █████ ████ █████▒▒███████
+ ▒▒▒▒▒▒  ▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒  ▒▒▒▒▒███
+                                                        ███ ▒███
+                                                       ▒▒██████
+                                                        ▒▒▒▒▒▒  """
+
+    @property
+    def max_banner_width(self) -> int:
+        """Calculate the maximum width across both banners."""
+        working_width = max(len(line) for line in self.WORKING_BANNER.split("\n"))
+        paused_width = max(len(line) for line in self.PAUSED_BANNER.split("\n"))
+        return max(working_width, paused_width)
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._is_working = False
+
+    def update_stats(self, is_working: bool, *_) -> None:
+        """Update working state and refresh display."""
+        self._is_working = is_working
+        self.refresh()
+
+    def on_mount(self) -> None:
+        """Set up content alignment on mount."""
+        self.styles.content_align = ("center", "top")
+
+    def render(self) -> Text:
+        """Render the ASCII art banner."""
+        banner = self.WORKING_BANNER if self._is_working else self.PAUSED_BANNER
+        banner_style = (
+            "bold rgb(255,180,80)" if self._is_working else "bold rgb(120,180,220)"
+        )
+        return Text(banner, style=banner_style)
+
+
+class SummaryTableWidget(DataTable):
+    """Widget displaying summary table of work sessions."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.show_header = True
+        self.show_cursor = False
+        self.zebra_stripes = True
+
+    def on_mount(self) -> None:
+        """Set up the table columns on mount."""
+        self.add_column("Date", key="date")
+        self.add_column("Sessions", key="sessions")
+        self.add_column("Duration", key="duration")
+
+    def update_intervals(self, intervals: list[Interval]) -> None:
+        """Update intervals and refresh table rows."""
+        from rich.text import Text as RichText
+
+        # Group intervals by date (include both complete and incomplete)
+        by_date = defaultdict(list)
+        for interval in intervals:
+            by_date[interval.start.date()].append(interval.duration)
+
+        self.clear()
+
+        # Add rows for all days (most recent first)
+        today = datetime.now().date()
+        grand_total = timedelta()
+        total_sessions = 0
+
+        for date in sorted(by_date, reverse=True):
+            day_total = sum(by_date[date], timedelta())
+            grand_total += day_total
+            total_sessions += len(by_date[date])
+
+            # Highlight today's row
+            if date == today:
+                self.add_row(
+                    RichText(date.strftime("%Y-%m-%d, %A"), style="bold yellow"),
+                    RichText(str(len(by_date[date])), style="bold yellow"),
+                    RichText(format_duration(day_total), style="bold yellow"),
+                )
+            else:
+                self.add_row(
+                    date.strftime("%Y-%m-%d, %A"),
+                    str(len(by_date[date])),
+                    format_duration(day_total),
+                )
+
+        # Add summary row with styling
+        if by_date:
+            self.add_row(
+                RichText("Total", style="bold"),
+                RichText(str(total_sessions), style="bold"),
+                RichText(format_duration(grand_total), style="bold"),
+                key="summary",
+            )
+
+
+class IncompleteIntervalModal(ModalScreen[bool]):
+    """Modal screen for warning about incomplete intervals."""
+
+    DEFAULT_CSS = """
+    IncompleteIntervalModal {
+        align: center middle;
+    }
+
+    #warning-container {
+        width: 60;
+        height: auto;
+        background: $panel;
+        border: thick $warning;
+        padding: 2 4;
+    }
+
+    #warning-title {
+        text-align: center;
+        text-style: bold;
+        color: $warning;
+        margin-bottom: 1;
+    }
+
+    #warning-message {
+        text-align: center;
+        margin-bottom: 1;
+    }
+
+    #warning-footer {
+        text-align: center;
+        text-style: dim;
+    }
+    """
+
+    def __init__(self, warning_message: str) -> None:
+        super().__init__()
+        self.warning_message = warning_message
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="warning-container"):
+            yield Static("⚠ Incomplete Interval Detected", id="warning-title")
+            yield Static(self.warning_message, id="warning-message")
+            yield Static("Press any key to continue", id="warning-footer")
+
+    def on_key(self) -> None:
+        """Dismiss modal on any key press."""
+        self.dismiss(True)
+
+
+class WorkLogApp(App[None]):
+    """Textual app for tracking work time."""
+
+    CSS = """
+    Screen {
+        background: $background;
+    }
+
+    #main-container {
+        width: 100%;
+        height: 100%;
+        border: heavy $primary;
+        background: $surface;
+        padding: 2 4;
+        align: center top;
+    }
+
+    #content-column {
+        width: auto;
+        height: auto;
+    }
+
+    /* Paused theme - relaxing blue/cyan */
+    .paused #main-container {
+        border: heavy rgb(60,100,140);
+        background: rgb(28,30,35);
+    }
+
+    .paused BannerDisplay {
+        color: rgb(120,180,220);
+    }
+
+    /* Working theme - energizing orange/amber */
+    .working #main-container {
+        border: heavy rgb(200,140,60);
+        background: rgb(35,32,28);
+    }
+
+    .working BannerDisplay {
+        color: rgb(255,180,80);
+    }
+
+    BannerDisplay {
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    SessionInfo {
+        text-align: center;
+        height: auto;
+        margin-bottom: 2;
+    }
+
+    SummaryTableWidget {
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    SummaryTableWidget > #summary {
+        text-style: bold;
+    }
+
+    Footer {
+        background: $panel;
+    }
+    """
+
+    BINDINGS = [
+        ("space", "toggle", "Toggle"),
+        ("c", "cancel", "Cancel"),
+        ("q", "quit", "Quit"),
+        ("escape", "quit", "Quit"),
+    ]
+
+    is_working: reactive[bool] = reactive(False)
+
+    def __init__(self, file_path: Path) -> None:
+        super().__init__()
+        self.file_path = file_path
+        self.intervals: list[Interval] = Interval.load(self.file_path)
+        self.stats_display: BannerDisplay
+        self.session_info: SessionInfo
+        self.summary_table: SummaryTableWidget
+
+    def compose(self) -> ComposeResult:
+        """Create child widgets."""
+        with Container(id="main-container"):
+            with Vertical(id="content-column"):
+                self.stats_display = BannerDisplay()
+                yield self.stats_display
+                self.session_info = SessionInfo()
+                yield self.session_info
+                self.summary_table = SummaryTableWidget()
+                yield self.summary_table
+        yield Footer()
+
+    def on_mount(self) -> None:
+        """Handle mount - check for incomplete intervals and show modal if needed."""
+        # Set content column width to match banner width
+        content_column = self.query_one("#content-column", Vertical)
+        content_column.styles.width = self.stats_display.max_banner_width
+
+        # Check for incomplete intervals
+        if warning := self._check_incomplete_intervals():
+            self.push_screen(IncompleteIntervalModal(warning))
+
+        # Start in paused mode
+        self.is_working = False
+        self.add_class("paused")
+        self.update_display()
+
+        # Set up timer for live updates (every second)
+        self.set_interval(1.0, self._update_if_working)
+
+    def _check_incomplete_intervals(self) -> str | None:
+        """Check for incomplete intervals from today."""
+        today = datetime.now().date()
+        incomplete = [
+            i for i in self.intervals if not i.is_complete and i.start.date() == today
+        ]
+        if not incomplete:
+            return None
+
+        times = ", ".join(i.start.strftime("%H:%M") for i in incomplete)
+        return f"Found incomplete interval(s) from: {times}"
+
+    def get_stats(self) -> tuple[timedelta, timedelta, timedelta]:
+        """Return (current_duration, today_total, all_time_total)."""
+        today = datetime.now().date()
+        today_total = timedelta()
+        all_time_total = timedelta()
+        current_interval = (
+            self.intervals[-1] if self.is_working and self.intervals else None
+        )
+
+        for interval in self.intervals:
+            if interval.is_complete:
+                all_time_total += interval.duration
+                if interval.start.date() == today:
+                    today_total += interval.duration
+
+        current_duration = (
+            current_interval.duration if current_interval else timedelta()
+        )
+        return (
+            current_duration,
+            today_total + current_duration,
+            all_time_total + current_duration,
+        )
+
+    def _update_if_working(self) -> None:
+        """Update display only if working (called by timer every second)."""
+        if self.is_working:
+            self.update_display()
+
+    def update_display(self) -> None:
+        """Update all display widgets with current stats."""
+        current, today, total = self.get_stats()
+
+        self.stats_display.update_stats(self.is_working, current, today, total)
+
+        # Update session info with appropriate label and duration
+        if self.is_working:
+            self.session_info.update_info("Current Session: ", current)
+        else:
+            # Find last completed session
+            last_duration = next(
+                (i.duration for i in reversed(self.intervals) if i.is_complete),
+                timedelta(),
+            )
+            self.session_info.update_info("Last Session: ", last_duration)
+
+        self.summary_table.update_intervals(self.intervals)
+
+    def watch_is_working(self, is_working: bool) -> None:
+        """React to is_working changes."""
+        # Update theme
+        if is_working:
+            self.add_class("working")
+            self.remove_class("paused")
+        else:
+            self.add_class("paused")
+            self.remove_class("working")
+
+        self.update_display()
+
+    def save_intervals(self) -> None:
+        """Save intervals to file."""
+        try:
+            Interval.save(self.intervals, self.file_path)
+        except OSError as e:
+            # Log error but don't crash - keep running with in-memory state
+            self.notify(
+                f"Warning: Failed to save to file: {e}", severity="error", timeout=5
+            )
+
+    def action_toggle(self) -> None:
+        """Toggle between working and paused states."""
+        if self.is_working:
+            # Complete the current interval
+            self.intervals[-1].complete()
+            self.is_working = False
+        else:
+            # Start new interval
+            self.intervals.append(Interval())
+            self.is_working = True
+
+        self.save_intervals()
+
+    def action_cancel(self) -> None:
+        """Cancel the current working interval without saving it."""
+        if not self.is_working:
+            return
+
+        # Remove the incomplete interval (verify it's actually incomplete)
+        if self.intervals and not self.intervals[-1].is_complete:
+            self.intervals.pop()
+        self.is_working = False
+        self.save_intervals()
+
+    def action_quit(self) -> None:
+        """Quit the app, completing current interval if working."""
+        if self.is_working:
+            self.intervals[-1].complete()
+            self.save_intervals()
+        self.exit()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Track work time with simple toggling")
+    parser.add_argument("file", type=Path, help="Path to tracking file")
+    args = parser.parse_args()
+
+    app = WorkLogApp(args.file)
+    app.run()
+
+
+if __name__ == "__main__":
+    main()
+
+# vim: set ft=python:
