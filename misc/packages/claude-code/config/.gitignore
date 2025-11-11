@@ -1,5 +1,11 @@
+# Ignore everything by default
 *
+
+# Track core configuration
 !.gitignore
+!CLAUDE.md
 !settings.json
+
+# Track custom skills
 !skills
 !skills/**
