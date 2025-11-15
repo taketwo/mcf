@@ -1,0 +1,417 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "rich",
+# ]
+# ///
+
+"""Video transcoding utility using ffmpeg."""
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+from collections import defaultdict
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
+from typing import TypeAlias
+
+from rich.console import Console  # type: ignore[import-not-found]
+from rich.table import Table  # type: ignore[import-not-found]
+
+console = Console()
+
+StreamSignature: TypeAlias = tuple[
+    tuple[tuple[str, int | None, int | None], ...],
+    tuple[tuple[str, str | None, str | None], ...],
+    tuple[tuple[str, str | None, str | None], ...],
+]
+
+
+class Codec(Enum):
+    """Video codec options."""
+
+    H264 = "libx264"
+    H265 = "libx265"
+
+
+class Resolution(Enum):
+    """Video resolution options."""
+
+    P1080 = 1080
+    P720 = 720
+    P480 = 480
+    P360 = 360
+    P240 = 240
+
+
+@dataclass
+class StreamInfo:
+    """Media stream information."""
+
+    index: int
+    codec_type: str
+    codec_name: str
+    width: int | None = None
+    height: int | None = None
+    language: str | None = None
+    title: str | None = None
+
+
+@dataclass
+class FileInfo:
+    """Video file information."""
+
+    path: Path
+    streams: list[StreamInfo]
+
+
+def probe_video(path: Path) -> FileInfo:
+    """Extract video file information using ffprobe."""
+    result = subprocess.run(
+        [  # noqa: S607
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "stream=index,codec_type,codec_name,width,height:stream_tags=language,title",
+            "-of",
+            "json",
+            str(path),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    data = json.loads(result.stdout)
+
+    streams = [
+        StreamInfo(
+            index=s["index"],
+            codec_type=s["codec_type"],
+            codec_name=s["codec_name"],
+            width=s.get("width"),
+            height=s.get("height"),
+            language=s.get("tags", {}).get("language"),
+            title=s.get("tags", {}).get("title"),
+        )
+        for s in data["streams"]
+    ]
+
+    return FileInfo(path=path, streams=streams)
+
+
+def get_streams_by_type(info: FileInfo, stream_type: str) -> list[StreamInfo]:
+    """Get all streams of a specific type."""
+    return [s for s in info.streams if s.codec_type == stream_type]
+
+
+def stream_signature(info: FileInfo) -> StreamSignature:
+    """Create hashable signature for stream configuration."""
+    video = tuple(
+        (s.codec_name, s.width, s.height) for s in get_streams_by_type(info, "video")
+    )
+    audio = tuple(
+        (s.codec_name, s.language, s.title) for s in get_streams_by_type(info, "audio")
+    )
+    subtitle = tuple(
+        (s.codec_name, s.language, s.title)
+        for s in get_streams_by_type(info, "subtitle")
+    )
+    return (video, audio, subtitle)
+
+
+def display_streams(info: FileInfo) -> None:
+    """Display stream information grouped by type."""
+    video_streams = get_streams_by_type(info, "video")
+    audio_streams = get_streams_by_type(info, "audio")
+    subtitle_streams = get_streams_by_type(info, "subtitle")
+
+    if video_streams:
+        console.print("\n  [bold]Video streams:[/bold]")
+        table = Table(show_header=True, box=None, padding=(0, 2), show_edge=False)
+        table.add_column("Index", style="cyan")
+        table.add_column("Codec")
+        table.add_column("Resolution")
+        for idx, s in enumerate(video_streams):
+            resolution = f"{s.width}x{s.height}" if s.width and s.height else ""
+            table.add_row(f"[{idx}]", s.codec_name, resolution)
+        console.print(table)
+
+    for stream_type, streams in [
+        ("Audio", audio_streams),
+        ("Subtitle", subtitle_streams),
+    ]:
+        if streams:
+            console.print(f"\n  [bold]{stream_type} streams:[/bold]")
+            table = Table(show_header=True, box=None, padding=(0, 2), show_edge=False)
+            table.add_column("Index", style="cyan")
+            table.add_column("Codec")
+            table.add_column("Language")
+            table.add_column("Title")
+            for idx, s in enumerate(streams):
+                table.add_row(f"[{idx}]", s.codec_name, s.language or "", s.title or "")
+            console.print(table)
+
+
+def display_info(info: FileInfo) -> None:
+    """Display video file information."""
+    console.print(f"\n[bold]File:[/bold] {info.path}")
+    display_streams(info)
+
+
+def transcode_video(  # noqa: PLR0913
+    input_path: Path,
+    output_path: Path,
+    codec: Codec | None,
+    resolution: Resolution | None,
+    audio_streams: list[int] | None,
+    *,
+    dry_run: bool,
+) -> None:
+    """Transcode video file with specified parameters."""
+    console.print(f"[bold]Input file:[/bold] {input_path}")
+    console.print(f"[bold]Output file:[/bold] {output_path}")
+
+    cmd = ["ffmpeg", "-i", str(input_path)]
+
+    if audio_streams is not None:
+        info = probe_video(input_path)
+        audio_stream_list = get_streams_by_type(info, "audio")
+        absolute_indices = [
+            audio_stream_list[i].index
+            for i in audio_streams
+            if i < len(audio_stream_list)
+        ]
+        if len(absolute_indices) != len(audio_streams):
+            console.print(
+                f"[yellow]Warning:[/yellow] Some audio streams not found "
+                f"(file has {len(audio_stream_list)} audio streams)",
+            )
+
+        stream_list = ", ".join(map(str, audio_streams))
+        console.print(f"[bold]Audio streams:[/bold] {stream_list}")
+        cmd.extend(["-map", "0:v"])
+        for abs_idx in absolute_indices:
+            cmd.extend(["-map", f"0:{abs_idx}"])
+        cmd.extend(["-map", "0:s?"])
+    else:
+        cmd.extend(["-map", "0"])
+
+    cmd.extend(["-c", "copy"])
+
+    input_height = int(
+        subprocess.run(
+            [  # noqa: S607
+                "ffprobe",
+                "-v",
+                "error",
+                "-select_streams",
+                "v:0",
+                "-show_entries",
+                "stream=height",
+                "-of",
+                "csv=s=x:p=0",
+                str(input_path),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip(),
+    )
+
+    console.print(f"[bold]Input resolution:[/bold] {input_height}p")
+
+    if resolution is not None:
+        if input_height < resolution.value:
+            console.print(
+                "[bold]Output resolution:[/bold] same (input is lower than target)",
+            )
+        else:
+            cmd.extend(["-vf", f"scale=-1:{resolution.value}"])
+            console.print(f"[bold]Output resolution:[/bold] {resolution.value}p")
+    else:
+        console.print("[bold]Output resolution:[/bold] same")
+
+    input_codec = subprocess.run(
+        [  # noqa: S607
+            "ffprobe",
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=codec_name",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
+            str(input_path),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+
+    console.print(f"[bold]Input codec:[/bold] {input_codec}")
+
+    if codec is not None:
+        cmd.extend(["-c:v", codec.value])
+        console.print(f"[bold]Output codec:[/bold] {codec.value}")
+    else:
+        console.print("[bold]Output codec:[/bold] same")
+
+    cmd.append(str(output_path))
+
+    console.print(f"[bold]Command:[/bold] {' '.join(cmd)}")
+
+    if not dry_run:
+        subprocess.run(cmd, check=True)
+
+
+def main() -> None:  # noqa: C901, PLR0912, PLR0915
+    """Run the video transcoding utility."""
+    parser = argparse.ArgumentParser(
+        description="Video transcoding utility using ffmpeg",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+If output path is not provided, the input path name with .transcoded suffix is used.
+Both files and directories are supported. In the latter case, all files in the
+directory are transcoded.
+
+If none of -c, -r, or -a options are provided, the script will print information
+about video file(s).
+        """,
+    )
+
+    parser.add_argument("input_path", help="Input file or directory")
+    parser.add_argument("output_path", nargs="?", help="Output file or directory")
+    parser.add_argument(
+        "-c",
+        "--codec",
+        choices=["h264", "h265"],
+        help="Target video codec",
+    )
+    parser.add_argument(
+        "-r",
+        "--resolution",
+        choices=["1080p", "720p", "480p", "360p", "240p"],
+        help="Target resolution",
+    )
+    parser.add_argument(
+        "-a",
+        "--audio",
+        action="append",
+        dest="audio_streams",
+        metavar="STREAMS",
+        help="Audio stream(s) to preserve using type-specific indices (e.g., -a 0,1)",
+    )
+    parser.add_argument(
+        "-d",
+        "--dry-run",
+        action="store_true",
+        help="Print commands without executing them",
+    )
+
+    args = parser.parse_args()
+
+    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
+        console.print("[bold red]Error:[/bold red] ffmpeg and/or ffprobe not found")
+        console.print("Install with: sudo apt install ffmpeg")
+        sys.exit(1)
+
+    input_path = Path(args.input_path)
+
+    codec = Codec.H264 if args.codec == "h264" else Codec.H265 if args.codec else None
+    resolution = {
+        "1080p": Resolution.P1080,
+        "720p": Resolution.P720,
+        "480p": Resolution.P480,
+        "360p": Resolution.P360,
+        "240p": Resolution.P240,
+    }.get(args.resolution)
+
+    audio_streams: list[int] | None = None
+    if args.audio_streams:
+        audio_streams = []
+        for arg in args.audio_streams:
+            audio_streams.extend(int(s.strip()) for s in arg.split(","))
+
+    if codec is None and resolution is None and audio_streams is None:
+        if input_path.is_file():
+            info = probe_video(input_path)
+            display_info(info)
+        elif input_path.is_dir():
+            console.print(f"[bold]Directory:[/bold] {input_path}\n")
+
+            groups: dict[StreamSignature, list[FileInfo]] = defaultdict(list)
+            for file in sorted(input_path.iterdir()):
+                if file.is_file():
+                    try:
+                        info = probe_video(file)
+                        sig = stream_signature(info)
+                        groups[sig].append(info)
+                    except subprocess.CalledProcessError:
+                        pass
+
+            for group_infos in groups.values():
+                console.print("[bold]Files:[/bold]")
+                for info in group_infos:
+                    console.print(f"  {info.path.name}")
+                display_streams(group_infos[0])
+                console.print()
+        else:
+            console.print("[bold red]Error:[/bold red] Invalid input path")
+            sys.exit(1)
+        return
+
+    if input_path.is_file():
+        if args.output_path:
+            output_path = Path(args.output_path)
+        else:
+            output_path = input_path.with_stem(f"{input_path.stem}.transcoded")
+
+        transcode_video(
+            input_path,
+            output_path,
+            codec,
+            resolution,
+            audio_streams,
+            dry_run=args.dry_run,
+        )
+
+    elif input_path.is_dir():
+        if args.output_path:
+            output_path = Path(args.output_path)
+        else:
+            output_path = Path(f"{input_path.name}.transcoded")
+
+        output_path.mkdir(parents=True, exist_ok=True)
+        console.print(f"[bold]Transcoding all files in:[/bold] {input_path}")
+        console.print(f"[bold]Output directory:[/bold] {output_path}\n")
+
+        for file in sorted(input_path.iterdir()):
+            if file.is_file():
+                try:
+                    output_file = output_path / file.name
+                    transcode_video(
+                        file,
+                        output_file,
+                        codec,
+                        resolution,
+                        audio_streams,
+                        dry_run=args.dry_run,
+                    )
+                    console.print()
+                except subprocess.CalledProcessError:
+                    console.print(f"[yellow]Skipping {file.name}[/yellow]\n")
+    else:
+        console.print("[bold red]Error:[/bold red] Invalid input path")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+
+# vim: set filetype=python:
