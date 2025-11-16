@@ -160,16 +160,7 @@ return {
             },
           },
         },
-        extensions = {
-          mcphub = {
-            callback = 'mcphub.extensions.codecompanion',
-            opts = {
-              show_result_in_chat = true,
-              make_vars = true,
-              make_slash_commands = true,
-            },
-          },
-        },
+        extensions = {},
       }
     end,
     init = function()
