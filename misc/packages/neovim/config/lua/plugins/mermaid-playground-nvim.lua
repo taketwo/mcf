@@ -4,6 +4,7 @@ return {
     {
       'barrett-ruth/live-server.nvim',
       cmd = { 'LiveServerStart', 'LiveServerStop' },
+      build = 'fnm exec --using=node-nvim npm install --location=global live-server',
       config = true,
     },
   },
