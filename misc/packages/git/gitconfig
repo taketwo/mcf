@@ -14,8 +14,9 @@
   co = checkout
   cob = checkout -b
   lg = log --all --graph --oneline --decorate --abbrev-commit
-  rim = rebase -i master
-  rimo = rebase -i origin/master
+  default-branch = "!git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | cut -d/ -f4 || git ls-remote --symref origin HEAD | grep '^ref:' | cut -d/ -f3 || echo 'master'"
+  rim = "!git rebase -i $(git default-branch)"
+  rimo = "!git rebase -i origin/$(git default-branch)"
   rid = rebase -i develop
   rido = rebase -i origin/develop
   in = "!git remote update -p; git log ..@{u}"
