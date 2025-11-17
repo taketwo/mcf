@@ -24,7 +24,7 @@ return {
       icons = { mappings = false },
       spec = {
         { '<Leader>.', group = 'Search' },
-        { '<Leader>a', group = 'AI support' },
+        { '<Leader>a', group = 'AI support', mode = { 'n', 'v' } },
         { '<Leader>f', group = 'Filename' },
         { '<Leader>g', group = 'Git' },
         { '<Leader>l', group = 'LSP', mode = { 'n', 'v' } },
