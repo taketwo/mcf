@@ -10,6 +10,7 @@ misc/packages/mpdas/mpdasrc filter=git-crypt diff=git-crypt
 misc/packages/nb/post-install filter=git-crypt diff=git-crypt
 misc/packages/sunshine/config/credentials/* filter=git-crypt diff=git-crypt
 misc/packages/sunshine/config/sunshine_state.json filter=git-crypt diff=git-crypt
+misc/packages/syncthing/config.yaml filter=git-crypt diff=git-crypt
 misc/packages/xmonad/config/gmail.token filter=git-crypt diff=git-crypt
 misc/secrets filter=git-crypt diff=git-crypt
 ssh/* filter=git-crypt diff=git-crypt

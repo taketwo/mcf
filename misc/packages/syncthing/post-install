@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+systemctl --user link ~/.nix-profile/share/systemd/user/syncthing.service
+systemctl --user enable syncthing.service
+systemctl --user start syncthing.service
