@@ -1,0 +1,8 @@
+# Version controlled files
+.gitignore
+settings.json
+# Machine-specific files
+.credentials.json
+# Ephemeral files
+debug/
+statsig/
