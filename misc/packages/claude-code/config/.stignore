@@ -1,8 +1,9 @@
-# Version controlled files
+// Version controlled files
 .gitignore
+.stignore
 settings.json
-# Machine-specific files
+// Machine-specific files
 .credentials.json
-# Ephemeral files
+// Ephemeral files
 debug/
 statsig/
