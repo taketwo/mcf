@@ -17,7 +17,7 @@ paths:
   default: $albumartist/$album%aunique{}/$title
   singleton: $artist/Singletons/$title
   comp: Compilations/$album%aunique{}/$title
-plugins: fetchart embedart edit lyrics replaygain scrub missing info ftintitle
+plugins: fetchart embedart edit lyrics replaygain scrub missing info ftintitle musicbrainz
 fetchart:
   maxwidth: 500
 embedart:
