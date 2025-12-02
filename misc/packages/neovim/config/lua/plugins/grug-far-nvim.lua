@@ -7,7 +7,13 @@ return {
         '<C-f>',
         function() require('grug-far').open({ transient = true }) end,
         desc = 'Find/replace',
-        mode = { 'n', 'x' },
+        mode = { 'n' },
+      },
+      {
+        '<C-f>',
+        function() require('grug-far').open({ transient = true, startInInsertMode = false }) end,
+        desc = 'Find/replace',
+        mode = { 'x' },
       },
     },
     ---@type GrugFarOptions
