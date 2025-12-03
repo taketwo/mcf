@@ -21,6 +21,7 @@ alias cbp='xsel --clipboard --output'
 # Git
 alias ga='gitk --all'
 alias gg='git gui'
+alias lg='lazygit'
 
 # Latex
 alias tex-clean='rm -f *.{aux,log,out,bbl,blg}'
