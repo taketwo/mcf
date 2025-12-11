@@ -159,11 +159,11 @@ def main() -> None:
         updated = {
             **existing_folders.get(folder_id, {}),
             "id": folder_id,
-            "label": config["folders"][folder_id],
+            "label": config["folders"][folder_id]["label"],
             "path": os.path.expandvars(folder_data["path"]),
             "type": folder_data["type"],
             "devices": member_device_ids,
-            "rescanIntervalS": 300,
+            "rescanIntervalS": config["folders"][folder_id]["rescan_interval"],
         }
         new_folders.append(updated)
 
