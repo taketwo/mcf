@@ -1,0 +1,47 @@
+{# Command explanation prompt template - continues conversation #}
+Please explain the command I just generated, breaking it down in a hierarchical structure.
+
+Structure:
+- Group components by their command (e.g., all parts of "du -ah ~/Downloads" together)
+- For each command, provide:
+  - The base command name (e.g., "du")
+  - A description of what the command does
+  - An array of parts (flags and arguments) that belong to this command
+- For each part:
+  - The component (flag or argument)
+  - A description of what it does
+
+Rules:
+1. Commands are separated by pipes in the original command
+2. Break down each flag individually, even if combined (e.g., "-rh" becomes "-r" and "-h" as separate parts)
+3. Only group a flag with its argument if the flag requires the argument (e.g., "-n 5" or "-name '*.py'")
+4. Keep each description concise - one or two sentences maximum
+5. Do not explain pipe operators themselves
+
+Example for "du -ah ~/Downloads | sort -rh | head -n 5":
+[
+  {
+    "command": "du",
+    "description": "Estimates file space usage",
+    "parts": [
+      {"component": "-a", "description": "Shows sizes for all files"},
+      {"component": "-h", "description": "Human-readable format"},
+      {"component": "~/Downloads", "description": "Target directory"}
+    ]
+  },
+  {
+    "command": "sort",
+    "description": "Sorts the input lines",
+    "parts": [
+      {"component": "-r", "description": "Reverse order"},
+      {"component": "-h", "description": "Sort human-readable numbers"}
+    ]
+  },
+  {
+    "command": "head",
+    "description": "Outputs the first part of input",
+    "parts": [
+      {"component": "-n 5", "description": "Limits to first 5 lines"}
+    ]
+  }
+]

@@ -1,0 +1,59 @@
+[project]
+name = "suggest"
+version = "0.1.0"
+description = "Convert natural language to CLI commands using local LLMs"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "jinja2>=3.1.6",
+  "llm>=0.28",
+  "llm-ollama>=0.15.1",
+  "llm-openrouter>=0.5",
+  "pyperclip>=1.11.0",
+  "rich>=14.2.0",
+]
+
+[dependency-groups]
+dev = ["mypy>=1.19.1", "ruff>=0.14.10", "types-pyperclip>=1.9.0.20240718"]
+
+[project.scripts]
+suggest = "suggest.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+suggest = ["prompts/*.jinja"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "ANN003", # kwargs argument without type annotation is okay
+  "C901",   # function complexity is okay
+  "D100",   # missing docstring in public module is okay
+  "E501",
+  "EM",     # noisy warnings about need to store exception messages in variables
+  "ERA001", # has false positives
+  "I",      # imports are sorted automatically by usort
+  "S603",   # calling subprocess with shell=True is okay
+  "T20",    # print statements are okay
+  "TD002",  # no need to mention author in TODO comments (use git blame instead)
+  "TD003",  # no need to create ticket for every TODO comment
+  "FA102",  # no need to import from __future__ to support fancy annotations
+  "FIX002", # not every TODO comment needs to be fixed
+]
