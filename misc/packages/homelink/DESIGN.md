@@ -219,3 +219,28 @@ if not iface_name.startswith(virtual_prefixes) and iface_name != self.interface:
 **VPN Route Pollution**: WireGuard creates routes that can interfere with detection. The solution explicitly excludes the configured VPN interface from all physical interface logic.
 
 **Robust Tunnel Health**: Home routers often don't respond to ping (disabled/firewalled), requiring multi-tier health detection combining ping tests, route verification, and IP assignment checks.
+
+---
+
+## Appendix: WireGuard IPv6 Handshake Issues
+
+**Problem Observed:** WireGuard tunnel failed to establish handshakes when connecting from a FritzBox-managed network to a home FritzBox server via DynDNS hostname, despite working reliably on other networks.
+
+**Symptoms:**
+- WireGuard interface up with correct IP and routes
+- Endpoint reachable via both IPv4 and IPv6
+- Client sending handshake packets (transfer shows KiB sent, 0 B received)
+- No "latest handshake" timestamp in `wg show` output
+- Ping to home router through tunnel fails
+
+**Root Cause:** FritzBox IPv6 firewall blocking incoming WireGuard handshake response packets. When the DynDNS hostname resolved to both IPv4 and IPv6 addresses, WireGuard preferred IPv6. The local FritzBox's stateful packet inspection dropped incoming UDP responses on high ports as "unsolicited" traffic.
+
+**Solution:** Force IPv4 endpoint by specifying IP address directly instead of hostname in WireGuard configuration:
+```
+Endpoint = <ipv4-address>:<port>
+```
+
+**Key Diagnostic:** Check `wg show` for:
+- Presence of "latest handshake" timestamp
+- Bidirectional transfer (both sent and received > 0)
+- Endpoint IP version being used
