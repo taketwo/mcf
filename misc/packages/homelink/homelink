@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 # Constants
 SOCKET_PATH = "/run/homelink/monitor.sock"
 DNS_SERVERS = ["8.8.8.8", "1.1.1.1"]
+HANDSHAKE_FRESHNESS_THRESHOLD = 180  # seconds (3x WireGuard rekey interval)
 VIRTUAL_INTERFACE_PREFIXES = (
     "wg",
     "tun",
@@ -183,21 +184,24 @@ class HomeLinkMonitor:
         if not wg_result or wg_result.returncode != 0:
             return "down"
 
-        # Interface is up, now check tunnel health
-        # 1. Try to ping home router
+        # Interface is up, now check tunnel health via handshake
+        result = run_command(["wg", "show", self.interface, "latest-handshakes"])
+        if result and result.returncode == 0 and result.stdout.strip():
+            # Parse output: <peer-pubkey> <timestamp>
+            for line in result.stdout.strip().split("\n"):
+                parts = line.split()
+                if len(parts) == 2:  # noqa: PLR2004
+                    try:
+                        handshake_time = int(parts[1])
+                        current_time = int(time.time())
+                        age = current_time - handshake_time
+                        if age <= HANDSHAKE_FRESHNESS_THRESHOLD:
+                            return "up"
+                    except (ValueError, IndexError):
+                        pass
+
+        # Fallback: try to ping home router (in case handshake check fails)
         if self._ping(self.home_router):
-            return "up"
-
-        # 2. Check if we have a route through the WG interface
-        result = run_command(["ip", "route", "show", "dev", self.interface])
-        if result and result.stdout.strip():
-            # If we have routes through WG interface, assume it's working
-            # This is more reliable than ping which might be blocked
-            return "up"
-
-        # 3. Check if the interface has an IP assigned
-        result = run_command(["ip", "addr", "show", self.interface])
-        if result and "inet " in result.stdout:
             return "up"
 
         # Interface exists but tunnel is broken
@@ -348,7 +352,7 @@ class HomeLinkMonitor:
             client_socket.recv(1024)  # Read and ignore request
             response = self.get_status()
             client_socket.send((json.dumps(response) + "\n").encode())
-        except socket.timeout:
+        except TimeoutError:
             self.logger.debug("Socket client timeout")
         except Exception:
             self.logger.exception("Error handling socket client")
@@ -382,7 +386,7 @@ class HomeLinkMonitor:
                     args=(client_socket,),
                     daemon=True,
                 ).start()
-            except socket.timeout:  # noqa: PERF203
+            except TimeoutError:  # noqa: PERF203
                 continue
             except Exception:
                 if self.running:
@@ -464,7 +468,7 @@ def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
                     break
 
             status = json.loads(response.strip())
-    except socket.timeout:
+    except TimeoutError:
         status = {"error": "Timeout connecting to daemon"}
     except FileNotFoundError:
         status = {"error": f"Socket not found: {SOCKET_PATH}"}

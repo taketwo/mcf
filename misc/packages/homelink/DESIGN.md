@@ -68,11 +68,12 @@ The system requires all values in the sliding window to be identical before decl
 VPN status is determined through multi-tier health checks:
 
 1. **Interface check**: Verify WireGuard interface exists and is up
-2. **Ping test**: Attempt to ping home router through tunnel
-3. **Route verification**: Check for active routes through WG interface
-4. **IP assignment**: Confirm interface has assigned IP address
+2. **Handshake verification**: Check for recent WireGuard handshake (within 180 seconds)
+3. **Ping test**: Fallback to ping home router if handshake check unavailable
 
-If interface is up but tunnel health fails, status is marked as "degraded".
+Handshake timestamp is the primary health indicator because it directly verifies cryptographic tunnel establishment. A fresh handshake (within 3x the rekey interval) guarantees the tunnel is operational, even if the home router blocks ping.
+
+If interface is up but no recent handshake and ping fails, status is marked as "degraded".
 
 ## Configuration
 
@@ -244,3 +245,5 @@ Endpoint = <ipv4-address>:<port>
 - Presence of "latest handshake" timestamp
 - Bidirectional transfer (both sent and received > 0)
 - Endpoint IP version being used
+
+**Detection Improvement:** The health check now verifies handshake freshness as the primary indicator, which immediately detects this failure mode (interface up with routes/IP configured, but no successful handshakes).
