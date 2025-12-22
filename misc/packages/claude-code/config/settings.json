@@ -46,8 +46,6 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true,
-    "example-skills@anthropic-agent-skills": false
-  },
-  "alwaysThinkingEnabled": false
+    "elements-of-style@superpowers-marketplace": true
+  }
 }
