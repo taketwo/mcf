@@ -1,2 +1,1 @@
 config:.config/gh:GH config directory
-config-copilot:.config/gh-copilot:GH copilot extension config directory

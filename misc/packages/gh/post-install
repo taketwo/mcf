@@ -11,10 +11,4 @@ install_extension() {
   fi
 }
 
-install_extension "github/gh-copilot"
 install_extension "benelan/gh-fzf"
-
-echo "Creating aliases for copilot commands..."
-ALIASES=$HOME/.local/bash/72-gh-copilot.bash
-gh copilot alias -- bash | sed 's/^ghcs/suggest/' | sed 's/^ghce/explain/' >>"$ALIASES"
-echo "Done"
