@@ -122,10 +122,11 @@ class Interval:
 
 
 def format_duration(td: timedelta) -> str:
-    """Format timedelta as 'Xh Ym' or 'Xm' with space-padded numbers."""
+    """Format timedelta as 'Xh Ym' or 'Ym'."""
     minutes = int(td.total_seconds() / 60)
     hours = minutes // 60
-    return f"{hours:2d}h {minutes % 60:2d}m" if hours else f"{minutes:2d}m"
+    mins = minutes % 60
+    return f"{hours}h {mins:2d}m" if hours else f"{mins}m"
 
 
 class SessionInfo(Static):
@@ -250,13 +251,15 @@ class SummaryTableWidget(DataTable):
                 self.add_row(
                     RichText(date.strftime("%Y-%m-%d, %A"), style="bold yellow"),
                     RichText(str(len(by_date[date])), style="bold yellow"),
-                    RichText(format_duration(day_total), style="bold yellow"),
+                    RichText(
+                        format_duration(day_total), style="bold yellow", justify="right"
+                    ),
                 )
             else:
                 self.add_row(
                     date.strftime("%Y-%m-%d, %A"),
                     str(len(by_date[date])),
-                    format_duration(day_total),
+                    RichText(format_duration(day_total), justify="right"),
                 )
 
         # Add summary row with styling
@@ -264,7 +267,7 @@ class SummaryTableWidget(DataTable):
             self.add_row(
                 RichText("Total", style="bold"),
                 RichText(str(total_sessions), style="bold"),
-                RichText(format_duration(grand_total), style="bold"),
+                RichText(format_duration(grand_total), style="bold", justify="right"),
                 key="summary",
             )
 
