@@ -18,7 +18,7 @@ from zoneinfo import ZoneInfo
 
 from rich.text import Text
 from textual.app import App, ComposeResult
-from textual.containers import Container, Vertical
+from textual.containers import Container, Horizontal, Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.widgets import DataTable, Footer, Static
@@ -223,9 +223,10 @@ class SummaryTableWidget(DataTable):
 
     def on_mount(self) -> None:
         """Set up the table columns on mount."""
-        self.add_column("Date", key="date")
-        self.add_column("Sessions", key="sessions")
-        self.add_column("Duration", key="duration")
+        self.add_column("Date", key="date", width=12)
+        self.add_column("Day", key="day", width=10)
+        self.add_column(RichText("Sessions", justify="right"), key="sessions", width=10)
+        self.add_column(RichText("Duration", justify="right"), key="duration", width=12)
 
     def update_intervals(self, intervals: list[Interval]) -> None:
         """Update intervals and refresh table rows."""
@@ -249,16 +250,18 @@ class SummaryTableWidget(DataTable):
             # Highlight today's row
             if date == today:
                 self.add_row(
-                    RichText(date.strftime("%Y-%m-%d, %A"), style="bold yellow"),
-                    RichText(str(len(by_date[date])), style="bold yellow"),
+                    RichText(date.strftime("%Y-%m-%d"), style="bold yellow"),
+                    RichText(date.strftime("%A"), style="bold yellow"),
+                    RichText(str(len(by_date[date])), style="bold yellow", justify="right"),
                     RichText(
                         format_duration(day_total), style="bold yellow", justify="right"
                     ),
                 )
             else:
                 self.add_row(
-                    date.strftime("%Y-%m-%d, %A"),
-                    str(len(by_date[date])),
+                    date.strftime("%Y-%m-%d"),
+                    date.strftime("%A"),
+                    RichText(str(len(by_date[date])), justify="right"),
                     RichText(format_duration(day_total), justify="right"),
                 )
 
@@ -266,7 +269,8 @@ class SummaryTableWidget(DataTable):
         if by_date:
             self.add_row(
                 RichText("Total", style="bold"),
-                RichText(str(total_sessions), style="bold"),
+                "",
+                RichText(str(total_sessions), style="bold", justify="right"),
                 RichText(format_duration(grand_total), style="bold", justify="right"),
                 key="summary",
             )
@@ -357,6 +361,11 @@ class WorkLogApp(App[None]):
         height: auto;
     }
 
+    Horizontal {
+        align: center top;
+        width: 100%;
+    }
+
     /* Paused theme - relaxing blue/cyan */
     .paused #main-container {
         border: heavy rgb(60,100,140);
@@ -389,8 +398,19 @@ class WorkLogApp(App[None]):
     }
 
     SummaryTableWidget {
+        width: auto;
         height: auto;
         margin-bottom: 1;
+    }
+
+    SummaryTableWidget DataTable.Cell {
+        padding-left: 1;
+        padding-right: 1;
+    }
+
+    SummaryTableWidget DataTable.HeaderCell {
+        padding-left: 1;
+        padding-right: 1;
     }
 
     SummaryTableWidget > #summary {
@@ -433,8 +453,9 @@ class WorkLogApp(App[None]):
             yield self.stats_display
             self.session_info = SessionInfo()
             yield self.session_info
-            self.summary_table = SummaryTableWidget()
-            yield self.summary_table
+            with Horizontal():
+                self.summary_table = SummaryTableWidget()
+                yield self.summary_table
         yield Footer()
 
     def on_mount(self) -> None:
