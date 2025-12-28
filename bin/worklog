@@ -14,6 +14,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from rich.text import Text
 from textual.app import App, ComposeResult
@@ -22,23 +23,38 @@ from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.widgets import DataTable, Footer, Static
 
+# Type alias for rich Text (avoid conflicts with textual Text import later)
+RichText = Text
+
+# Local timezone for all datetime operations
+LOCAL_TZ = ZoneInfo("localtime")
+
+
+def now() -> datetime:
+    """Get current time in local timezone."""
+    return datetime.now(tz=LOCAL_TZ)
+
 
 @dataclass
 class Interval:
-    start: datetime = field(default_factory=datetime.now)
+    """Represents a time interval with start and optional end time."""
+
+    start: datetime = field(default_factory=now)
     end: datetime | None = None
 
     @property
     def is_complete(self) -> bool:
+        """Check if the interval has an end time."""
         return self.end is not None
 
     @property
     def duration(self) -> timedelta:
-        return (self.end or datetime.now()) - self.start
+        """Calculate the duration of the interval."""
+        return (self.end or now()) - self.start
 
     def complete(self, when: datetime | None = None) -> None:
         """Complete this interval by setting end time."""
-        self.end = when or datetime.now()
+        self.end = when or now()
 
     def format(self) -> str:
         """Format interval as 'HH:MM-HH:MM' or 'HH:MM-' if incomplete."""
@@ -51,9 +67,8 @@ class Interval:
         """Parse an interval from a line string."""
 
         def parse_time(time_str: str, date: datetime) -> datetime:
-            return datetime.combine(
-                date.date(), datetime.strptime(time_str, "%H:%M").time()
-            )
+            naive_time = datetime.strptime(time_str, "%H:%M").time()
+            return datetime.combine(date.date(), naive_time, tzinfo=LOCAL_TZ)
 
         start_str, _, end_str = line.partition("-")
         try:
@@ -77,12 +92,16 @@ class Interval:
 
             if line.startswith("==="):
                 try:
-                    current_date = datetime.strptime(line.strip("= "), "%A, %Y-%m-%d")
+                    naive_date = datetime.strptime(line.strip("= "), "%A, %Y-%m-%d")
+                    current_date = naive_date.replace(tzinfo=LOCAL_TZ)
                 except ValueError:
                     current_date = None
-            elif "-" in line and current_date:
-                if interval := Interval.parse(line, current_date):
-                    intervals.append(interval)
+            elif (
+                "-" in line
+                and current_date
+                and (interval := Interval.parse(line, current_date))
+            ):
+                intervals.append(interval)
 
         return intervals
 
@@ -113,6 +132,7 @@ class SessionInfo(Static):
     """Widget displaying current/last session duration."""
 
     def __init__(self) -> None:
+        """Initialize the session info widget."""
         super().__init__()
         self._label = "Last Session: "
         self._duration = timedelta()
@@ -168,10 +188,11 @@ class BannerDisplay(Static):
         return max(working_width, paused_width)
 
     def __init__(self) -> None:
+        """Initialize the banner display widget."""
         super().__init__()
         self._is_working = False
 
-    def update_stats(self, is_working: bool, *_) -> None:
+    def update_stats(self, *, is_working: bool) -> None:
         """Update working state and refresh display."""
         self._is_working = is_working
         self.refresh()
@@ -192,8 +213,9 @@ class BannerDisplay(Static):
 class SummaryTableWidget(DataTable):
     """Widget displaying summary table of work sessions."""
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self) -> None:
+        """Initialize the summary table widget."""
+        super().__init__()
         self.show_header = True
         self.show_cursor = False
         self.zebra_stripes = True
@@ -206,8 +228,6 @@ class SummaryTableWidget(DataTable):
 
     def update_intervals(self, intervals: list[Interval]) -> None:
         """Update intervals and refresh table rows."""
-        from rich.text import Text as RichText
-
         # Group intervals by date (include both complete and incomplete)
         by_date = defaultdict(list)
         for interval in intervals:
@@ -216,7 +236,7 @@ class SummaryTableWidget(DataTable):
         self.clear()
 
         # Add rows for all days (most recent first)
-        today = datetime.now().date()
+        today = now().date()
         grand_total = timedelta()
         total_sessions = 0
 
@@ -284,10 +304,24 @@ class IncompleteIntervalModal(ModalScreen[bool]):
     """
 
     def __init__(self, warning_message: str) -> None:
+        """Initialize the incomplete interval modal.
+
+        Parameters
+        ----------
+        warning_message : str
+            The warning message to display.
+        """
         super().__init__()
         self.warning_message = warning_message
 
     def compose(self) -> ComposeResult:
+        """Compose the modal widgets.
+
+        Yields
+        ------
+        Widget
+            The widgets that make up the modal.
+        """
         with Vertical(id="warning-container"):
             yield Static("⚠ Incomplete Interval Detected", id="warning-title")
             yield Static(self.warning_message, id="warning-message")
@@ -295,7 +329,7 @@ class IncompleteIntervalModal(ModalScreen[bool]):
 
     def on_key(self) -> None:
         """Dismiss modal on any key press."""
-        self.dismiss(True)
+        self.dismiss(result=True)
 
 
 class WorkLogApp(App[None]):
@@ -365,16 +399,23 @@ class WorkLogApp(App[None]):
     }
     """
 
-    BINDINGS = [
+    BINDINGS: list[tuple[str, str, str]] = [
         ("space", "toggle", "Toggle"),
         ("c", "cancel", "Cancel"),
         ("q", "quit", "Quit"),
         ("escape", "quit", "Quit"),
     ]
 
-    is_working: reactive[bool] = reactive(False)
+    is_working: reactive[bool] = reactive(default=False)
 
     def __init__(self, file_path: Path) -> None:
+        """Initialize the work log application.
+
+        Parameters
+        ----------
+        file_path : Path
+            Path to the file for storing intervals.
+        """
         super().__init__()
         self.file_path = file_path
         self.intervals: list[Interval] = Interval.load(self.file_path)
@@ -384,14 +425,13 @@ class WorkLogApp(App[None]):
 
     def compose(self) -> ComposeResult:
         """Create child widgets."""
-        with Container(id="main-container"):
-            with Vertical(id="content-column"):
-                self.stats_display = BannerDisplay()
-                yield self.stats_display
-                self.session_info = SessionInfo()
-                yield self.session_info
-                self.summary_table = SummaryTableWidget()
-                yield self.summary_table
+        with Container(id="main-container"), Vertical(id="content-column"):
+            self.stats_display = BannerDisplay()
+            yield self.stats_display
+            self.session_info = SessionInfo()
+            yield self.session_info
+            self.summary_table = SummaryTableWidget()
+            yield self.summary_table
         yield Footer()
 
     def on_mount(self) -> None:
@@ -414,7 +454,7 @@ class WorkLogApp(App[None]):
 
     def _check_incomplete_intervals(self) -> str | None:
         """Check for incomplete intervals from today."""
-        today = datetime.now().date()
+        today = now().date()
         incomplete = [
             i for i in self.intervals if not i.is_complete and i.start.date() == today
         ]
@@ -426,7 +466,7 @@ class WorkLogApp(App[None]):
 
     def get_stats(self) -> tuple[timedelta, timedelta, timedelta]:
         """Return (current_duration, today_total, all_time_total)."""
-        today = datetime.now().date()
+        today = now().date()
         today_total = timedelta()
         all_time_total = timedelta()
         current_interval = (
@@ -457,7 +497,7 @@ class WorkLogApp(App[None]):
         """Update all display widgets with current stats."""
         current, today, total = self.get_stats()
 
-        self.stats_display.update_stats(self.is_working, current, today, total)
+        self.stats_display.update_stats(is_working=self.is_working)
 
         # Update session info with appropriate label and duration
         if self.is_working:
@@ -474,7 +514,6 @@ class WorkLogApp(App[None]):
 
     def watch_is_working(self, is_working: bool) -> None:
         """React to is_working changes."""
-        # Update theme
         if is_working:
             self.add_class("working")
             self.remove_class("paused")
@@ -491,7 +530,9 @@ class WorkLogApp(App[None]):
         except OSError as e:
             # Log error but don't crash - keep running with in-memory state
             self.notify(
-                f"Warning: Failed to save to file: {e}", severity="error", timeout=5
+                f"Warning: Failed to save to file: {e}",
+                severity="error",
+                timeout=5,
             )
 
     def action_toggle(self) -> None:
@@ -527,6 +568,7 @@ class WorkLogApp(App[None]):
 
 
 def main() -> None:
+    """Main entry point for the work log application."""
     parser = argparse.ArgumentParser(description="Track work time with simple toggling")
     parser.add_argument("file", type=Path, help="Path to tracking file")
     args = parser.parse_args()
