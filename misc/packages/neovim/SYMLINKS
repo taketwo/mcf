@@ -1,2 +1,1 @@
 config:.config/nvim:Neovim config directory
-$HOME/.cargo/bin/tree-sitter:.local/bin/tree-sitter:Tree-sitter CLI executable

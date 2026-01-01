@@ -9,6 +9,5 @@ uvx: pynvim            # For Python provider
 # Mason can handle installation of this tool, however it tends to download
 # a pre-compiled binary which is incompatible with Ubuntu 20.04
 # Since we still need to support Ubuntu 20.04, we explicitly install the
-# tool from source using cargo. Note that a corresponding symlink needs
-# to be created.
+# tool from source using cargo.
 cargo: tree-sitter-cli

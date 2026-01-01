@@ -10,7 +10,6 @@ import mcf
 from filesystem import link
 from install import get_platform
 
-
 PACKAGES = mcf.path("misc", "packages")
 PLATFORM = get_platform()
 
@@ -132,7 +131,7 @@ class Eget(Install):
 
 
 class Cargo(Install):
-    CMD = "cargo install"
+    CMD = f"cargo install --root {mcf.HOME}/.local --force"
 
     def __init__(self, packages, args=None):
         args = args or []
