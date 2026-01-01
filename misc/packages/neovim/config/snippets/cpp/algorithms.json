@@ -1,0 +1,100 @@
+{
+  "max": {
+    "prefix": "max",
+    "body": [
+      "${1:result_iter} = std::max_element(${2:v}.begin(), $2.end()${3:, [](const auto& a, const auto& b){ return a < b; \\}})$0"
+    ],
+    "description": "Max element"
+  },
+  "min": {
+    "prefix": "min",
+    "body": [
+      "${1:result_iter} = std::min_element(${2:v}.begin(), $2.end()${3:, [](const auto& a, const auto& b){ return a < b; \\}})$0"
+    ],
+    "description": "Min element"
+  },
+  "minmax": {
+    "prefix": "minmax",
+    "body": [
+      "${1:minmax_iters} = std::minmax_element(${2:v}.begin(), $2.end()${3:, [](const auto& a, const auto& b){ return a < b; \\}})$0"
+    ],
+    "description": "Min/max element"
+  },
+  "sort": {
+    "prefix": "sort",
+    "body": [
+      "std::sort(${1:v}.begin(), $1.end()${2:, [](const auto& a, const auto& b){ return a < b; \\}})$0"
+    ],
+    "description": "Sort vector"
+  },
+  "remove_if": {
+    "prefix": "remove_if",
+    "body": [
+      "${1:v}.erase(std::remove_if($1.begin(), $1.end(), [](const auto& ${2:item}){ return ${3:$2 == true}; }), $1.end())$0"
+    ],
+    "description": "Remove vector elements"
+  },
+  "transform": {
+    "prefix": "transform",
+    "body": [
+      "std::transform(${1:v}.begin(), $1.end(), std::back_inserter(${2:destination}), [](const auto& ${3:v}) { return $3; })$0"
+    ],
+    "description": "Transform vector"
+  },
+  "any": {
+    "prefix": "any",
+    "body": [
+      "std::any_of(${1:v}.begin(), $1.end(), [](const auto& ${2:item}) { return ${3}; })$0"
+    ],
+    "description": "Any of"
+  },
+  "all": {
+    "prefix": "all",
+    "body": [
+      "std::all_of(${1:v}.begin(), $1.end(), [](const auto& ${2:item}) { return ${3}; })$0"
+    ],
+    "description": "All of"
+  },
+  "none": {
+    "prefix": "none",
+    "body": [
+      "std::none_of(${1:v}.begin(), $1.end(), [](const auto& ${2:item}) { return ${3}; })$0"
+    ],
+    "description": "None of"
+  },
+  "insert": {
+    "prefix": "insert",
+    "body": [
+      "${1:v}.insert($1.end(), ${2:source}.begin(), $2.end())$0"
+    ],
+    "description": "Insert range into vector"
+  },
+  "sum": {
+    "prefix": "sum",
+    "body": [
+      "auto ${1:sum} = std::accumulate(${2:v}.begin(), $2.end(), ${3:0})$0"
+    ],
+    "description": "Sum values"
+  },
+  "accumulate": {
+    "prefix": "accumulate",
+    "body": [
+      "auto ${1:sum} = std::accumulate(${2:v}.begin(), $2.end(), ${3:init}, ${4:[](const auto& acc, const auto& val){ return acc + val; \\}})$0"
+    ],
+    "description": "Accumulate values"
+  },
+  "count": {
+    "prefix": "count",
+    "body": [
+      "auto ${1:count} = std::count(${2:v}.begin(), $2.end(), ${3:target_value})$0"
+    ],
+    "description": "Count elements equal to value"
+  },
+  "count_if": {
+    "prefix": "count_if",
+    "body": [
+      "auto ${1:count} = std::count_if(${2:v}.begin(), $2.end(), ${3:[](const auto& v) { return v > 0; \\}})$0"
+    ],
+    "description": "Count elements for which predicate holds"
+  }
+}

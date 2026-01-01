@@ -1,0 +1,18 @@
+{
+  "foreach": {
+    "prefix": "foreach",
+    "body": [
+      "${1:mat}.forEach<${2:float}>([$3]($2& v, const int* p) {",
+      "\t\t$0",
+      "\t});"
+    ],
+    "description": "Foreach loop over cv::Mat"
+  },
+  "inco": {
+    "prefix": "inco",
+    "body": [
+      "#include <opencv2/${1:core/mat}.hpp>$0"
+    ],
+    "description": "Include OpenCV library header"
+  }
+}

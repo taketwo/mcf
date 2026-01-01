@@ -1,0 +1,274 @@
+{
+  "log": {
+    "prefix": "log",
+    "body": [
+      "ROS_${1|INFO,DEBUG,WARN,ERROR,FATAL|}(\"${2:Message}\");$0"
+    ],
+    "description": "Log message"
+  },
+  "logs": {
+    "prefix": "logs",
+    "body": [
+      "ROS_${1|INFO,DEBUG,WARN,ERROR,FATAL|}_STREAM(\"${2:Message}\" << $3);$0"
+    ],
+    "description": "Log message (stream)"
+  },
+  "level": {
+    "prefix": "level",
+    "body": [
+      "ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::${1|Debug,Info,Warn,Error,Fatal|})$0"
+    ],
+    "description": "Set logging level"
+  },
+  "dynrec": {
+    "prefix": "dynrec",
+    "body": [
+      "#include <dynamic_reconfigure/server.h>",
+      "#include <$1/$2.h>",
+      "void ${3:reconfigureCallback}($1::$2 &config, uint32_t level)",
+      "{",
+      "  $0",
+      "}",
+      "dynamic_reconfigure::Server<${1:package}::${2:FooConfig}> ${4:server};",
+      "$4.setCallback(boost::bind(&$3, _1, _2));"
+    ],
+    "description": "Dynamic reconfigure template"
+  },
+  "aclient": {
+    "prefix": "aclient",
+    "body": [
+      "#include <actionlib/client/simple_action_client.h>",
+      "#include <$1/$2.h>",
+      "actionlib::SimpleActionClient<${1:package}::${2:FooAction}> ${3:client}(${4:\"topic\"}, true);$0"
+    ],
+    "description": "Action client"
+  },
+  "acall": {
+    "prefix": "acall",
+    "body": [
+      "${1:package::FooGoal} ${2:goal};",
+      "$2.${3:/* fill in goal parameters */}",
+      "${4:client}.sendGoal($2);",
+      "if ($4.waitForResult(ros::Duration(${5:30.0}))) {",
+      "  actionlib::SimpleClientGoalState state = $4.getState();",
+      "}"
+    ],
+    "description": "Action call"
+  },
+  "callback_message": {
+    "prefix": "callback_message",
+    "body": [
+      "void ${1:callback}(const ${2:std_msgs::String}ConstPtr& ${3:msg}) {",
+      "  $0",
+      "}"
+    ],
+    "description": "Callback for messages"
+  },
+  "callback_service": {
+    "prefix": "callback_service",
+    "body": [
+      "bool ${1:callback}(${2:std_srvs::Empty}::Request& ${3:request}, $2::Response& ${4:response}) {",
+      "  $0",
+      "  return true;",
+      "}"
+    ],
+    "description": "Callback for services"
+  },
+  "init": {
+    "prefix": "init",
+    "body": [
+      "ros::init(argc, argv, \"${1:node_name}\");$0"
+    ],
+    "description": "Initialize node"
+  },
+  "node": {
+    "prefix": "node",
+    "body": [
+      "class ${1:NodeName}",
+      "{",
+      "",
+      "public:",
+      "",
+      "  $1(${2})",
+      "  {",
+      "    $0",
+      "  }",
+      "",
+      "private:",
+      "",
+      "  ros::NodeHandle nh_;",
+      "",
+      "};"
+    ],
+    "description": "Node class declaration"
+  },
+  "nh": {
+    "prefix": "nh",
+    "body": [
+      "ros::NodeHandle ${1:nh}$0"
+    ],
+    "description": "Node handle"
+  },
+  "pn": {
+    "prefix": "pn",
+    "body": [
+      "ros::NodeHandle ${1:pn}(\"~\")$0"
+    ],
+    "description": "Private node handle"
+  },
+  "pub": {
+    "prefix": "pub",
+    "body": [
+      "${1:publisher} = ${2:nh}.advertise<${3:std_msgs::String}>(\"${4:topic}\", ${5:10});$0"
+    ],
+    "description": "Publisher"
+  },
+  "sub": {
+    "prefix": "sub",
+    "body": [
+      "${1:subscriber} = ${2:nh}.subscribe(\"${3:topic}\", ${4:10}, ${5:callback});$0"
+    ],
+    "description": "Subscriber"
+  },
+  "service_client": {
+    "prefix": "service_client",
+    "body": [
+      "${1:client} = ${2:nh}.serviceClient<${3:std_srvs::Empty}>(\"${4:topic}\");",
+      "$3 ${5:srv};",
+      "$5.request.${6:/* fill in request parameters */}",
+      "if ($1.call($5)) {",
+      "  $0",
+      "}"
+    ],
+    "description": "Service client"
+  },
+  "service_server": {
+    "prefix": "service_server",
+    "body": [
+      "${1:service} = ${2:nh}.advertiseService(\"${3:topic}\", ${4:callback})$0"
+    ],
+    "description": "Service server"
+  },
+  "service_call": {
+    "prefix": "service_call",
+    "body": [
+      "${1:std_srvs::Empty} ${2:srv};",
+      "$2.request.${3:/* fill in request parameters */}",
+      "if (ros::service::call(\"${4:topic}\", $2))",
+      "{",
+      "  $0",
+      "}"
+    ],
+    "description": "Service call (without creating client)"
+  },
+  "y2qm": {
+    "prefix": "y2qm",
+    "body": [
+      "${1:geometry_msgs::Quaternion ${2:q} = }tf::createQuaternionMsgFromYaw(${3:yaw})$0"
+    ],
+    "description": "Yaw to quaternion message"
+  },
+  "y2q": {
+    "prefix": "y2q",
+    "body": [
+      "${1:tf::Quaternion ${2:q} = }tf::createQuaternionFromYaw(${3:yaw})$0"
+    ],
+    "description": "Yaw to quaternion"
+  },
+  "q2y": {
+    "prefix": "q2y",
+    "body": [
+      "${1:double ${2:yaw} = }tf::getYaw(${3:q})$0"
+    ],
+    "description": "Quaternion to yaw"
+  },
+  "e2qm": {
+    "prefix": "e2qm",
+    "body": [
+      "${1:geometry_msgs::Quaternion ${2:q} = }tf::createQuaternionMsgFromRollPitchYaw(${3:roll}, ${4:pitch}, ${5:yaw})$0"
+    ],
+    "description": "Euler to quaternion message"
+  },
+  "e2q": {
+    "prefix": "e2q",
+    "body": [
+      "${1:tf::Quaternion ${2:q} = }tf::createQuaternionFromRPY(${3:roll}, ${4:pitch}, ${5:yaw})$0"
+    ],
+    "description": "Euler to quaternion"
+  },
+  "tfl": {
+    "prefix": "tfl",
+    "body": [
+      "#include <tf/transform_listener.h>",
+      "tf::TransformListener $2;",
+      "tf::StampedTransform ${1:transform};",
+      "try",
+      "{",
+      "  ros::Time now = ros::Time::now();",
+      "  ${2:tf_listener_}.waitForTransform(\"${3:odom}\", \"${4:base_link}\", now, ros::Duration(${5:0.1}));",
+      "  $2.lookupTransform(\"$3\", \"$4\", now, $1);",
+      "}",
+      "catch (tf::TransformException& e)",
+      "{",
+      "  ROS_ERROR(\"Unable to lookup the transform: %s\", e.what());",
+      "}"
+    ],
+    "description": "Transform lookup"
+  },
+  "now": {
+    "prefix": "now",
+    "body": [
+      "ros::Time::now()"
+    ],
+    "description": "Current time"
+  },
+  "wfm": {
+    "prefix": "wfm",
+    "body": [
+      "auto ${1:msg} = ros::topic::waitForMessage<${2:std_msgs::String}>(${3:\"topic\"}${4:, ros::Duration(${5:timeout})});$0"
+    ],
+    "description": "Wait for message"
+  },
+  "rpn": {
+    "prefix": "rpn",
+    "body": [
+      "constexpr const char *k${1:Name}Param = \"${2:parameter_name}\";$0"
+    ],
+    "description": "ROS parameter name constant"
+  },
+  "rpd": {
+    "prefix": "rpd",
+    "body": [
+      "constexpr ${1:auto} kDefault${2:Name} = ${3};$0"
+    ],
+    "description": "ROS parameter default value"
+  },
+  "rpt": {
+    "prefix": "rpt",
+    "body": [
+      "constexpr const char *k${1:Name}Topic = \"${2:topic_name}\";$0"
+    ],
+    "description": "ROS parameter topic name"
+  },
+  "param": {
+    "prefix": "param",
+    "body": [
+      ".param<${1:std::string}>(\"${2:parameter_name}\", ${3:$2}${4:, ${5:default}})$0"
+    ],
+    "description": "Query parameter from server (with default)"
+  },
+  "getparam": {
+    "prefix": "getparam",
+    "body": [
+      ".getParam(\"${1:parameter_name}\", ${2:$1})$0"
+    ],
+    "description": "Query parameter from server"
+  },
+  "ccc": {
+    "prefix": "ccc",
+    "body": [
+      "constexpr const char *k${1:FoobarConstantName} = \"${2:foobar_constant_value}\"$0"
+    ],
+    "description": "Constexpr const char*"
+  }
+}

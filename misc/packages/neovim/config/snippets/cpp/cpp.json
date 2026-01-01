@@ -1,0 +1,49 @@
+{
+  "pragma_once": {
+    "prefix": "ponce",
+    "body": [
+      "#pragma once"
+    ],
+    "description": "Pragma once directive"
+  },
+  "for": {
+    "prefix": "for",
+    "body": [
+      "for (${1:size_t} ${2:i} = 0; $2 < ${3:count}; ++$2) {",
+      "\t$0",
+      "}"
+    ],
+    "description": "For loop"
+  },
+  "for_iterable": {
+    "prefix": "fori",
+    "body": [
+      "for (const auto& ${1:item} : ${2:items}) {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Range-based for loop over iterable"
+  },
+  "inc": {
+    "prefix": "inc",
+    "body": [
+      "#include <${1:header.h}>"
+    ],
+    "description": "Include directive"
+  },
+  "incb": {
+    "prefix": "incb",
+    "body": [
+      "#include <boost/${1:format}.hpp>"
+    ],
+    "description": "Include directive for Boost header"
+  },
+  "math": {
+    "prefix": "math",
+    "body": [
+      "#define _USE_MATH_DEFINES",
+      "#include <cmath>"
+    ],
+    "description": "Include cmath with MATH defines"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "launch": {
+    "prefix": "launch",
+    "body": [
+      "<launch>",
+      "  $0",
+      "</launch>"
+    ],
+    "description": "Launch tag"
+  },
+  "include": {
+    "prefix": "include",
+    "body": [
+      "<include file=\"$(find ${1:pkg-name})/${2:path.launch}\"/>"
+    ],
+    "description": "Include file tag"
+  },
+  "node": {
+    "prefix": "node",
+    "body": [
+      "<node pkg=\"${1}\" type=\"${2}\" name=\"${3:$2}\"${4: args=\"${5}\"}/>"
+    ],
+    "description": "Node tag"
+  },
+  "param": {
+    "prefix": "param",
+    "body": [
+      "<param name=\"${1}\" value=\"${2}\" type=\"${3:str}\"/>"
+    ],
+    "description": "Param tag"
+  },
+  "arg": {
+    "prefix": "arg",
+    "body": [
+      "<arg name=\"${1}\" default=\"${2}\"/>"
+    ],
+    "description": "Arg tag"
+  },
+  "rosparam": {
+    "prefix": "rosparam",
+    "body": [
+      "<rosparam command=\"load\" file=\"$(find ${1:pkg-name})/${2:path.yaml}\"/>"
+    ],
+    "description": "Rosparam load tag"
+  },
+  "env": {
+    "prefix": "env",
+    "body": [
+      "$(env ${1:ENVIRONMENT_VARIABLE})"
+    ],
+    "description": "Environment variable substitution"
+  },
+  "argsub": {
+    "prefix": "argsub",
+    "body": [
+      "$(arg ${1:arg-name})"
+    ],
+    "description": "Argument substitution"
+  },
+  "find": {
+    "prefix": "find",
+    "body": [
+      "$(find ${1:pkg-name})$0"
+    ],
+    "description": "Find package"
+  },
+  "remap": {
+    "prefix": "remap",
+    "body": [
+      "<remap from=\"${1:from_topic}\" to=\"${2:to_topic}\"/>"
+    ],
+    "description": "Remap topics"
+  },
+  "sim": {
+    "prefix": "sim",
+    "body": [
+      "<param name=\"/use_sim_time\" value=\"true\"/>"
+    ],
+    "description": "Use simulation time"
+  }
+}

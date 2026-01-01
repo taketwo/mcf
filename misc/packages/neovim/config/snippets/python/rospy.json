@@ -1,0 +1,154 @@
+{
+  "rospy": {
+    "prefix": "rospy",
+    "body": [
+      "#!/usr/bin/env python",
+      "",
+      "PACKAGE = '${1:package}'",
+      "NODE = '${2:node}'",
+      "",
+      "import rospy",
+      "",
+      "$0"
+    ],
+    "description": "Rospy preamble"
+  },
+  "init": {
+    "prefix": "init",
+    "body": [
+      "rospy.init_node(NODE${1:, anonymous=True})$0"
+    ],
+    "description": "Initialize node"
+  },
+  "aclient": {
+    "prefix": "aclient",
+    "body": [
+      "${1:client} = ${2:actionlib.}SimpleActionClient('${3:service}', ${4:msg.MyAction})$0"
+    ],
+    "description": "Action client"
+  },
+  "log": {
+    "prefix": "log",
+    "body": [
+      "rospy.log${1|info,debug,warn,err,fatal|}('${2:Message}'${3: % (${4})})$0"
+    ],
+    "description": "Log message"
+  },
+  "par": {
+    "prefix": "par",
+    "body": [
+      "${1:param_name} = rospy.get_param('${2:$1}'${3:, ${4:default}})$0"
+    ],
+    "description": "Query parameter from server"
+  },
+  "pub": {
+    "prefix": "pub",
+    "body": [
+      "${1:publisher} = rospy.Publisher('${2:topic}', ${3:message_type}, queue_size=${4:10}${5:, latch=${6:True}})$0"
+    ],
+    "description": "Publisher"
+  },
+  "sub": {
+    "prefix": "sub",
+    "body": [
+      "${1:subscriber} = rospy.Subscriber('${2:topic}', ${3:message_type}, ${4:callback})$0"
+    ],
+    "description": "Subscriber"
+  },
+  "service_client": {
+    "prefix": "service_client",
+    "body": [
+      "${1:client} = rospy.ServiceProxy('${2:service}', ${3:srv.Type})$0"
+    ],
+    "description": "Service client"
+  },
+  "service_server": {
+    "prefix": "service_server",
+    "body": [
+      "${1:server} = rospy.Service('${2:service}', ${3:srv.Type}, ${4:callback})$0"
+    ],
+    "description": "Service server"
+  },
+  "service_call": {
+    "prefix": "service_call",
+    "body": [
+      "try:",
+      "\t${1:response} = ${2:some_srv}(${3:request})",
+      "except rospy.ServiceException as e:",
+      "\tprint \"Service call failed: %s\" % str(e)"
+    ],
+    "description": "Service call"
+  },
+  "e2q": {
+    "prefix": "e2q",
+    "body": [
+      "${1:q} = ${2:tf.transformations.}quaternion_from_euler(${3:0, 0, yaw})$0"
+    ],
+    "description": "Euler to quaternion"
+  },
+  "e2qm": {
+    "prefix": "e2qm",
+    "body": [
+      "${1:msg} = Quaternion(*${2:tf.transformations.}quaternion_from_euler(${3:0, 0, yaw}))$0"
+    ],
+    "description": "Euler to quaternion message"
+  },
+  "y2q": {
+    "prefix": "y2q",
+    "body": [
+      "${1:q} = ${2:tf.transformations.}quaternion_from_euler(0, 0, ${3:yaw})$0"
+    ],
+    "description": "Yaw to quaternion"
+  },
+  "q2e": {
+    "prefix": "q2e",
+    "body": [
+      "${1:rpy} = ${2:tf.transformations.}euler_from_quaternion(${3:q})$0"
+    ],
+    "description": "Quaternion to euler"
+  },
+  "qm2e": {
+    "prefix": "qm2e",
+    "body": [
+      "o = ${1:msg.pose.orientation}",
+      "${2:rpy} = ${3:tf.transformations.}euler_from_quaternion([o.x, o.y, o.z, o.w])$0"
+    ],
+    "description": "Quaternion message to euler"
+  },
+  "tfl": {
+    "prefix": "tfl",
+    "body": [
+      "import tf",
+      "$1 = tf.TransformListener()",
+      "try:",
+      "\t(trans, rot) = ${1:tf_listener}.lookupTransform(${2:'/odom'}, ${3:'/base_link'}, rospy.Time(0))",
+      "except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):",
+      "\tcontinue"
+    ],
+    "description": "Transform lookup"
+  },
+  "now": {
+    "prefix": "now",
+    "body": [
+      "rospy.Time.now()"
+    ],
+    "description": "Current time"
+  },
+  "rate": {
+    "prefix": "rate",
+    "body": [
+      "${1:r} = rospy.Rate(${2:hz})$0"
+    ],
+    "description": "Rate"
+  },
+  "timer": {
+    "prefix": "timer",
+    "body": [
+      "def $2(event):",
+      "\t${3:pass}",
+      "",
+      "rospy.Timer(rospy.Duration(${1:s}), ${2:timer_cb})"
+    ],
+    "description": "Timer"
+  }
+}

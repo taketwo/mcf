@@ -1,0 +1,158 @@
+{
+  "shebang": {
+    "prefix": "#!",
+    "body": [
+      "#!/usr/bin/env bash",
+      "",
+      "$0"
+    ],
+    "description": "Bash shebang"
+  },
+  "ifh": {
+    "prefix": "ifh",
+    "body": [
+      "if hash ${1:program} 2>/dev/null; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if program exists"
+  },
+  "if?": {
+    "prefix": "if?",
+    "body": [
+      "if [[ $? -ne 0 ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if exit code is non-zero"
+  },
+  "ifs": {
+    "prefix": "ifs",
+    "body": [
+      "if [[ -n \\$${1:var} ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if variable is set"
+  },
+  "ifns": {
+    "prefix": "ifns",
+    "body": [
+      "if [[ -z \\$\\{${1:var}+x\\} ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if variable is not set"
+  },
+  "ifd": {
+    "prefix": "ifd",
+    "body": [
+      "if [[ -d ${1:directory} ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if directory exists"
+  },
+  "iff": {
+    "prefix": "iff",
+    "body": [
+      "if [[ -f ${1:file} ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if file (regular) exists"
+  },
+  "ife": {
+    "prefix": "ife",
+    "body": [
+      "if [[ -e ${1:path} ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if exists (file, directory, node, etc)"
+  },
+  "ifm": {
+    "prefix": "ifm",
+    "body": [
+      "if mountpoint -q ${1:path}; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if path is a mounting point"
+  },
+  "ifsub": {
+    "prefix": "ifsub",
+    "body": [
+      "if [[ \"\\$${1:var}\" == *${2:substring}* ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if string contains a substring"
+  },
+  "ifarg": {
+    "prefix": "ifarg",
+    "body": [
+      "if [[ $# -eq ${1:1} ]]; then",
+      "\t$0",
+      "fi"
+    ],
+    "description": "Check if number of arguments as expected"
+  },
+  "fora": {
+    "prefix": "fora",
+    "body": [
+      "for ${1:element} in \"\\${${2:array}[@]}\"; do",
+      "\t$0",
+      "done"
+    ],
+    "description": "For loop over an array"
+  },
+  "forai": {
+    "prefix": "forai",
+    "body": [
+      "for ${1:i} in \"\\${!${2:array}[@]}\"; do",
+      "\t${0: echo \"Array element \\$$1: \\${$2[\\$$1]}\"}",
+      "done"
+    ],
+    "description": "For loop over an array with index"
+  },
+  "length": {
+    "prefix": "length",
+    "body": [
+      "\\${#${1:name}[@]}$0"
+    ],
+    "description": "Array length"
+  },
+  "filename": {
+    "prefix": "filename",
+    "body": [
+      "filename=$(basename \"\\$${1:path}\")"
+    ],
+    "description": "Extract filename from a full path"
+  },
+  "extension": {
+    "prefix": "extension",
+    "body": [
+      "extension=\"\\${${1:filename}##*.}\""
+    ],
+    "description": "Extract extension from a filename"
+  },
+  "stem": {
+    "prefix": "stem",
+    "body": [
+      "stem=\"\\${${1:filename}%.*}\""
+    ],
+    "description": "Extract stem from a filename"
+  },
+  "exit": {
+    "prefix": "exit",
+    "body": [
+      "function on_exit {",
+      "\t${1:# Clean-up code here}",
+      "}",
+      "",
+      "trap on_exit EXIT"
+    ],
+    "description": "Execute function on exit"
+  }
+}

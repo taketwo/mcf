@@ -1,0 +1,23 @@
+{
+  "nan": {
+    "prefix": "nan",
+    "body": [
+      "std::numeric_limits<${1:double}>::quiet_NaN()"
+    ],
+    "description": "Quiet NaN value"
+  },
+  "inf": {
+    "prefix": "inf",
+    "body": [
+      "std::numeric_limits<${1:double}>::infinity()"
+    ],
+    "description": "Infinity value"
+  },
+  "eps": {
+    "prefix": "eps",
+    "body": [
+      "std::numeric_limits<${1:double}>::epsilon()"
+    ],
+    "description": "Machine epsilon value"
+  }
+}

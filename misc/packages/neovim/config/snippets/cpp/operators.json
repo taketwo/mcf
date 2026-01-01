@@ -1,0 +1,55 @@
+{
+  "op<<": {
+    "prefix": "opout",
+    "body": [
+      "// Note: it is recommended that the operator is inside namespace where the type belongs",
+      "std::ostream& operator<<(std::ostream& os, const ${1:Type}& obj) {",
+      "\t${0:// Implementation}",
+      "\treturn os;",
+      "}"
+    ],
+    "description": "operator<< overload"
+  },
+  "op>>": {
+    "prefix": "opin",
+    "body": [
+      "// Note: it is recommended that the operator is inside namespace where the type belongs",
+      "std::istream& operator>>(std::istream& is, ${1:Type}& obj) {",
+      "\t${0:// Implementation}",
+      "\tif (false /* $1 could not be constructed */)",
+      "\t\tis.setstate(std::ios::failbit);",
+      "\treturn is;",
+      "}"
+    ],
+    "description": "operator>> overload"
+  },
+  "opcomp": {
+    "prefix": "opcomp",
+    "body": [
+      "inline bool operator==(const ${1:Type}& lhs, const $1& rhs) {",
+      "\t${2:/* do actual comparison */}",
+      "}",
+      "",
+      "inline bool operator!=(const $1& lhs, const $1& rhs) {",
+      "\treturn !operator==(lhs, rhs);",
+      "}",
+      "",
+      "inline bool operator< (const $1& lhs, const $1& rhs) {",
+      "\t${0:/* do actual comparison */}",
+      "}",
+      "",
+      "inline bool operator> (const $1& lhs, const $1& rhs) {",
+      "\treturn  operator< (rhs, lhs);",
+      "}",
+      "",
+      "inline bool operator<=(const $1& lhs, const $1& rhs) {",
+      "\treturn !operator> (lhs, rhs);",
+      "}",
+      "",
+      "inline bool operator>=(const $1& lhs, const $1& rhs) {",
+      "\treturn !operator< (lhs, rhs);",
+      "}"
+    ],
+    "description": "Comparison operators overload"
+  }
+}

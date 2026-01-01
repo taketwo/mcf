@@ -24,7 +24,11 @@ return {
       local gen_loader = require('mini.snippets').gen_loader
       return {
         snippets = {
-          gen_loader.from_lang(),
+          gen_loader.from_lang({
+            lang_patterns = {
+              sh = { '**/bash.json' },
+            },
+          }),
         },
         mappings = {
           expand = '<C-b>',

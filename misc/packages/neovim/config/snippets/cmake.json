@@ -1,0 +1,262 @@
+{
+  "message": {
+    "prefix": "mes",
+    "body": [
+      "message(${1|STATUS,WARNING,AUTHOR_WARNING,SEND_ERROR,FATAL_ERROR,DEPRECATION|} \"${2:Message}\")$0"
+    ],
+    "description": "Message"
+  },
+  "var": {
+    "prefix": "$",
+    "body": [
+      "\\${${1:VARIABLE}}$0"
+    ],
+    "description": "CMake variable"
+  },
+  "path": {
+    "prefix": "path",
+    "body": [
+      "get_filename_component(${1:output_variable} ${2:filename_string} ${3:DIRECTORY})$0"
+    ],
+    "description": "Path component extraction"
+  },
+  "color": {
+    "prefix": "color",
+    "body": [
+      "if(\"${CMAKE_CXX_COMPILER_ID}\" MATCHES \"Clang\")",
+      "\tset(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -fcolor-diagnostics\")",
+      "elseif(\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.5)",
+      "\t# Color diagnostics output was added in GCC 4.9.0 (and GCC 4.8.5 was the last release in the 4.8 series).",
+      "\tset(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -fdiagnostics-color\")",
+      "endif()"
+    ],
+    "description": "Color diagnostics"
+  },
+  "cmake": {
+    "prefix": "cmake",
+    "body": [
+      "cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)",
+      "",
+      "project(${1:name})",
+      "",
+      "set(CMAKE_MODULE_PATH \"${CMAKE_SOURCE_DIR}/cmake/Modules/\" ${CMAKE_MODULE_PATH})",
+      "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+      "set(CMAKE_CXX_STANDARD 17)",
+      "",
+      "option(BUILD_TESTS \"Build tests.\" OFF)",
+      "",
+      "add_definitions(-Wall)",
+      "",
+      "include_directories(",
+      "  ${PROJECT_SOURCE_DIR}/include",
+      ")",
+      "",
+      "if(BUILD_TESTS)",
+      "  enable_testing()",
+      "  add_subdirectory(test)",
+      "endif()"
+    ],
+    "description": "CMake template"
+  },
+  "werror": {
+    "prefix": "werror",
+    "body": [
+      "# Treat warnings as errors and disable certain warnings",
+      "add_definitions(-Werror)",
+      "add_definitions(-Wno-error=unused-variable)",
+      "add_definitions(-Wno-error=unknown-pragmas)",
+      "add_definitions(-Wno-unknown-pragmas)",
+      "add_definitions(-Wno-deprecated)"
+    ],
+    "description": "Warnings and errors"
+  },
+  "wall": {
+    "prefix": "wall",
+    "body": [
+      "# Enable all but certain warnings",
+      "add_definitions(-Wall)",
+      "add_definitions(-Wno-unknown-pragmas)",
+      "add_definitions(-Wno-deprecated)",
+      "add_definitions(-fpermissive)"
+    ],
+    "description": "Warnings as errors"
+  },
+  "exe": {
+    "prefix": "exe",
+    "body": [
+      "add_executable(${1:test}",
+      "  ${2:src/test.cpp}",
+      ")"
+    ],
+    "description": "Add executable target"
+  },
+  "lib": {
+    "prefix": "lib",
+    "body": [
+      "add_library(${1:lib}",
+      "  ${2:src/lib.cpp}",
+      ")"
+    ],
+    "description": "Add library"
+  },
+  "link": {
+    "prefix": "link",
+    "body": [
+      "target_link_libraries(${1:test}",
+      "  ${2:library}",
+      ")"
+    ],
+    "description": "Link libraries"
+  },
+  "pcl": {
+    "prefix": "pcl",
+    "body": [
+      "find_package(PCL 1.7.2 REQUIRED)",
+      "include_directories(",
+      "  ${PCL_INCLUDE_DIRS}",
+      ")",
+      "link_directories(",
+      "  ${PCL_LIBRARY_DIRS}",
+      ")",
+      "add_definitions(",
+      "  ${PCL_DEFINITIONS}",
+      ")"
+    ],
+    "description": "Use PCL"
+  },
+  "ecc": {
+    "prefix": "ecc",
+    "body": [
+      "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)"
+    ],
+    "description": "Export compile commands"
+  },
+  "find": {
+    "prefix": "find",
+    "body": [
+      "find_package(${1:package}${2: COMPONENTS ${3:component}}${4: REQUIRED})"
+    ],
+    "description": "Find package"
+  },
+  "pic": {
+    "prefix": "pic",
+    "body": [
+      "set_property(TARGET ${1:library} PROPERTY POSITION_INDEPENDENT_CODE ON)$0"
+    ],
+    "description": "Add -fPIC compiler option"
+  },
+  "tinc": {
+    "prefix": "tinc",
+    "body": [
+      "target_include_directories(${1:target} ${2:PUBLIC} ${3:directories})"
+    ],
+    "description": "Target include directories"
+  },
+  "tdef": {
+    "prefix": "tdef",
+    "body": [
+      "target_compile_definitions(${1:target} ${2:PUBLIC} ${3:definitions})"
+    ],
+    "description": "Target compile definitions"
+  },
+  "topt": {
+    "prefix": "topt",
+    "body": [
+      "target_compile_options(${1:target} ${2:PUBLIC} ${3:\"-opt1;-opt2\"})"
+    ],
+    "description": "Target compile options"
+  },
+  "foreach": {
+    "prefix": "foreach",
+    "body": [
+      "foreach(${1:_variable} ${2:\\${container\\}})",
+      "\t$0",
+      "endforeach()"
+    ],
+    "description": "Foreach loop"
+  },
+  "macro": {
+    "prefix": "macro",
+    "body": [
+      "macro($1)",
+      "\t$0",
+      "endmacro()"
+    ],
+    "description": "Macro"
+  },
+  "function": {
+    "prefix": "function",
+    "body": [
+      "function($1)",
+      "\t$0",
+      "endfunction()"
+    ],
+    "description": "Function"
+  },
+  "upper": {
+    "prefix": "upper",
+    "body": [
+      "string(TOUPPER \"\\${${1:variable_in}}\" ${2:variable_out})"
+    ],
+    "description": "String to upper case"
+  },
+  "lower": {
+    "prefix": "lower",
+    "body": [
+      "string(TOLOWER \"\\${${1:variable_in}}\" ${2:variable_out})"
+    ],
+    "description": "String to lower case"
+  },
+  "inlist": {
+    "prefix": "inlist",
+    "body": [
+      "\\${${1:value_variable}} IN_LIST ${2:list_variable}"
+    ],
+    "description": "Value is in list"
+  },
+  "parse": {
+    "prefix": "parse",
+    "body": [
+      "cmake_parse_arguments(",
+      "\t${1:PREFIX}",
+      "\t\"${2:option-1;...}\"",
+      "\t\"${3:one-value-arg-1;...}\"",
+      "\t\"${4:multi-value-arg-1;...}\"",
+      "\t\\${ARGN}",
+      ")"
+    ],
+    "description": "Parse arguments"
+  },
+  "if": {
+    "prefix": "if",
+    "body": [
+      "if(${1:condition})",
+      "\t$0",
+      "endif()"
+    ],
+    "description": "If"
+  },
+  "ifelse": {
+    "prefix": "ifelse",
+    "body": [
+      "if(${1:condition})",
+      "\t${2:# condition is true}",
+      "else()",
+      "\t$0",
+      "endif()"
+    ],
+    "description": "If-else"
+  },
+  "standard": {
+    "prefix": "standard",
+    "body": [
+      "set(CMAKE_CXX_STANDARD ${1:17})",
+      "set(CMAKE_CXX_STANDARD_REQUIRED ON)",
+      "# Optional: disable extensions to link against c++$1 and not gnu++$1",
+      "set(CMAKE_CXX_EXTENSIONS OFF)",
+      "# Optional: export standard requirement (requires CMake 3.8)",
+      "target_compile_features(foo PUBLIC cxx_std_$1)"
+    ],
+    "description": "Set CXX standard"
+  }
+}

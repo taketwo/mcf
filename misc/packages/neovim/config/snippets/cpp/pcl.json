@@ -1,0 +1,27 @@
+{
+  "cloud": {
+    "prefix": "cloud",
+    "body": [
+      "pcl::PointCloud<${1:pcl::PointXYZ}> ${2:cloud}$0"
+    ],
+    "description": "Point cloud"
+  },
+  "cloud_ptr": {
+    "prefix": "cloud_ptr",
+    "body": [
+      "pcl::PointCloud<${1:pcl::PointXYZ}>::Ptr ${2:cloud}(new pcl::PointCloud<$1>)$0"
+    ],
+    "description": "Point cloud pointer"
+  },
+  "load": {
+    "prefix": "load",
+    "body": [
+      "if (pcl::io::loadPCDFile<${1:pcl::PointXYZ}>(${2:filename}, ${3:*cloud}) == -1)",
+      "{",
+      "  PCL_ERROR(\"Couldn't read file %s\\n\", $2);",
+      "  return -1;",
+      "}$0"
+    ],
+    "description": "Load point cloud"
+  }
+}

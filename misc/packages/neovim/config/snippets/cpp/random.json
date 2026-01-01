@@ -1,0 +1,24 @@
+{
+  "random": {
+    "prefix": "random",
+    "body": [
+      "#include <random>",
+      "std::random_device rnd;",
+      "std::mt19937 gen(rnd());",
+      "std::uniform_int_distribution<> ${1:dist}(${2:0}, ${3});",
+      "$1(gen);"
+    ],
+    "description": "Random (uniform int) number generator"
+  },
+  "shuffle": {
+    "prefix": "shuffle",
+    "body": [
+      "#include <random>",
+      "#include <algorithm>",
+      "std::random_device rnd;",
+      "std::mt19937 gen(rnd());",
+      "std::shuffle(${1:v}.begin(), $1.end(), gen)$0"
+    ],
+    "description": "Shuffle elements of a container"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "plugin": {
+    "prefix": "plugin",
+    "body": [
+      "return {",
+      "  {",
+      "    '${1:short url}'$0",
+      "  }",
+      "}"
+    ],
+    "description": "Plugin spec"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "shebang": {
+    "prefix": "#!",
+    "body": [
+      "#!/usr/bin/env python3",
+      "",
+      "$0"
+    ],
+    "description": "Python shebang"
+  },
+  "shebang_uv": {
+    "prefix": "#!uv",
+    "body": [
+      "#!/usr/bin/env -S uv --quiet run --script",
+      "",
+      "$0"
+    ],
+    "description": "Python shebang with uv run"
+  },
+  "main": {
+    "prefix": "main",
+    "body": [
+      "if __name__ == \"__main__\":",
+      "\t$0"
+    ],
+    "description": "Main"
+  },
+  "paired": {
+    "prefix": "paired",
+    "body": [
+      "zip(${1:list}[:-1], $1[1:])$0"
+    ],
+    "description": "Paired list"
+  },
+  "np": {
+    "prefix": "np",
+    "body": [
+      "import numpy as np$0"
+    ],
+    "description": "Import numpy"
+  },
+  "plt": {
+    "prefix": "plt",
+    "body": [
+      "import matplotlib.pyplot as plt$0"
+    ],
+    "description": "Import pyplot"
+  },
+  "comp": {
+    "prefix": "comp",
+    "body": [
+      "${1:item} for ${2:item} in ${3:items}${4: if ${5:condition}}$0"
+    ],
+    "description": "List comprehension"
+  },
+  "def": {
+    "prefix": "def",
+    "body": [
+      "def ${1:function}(${2:arg1}):",
+      "\t${3:pass}"
+    ],
+    "description": "Function"
+  },
+  "ds": {
+    "prefix": "ds",
+    "body": [
+      "\"\"\"$0",
+      "\"\"\""
+    ],
+    "description": "Docstring"
+  },
+  "init": {
+    "prefix": "init",
+    "body": [
+      "def __init__(self${1:, ${2:arguments}}):",
+      "\t${3:pass}"
+    ],
+    "description": "Init function"
+  },
+  "super": {
+    "prefix": "super",
+    "body": [
+      "super().${1:__init__}($2)$0"
+    ],
+    "description": "Call base class method"
+  },
+  "prop": {
+    "prefix": "prop",
+    "body": [
+      "@property",
+      "def ${1:x}(self):",
+      "\treturn ${2:self._$1}",
+      "",
+      "@$1.setter",
+      "def $1(self, $1):",
+      "\t${3:self._$1 = $1}"
+    ],
+    "description": "Property with setter"
+  },
+  "property": {
+    "prefix": "property",
+    "body": [
+      "@property",
+      "def ${1:x}(self):",
+      "\treturn ${2:self._$1}"
+    ],
+    "description": "Property (read-only)"
+  }
+}
