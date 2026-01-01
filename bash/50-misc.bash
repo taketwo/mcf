@@ -7,6 +7,12 @@ function mkd() {
   mkdir -p "$@" && eval cd "\"\$$#\""
 }
 
+# Create a temporary directory and cd into it
+function mkdt() {
+  local tmpdir
+  tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/tmp.XXXXXX") && eval cd "\"$tmpdir\""
+}
+
 # Repeat last command with "c"
 # Useful because sometimes "c" is produced on Alt-c press
 alias c='eval `fc -ln -2 -2 | sed -e "s/^[[:space:]]*//"`'
