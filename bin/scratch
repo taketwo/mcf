@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+set -o pipefail
+
+EXTENSION="${1:-}"
+TMPFILE="$(mktemp --suffix="${EXTENSION:+.$EXTENSION}")"
+
+exec "$EDITOR" "$TMPFILE"
