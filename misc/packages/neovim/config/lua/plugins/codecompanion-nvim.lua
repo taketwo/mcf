@@ -55,7 +55,7 @@ return {
             intro_message = '',
           },
         },
-        strategies = {
+        interactions = {
           chat = {
             tools = {
               opts = { wait_timeout = 3600000 }, -- Timeout waiting for user input/confirmation (1 hour)
@@ -125,10 +125,10 @@ return {
         },
         prompt_library = {
           ['Commit Message'] = {
-            strategy = 'inline',
+            interaction = 'inline',
             description = 'Generate a commit message',
             opts = {
-              short_name = 'commit_message',
+              alias = 'commit_message',
               auto_submit = true,
               placement = 'before|false',
             },
@@ -143,10 +143,10 @@ return {
             },
           },
           ['Edit buffer'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Edit the current buffer',
             opts = {
-              short_name = 'edit_buffer',
+              alias = 'edit_buffer',
               auto_submit = false,
             },
             prompts = {
