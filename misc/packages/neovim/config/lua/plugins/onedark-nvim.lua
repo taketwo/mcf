@@ -38,6 +38,11 @@ return {
         DiffviewDiffDeleteDim = { fg = '$bg2' },
         Folded = { bg = '$bg1' },
         SnacksIndent = { fg = '$bg1', fmt = 'nocombine' },
+        MiniSnippetsCurrent = { bg = '$bg2' },
+        MiniSnippetsCurrentReplace = { bg = '$bg2' },
+        MiniSnippetsFinal = { fg = '$purple' },
+        MiniSnippetsUnvisited = { bg = '$bg1' },
+        MiniSnippetsVisited = { bg = '$bg1' },
       },
     },
     config = function(_, opts)

@@ -3,7 +3,6 @@ return {
     'saghen/blink.cmp',
     version = '*', -- Using a release tag to download pre-built binaries
     dependencies = {
-      'rafamadriz/friendly-snippets',
       'xzbdmw/colorful-menu.nvim',
       -- Community completion sources
       'bydlw98/blink-cmp-env',
@@ -16,8 +15,7 @@ return {
     ---@type blink.cmp.Config
     opts = {
       snippets = {
-        preset = 'default',
-        expand = function(snippet, _) return LazyVim.cmp.expand(snippet) end,
+        preset = 'mini_snippets',
       },
       keymap = {
         preset = 'none',
