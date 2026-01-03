@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_name="$1"
+language=""
+
+case "$script_name" in
+  *.sh)
+    language="sh"
+    ;;
+  *.py)
+    language="py"
+    ;;
+  *)
+    # No extension - require second argument
+    if [[ $# -lt 2 ]]; then
+      echo "Error: script without extension requires language argument (sh or py)" >&2
+      echo "Usage: create-script <name> [sh|py]" >&2
+      exit 1
+    fi
+    language="$2"
+    ;;
+esac
+
+if [[ "$language" != "sh" && "$language" != "py" ]]; then
+  echo "Error: unknown language '$language'. Must be 'sh' or 'py'" >&2
+  exit 1
+fi
+
+if [[ "$language" == "sh" ]]; then
+  cat >"$script_name" <<'EOF'
+#!/usr/bin/env bash
+
+EOF
+else
+  uv init --script "$script_name"
+  if ! head -n 1 "$script_name" | grep -q "^#!/"; then
+    sed -i '1s|^|#!/usr/bin/env -S uv --quiet run --script\n|' "$script_name"
+  fi
+fi
+
+chmod u+x "$script_name"
+
+"${EDITOR:-vi}" "$script_name"
