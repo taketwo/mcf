@@ -4,6 +4,7 @@ This module provides a simple interface to the llm library for
 command generation using any accessible language model.
 """
 
+from collections.abc import Callable
 from dataclasses import replace
 from typing import TYPE_CHECKING, Any
 
@@ -150,7 +151,11 @@ class LLMClient:
             msg = "llm library not installed. Please install with: pip install llm"
             raise LLMGenerationError(msg) from e
 
-    async def request_command(self, request: str) -> dict[str, Any]:
+    async def request_command(
+        self,
+        request: str,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> dict[str, Any]:
         """Generate or revise a shell command from a natural language request.
 
         This method automatically determines whether to start a new conversation
@@ -160,6 +165,8 @@ class LLMClient:
         ----------
         request : str
             Natural language request for command generation or revision.
+        on_progress : callable, optional
+            Callback invoked with byte count as response chunks arrive.
 
         Returns
         -------
@@ -207,7 +214,16 @@ class LLMClient:
                 prompt,
                 schema=COMMAND_GENERATION_SCHEMA,
             )
-            response_text = await response.text()
+
+            # Stream response chunks and report progress
+            chunks = []
+            async for chunk in response:
+                chunks.append(chunk)
+                if on_progress:
+                    bytes_received = len("".join(chunks).encode("utf-8"))
+                    on_progress(bytes_received)
+
+            response_text = "".join(chunks)
             logger.debug("LLM response: %s", response_text)
 
             # Parse and return the JSON response
@@ -220,12 +236,20 @@ class LLMClient:
             logger.info("Successfully generated command")
             return result
 
-    async def explain_command(self) -> dict[str, Any]:
+    async def explain_command(
+        self,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> dict[str, Any]:
         """Explain the last generated command by branching the conversation.
 
         This method creates an ephemeral branch of the current conversation,
         gets an explanation, then discards the branch so that explanations
         don't pollute the main conversation history for revisions.
+
+        Parameters
+        ----------
+        on_progress : callable, optional
+            Callback invoked with byte count as response chunks arrive.
 
         Returns
         -------
@@ -272,7 +296,16 @@ class LLMClient:
         # Get explanation on the branch
         try:
             response = await branch.prompt(prompt, schema=COMMAND_EXPLANATION_SCHEMA)
-            response_text = await response.text()
+
+            # Stream response chunks and report progress
+            chunks = []
+            async for chunk in response:
+                chunks.append(chunk)
+                if on_progress:
+                    bytes_received = len("".join(chunks).encode("utf-8"))
+                    on_progress(bytes_received)
+
+            response_text = "".join(chunks)
             logger.debug("Explanation response: %s", response_text)
 
             # Parse and return the JSON response

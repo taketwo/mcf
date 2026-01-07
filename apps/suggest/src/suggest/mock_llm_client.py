@@ -13,6 +13,7 @@ Mock scenarios are triggered by specific request strings:
 """
 
 import asyncio
+from collections.abc import Callable
 from typing import Any
 
 from .llm_client import LLMExplanationError, LLMGenerationError
@@ -39,7 +40,11 @@ class MockLLMClient:
         self._explanation_should_fail = False
         self._revision_should_fail = False
 
-    async def request_command(self, request: str) -> dict[str, Any]:
+    async def request_command(
+        self,
+        request: str,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> dict[str, Any]:
         """Generate a mock shell command from a natural language request.
 
         Recognizes scenario keywords to test different UX flows:
@@ -53,6 +58,8 @@ class MockLLMClient:
         ----------
         request : str
             Natural language request or scenario keyword.
+        on_progress : callable, optional
+            Callback invoked with byte count as response chunks arrive.
 
         Returns
         -------
@@ -67,8 +74,14 @@ class MockLLMClient:
             If request is "error" or revision_should_fail flag is set.
 
         """
-        # Simulate network delay
-        await asyncio.sleep(1.5)
+        # Simulate streaming with progress updates
+        if on_progress:
+            # Simulate receiving data in chunks
+            for i in range(1, 6):
+                await asyncio.sleep(0.3)
+                on_progress(i * 50)  # Simulate 50, 100, 150, 200, 250 bytes
+        else:
+            await asyncio.sleep(1.5)
 
         # Handle revisions
         if not self._is_first_request:
@@ -104,8 +117,16 @@ class MockLLMClient:
             "confidence": 0.95,
         }
 
-    async def explain_command(self) -> dict[str, Any]:
+    async def explain_command(
+        self,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> dict[str, Any]:
         """Explain the last generated command (mock implementation).
+
+        Parameters
+        ----------
+        on_progress : callable, optional
+            Callback invoked with byte count as response chunks arrive.
 
         Returns
         -------
@@ -119,8 +140,14 @@ class MockLLMClient:
             If explanation_should_fail flag is set.
 
         """
-        # Simulate network delay
-        await asyncio.sleep(1.0)
+        # Simulate streaming with progress updates
+        if on_progress:
+            # Simulate receiving data in chunks
+            for i in range(1, 5):
+                await asyncio.sleep(0.25)
+                on_progress(i * 100)  # Simulate 100, 200, 300, 400 bytes
+        else:
+            await asyncio.sleep(1.0)
 
         # Check explanation error flag
         if self._explanation_should_fail:

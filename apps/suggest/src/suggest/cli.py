@@ -6,10 +6,14 @@ for the suggest command-line tool.
 
 import argparse
 import asyncio
+import time
+from collections.abc import Callable
 from typing import Any, Protocol
 
 import pyperclip
+from humanize import naturalsize
 from rich.console import Console
+from rich.status import Status
 
 from .llm_client import LLMClient
 from .logging import configure_logging, get_logger
@@ -28,13 +32,55 @@ logger = get_logger(__name__)
 class LLMClientProtocol(Protocol):
     """Protocol for LLM client implementations."""
 
-    async def request_command(self, request: str) -> dict[str, Any]:
+    async def request_command(
+        self,
+        request: str,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> dict[str, Any]:
         """Generate or revise a shell command from a natural language request."""
         ...
 
-    async def explain_command(self) -> dict[str, Any]:
+    async def explain_command(
+        self,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> dict[str, Any]:
         """Explain the last generated command."""
         ...
+
+
+def make_progress_callback(
+    status: Status,
+    base_message: str,
+    throttle_ms: float = 100,
+) -> Callable[[int], None]:
+    """Create a throttled progress callback for status updates.
+
+    Parameters
+    ----------
+    status : Status
+        Rich Status object to update
+    base_message : str
+        Base status message (e.g., "Generating command")
+    throttle_ms : float
+        Minimum milliseconds between updates (default: 100)
+
+    Returns
+    -------
+    Callable[[int], None]
+        Progress callback function that takes bytes received
+
+    """
+    last_update = 0.0
+
+    def callback(bytes_received: int) -> None:
+        nonlocal last_update
+        now = time.monotonic()
+        if now - last_update >= throttle_ms / 1000:
+            size_str = naturalsize(bytes_received)
+            status.update(f"{base_message}... [dim](↓ {size_str})[/dim]")
+            last_update = now
+
+    return callback
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -101,8 +147,12 @@ async def main_loop(
         logger.info("Processing request: %s", request)
 
         # Generate command
-        with console.status("[bold blue]Generating command...[/bold blue]"):
-            result = await llm_client.request_command(request)
+        msg = "[bold blue]Generating command[/bold blue]"
+        with console.status(f"{msg}...") as status:
+            result = await llm_client.request_command(
+                request,
+                on_progress=make_progress_callback(status, msg),
+            )
 
         logger.info(
             "Generated command: %s (confidence: %s)",
@@ -138,8 +188,11 @@ async def main_loop(
 
             elif choice == "explain":
                 logger.info("Generating explanation for command")
-                with console.status("[bold blue]Generating explanation...[/bold blue]"):
-                    explanation = await llm_client.explain_command()
+                msg = "[bold blue]Generating explanation[/bold blue]"
+                with console.status(f"{msg}...") as status:
+                    explanation = await llm_client.explain_command(
+                        on_progress=make_progress_callback(status, msg),
+                    )
                 console.print()
                 display_explanation(console, explanation)
 

@@ -5,6 +5,7 @@ description = "Convert natural language to CLI commands using local LLMs"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+  "humanize>=4.15.0",
   "jinja2>=3.1.6",
   "llm>=0.28",
   "llm-ollama>=0.15.1",
