@@ -19,7 +19,7 @@ ignore = [
 ]
 
 [lint.per-file-ignores]
-"**/test_*.py" = [
+"**/{test_*,*_test}.py" = [
   "ANN",    # type annotations are not required in tests
   "D",      # docstrings are not required in tests
   "S101",   # asserts are allowed in tests
