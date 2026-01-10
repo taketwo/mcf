@@ -26,7 +26,8 @@ return {
         snippets = {
           gen_loader.from_lang({
             lang_patterns = {
-              sh = { '**/bash.json' },
+              ['sh'] = { '**/bash.json' },
+              ['gtest.cpp'] = { 'cpp/**/*.json' },
             },
           }),
         },
