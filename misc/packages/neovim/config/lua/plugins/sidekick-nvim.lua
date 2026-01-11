@@ -49,6 +49,12 @@ return {
       },
       -- CLI keybindings
       {
+        '<Space>',
+        function() require('sidekick.cli').send({ msg = '{this}' }) end,
+        mode = { 'x', 'n' },
+        desc = 'Send this to Sidekick',
+      },
+      {
         '<Leader>ac',
         function() require('sidekick.cli').toggle({ name = 'claude', focus = true }) end,
         desc = 'Toggle ClaudeCode',
