@@ -25,6 +25,7 @@ alias cbp='xsel --clipboard --output'
 alias ga='gitk --all'
 alias gg='git gui'
 alias lg='lazygit'
+alias lgl='lazygit --screen-mode half log'
 
 if ! hash see 2>/dev/null; then
   alias see='xdg-open'
