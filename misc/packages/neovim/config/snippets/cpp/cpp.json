@@ -45,5 +45,12 @@
       "#include <cmath>"
     ],
     "description": "Include cmath with MATH defines"
+  },
+  "cppcheck_suppress": {
+    "prefix": "cppcheck",
+    "body": [
+      "// cppcheck-suppress ${1:diagnosticName}${2:; optional explanation}"
+    ],
+    "description": "Cppcheck suppress comment"
   }
 }
