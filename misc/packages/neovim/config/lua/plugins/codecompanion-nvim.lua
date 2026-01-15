@@ -16,8 +16,13 @@ return {
       'CodeCompanionCmd',
     },
     keys = {
-      { '<Leader>a<Space>', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle chat window', mode = { 'n', 'v' } },
-      { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Actions', mode = { 'n', 'v' } },
+      {
+        '<Leader>ac',
+        '<cmd>CodeCompanionChat Toggle<cr>',
+        desc = 'Toggle CodeCompanion chat window',
+        mode = { 'n', 'v' },
+      },
+      { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Open CodeCompanion actions', mode = { 'n', 'v' } },
       {
         '<C-g>',
         function()
