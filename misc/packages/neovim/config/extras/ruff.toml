@@ -20,8 +20,9 @@ ignore = [
 
 [lint.per-file-ignores]
 "**/{test_*,*_test}.py" = [
-  "ANN",    # type annotations are not required in tests
-  "D",      # docstrings are not required in tests
-  "S101",   # asserts are allowed in tests
-  "ARG001", # "unused" function arguments are needed to pass mock objects
+  "ANN",     # type annotations are not required in tests
+  "ARG001",  # "unused" function arguments are needed to pass mock objects
+  "D",       # docstrings are not required in tests
+  "PLR2004", # magic values are allowed in tests
+  "S101",    # asserts are allowed in tests
 ]
