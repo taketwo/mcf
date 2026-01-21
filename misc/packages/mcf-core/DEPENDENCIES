@@ -19,6 +19,7 @@ nix: delta                             # syntax highlighting for diffs
 pudb
 lnav                                   # log viewer
 claude-code
+nix: just
 
 # Terminal
 tmux
