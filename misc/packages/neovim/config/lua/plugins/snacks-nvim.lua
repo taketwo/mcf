@@ -89,6 +89,7 @@ return {
     -- Picker: Git
     { '<Leader>gC', function() Snacks.picker.git_branches() end, desc = 'Checkout branch' },
     { '<Leader>gL', function() Snacks.picker.git_log_file() end, desc = 'Log (current file)' },
+    { '<Leader>gS', function() Snacks.picker.git_status() end, desc = 'Status' },
     { '<Leader>gl', function() Snacks.picker.git_log() end, desc = 'Log' },
     -- Picker: Misc
     { 'z=', function() Snacks.picker.spelling() end, desc = 'Spelling suggestions' },
