@@ -1,0 +1,2 @@
+config:.config/yazi:Yazi config directory
+yazi.bash:.local/bash/71-yazi.bash:Yazi alias
