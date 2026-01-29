@@ -105,8 +105,8 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         "-m",
-        default="openrouter/mistralai/devstral-2512:free",
-        help="LLM model to use (default: openrouter/mistralai/devstral-2512:free)",
+        default="openrouter/upstage/solar-pro-3:free",
+        help="LLM model to use",
     )
 
     parser.add_argument(
