@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if hash claude 2>/dev/null; then
+  CLAUDE_PATH=$(which claude)
+  if [[ $CLAUDE_PATH == "$HOME/.local/bin/claude" ]]; then
+    if [[ $1 != "--reinstall" ]]; then
+      echo "Claude is already installed at $CLAUDE_PATH"
+      exit 0
+    fi
+    echo "Claude is already installed at $CLAUDE_PATH, forcing reinstall"
+  fi
+fi
+
+curl -fsSL https://claude.ai/install.sh | bash
