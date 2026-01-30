@@ -165,6 +165,23 @@ def main() -> None:
             "devices": member_device_ids,
             "rescanIntervalS": config["folders"][folder_id]["rescan_interval"],
         }
+
+        if "versioning" in config["folders"][folder_id]:
+            versioning_config = config["folders"][folder_id]["versioning"]
+            versioning_type = versioning_config["type"]
+
+            params = {}
+            if versioning_type == "simple":
+                if "keep" in versioning_config:
+                    params["keep"] = str(versioning_config["keep"])
+                if "cleanoutDays" in versioning_config:
+                    params["cleanoutDays"] = str(versioning_config["cleanoutDays"])
+
+            updated["versioning"] = {
+                "type": versioning_type,
+                "params": params,
+            }
+
         new_folders.append(updated)
 
     client.put("rest/config/folders", payload=new_folders)
