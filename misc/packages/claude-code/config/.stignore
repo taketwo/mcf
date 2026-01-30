@@ -7,3 +7,5 @@ settings.json
 // Ephemeral files
 debug/
 statsig/
+telemetry/
+downloads/
