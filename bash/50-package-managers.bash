@@ -23,6 +23,11 @@ if hash nix-env 2>/dev/null; then
   }
 fi
 
+# npm aliases (through fnm)
+alias npmi='fnm exec --using default npm install -g'
+alias npml='fnm exec --using default npm list -g --depth=0'
+alias npmr='fnm exec --using default npm uninstall -g'
+
 DISTRO=$(cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)')
 if [[ $DISTRO == "Arch" ]]; then
   alias file-from-package='pkgfile'
