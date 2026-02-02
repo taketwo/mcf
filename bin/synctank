@@ -29,7 +29,7 @@ def ensure_git_excluded(dir_name: str) -> None:
     cwd = Path.cwd()
     try:
         result = subprocess.run(
-            ["git", "rev-parse", "--git-path", "info/exclude"],
+            ["git", "rev-parse", "--show-toplevel", "--git-path", "info/exclude"],
             cwd=cwd,
             capture_output=True,
             text=True,
@@ -169,3 +169,5 @@ def list_projects() -> None:
 
 if __name__ == "__main__":
     cli()
+
+# vim: set ft=python:
