@@ -65,7 +65,7 @@ return {
     -- Picker: Search
     { '<Leader>."', function() Snacks.picker.registers() end, desc = 'Registers' },
     { '<Leader>.,', function() Snacks.picker.resume() end, desc = 'Resume last picker' },
-    { '<Leader>..', function() Snacks.picker.files() end, desc = 'Files' },
+    { '<Leader>..', function() Snacks.picker.files({ follow = true }) end, desc = 'Files' },
     { '<Leader>./', function() Snacks.picker.search_history() end, desc = 'Search history' },
     { '<Leader>.;', function() Snacks.picker.command_history() end, desc = 'Command history' },
     { '<Leader>.D', function() Snacks.picker.diagnostics_buffer() end, desc = 'Diagnostics (buffer only)' },
