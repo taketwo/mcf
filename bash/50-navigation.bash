@@ -66,6 +66,16 @@ cpp() {
   local dest="${@: -1}"         # last arg is destination
   local sources=("${@:1:$#-1}") # all but last are sources
 
+  # Normalize source paths: for directories, remove trailing slash so rsync copies the directory itself, not its contents
+  local normalized_sources=()
+  for source in "${sources[@]}"; do
+    if [ -d "$source" ]; then
+      normalized_sources+=("${source%/}")
+    else
+      normalized_sources+=("$source")
+    fi
+  done
+
   # rsync options used:
   # -a   : archive mode (recursive, preserve permissions, symlinks, timestamps, etc.)
   # -h   : human-readable sizes (e.g. 1.1K, 2.3M)
@@ -73,7 +83,7 @@ cpp() {
   # --inplace        : write updated data directly to the destination file
   # --no-whole-file  : avoid rewriting entire files unnecessarily (faster for big files)
   rsync -a -h --info=progress2 --inplace --no-whole-file \
-    -- "${sources[@]}" "$dest"
+    -- "${normalized_sources[@]}" "$dest"
 }
 
 # Move with progress
