@@ -9,13 +9,13 @@ ignore = [
   "E501",
   "EM",     # noisy warnings about need to store exception messages in variables
   "ERA001", # has false positives
+  "FA102",  # no need to import from __future__ to support fancy annotations
+  "FIX002", # not every TODO comment needs to be fixed
   "I",      # imports are sorted automatically by usort
   "S603",   # calling subprocess with shell=True is okay
   "T20",    # print statements are okay
   "TD002",  # no need to mention author in TODO comments (use git blame instead)
   "TD003",  # no need to create ticket for every TODO comment
-  "FA102",  # no need to import from __future__ to support fancy annotations
-  "FIX002", # not every TODO comment needs to be fixed
 ]
 
 [lint.per-file-ignores]
