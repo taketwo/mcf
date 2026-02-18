@@ -19,6 +19,11 @@ ignore = [
   "TRY003", # it is okay to specify long descriptive messages in exceptions
 ]
 
+[lint.pep8-naming]
+extend-ignore-names = [
+  "*_T_*", # allow robotics transform notation (e.g. inertial_T_sensor)
+]
+
 [lint.per-file-ignores]
 "**/{test_*,*_test}.py" = [
   "ANN",     # type annotations are not required in tests
