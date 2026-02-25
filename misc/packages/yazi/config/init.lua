@@ -1,6 +1,6 @@
 require('yaziline'):setup({
-  color = '#98c379',
-  secondary_color = 'darkgray',
+  color = '#8fb573',
+  secondary_color = '#35363b',
   separator_style = 'angly',
   select_symbol = '',
   yank_symbol = '󰆐',
