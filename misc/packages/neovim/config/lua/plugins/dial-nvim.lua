@@ -80,20 +80,6 @@ return {
         cyclic = true,
       })
 
-      local weekdays = augend.constant.new({
-        elements = {
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday',
-          'Sunday',
-        },
-        word = true,
-        cyclic = true,
-      })
-
       local months = augend.constant.new({
         elements = {
           'January',
@@ -113,15 +99,6 @@ return {
         cyclic = true,
       })
 
-      local capitalized_boolean = augend.constant.new({
-        elements = {
-          'True',
-          'False',
-        },
-        word = true,
-        cyclic = true,
-      })
-
       local groups = {
         default = {
           augend.integer.alias.decimal, -- nonnegative decimal number (0, 1, 2, 3, ...)
@@ -130,7 +107,8 @@ return {
           augend.date.alias['%Y-%m-%d'],
           augend.semver.alias.semver,
           ordinal_numbers,
-          weekdays,
+          augend.constant.alias.en_weekday, -- Mon, Tue, ..., Sun
+          augend.constant.alias.en_weekday_full, -- Monday, Tuesday, ..., Sunday
           months,
           augend.constant.alias.bool,
         },
@@ -144,7 +122,7 @@ return {
           augend.misc.alias.markdown_header,
         },
         python = {
-          capitalized_boolean,
+          augend.constant.alias.Bool,
           logical_word_alias,
         },
       }
