@@ -35,14 +35,14 @@ return {
                 desc = (key:sub(1, 1) == '[' and 'Previous ' or 'Next ') .. desc
                 desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and ' end' or ' start')
                 --Only set the keymap if we are not in diff mode with a c/C key
-                if not (vim.wo.diff and key:find('[cC]')) then
-                  vim.keymap.set(
-                    { 'n', 'x', 'o' },
-                    key,
-                    function() require('nvim-treesitter-textobjects.move')[method](query, 'textobjects') end,
-                    { desc = desc, buffer = buf, silent = true }
-                  )
-                end
+                vim.keymap.set({ 'n', 'x', 'o' }, key, function()
+                  if vim.wo.diff and key:find('[cC]') then return vim.cmd('normal! ' .. key) end
+                  require('nvim-treesitter-textobjects.move')[method](query, 'textobjects')
+                end, {
+                  buffer = buf,
+                  desc = desc,
+                  silent = true,
+                })
               end
             end
             local swaps = {
