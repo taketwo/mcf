@@ -127,7 +127,6 @@ return {
         -- 'hjson', seems to be broken, using a plugin instead
         'html',
         'json',
-        'jsonc',
         'lua',
         'luadoc',
         'luap',
