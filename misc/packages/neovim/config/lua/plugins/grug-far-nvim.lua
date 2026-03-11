@@ -24,6 +24,7 @@ return {
         preferredLocation = 'right',
       },
       keymaps = {
+        openLocation = { n = 'o' },
         openNextLocation = { n = '>' },
         openPrevLocation = { n = '<' },
         nextInput = { n = '<Tab>', i = '<Tab>' },
