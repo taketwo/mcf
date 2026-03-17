@@ -105,7 +105,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         "-m",
-        default="openrouter/upstage/solar-pro-3:free",
+        default="openrouter/arcee-ai/trinity-large-preview:free",
         help="LLM model to use",
     )
 
