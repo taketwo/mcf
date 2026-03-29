@@ -56,7 +56,7 @@ font-0 = VictorMono Nerd Font:pixelsize=10:bold:antialias=true;2
 
 modules-left = xmonad network-speed-eth network-speed-wlan
 modules-center = 
-modules-right = mpd volume keyboard network-connectivity-eth network-connectivity-wlan homelink gmail battery0 battery1 date
+modules-right = mpd volume keyboard network-connectivity-eth network-connectivity-wlan homelink mailcount battery0 battery1 date
 
 override-redirect = true
 
@@ -122,13 +122,13 @@ type = custom/ipc
 hook-0 = $HOME/.xmonad/keyboard_segment.sh
 initial = 1
 
-[module/gmail]
+[module/mailcount]
 
 type = custom/script
-exec = $HOME/.xmonad/gmail.py
-tail = true
-click-left = "kill -USR1 $(pgrep --oldest --parent %pid%)"
-click-right = "kill -USR2 $(pgrep --oldest --parent %pid%)"
+exec = $HOME/.xmonad/mailcount_segment.sh
+interval = 10
+format = <label>
+label = %output%
 
 [common/network-connectivity]
 

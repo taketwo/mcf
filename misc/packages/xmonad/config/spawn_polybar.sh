@@ -34,10 +34,6 @@ index=$(((${#monitors[@]} - 1) / 2))
 export MONITOR=${monitors[$index]}
 log "Selected monitor: $MONITOR (index $index of ${#monitors[@]} monitors)"
 
-# Kill all gmail.py scripts
-log "Killing existing gmail.py scripts"
-pkill -f gmail.py
-
 log "Starting polybar on monitor $MONITOR"
 polybar -c "$HOME/.xmonad/polybarrc" -r primary --log=info 2>/tmp/polybar.log &
 POLYBAR_PID=$!

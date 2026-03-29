@@ -1,0 +1,3 @@
+mailcount:.local/bin/mailcount:Mailcount daemon script
+mailcount-monitor.service:.local/share/systemd/user/mailcount-monitor.service:Mailcount systemd user unit
+gmail.token:.config/mailcount/gmail.token:Gmail credentials

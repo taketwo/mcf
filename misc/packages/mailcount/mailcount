@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+
+"""Mailcount - Mail unread thread monitor."""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import imaplib
+import logging
+import os
+import re
+import signal
+import socket
+import subprocess
+import sys
+import threading
+import time
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from types import FrameType
+
+
+SOCKET_PATH = "/run/user/{uid}/mailcount/monitor.sock"
+CREDENTIALS_PATH = Path.home() / ".config/mailcount/gmail.token"
+IMAP_HOST = "imap.gmail.com"
+IMAP_PORT = 993
+IMAP_TIMEOUT = 15
+CHECK_INTERVAL = int(os.getenv("MAILCOUNT_CHECK_INTERVAL", "10"))
+LOG_LEVEL = os.getenv("MAILCOUNT_LOG_LEVEL", "INFO").upper()
+
+THREAD_ID_RE = re.compile(r"X-GM-THRID (\d+) UID")
+SIGNAL_NAMES = {signal.SIGTERM: "SIGTERM", signal.SIGINT: "SIGINT"}
+
+
+def socket_path() -> str:
+    """Return the path to the Unix domain socket for the current user."""
+    return SOCKET_PATH.format(uid=os.getuid())
+
+
+def load_credentials(path: Path) -> tuple[str, str]:
+    """Load username and token from a two-line credentials file."""
+    with path.open() as f:
+        user = f.readline().strip()
+        token = f.readline().strip()
+    if not user or not token:
+        msg = "Credentials file is incomplete"
+        raise ValueError(msg)
+    return user, token
+
+
+class MailcountMonitor:
+    """Monitor unread Gmail threads and serve the count over a Unix socket."""
+
+    def __init__(self, user: str, token: str) -> None:
+        """Initialize the monitor with credentials."""
+        self.user = user
+        self.token = token
+        self.logger = logging.getLogger("mailcount")
+        self.unread: int = 0
+        self.check_failed: bool = False
+        self.running = True
+        self.socket_server: socket.socket | None = None
+        self._socket_path = Path(socket_path())
+        self._lock = threading.Lock()
+        self._stop_event = threading.Event()
+
+    def _signal_handler(self, signum: int, _frame: FrameType | None) -> None:
+        self.logger.info("Received %s, shutting down", SIGNAL_NAMES.get(signum, signum))
+        self.running = False
+        self._stop_event.set()
+
+    def _count_unread_threads(self) -> int:
+        """Connect to Gmail IMAP and return the number of unread threads."""
+        with imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT, timeout=IMAP_TIMEOUT) as imap:
+            imap.login(f"{self.user}@gmail.com", self.token)
+            imap.select()
+            uids = imap.uid("search", None, "UnSeen")[1][0].decode().split()
+            if not uids:
+                return 0
+            query = ",".join(uids).encode()
+            items = [t.decode() for t in imap.uid("fetch", query, "(X-GM-THRID)")[1]]
+            tids = THREAD_ID_RE.findall(" ".join(items))
+            return len(set(tids))
+
+    def _check(self) -> None:
+        try:
+            count = self._count_unread_threads()
+            with self._lock:
+                self.unread = count
+                self.check_failed = False
+            self.logger.debug("Unread threads: %d", count)
+        except Exception:
+            with self._lock:
+                self.check_failed = True
+            self.logger.exception("Failed to fetch unread count")
+
+    def _handle_client(self, client: socket.socket) -> None:
+        try:
+            client.settimeout(5.0)
+            with self._lock:
+                response = "-1" if self.check_failed else str(self.unread)
+            client.send((response + "\n").encode())
+        except Exception:  # noqa: BLE001
+            self.logger.debug("Socket client error", exc_info=True)
+        finally:
+            client.close()
+
+    def _setup_socket(self) -> None:
+        self._socket_path.parent.mkdir(parents=True, exist_ok=True)
+        with contextlib.suppress(FileNotFoundError):
+            self._socket_path.unlink()
+        self.socket_server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.socket_server.bind(str(self._socket_path))
+        self.socket_server.listen(5)
+        self.socket_server.settimeout(1.0)
+        self.logger.info("Socket listening on %s", self._socket_path)
+
+    def _socket_loop(self) -> None:
+        while self.running:
+            try:
+                client, _ = self.socket_server.accept()
+                threading.Thread(
+                    target=self._handle_client,
+                    args=(client,),
+                    daemon=True,
+                ).start()
+            except TimeoutError:  # noqa: PERF203
+                continue
+            except Exception:
+                if self.running:
+                    self.logger.exception("Socket server error")
+
+    def cleanup(self) -> None:
+        """Close the socket server and remove the socket file."""
+        if self.socket_server:
+            self.socket_server.close()
+        with contextlib.suppress(FileNotFoundError):
+            self._socket_path.unlink()
+
+    def run(self) -> None:
+        """Run the monitor daemon."""
+        signal.signal(signal.SIGTERM, self._signal_handler)
+        signal.signal(signal.SIGINT, self._signal_handler)
+
+        self.logger.info("Mailcount monitor starting")
+
+        try:
+            self._setup_socket()
+            threading.Thread(target=self._socket_loop, daemon=True).start()
+
+            while self.running:
+                start = time.monotonic()
+                self._check()
+                elapsed = time.monotonic() - start
+                sleep = CHECK_INTERVAL - elapsed
+                if sleep > 0:
+                    self._stop_event.wait(timeout=sleep)
+        finally:
+            self.cleanup()
+            self.logger.info("Mailcount monitor stopped")
+
+
+def cmd_monitor() -> None:
+    """Run the mailcount monitor daemon."""
+    logging.basicConfig(
+        level=getattr(logging, LOG_LEVEL, logging.INFO),
+        format="%(message)s",
+        handlers=[logging.StreamHandler(sys.stdout)],
+    )
+    try:
+        user, token = load_credentials(CREDENTIALS_PATH)
+    except (OSError, ValueError):
+        logging.getLogger("mailcount").exception(
+            "Failed to load credentials from %s",
+            CREDENTIALS_PATH,
+        )
+        sys.exit(1)
+    MailcountMonitor(user, token).run()
+
+
+def cmd_logs() -> int:
+    """Tail mailcount monitor logs."""
+    with contextlib.suppress(KeyboardInterrupt):
+        subprocess.run(
+            ["journalctl", "--user", "-u", "mailcount-monitor.service", "-f"],  # noqa: S607
+            check=False,
+        )
+    return 0
+
+
+def cmd_status() -> int:
+    """Print the current unread thread count from the daemon."""
+    path = socket_path()
+    try:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+            sock.settimeout(5)
+            sock.connect(path)
+            with sock.makefile() as f:
+                response = f.readline().strip()
+    except FileNotFoundError:
+        sys.stderr.write(f"Socket not found: {path}\n")
+        return 1
+    except ConnectionRefusedError:
+        sys.stderr.write("Daemon not running\n")
+        return 1
+    except Exception as e:  # noqa: BLE001
+        sys.stderr.write(f"Error: {e}\n")
+        return 1
+    else:
+        if response == "-1":
+            sys.stderr.write("Last IMAP check failed\n")
+            return 1
+        print(response)
+        return 0
+
+
+def main() -> int:
+    """Parse arguments and dispatch to the appropriate command."""
+    parser = argparse.ArgumentParser(
+        prog="mailcount",
+        description="Mail unread thread monitor",
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("monitor", help="Run the monitor daemon")
+    subparsers.add_parser("status", help="Print unread thread count")
+    subparsers.add_parser("logs", help="Tail mailcount monitor logs")
+
+    args = parser.parse_args()
+
+    if args.command == "monitor":
+        cmd_monitor()
+        return 0
+    if args.command == "status":
+        return cmd_status()
+    if args.command == "logs":
+        return cmd_logs()
+    parser.print_help()
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

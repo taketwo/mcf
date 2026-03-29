@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+
+from subprocess import call
+
+
+def enable_service():
+    print("Enabling and starting mailcount-monitor service...")
+    call(["systemctl", "--user", "daemon-reload"])
+    call(["systemctl", "--user", "enable", "--now", "mailcount-monitor.service"])
+
+
+if __name__ == "__main__":
+    enable_service()
