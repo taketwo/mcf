@@ -52,6 +52,8 @@ return {
           nav_j = { '<C-t>', '<cmd>wincmd j<cr>', desc = 'Go to lower window', expr = true, mode = 't' },
           nav_k = { '<C-c>', '<cmd>wincmd k<cr>', desc = 'Go to upper window', expr = true, mode = 't' },
           nav_l = { '<C-n>', '<cmd>wincmd l<cr>', desc = 'Go to right window', expr = true, mode = 't' },
+          hide_slash = { '<C-/>', 'hide', desc = 'Hide terminal', mode = 't' },
+          hide_underscore = { '<C-_>', 'hide', desc = 'which_key_ignore', mode = 't' },
         },
       },
     },

@@ -96,13 +96,12 @@ Snacks.toggle.treesitter():map('<Leader>uT')
 Snacks.toggle.indent():map('<Leader>ug')
 
 -- Floating terminal
-local lazyterm = function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root() }) end
+local lazyterm = function() Snacks.terminal.focus(nil, { cwd = LazyVim.root() }) end
 map('n', '<C-/>', lazyterm, { desc = 'Show terminal' })
 map('t', '<C-/>', lazyterm, { desc = 'Hide terminal' })
--- NOTE: The <C-_> maps is necessary due terminal weirdness
+-- NOTE: The <C-_> maps are necessary due terminal weirdness
 --See: https://apple.stackexchange.com/questions/24261/how-do-i-send-c-that-is-control-slash-to-the-terminal/227286#227286
-map('n', '<C-_>', lazyterm, { desc = 'which_key_ignore' })
-map('t', '<C-_>', '<cmd>close<cr>', { desc = 'which_key_ignore' })
+map({ 'n', 't' }, '<C-_>', lazyterm, { desc = 'which_key_ignore' })
 map('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'Enter normal mode' })
 
 -- Misc
