@@ -21,7 +21,16 @@ function M.capabilities()
     if #capabilities == 0 then
       table.insert(lines, '* (none)')
     else
-      vim.list_extend(lines, capabilities)
+      local code_actions = LazyVim.lsp.code_actions({ bufnr = current_buf, id = client.id })
+      table.sort(code_actions)
+      for _, capability in ipairs(capabilities) do
+        table.insert(lines, capability)
+        if capability == '* codeAction' and #code_actions > 0 then
+          for _, action in ipairs(code_actions) do
+            table.insert(lines, '  * ' .. action)
+          end
+        end
+      end
     end
   end
 
