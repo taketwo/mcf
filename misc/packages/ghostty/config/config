@@ -1,0 +1,7 @@
+font-family = "VictorMono Nerd Font Mono"
+font-size = 11
+theme = "One Dark Warmer"
+window-decoration = none
+adjust-cell-height = -1
+# TODO: understand whether this is useful
+right-click-action = copy-or-paste

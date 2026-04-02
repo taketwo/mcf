@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# add-apt-repository fails if sources.list file does not exist
+if [[ ! -f /etc/apt/sources.list ]]; then
+  sudo touch /etc/apt/sources.list
+fi
+
+sudo add-apt-repository ppa:mkasberg/ghostty-ubuntu -y
+sudo apt-get update
