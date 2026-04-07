@@ -101,6 +101,23 @@ class BTManager:
             None,
         )
 
+    def _reconnect_bluetooth_device(self, device: BTDevice) -> None:
+        """Disconnect and connect again (clears wedged BlueZ / PipeWire audio state)."""
+        self.bluetooth.disconnect_device(device.mac_address)
+        self.bluetooth.connect_device(device.mac_address)
+
+    def _recover_bt_audio_if_pulse_mode_unknown(self, device: BTDevice) -> None:
+        """Reconnect when PulseAudio cannot classify the card (same idea as activate)."""
+        if not self.bluetooth.is_device_connected(device.mac_address):
+            return
+        if self.pulseaudio.get_device_mode(device.mac_address) is not None:
+            return
+        logger.info(
+            "Reconnecting %s because PulseAudio mode is unknown",
+            device.name,
+        )
+        self._reconnect_bluetooth_device(device)
+
     def activate_device(
         self,
         device: BTDevice,
@@ -133,7 +150,8 @@ class BTManager:
                         "Device %s is in unknown mode, need to reconnect",
                         device.name,
                     )
-                    self.bluetooth.disconnect_device(device.mac_address)
+                    self._reconnect_bluetooth_device(device)
+                    need_connect = False
 
             if need_connect:
                 self.bluetooth.connect_device(device.mac_address)
@@ -161,7 +179,18 @@ class BTManager:
         if mode not in device.supported_modes:
             raise ValueError(f"Mode {mode.name} not supported by device {device.name}")
 
-        self.pulseaudio.set_device_mode(device.mac_address, mode)
+        self._recover_bt_audio_if_pulse_mode_unknown(device)
+
+        try:
+            self.pulseaudio.set_device_mode(device.mac_address, mode)
+        except PulseAudioError:
+            logger.info(
+                "PulseAudio mode switch failed for %s; reconnecting and retrying once",
+                device.name,
+            )
+            self._reconnect_bluetooth_device(device)
+            self.pulseaudio.set_device_mode(device.mac_address, mode)
+
         logger.info("Switched %s to %s mode", device.name, mode.name.lower())
 
     def toggle_mode(self, device: BTDevice) -> None:
