@@ -7,6 +7,25 @@ from .logging import logging
 logger = logging.getLogger(__name__)
 
 
+class CommandError(Exception):
+    """External command exited with non-zero status."""
+
+    def __init__(
+        self,
+        command: str,
+        returncode: int,
+        stdout: str,
+        stderr: str,
+    ) -> None:
+        self.command = command
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+        super().__init__(
+            f"Command failed with exit code {returncode}: {command}",
+        )
+
+
 def run_command(command: str) -> tuple[str, str, int]:
     """Run command and return its output and exit code."""
     logger.debug("Running command: %s", command)
@@ -29,3 +48,11 @@ def run_command(command: str) -> tuple[str, str, int]:
         if stderr:
             logger.error("Stderr: %s", stderr.strip())
     return stdout, stderr, process.returncode
+
+
+def run_command_check(command: str) -> tuple[str, str]:
+    """Run command and raise CommandError if it exits non-zero."""
+    stdout, stderr, returncode = run_command(command)
+    if returncode != 0:
+        raise CommandError(command, returncode, stdout, stderr)
+    return stdout, stderr

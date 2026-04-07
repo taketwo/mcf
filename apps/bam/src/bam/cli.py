@@ -10,8 +10,11 @@ from .audio import AudioMode
 from .bluetooth import BluetoothError
 from .core import BTManager
 from .logging import configure_logging, get_logger
+from .pulseaudio import PulseAudioError
 
 logger = get_logger(__name__)
+
+_SYSTEM_ERRORS = (BluetoothError, PulseAudioError)
 
 
 def mode_argument() -> click.Argument:
@@ -45,8 +48,11 @@ def cli(*, debug: bool) -> None:
 @cli.command()
 def status() -> None:
     """Show current system status."""
-    manager = get_manager()
-    status_info = manager.get_device_status()
+    try:
+        manager = get_manager()
+        status_info = manager.get_device_status()
+    except _SYSTEM_ERRORS as e:
+        raise click.Abort from e
 
     # Connected Devices Section
     click.echo("Connected devices:")
@@ -98,7 +104,7 @@ def activate(device_name: str, mode: AudioMode | None) -> None:
     if device := manager.find_device(device_name):
         try:
             manager.activate_device(device, mode)
-        except BluetoothError as e:
+        except _SYSTEM_ERRORS as e:
             raise click.Abort from e
         return
 
@@ -121,7 +127,7 @@ def deactivate(device_name: str | None) -> None:
 
     try:
         manager.deactivate_device(device)
-    except BluetoothError as e:
+    except _SYSTEM_ERRORS as e:
         raise click.Abort from e
 
 
@@ -131,7 +137,7 @@ def deactivate(device_name: str | None) -> None:
 def mode(device_name: str | None, mode: AudioMode | None) -> None:
     """Switch device mode.
 
-    If no mode is specified, toggles between music/call. If no device isspecified, acts
+    If no mode is specified, toggles between music/call. If no device is specified, acts
     on the only connected device.
     """
     manager = get_manager()
@@ -144,10 +150,13 @@ def mode(device_name: str | None, mode: AudioMode | None) -> None:
             click.echo("Unable to automatically select device, please specify name")
         return
 
-    if not mode:
-        manager.toggle_mode(device)
-    else:
-        manager.set_device_mode(device, mode)
+    try:
+        if not mode:
+            manager.toggle_mode(device)
+        else:
+            manager.set_device_mode(device, mode)
+    except _SYSTEM_ERRORS as e:
+        raise click.Abort from e
 
 
 @cli.command()
@@ -156,7 +165,10 @@ def enroll(alias: str | None) -> None:
     """Add currently connected device to known devices."""
     manager = get_manager()
 
-    connected = manager.bluetooth.get_connected_devices()
+    try:
+        connected = manager.bluetooth.get_connected_devices()
+    except _SYSTEM_ERRORS as e:
+        raise click.Abort from e
     known_macs = set(manager.devices.keys())
     unenrolled = [d for d in connected if d.mac_address not in known_macs]
 
@@ -187,7 +199,12 @@ def enroll(alias: str | None) -> None:
         )
 
     # Detect supported modes by checking available profiles
-    modes = manager.pulseaudio.detect_device_supported_modes(device_info.mac_address)
+    try:
+        modes = manager.pulseaudio.detect_device_supported_modes(
+            device_info.mac_address,
+        )
+    except _SYSTEM_ERRORS as e:
+        raise click.Abort from e
 
     # Set default mode
     mode_names = [m.name.lower() for m in modes]

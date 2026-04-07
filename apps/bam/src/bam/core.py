@@ -10,7 +10,7 @@ import yaml
 from .audio import AudioMode
 from .bluetooth import BluetoothController, BluetoothError
 from .logging import get_logger
-from .pulseaudio import PulseAudioController
+from .pulseaudio import PulseAudioController, PulseAudioError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -140,7 +140,7 @@ class BTManager:
             if need_set_mode:
                 self.set_device_mode(device, mode)
             self.pulseaudio.set_default_sink(device.mac_address)
-        except BluetoothError:
+        except (BluetoothError, PulseAudioError):
             logger.exception("Failed to activate device %s", device.name)
             raise
 

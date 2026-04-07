@@ -4,12 +4,15 @@ from __future__ import annotations
 
 from enum import Enum
 
-from .logging import logging
-
 from .audio import AudioMode
-from .utils import run_command
+from .logging import logging
+from .utils import CommandError, run_command_check
 
 logger = logging.getLogger(__name__)
+
+
+class PulseAudioError(Exception):
+    """PulseAudio (pactl) operation failed."""
 
 
 class AudioProfile(str, Enum):
@@ -29,6 +32,15 @@ class DevicePrefix(str, Enum):
 
 class PulseAudioController:
     """Interface to PulseAudio functionality via pactl."""
+
+    def _pactl(self, command: str) -> tuple[str, str]:
+        try:
+            return run_command_check(command)
+        except CommandError as e:
+            detail = e.stderr.strip() or e.stdout.strip() or "(no output)"
+            raise PulseAudioError(
+                f"PulseAudio command failed (exit {e.returncode}): {detail}",
+            ) from e
 
     def get_device_mode(self, mac_address: str) -> AudioMode | None:
         """Get current audio mode of a device."""
@@ -60,7 +72,7 @@ class PulseAudioController:
             AudioProfile.A2DP_SINK if mode == AudioMode.MUSIC else AudioProfile.HSP
         )
         mac_normalized = self._normalize_mac(mac_address)
-        run_command(
+        self._pactl(
             f"pactl set-card-profile {DevicePrefix.CARD.value}{mac_normalized} {profile.value}",
         )
 
@@ -91,7 +103,7 @@ class PulseAudioController:
                     ", ".join(sinks),
                 )
             for sink_name in sinks:
-                run_command(f"pactl set-default-sink {sink_name}")
+                self._pactl(f"pactl set-default-sink {sink_name}")
                 return
         else:
             raise RuntimeError(
@@ -104,7 +116,7 @@ class PulseAudioController:
 
     def _get_card_info(self, mac_address: str) -> str | None:
         """Get card info for a device from PulseAudio."""
-        stdout, _, _ = run_command("pactl list cards")
+        stdout, _ = self._pactl("pactl list cards")
         cards = stdout.split("Card #")
         mac_normalized = self._normalize_mac(mac_address)
 
@@ -131,7 +143,7 @@ class PulseAudioController:
             logger.debug("Getting available sinks")
         else:
             logger.debug("Getting available sinks for device with MAC %s", mac_address)
-        stdout, _, _ = run_command("pactl list short sinks")
+        stdout, _ = self._pactl("pactl list short sinks")
         sinks = [
             parts[1]
             for parts in (
