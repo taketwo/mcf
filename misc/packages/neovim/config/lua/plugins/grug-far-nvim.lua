@@ -42,12 +42,10 @@ return {
           -- Leave insert mode and jump to first result with Enter
           vim.keymap.set({ 'i' }, '<Enter>', '<Esc>>', { buffer = true, remap = true })
           -- Open location and close Grug-far window with O
-          vim.keymap.set(
-            { 'n' },
-            'O',
-            '<LocalLeader>oq',
-            { buffer = true, remap = true, desc = 'Open location and close Grug-far' }
-          )
+          vim.keymap.set({ 'n' }, 'O', function()
+            require('grug-far').get_instance(0):open_location()
+            require('grug-far').get_instance(0):close()
+          end, { buffer = true, desc = 'Open location and close Grug-far' })
         end,
       })
     end,
