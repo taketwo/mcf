@@ -1,0 +1,86 @@
+[project]
+name = "synctank"
+version = "0.1.0"
+description = "Manage synced ephemeral notes directories across machines"
+authors = [
+  { name = "Sergey Alexandrov", email = "alexandrov88@gmail.com" },
+]
+requires-python = ">= 3.14"
+license = { text = "MIT" }
+dependencies = [
+    "click>=8.3.2",
+    "rich>=14.3.3",
+]
+
+[project.scripts]
+"synctank" = "synctank.main:cli"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.15.10",
+    "ty>=0.0.29",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+lint.select = ["ALL"]
+lint.ignore = [
+  "ANN003", # kwargs argument without type annotation is okay
+  "COM812", # conflicts with ruff formatter
+  "D100",   # missing docstring in public module is okay
+  "D104",   # missing docstring in public package is okay
+  "D203",   # conflicts with D211
+  "D213",   # conflicts with D212
+  "E501",
+  "EM",     # noisy warnings about need to store exception messages in variables
+  "ERA001", # has false positives
+  "FA102",  # no need to import from __future__ to support fancy annotations
+  "FIX002", # not every TODO comment needs to be fixed
+  "S603",   # calling subprocess with shell=True is okay
+  "T20",    # print statements are okay
+  "TD002",  # no need to mention author in TODO comments (use git blame instead)
+  "TD003",  # no need to create ticket for every TODO comment
+  "TRY003", # it is okay to specify long descriptive messages in exceptions
+]
+lint.per-file-ignores."**/test_*.py" = [
+  "ANN",     # type annotations are not required in tests
+  "ARG001",  # "unused" function arguments are needed to pass mock objects
+  "ARG002",  # fixture arguments are used for side effects, not their value
+  "D",       # docstrings are not required in tests
+  "INP001",  # tests/ is an implicit namespace package
+  "PLR2004", # magic values are allowed in tests
+  "S101",    # asserts are allowed in tests
+  "SLF001",  # accessing private members is acceptable in tests
+  "TC002",   # TYPE_CHECKING imports are not required in tests
+]
+lint.per-file-ignores."**/conftest.py" = [
+  "ANN",    # type annotations are not required in conftest
+  "INP001", # tests/ is an implicit namespace package
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = ["--strict-markers", "-v"]
+
+[tool.ty.environment]
+extra-paths = ["src"]
+
+[tool.ty.src]
+exclude = ["tests/"]
+
+[tool.coverage.run]
+source = ["src/synctank"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false

@@ -1,22 +1,11 @@
-#!/usr/bin/env -S uv run --script
-# /// script
-# requires-python = ">=3.14"
-# dependencies = [
-#     "click>=8.3.1",
-# ]
-# ///
-
-"""Manage synced ephemeral notes directories across machines.
-
-A tool for managing per-project notes directories that sync across machines via external
-sync tools (Syncthing, Dropbox, etc.).
-"""
-
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
 import click
+
+from .logging import configure_logging
 
 
 def get_synctank_dir() -> Path:
@@ -27,16 +16,18 @@ def get_synctank_dir() -> Path:
 def ensure_git_excluded(dir_name: str) -> None:
     """Ensure symlink is excluded from git if in a repository."""
     cwd = Path.cwd()
+    git = shutil.which("git")
+    if git is None:
+        return
     try:
         result = subprocess.run(
-            ["git", "rev-parse", "--show-toplevel", "--git-path", "info/exclude"],
+            [git, "rev-parse", "--show-toplevel", "--git-path", "info/exclude"],
             cwd=cwd,
             capture_output=True,
             text=True,
             check=True,
         )
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        # Not in a git repo, silently return
+    except subprocess.CalledProcessError:
         return
 
     repo_root, exclude_file = map(Path, result.stdout.strip().split("\n"))
@@ -73,8 +64,13 @@ def create_symlink_and_exclude(project_dir: Path, dir_name: str) -> None:
 
 
 @click.group()
-def cli() -> None:
+@click.option("--debug", is_flag=True, default=False, help="Enable debug logging.")
+@click.pass_context
+def cli(ctx: click.Context, *, debug: bool) -> None:
     """Manage synced ephemeral notes directories across machines."""
+    ctx.ensure_object(dict)
+    ctx.obj["debug"] = debug
+    configure_logging(debug=debug)
 
 
 @cli.command()
@@ -138,7 +134,6 @@ def status() -> None:
                 linked = True
                 break
             except ValueError:
-                # Not under synctank_dir, skip
                 continue
 
     if not linked:
@@ -169,5 +164,3 @@ def list_projects() -> None:
 
 if __name__ == "__main__":
     cli()
-
-# vim: set ft=python:

@@ -1,0 +1,38 @@
+# Show available commands
+default:
+    @just --list
+
+# Run all checks
+check: check-format check-lint check-type
+
+# Verify code formatting
+check-format:
+    uv run ruff format --check .
+
+# Run linting checks
+check-lint:
+    uv run ruff check .
+
+# Run type checking
+check-type:
+    uv run ty check src
+
+# Auto-format and auto-fix all issues
+fix: fix-format fix-lint
+
+# Auto-format code
+fix-format:
+    uv run ruff format .
+
+# Auto-fix linting issues
+fix-lint:
+    uv run ruff check --fix .
+
+# Run all tests with coverage; extra args are passed through to pytest, e.g. just test -k lala
+test *ARGS:
+    uv run pytest --cov=src/synctank --cov-report=term-missing {{ARGS}}
+
+# Run the CLI application; extra args are passed through, e.g. just run --help
+run *ARGS:
+    uv run synctank {{ARGS}}
+
