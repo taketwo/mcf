@@ -1,0 +1,10 @@
+{
+  "project_name": "My app",
+  "description": "A short description of my app",
+  "python_version": "3.14",
+  "_author_name": "Sergey Alexandrov",
+  "_author_email": "alexandrov88@gmail.com",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+  "package_name": "{{ cookiecutter.project_slug.replace('-', '_') }}",
+  "commit_prefix": "{{ cookiecutter.project_slug[0].upper() + cookiecutter.project_slug[1:] }}"
+}
