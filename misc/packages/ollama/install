@@ -24,7 +24,7 @@ fi
 
 echo "Downloading Ollama $LATEST_VERSION..."
 TMP_FILE=$(mktemp)
-gh --repo ollama/ollama release download --clobber --pattern ollama-linux-amd64.tgz --output "$TMP_FILE"
+gh --repo ollama/ollama release download --clobber --pattern ollama-linux-amd64.tar.zst --output "$TMP_FILE"
 echo "Extracting Ollama into ~/.local..."
-tar -xzf "$TMP_FILE" -C ~/.local
+tar -I zstd -xvf "$TMP_FILE" -C ~/.local
 rm "$TMP_FILE"
