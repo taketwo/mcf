@@ -1,7 +1,17 @@
+# One Dark Warmer theme for Ghostty
+# Based on navarasu/onedark.nvim "warmer" style palette
+# Terminal color mapping follows onedark.nvim's terminal.lua
+
 background = #232326
 foreground = #a7aab0
 selection-background = #37383d
 selection-foreground = #a7aab0
+
+# Per onedark.nvim: cursor highlight is "reverse", so cursor = fg, text under cursor = bg0
+cursor-color = #a7aab0
+cursor-text = #232326
+
+# Normal colors (0-7)
 palette = 0=#101012
 palette = 1=#de5d68
 palette = 2=#8fb573
@@ -9,6 +19,20 @@ palette = 3=#dbb671
 palette = 4=#57a5e5
 palette = 5=#bb70d2
 palette = 6=#51a8b3
+palette = 7=#a7aab0
+
+# Bright colors (8-15)
+# Per onedark.nvim terminal.lua: bright black = grey, rest match normal colors
+palette = 8=#5a5b5e
+palette = 9=#de5d68
+palette = 10=#8fb573
+palette = 11=#dbb671
+palette = 12=#57a5e5
+palette = 13=#bb70d2
+palette = 14=#51a8b3
+palette = 15=#a7aab0
+
+# Extended colors (16-22) for use in tmux, shell prompts, etc.
 palette = 16=#232326
 palette = 17=#2c2d31
 palette = 18=#35363b
@@ -16,15 +40,3 @@ palette = 19=#37383d
 palette = 20=#1b1c1e
 palette = 21=#68aee8
 palette = 22=#e2c792
-# Colors below directly come from "Atom One Dark" and have not been tuned yet
-cursor-color = #abb2bf
-cursor-text = #21252b
-palette = 7=#abb2bf
-palette = 8=#767676
-palette = 9=#e06c75
-palette = 10=#98c379
-palette = 11=#e5c07b
-palette = 12=#61afef
-palette = 13=#c678dd
-palette = 14=#56b6c2
-palette = 15=#abb2bf
