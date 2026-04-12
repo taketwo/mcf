@@ -33,8 +33,11 @@ cyan = "#51a8b3"
 green = "#8fb573"
 magenta = "#bb70d2"
 red = "#de5d68"
-white = "#5a5b5e"
+white = "#a7aab0"
 yellow = "#dbb671"
+
+[colors.bright]
+black = "#5a5b5e"
 
 [colors.primary]
 background = "#232326"
