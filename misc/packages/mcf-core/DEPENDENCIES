@@ -58,3 +58,4 @@ ministat                                 # for quick statistical analysis of dat
 uvx: pypipe-ppp                          # for ppp command to process stdin line by line
 nix: jq
 uvx: $MCF/apps/suggest                   # command suggestions from AI
+uvx: $MCF/apps/synctank                  # sync ephemeral docs between machines
