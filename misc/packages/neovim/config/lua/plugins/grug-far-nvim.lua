@@ -10,6 +10,18 @@ return {
         mode = { 'n' },
       },
       {
+        '<C-f><C-f>',
+        function()
+          require('grug-far').open({
+            transient = true,
+            startInInsertMode = false,
+            prefills = { search = vim.fn.expand('%:t'), flags = '--fixed-strings' },
+          })
+        end,
+        desc = 'Find/replace with current file name',
+        mode = { 'n' },
+      },
+      {
         '<C-f>',
         function() require('grug-far').open({ transient = true, startInInsertMode = false }) end,
         desc = 'Find/replace',
