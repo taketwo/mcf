@@ -56,6 +56,15 @@ return {
         desc = 'Send this to Sidekick',
       },
       {
+        '<Space>c',
+        function()
+          local prompt = require('mcf.util.prompts').generate_commit()
+          local text = require('sidekick.text').to_text(prompt)
+          require('sidekick.cli').send({ text = text })
+        end,
+        desc = 'Commit staged changes with Sidekick',
+      },
+      {
         '<Space>f',
         function() require('sidekick.cli').send({ msg = '{file}' }) end,
         desc = 'Send file to Sidekick',
