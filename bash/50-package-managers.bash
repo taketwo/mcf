@@ -4,11 +4,13 @@ if hash apt-get 2>/dev/null; then
   alias agi='sudo apt-get install'
   alias agr='sudo apt-get remove'
   alias aar='sudo apt autoremove'
+  alias file-from-package='apt-file search'
 fi
 
 # dpkg aliases
 if hash dpkg 2>/dev/null; then
   alias dgrep='dpkg -l | grep -i'
+  alias files-in-package='dpkg-query -L'
 fi
 
 # nix aliases
@@ -24,15 +26,8 @@ if hash nix-env 2>/dev/null; then
 fi
 
 # npm aliases (through fnm)
-alias npmi='fnm exec --using default npm install -g'
-alias npml='fnm exec --using default npm list -g --depth=0'
-alias npmr='fnm exec --using default npm uninstall -g'
-
-DISTRO=$(cat /etc/*-release | grep -Po '(?<=DISTRIB_ID=)(.*)')
-if [[ $DISTRO == "Arch" ]]; then
-  alias file-from-package='pkgfile'
-  alias files-in-package='pacman -Ql'
-else
-  alias file-from-package='apt-file search'
-  alias files-in-package='dpkg-query -L'
+if hash fnm 2>/dev/null; then
+  alias npmi='fnm exec --using default npm install -g'
+  alias npml='fnm exec --using default npm list -g --depth=0'
+  alias npmr='fnm exec --using default npm uninstall -g'
 fi
