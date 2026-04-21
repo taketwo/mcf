@@ -20,14 +20,17 @@ M.generate_commit = function()
     return ''
   end
 
+  local status = git_command('git status') or ''
+  local stat = git_command('git diff --staged --stat') or ''
+  local branch = git_command('git branch --show-current') or ''
+
   local Commits = require('mcf.util.commits')
   local commit_spec = Commits.load_repo_commit_spec()
+  local recent_commits_raw = require('neogit').lib.git.log.list({ '--max-count=10' })
   if not commit_spec then
     local style = 'freeform'
-    local commits = require('neogit').lib.git.log.list({ '--max-count=10' })
-    for _, commit in ipairs(commits) do
-      local conventional_commit = Commits.parse_conventional_commit(commit.description[1])
-      if conventional_commit then
+    for _, commit in ipairs(recent_commits_raw) do
+      if Commits.parse_conventional_commit(commit.description[1]) then
         style = 'conventional'
         break
       end
@@ -35,20 +38,41 @@ M.generate_commit = function()
     commit_spec = Commits.get_commit_spec(style)
   end
 
-  local template =
-    [[You are an expert at writing clear and concise git commit messages. The messages should follow the format:
+  local recent_commits = {}
+  for _, commit in ipairs(recent_commits_raw) do
+    table.insert(recent_commits, commit.description[1])
+  end
+  local recent_commits_str = table.concat(recent_commits, '\n')
+
+  local template = [[## Commit message format
 
 %s
 
-Given the following git diff, please generate an appropriate commit message:
+## Branch
+
+%s
+
+## Recent commits
+
+%s
+
+## Git status
+
+%s
+
+## Staged changes (summary)
+
+%s
+
+## Staged changes (diff)
 
 ```diff
 %s
 ```
 
-Output only the commit message without any explanations or suggestions.]]
+Based on the staged changes above, create a single git commit with an appropriate message following the format specified. Do not add an attribution footer. Do not wrap lines in the commit message body.]]
 
-  return string.format(template, commit_spec, diff)
+  return string.format(template, commit_spec, branch, recent_commits_str, status, stat, diff)
 end
 
 return M
