@@ -23,17 +23,6 @@ return {
         mode = { 'n', 'v' },
       },
       { '<Leader>aa', '<cmd>CodeCompanionActions<cr>', desc = 'Open CodeCompanion actions', mode = { 'n', 'v' } },
-      {
-        '<C-g>',
-        function()
-          -- HACK: This is a workaround for Neogit overriding wrapping settings configured through ftplugin.
-          vim.opt_local.wrap = true
-          require('codecompanion').prompt('commit_message')
-        end,
-        desc = 'Generate commit message',
-        ft = 'gitcommit',
-        mode = { 'n', 'i' },
-      },
     },
     opts = function()
       local user = (vim.env.USER or 'me'):gsub('^%l', string.upper)
@@ -129,24 +118,6 @@ return {
           },
         },
         prompt_library = {
-          ['Commit Message'] = {
-            interaction = 'inline',
-            description = 'Generate a commit message',
-            opts = {
-              alias = 'commit_message',
-              auto_submit = true,
-              placement = 'before|false',
-            },
-            prompts = {
-              {
-                role = 'user',
-                content = require('mcf.util.prompts').generate_commit,
-                opts = {
-                  contains_code = true,
-                },
-              },
-            },
-          },
           ['Edit buffer'] = {
             interaction = 'chat',
             description = 'Edit the current buffer',

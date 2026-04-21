@@ -16,7 +16,7 @@ end
 M.generate_commit = function()
   local diff, diff_err = git_command('git diff --no-ext-diff --staged')
   if diff_err then
-    LazyVim.error(string.format('Failed to get Git diff: %s', diff_err), { title = 'Code Companion' })
+    LazyVim.error(string.format('Failed to get Git diff: %s', diff_err), { title = 'MCF/Prompts' })
     return ''
   end
 
