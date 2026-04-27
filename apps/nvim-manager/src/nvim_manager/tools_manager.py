@@ -253,7 +253,7 @@ class ToolsManager:
         logger.debug("Getting installed Mason tools via headless Neovim")
 
         try:
-            result = run_command(
+            result = self._run_with_venv(
                 [
                     "nvim",
                     "--headless",
