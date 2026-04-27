@@ -5,7 +5,7 @@ import re
 import shutil
 import tempfile
 from collections.abc import Callable
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -53,7 +53,9 @@ class EditorManager:
         self.config = config
         self.lock_repo = lock_repo
         self.builder = NeovimBuilder(
-            config.build_cache, config.repository, config.build_cache_size_limit,
+            config.build_cache,
+            config.repository,
+            config.build_cache_size_limit,
         )
 
     def update(self, *, news_diff_callback: Callable[[str], None] | None = None) -> str:
@@ -99,7 +101,7 @@ class EditorManager:
             )
 
         # Use lock revision as baseline, fall back to current revision if no lock file
-        baseline_revision = lock_revision if lock_revision else current_revision
+        baseline_revision = lock_revision or current_revision
 
         if news_diff_callback and baseline_revision:
             try:
@@ -386,7 +388,7 @@ def parse_neovim_version_string(version_output: str) -> str | None:
         Commit hash or None if not found.
 
     """
-    version_line = version_output.split("\n")[0]
+    version_line = version_output.split("\n", maxsplit=1)[0]
     version_string = version_line.split(" ")[1] if " " in version_line else ""
 
     # Try to extract revision with +g prefix (nightly builds)

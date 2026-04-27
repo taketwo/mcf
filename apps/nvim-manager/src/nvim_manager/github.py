@@ -1,7 +1,7 @@
 """GitHub API integration for nvim-manager."""
 
 from dataclasses import dataclass
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 import requests
 

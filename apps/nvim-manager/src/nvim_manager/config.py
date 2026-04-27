@@ -3,7 +3,6 @@
 import os
 import tomllib
 from pathlib import Path
-
 from typing import Annotated
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict

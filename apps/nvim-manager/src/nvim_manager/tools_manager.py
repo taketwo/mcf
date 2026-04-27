@@ -118,7 +118,7 @@ class ToolsManager:
             logger.exception("Mason tools update failed")
             raise RuntimeError(msg) from e
 
-    def restore(self) -> None:
+    def restore(self) -> None:  # noqa: C901
         """Restore tools to versions specified in lock file.
 
         Compares currently installed tools with lock file versions and:
@@ -273,9 +273,7 @@ class ToolsManager:
 
         # Parse output - split on space: left=name, right=version
         # Mason output goes to stderr in headless mode
-        output = (
-            result.stderr.strip() if result.stderr.strip() else result.stdout.strip()
-        )
+        output = result.stderr.strip() or result.stdout.strip()
         tools = {}
         for raw_line in output.split("\n"):
             line = raw_line.strip()
@@ -386,7 +384,7 @@ class ToolsManager:
             )
         except Exception as e:
             # Script outputs one error per line to stderr on failure
-            if hasattr(e, "stderr") and e.stderr:
+            if isinstance(e, subprocess.CalledProcessError) and e.stderr:
                 for line in e.stderr.strip().split("\n"):
                     if line.strip():
                         logger.error(  # noqa: TRY400
@@ -394,4 +392,4 @@ class ToolsManager:
                             function_name,
                             line.strip(),
                         )
-            raise RuntimeError(f"{function_name} failed") from e  # noqa: TRY003
+            raise RuntimeError(f"{function_name} failed") from e
