@@ -1,10 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(uv run pytest:*)",
-      "Bash(uv run mypy:*)",
-      "Bash(uv run ruff:*)"
-    ],
-    "deny": []
+      "Bash(just:*)"
+    ]
   }
 }
