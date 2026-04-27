@@ -36,34 +36,41 @@ warn_unused_configs = true
 exclude = "^tests/"
 
 [tool.ruff]
-line-length = 88
-indent-width = 4
 target-version = "py313"
-
-[tool.ruff.lint]
-select = ["ALL"]
-ignore = [
+line-length = 88
+lint.select = ["ALL"]
+lint.ignore = [
   "ANN003", # kwargs argument without type annotation is okay
-  "C901",   # function complexity is okay
+  "COM812", # conflicts with ruff formatter
   "D100",   # missing docstring in public module is okay
+  "D104",   # missing docstring in public package is okay
+  "D203",   # conflicts with D211
+  "D213",   # conflicts with D212
   "E501",
   "EM",     # noisy warnings about need to store exception messages in variables
   "ERA001", # has false positives
-  "I",      # imports are sorted automatically by usort
+  "FA102",  # no need to import from __future__ to support fancy annotations
+  "FIX002", # not every TODO comment needs to be fixed
   "S603",   # calling subprocess with shell=True is okay
   "T20",    # print statements are okay
   "TD002",  # no need to mention author in TODO comments (use git blame instead)
   "TD003",  # no need to create ticket for every TODO comment
-  "FA102",  # no need to import from __future__ to support fancy annotations
-  "FIX002", # not every TODO comment needs to be fixed
+  "TRY003", # it is okay to specify long descriptive messages in exceptions
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"**/test_*.py" = [
-  "ANN",    # type annotations are not required in tests
-  "D",      # docstrings are not required in tests
-  "S101",   # asserts are allowed in tests
-  "ARG001", # "unused" function arguments are needed to pass mock objects
+lint.per-file-ignores."**/test_*.py" = [
+  "ANN",     # type annotations are not required in tests
+  "ARG001",  # "unused" function arguments are needed to pass mock objects
+  "ARG002",  # fixture arguments are used for side effects, not their value
+  "D",       # docstrings are not required in tests
+  "INP001",  # tests/ is an implicit namespace package
+  "PLR2004", # magic values are allowed in tests
+  "S101",    # asserts are allowed in tests
+  "SLF001",  # accessing private members is acceptable in tests
+  "TC002",   # TYPE_CHECKING imports are not required in tests
+]
+lint.per-file-ignores."**/conftest.py" = [
+  "ANN",    # type annotations are not required in conftest
+  "INP001", # tests/ is an implicit namespace package
 ]
 
 [tool.pytest.ini_options]
