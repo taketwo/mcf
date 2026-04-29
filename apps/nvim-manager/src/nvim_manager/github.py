@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from http import HTTPStatus
 
 import requests
 
@@ -22,8 +23,9 @@ def get_commit_info(repo: str, commit_hash: str | None = None) -> CommitInfo:
     """Get commit information from GitHub API.
 
     Fetches commit details and extracts hash and commit datetime. If no commit_hash
-    is provided, fetches the latest commit from the default branch. For commit hashes,
-    uses GitHub's search API for reliable resolution of partial hashes.
+    is provided, fetches the latest commit from the default branch. Uses the direct
+    commits API, falling back to the search API if the short hash is ambiguous with
+    a non-commit git object (which causes a 422 from the direct endpoint).
 
     Parameters
     ----------
@@ -44,22 +46,28 @@ def get_commit_info(repo: str, commit_hash: str | None = None) -> CommitInfo:
     KeyError
         If response doesn't contain expected fields.
     RuntimeError
-        If search returns no matches or multiple matches.
+        If search API fallback returns no matches or multiple matches.
 
     """
-    if commit_hash is None:
-        # For latest commit, use direct API
-        url = f"https://api.github.com/repos/{repo}/commits/HEAD"
-        logger.debug("Fetching latest commit from GitHub API: %s", url)
-        response = requests.get(url, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-    else:
-        # For specific commits, use search API for reliable partial hash resolution
+    ref = commit_hash if commit_hash is not None else "HEAD"
+    url = f"https://api.github.com/repos/{repo}/commits/{ref}"
+    logger.debug("Fetching commit from GitHub API: %s", url)
+    response = requests.get(url, timeout=30)
+
+    if (
+        response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+        and commit_hash is not None
+    ):
+        # The short hash is ambiguous in the git object database — it matches
+        # not just the target commit but also another object (blob or tree).
+        # Fall back to the search API, which indexes commits only and can
+        # resolve the prefix unambiguously.
+        logger.debug(
+            "Direct API returned 422 for %s, falling back to search API", commit_hash
+        )
         search_url = (
             f"https://api.github.com/search/commits?q=repo:{repo}+hash:{commit_hash}"
         )
-        logger.debug("Searching for commit via GitHub search API: %s", search_url)
         response = requests.get(
             search_url,
             timeout=30,
@@ -67,18 +75,17 @@ def get_commit_info(repo: str, commit_hash: str | None = None) -> CommitInfo:
         )
         response.raise_for_status()
         search_data = response.json()
-
         total_count = search_data.get("total_count", 0)
         if total_count == 0:
             msg = f"No commit found for hash: {commit_hash}"
             raise RuntimeError(msg)
         if total_count > 1:
-            msg = (
-                f"Multiple commits found for hash: {commit_hash} (found {total_count})"
-            )
+            msg = f"Ambiguous hash: {commit_hash} matches {total_count} commits"
             raise RuntimeError(msg)
-
         data = search_data["items"][0]
+    else:
+        response.raise_for_status()
+        data = response.json()
 
     full_hash = str(data["sha"])
     commit_date_iso = str(data["commit"]["committer"]["date"])
