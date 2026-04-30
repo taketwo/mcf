@@ -83,6 +83,7 @@ return {
     { '<Leader>.k', function() Snacks.picker.keymaps() end, desc = 'Keymaps' },
     { '<Leader>.l', function() Snacks.picker.loclist() end, desc = 'Location list' },
     { '<Leader>.m', function() Snacks.picker.marks() end, desc = 'Marks' },
+    { '<Leader>.n', function() require('mcf.util.pickers').synctank() end, desc = 'Synctank notes' },
     { '<Leader>.q', function() Snacks.picker.qflist() end, desc = 'Quickfix list' },
     { '<Leader>.r', function() Snacks.picker.recent() end, desc = 'Recent files' },
     { '<Leader>.s', function() Snacks.picker.smart() end, desc = 'Smart files' },
