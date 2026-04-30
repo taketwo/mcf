@@ -95,11 +95,13 @@ return {
           'path',
           'snippets',
           'buffer',
-          -- TODO: Migrate 'rosmsg' source to blink and enable it
         },
         per_filetype = {
           gitcommit = { inherit_defaults = true, 'cc' },
           lua = { inherit_defaults = true, 'lazydev' },
+          rosaction = { inherit_defaults = true, 'ros' },
+          rosmsg = { inherit_defaults = true, 'ros' },
+          rossrv = { inherit_defaults = true, 'ros' },
           sh = { inherit_defaults = true, 'env' },
         },
         providers = {
@@ -115,6 +117,10 @@ return {
             name = 'LazyDev',
             module = 'lazydev.integrations.blink',
             score_offset = 100,
+          },
+          ros = {
+            name = 'ROS',
+            module = 'nvim-ros.blink',
           },
         },
       },
