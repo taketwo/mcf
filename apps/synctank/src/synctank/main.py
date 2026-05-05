@@ -103,10 +103,9 @@ def setup(link_name: str) -> None:
     help="Document status (see vocabulary below).",
 )
 @click.option(
-    "--dir",
-    "subdir",
+    "--subdir",
     default=None,
-    help="Subdirectory within the notes root, for grouping related notes into a subproject or topic cluster.",
+    help="Subdirectory to place note that belongs to a distinct subproject or workstream.",
 )
 @click.option(
     "--related",
@@ -140,6 +139,8 @@ def create(  # noqa: PLR0913
       - No H1 heading. The tool generates the main heading from name and kind.
       - No line wrapping. Write prose as one paragraph per line, no matter how long.
       - Sentence case headings. Use '## Design decisions', not '## Design Decisions'.
+
+    Notes are created within current project's notes root by default, or within a specified subdirectory. The latter is useful for grouping notes that belong to a distinct subproject or workstream. Use only when a subset of work is large enough to warrant its own namespace.
 
     Prints the absolute path of the created file. With --json, outputs the note metadata as a JSON object instead.
 
