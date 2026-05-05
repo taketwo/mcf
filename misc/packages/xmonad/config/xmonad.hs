@@ -5,8 +5,6 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
 import XMonad.Actions.PhysicalScreens
-import XMonad.Actions.Search
-import XMonad.Actions.Submap
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.FloatSnap
@@ -40,7 +38,6 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
 import XMonad.ManageHook
 import XMonad.Prompt
-import XMonad.Prompt.Input
 import XMonad.Prompt.Workspace
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
@@ -139,7 +136,6 @@ myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
   , TI "music"    ""                                         (spawnInTerminal "ncmpcpp")
-  , TI "zeal"     ""                                         (spawn "zeal")
   , TI "mcf"      "~/.mcf"                                   (spawnTmux)
   , TI "ael"      ""                                         (spawnInTerminal "ael tmux load ael")
   , TI "alpaca"   ""                                         (spawnInTerminal "mosh alpaca")
@@ -241,13 +237,13 @@ table =
   , k "w"            gotoWorkspace'            shiftToWorkspace'         createWorkspace           shiftAndGoToWorkspace'
   , k "x"            __                        __                        __                        deleteWorkspace
   , k "y"            __                        __                        __                        __
-  , k "z"            promptZealSearch          __                        __                        __
+  , k "z"            __                        __                        __                        __
   , k "<Backspace>"  renameWorkspace           __                        __                        __
   , k "<Space>"      launchRofi                nextKeyboardLayout        __                        __
   , k "<Tab>"        nextLayout                resetLayout               __                        __
   , k "`"            scratchTerminal           __                        __                        __
   , k "'"            goToGridSelection         bringGridSelection        __                        __
-  , k "/"            promptWebSearch           selectWebSearch           __                        __
+  , k "/"            __                        __                        __                        __
   , k "0"            gotoPrevWorkspace         __                        __                        __
   , k "]"            windowOpacityUp           __                        __                        __
   , k "["            windowOpacityDown         __                        __                        __
@@ -343,9 +339,6 @@ table =
     restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour def W.view)
     jumpToPrevScreen        = Unbound "Jump to previous physical screen"                   (onPrevNeighbour def W.view)
-    promptZealSearch        = Unbound "Prompt Zeal search"                                 (myPromptZealSearch)
-    promptWebSearch         = Unbound "Prompt web search"                                  (submap . mySearchMap $ myPromptWebSearch)
-    selectWebSearch         = Unbound "X selection web search"                             (submap . mySearchMap $ mySelectWebSearch)
     closeWindow             = Unbound "Close the focused window"                           (kill)
     goToGridSelection       = Unbound "Go to grid selection"                               (goToSelected $ gridSelectConfig)
     bringGridSelection      = Unbound "Bring grid selection"                               (bringSelected $ gridSelectConfig)
@@ -406,41 +399,6 @@ myNavigation = makeXEventhandler $ shadowWithKeymap navKeyMap navDefaultHandler
 navDefaultHandler = const myNavigation
 gridSelectConfig = def { gs_navigate = myNavigation
                        , gs_font = fontSpec }
-
--- }}}
--- Search ------------------------------------------------------------------ {{{
-
-mySearchMap method = M.fromList $
-        [ ((0, xK_g), method google)
-        , ((0, xK_w), method wikipedia)
-        , ((0, xK_s), method scholar)
-        , ((0, xK_m), method maps)
-        , ((0, xK_y), method youtube)
-        -- custom searches
-        , ((0, xK_e), method multitranEnglish)
-        , ((0, xK_d), method multitranDeutsch)
-        , ((0, xK_c), method cppreference)
-        ]
-
-multitranEnglish = searchEngine "multitran (english)" "http://www.multitran.ru/c/m.exe?l1=1&l2=2&s="
-multitranDeutsch = searchEngine "multitran (deutsch)" "http://www.multitran.ru/c/m.exe?l1=3&l2=2&s="
-cppreference = searchEngine "c++ reference" "http://en.cppreference.com/mwiki/index.php?search="
-
--- Prompt Zeal search: get input from the user via a prompt, then run Zeal
-myPromptZealSearch = inputPrompt myXPConfig "Search Zeal" ?+ \s ->
-      (spawn ("zeal " ++ s))
-
--- Prompt web search: get input from the user via a prompt, then run the search in
--- the browser and automatically switch to the web workspace
-myPromptWebSearch (SearchEngine name site)
-  = inputPrompt myXPConfig ("Search " ++ name) ?+ \s ->
-      (search appBrowser site s >> viewWeb)
-
--- Select search: do a web search based on the X selection
-mySelectWebSearch eng = selectSearch eng >> viewWeb
-
--- Switch to the "web" workspace
-viewWeb = windows (W.view "web")
 
 -- }}}
 -- Main -------------------------------------------------------------------- {{{
