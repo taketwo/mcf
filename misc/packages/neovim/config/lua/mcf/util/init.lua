@@ -3,6 +3,7 @@
 
 ---@class mcf.util: lazyvim.util
 ---@field commits mcf.util.commits
+---@field pickers mcf.util.pickers
 local M = {}
 
 setmetatable(M, {
