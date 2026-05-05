@@ -183,7 +183,7 @@ spawnTmuxSession (session, dir) = do
   let command = if exists
                 then "tmuxp load " ++ sessionFile
                 else "tmux new -s " ++ session
-  spawn $ appTerminal ++ " --working-directory " ++ dir ++ " -e " ++ command
+  spawn $ appTerminal ++ " --working-directory=" ++ dir ++ " -e " ++ command
 
 
 goto :: Topic -> X ()
@@ -197,7 +197,7 @@ promptedGoto = workspacePrompt myXPConfigAutoComplete goto
 
 myScratchPads = [ NS "terminal" spawnTerminal findTerminal manageTerminal ]
   where
-    spawnTerminal  = appTerminal ++ " --class ScratchTerminal -e tmux new-session -A -s scratch"
+    spawnTerminal  = "ghostty --x11-instance-name=ScratchTerminal -e tmux new-session -A -s scratch"
     findTerminal   = (resource =? "ScratchTerminal")
     manageTerminal = customFloating $ W.RationalRect l t w h
       where
