@@ -1,4 +1,4 @@
-{-# LANGUAGE ImplicitParams, FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 import XMonad
 import XMonad.Actions.CycleWS
@@ -24,8 +24,6 @@ import XMonad.Layout.Column
 import XMonad.Layout.ComboP
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Grid
-import XMonad.Layout.IM
-import XMonad.Layout.IndependentScreens
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.Magnifier as Mag
 import XMonad.Layout.MouseResizableTile
@@ -33,7 +31,6 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Reflect
 import XMonad.Layout.Renamed
-import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
 import XMonad.ManageHook
@@ -42,7 +39,6 @@ import XMonad.Prompt.Workspace
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.WorkspaceCompare
-import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.FlexibleResize as FR
 import qualified XMonad.StackSet as W
@@ -51,8 +47,7 @@ import Control.Monad (liftM2)
 import Data.Ratio ((%))
 import System.Directory
 import System.Environment (lookupEnv)
-import System.IO.Unsafe (unsafePerformIO)
-import Data.Maybe (maybe, fromMaybe)
+import Data.Maybe (fromMaybe)
 import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
 import qualified DBus.Client as D
@@ -185,9 +180,6 @@ spawnTmuxSession (session, dir) = do
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
 
-promptedGoto :: X ()
-promptedGoto = workspacePrompt myXPConfigAutoComplete goto
-
 -- }}}
 -- Scratchpads ------------------------------------------------------------- {{{
 
@@ -288,7 +280,6 @@ table =
 
     -- Actions
     -- Launch program
-    launchBrowser           = Unbound "Launch browser"                                     (spawn appBrowser)
     launchTmux              = Unbound "Launch tmux"                                        (spawn appTmux)
     launchRofi              = Unbound "Launch rofi"                                        (spawn "rofi -show drun")
     -- Window navigation
@@ -315,8 +306,6 @@ table =
     snapMoveFloat dir       = Unbound "Snap floating window"                               (withFocused $ snapMove dir Nothing)
     snapGrowFloat dir       = Unbound "Snap and grow floating window"                      (withFocused $ snapGrow dir Nothing)
     -- Workspace layout management
-    shrinkMaster            = Unbound "Shrink master window"                               (sendMessage Shrink)
-    expandMaster            = Unbound "Expand master window"                               (sendMessage Expand)
     nextLayout              = Unbound "Switch to next layout"                              (sendMessage NextLayout)
     resetLayout             = Unbound "Switch to default layout"                           (sendMessage FirstLayout)
     tileFloating            = Unbound "Push into tile"                                     (withFocused $ windows . W.sink)
