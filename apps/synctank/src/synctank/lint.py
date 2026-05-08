@@ -147,9 +147,9 @@ def check_heading_case(note: Note) -> LintViolation | None:
         if not heading_text:
             continue
 
-        # Strip leading numeric prefix (e.g. "2. " or "13) ") so numbered
-        # headings don't false-positive on the first real word.
-        heading_text = re.sub(r"^\d+[.)]\s+", "", heading_text)
+        # Strip leading enumeration prefix (e.g. "2. ", "13) ", "1.2 ", "1.2.3 ") so
+        # numbered headings don't false-positive on the first real word.
+        heading_text = re.sub(r"^[\d.]+[.)]\s+|^\d+\.\d[\d.]*\s+", "", heading_text)
         words = heading_text.split()
         # Heuristic: skip all-caps words (acronyms) and words with non-alpha chars.
         # Expect false positives on proper nouns (React, Docker, Kubernetes, etc.).

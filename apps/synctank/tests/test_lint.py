@@ -200,7 +200,11 @@ class TestCheckHeadingCase:
         assert check_heading_case(note) is None
 
     def test_passes_numbered_heading(self, tmp_path: Path) -> None:
-        note = make_note(tmp_path, body="## 1. First step\n\n## 2. Second step")
+        note = make_note(tmp_path, body="## 1. First step\n\n## 2. Second step\n\n## 13) Some heading")
+        assert check_heading_case(note) is None
+
+    def test_passes_multilevel_numbered_heading(self, tmp_path: Path) -> None:
+        note = make_note(tmp_path, body="### 1.2 Requirements\n\n### 1.2.3 Detailed spec")
         assert check_heading_case(note) is None
 
 
