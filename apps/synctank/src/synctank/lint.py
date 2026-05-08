@@ -75,6 +75,9 @@ def _looks_wrapped(paragraph: list[str]) -> bool:
     list_items = sum(1 for line in paragraph if _LIST_ITEM_RE.match(line))
     if list_items > len(paragraph) // 2:
         return False
+    table_rows = sum(1 for line in paragraph if line.startswith("|"))
+    if table_rows > len(paragraph) // 2:
+        return False
     long_lines = sum(1 for line in paragraph if len(line) > 80)  # noqa: PLR2004
     short_lines = sum(1 for line in paragraph if 20 < len(line) <= 80)  # noqa: PLR2004
     return short_lines >= 3 and long_lines == 0  # noqa: PLR2004

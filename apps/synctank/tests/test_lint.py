@@ -156,6 +156,17 @@ class TestCheckNoLineWrapping:
         note = make_note(tmp_path, body=body)
         assert check_no_line_wrapping(note) is None
 
+    def test_passes_markdown_table(self, tmp_path: Path) -> None:
+        body = (
+            "| Column A | Column B |\n"
+            "|----------|----------|\n"
+            "| value one | description of value one |\n"
+            "| value two | description of value two |\n"
+            "| value three | description of value three |\n"
+        )
+        note = make_note(tmp_path, body=body)
+        assert check_no_line_wrapping(note) is None
+
     def test_passes_prose_before_code_block(self, tmp_path: Path) -> None:
         body = "Short line.\n```\ncode\n```"
         note = make_note(tmp_path, body=body)
