@@ -119,6 +119,11 @@ class TestCheckNoLineWrapping:
         assert len(violations) == 1
         assert "hard-wrapped" in violations[0].message
 
+    def test_flags_two_line_paragraph(self, tmp_path: Path) -> None:
+        body = "First line of a paragraph that continues\non the next line without a blank separator.\n"
+        note = make_note(tmp_path, body=body)
+        assert len(check_no_line_wrapping(note)) == 1
+
     def test_flags_wrapped_paragraph_followed_by_blank(self, tmp_path: Path) -> None:
         body = (
             "This paragraph has been\n"

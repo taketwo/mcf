@@ -81,18 +81,14 @@ _LIST_ITEM_RE = re.compile(r"^[-*+]\s|^\d+[.)]\s")
 
 
 def _looks_wrapped(paragraph: list[str]) -> bool:
-    """Return True if a paragraph looks like it was hard-wrapped."""
-    if len(paragraph) < 3:  # noqa: PLR2004
+    """Return True if a paragraph is hard-wrapped (multiple lines, not a list or table)."""
+    if len(paragraph) < 2:  # noqa: PLR2004
         return False
     list_items = sum(1 for line in paragraph if _LIST_ITEM_RE.match(line))
     if list_items > len(paragraph) // 2:
         return False
     table_rows = sum(1 for line in paragraph if line.startswith("|"))
-    if table_rows > len(paragraph) // 2:
-        return False
-    long_lines = sum(1 for line in paragraph if len(line) > 80)  # noqa: PLR2004
-    short_lines = sum(1 for line in paragraph if 20 < len(line) <= 80)  # noqa: PLR2004
-    return short_lines >= 3 and long_lines == 0  # noqa: PLR2004
+    return table_rows <= len(paragraph) // 2
 
 
 def _flush(current: list[str], start: int, results: list[int]) -> None:
