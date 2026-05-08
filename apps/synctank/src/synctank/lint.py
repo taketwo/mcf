@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from .notes import ParseError, enumerate_notes, load_note, slugify
@@ -19,20 +19,23 @@ class LintViolation:
     """A lint rule violation found in a note."""
 
     path: Path
+    rule: str
     message: str
+    line: int | None = field(default=None)
 
     def __str__(self) -> str:
         """Return a human-readable violation message."""
-        return f"{self.path}: {self.message}"
+        if self.line is not None:
+            return f"{self.path}:{self.line}: [{self.rule}] {self.message}"
+        return f"{self.path}: [{self.rule}] {self.message}"
 
 
-def check_filename_kind(note: Note) -> LintViolation | None:
+def check_filename_kind(note: Note) -> list[LintViolation]:
     """Check that the kind suffix in the filename matches the frontmatter kind."""
     name = note.path.name
     stem = name[:-3]  # strip .md
 
     if note.meta.kind == Kind.OTHER:
-        # No suffix expected — verify there's no kind-like suffix
         parts = stem.split("-")
         if len(parts) > 1:
             try:
@@ -40,29 +43,38 @@ def check_filename_kind(note: Note) -> LintViolation | None:
             except ValueError:
                 pass
             else:
-                return LintViolation(
-                    path=note.path,
-                    message=f"kind is 'other' but filename has a kind suffix: {name}",
-                )
+                return [
+                    LintViolation(
+                        path=note.path,
+                        rule="filename-kind",
+                        message=f"kind is 'other' but filename has a kind suffix: {name}",
+                    )
+                ]
     else:
         expected_suffix = f"-{note.meta.kind.value}"
         if not stem.endswith(expected_suffix):
-            return LintViolation(
-                path=note.path,
-                message=f"filename kind suffix does not match frontmatter kind '{note.meta.kind.value}': {name}",
-            )
-    return None
+            return [
+                LintViolation(
+                    path=note.path,
+                    rule="filename-kind",
+                    message=f"filename kind suffix does not match frontmatter kind '{note.meta.kind.value}': {name}",
+                )
+            ]
+    return []
 
 
-def check_filename_slug(note: Note) -> LintViolation | None:
+def check_filename_slug(note: Note) -> list[LintViolation]:
     """Check that the slug in the filename matches a slugified form of the note name."""
     expected_slug = slugify(note.meta.name)
     if note.slug != expected_slug:
-        return LintViolation(
-            path=note.path,
-            message=f"filename slug '{note.slug}' does not match expected slug '{expected_slug}' (from name '{note.meta.name}')",
-        )
-    return None
+        return [
+            LintViolation(
+                path=note.path,
+                rule="filename-slug",
+                message=f"filename slug '{note.slug}' does not match expected slug '{expected_slug}' (from name '{note.meta.name}')",
+            )
+        ]
+    return []
 
 
 _LIST_ITEM_RE = re.compile(r"^[-*+]\s|^\d+[.)]\s")
@@ -83,57 +95,64 @@ def _looks_wrapped(paragraph: list[str]) -> bool:
     return short_lines >= 3 and long_lines == 0  # noqa: PLR2004
 
 
-def _count_wrapped_paragraphs(body_lines: list[str]) -> int:
-    """Count paragraphs in body_lines that appear to be hard-wrapped."""
-    in_code_block = False
-    count = 0
-    current: list[str] = []
+def _flush(current: list[str], start: int, results: list[int]) -> None:
+    if current and _looks_wrapped(current):
+        results.append(start)
 
-    for line in body_lines:
+
+def _find_wrapped_paragraphs(body_lines: list[str]) -> list[int]:
+    """Return 1-based line numbers of the first line of each hard-wrapped paragraph."""
+    in_code_block = False
+    results: list[int] = []
+    current: list[str] = []
+    current_start: int = 0
+
+    for i, line in enumerate(body_lines, start=1):
         if line.startswith("```"):
             in_code_block = not in_code_block
-            if not in_code_block and current:
-                if _looks_wrapped(current):
-                    count += 1
+            if not in_code_block:
+                _flush(current, current_start, results)
                 current = []
             continue
         if in_code_block:
             continue
         if not line.strip():
-            if current:
-                if _looks_wrapped(current):
-                    count += 1
-                current = []
+            _flush(current, current_start, results)
+            current = []
         else:
+            if not current:
+                current_start = i
             current.append(line)
 
-    if current and _looks_wrapped(current):
-        count += 1
-    return count
+    _flush(current, current_start, results)
+    return results
 
 
-def check_no_line_wrapping(note: Note) -> LintViolation | None:
+def check_no_line_wrapping(note: Note) -> list[LintViolation]:
     """Check that prose paragraphs are not hard-wrapped at a short column width."""
-    wrapped = _count_wrapped_paragraphs(note.body.splitlines())
-    if wrapped > 0:
-        return LintViolation(
+    wrapped_starts = _find_wrapped_paragraphs(note.body.splitlines())
+    return [
+        LintViolation(
             path=note.path,
-            message=f"body appears to have {wrapped} hard-wrapped paragraph(s); write prose as one line per paragraph",
+            rule="no-line-wrapping",
+            message="hard-wrapped paragraph; write prose as one line per paragraph",
+            line=start,
         )
-    return None
+        for start in wrapped_starts
+    ]
 
 
-def check_heading_case(note: Note) -> LintViolation | None:
+def check_heading_case(note: Note) -> list[LintViolation]:
     """Check that all headings use sentence case (only first word capitalised).
 
     Skips the first H1, which is tool-generated and follows its own convention.
     """
     lines = note.body.splitlines()
     in_code_block = False
-    violations: list[str] = []
+    violations: list[LintViolation] = []
     first_h1_seen = False
 
-    for line in lines:
+    for lineno, line in enumerate(lines, start=1):
         if line.startswith("```"):
             in_code_block = not in_code_block
             continue
@@ -160,18 +179,19 @@ def check_heading_case(note: Note) -> LintViolation | None:
             w for w in words[1:] if w[0].isupper() and w.isalpha() and not w.isupper()
         ]
         if bad_words:
-            violations.append(f"  {line!r} — capitalised words: {bad_words}")
+            violations.append(
+                LintViolation(
+                    path=note.path,
+                    rule="heading-case",
+                    message=f"{line!r} — capitalised words: {bad_words}",
+                    line=lineno,
+                )
+            )
 
-    if violations:
-        joined = "\n".join(violations)
-        return LintViolation(
-            path=note.path,
-            message=f"headings should use sentence case:\n{joined}",
-        )
-    return None
+    return violations
 
 
-RULES: list[Callable[[Note], LintViolation | None]] = [
+RULES: list[Callable[[Note], list[LintViolation]]] = [
     check_filename_kind,
     check_filename_slug,
     check_no_line_wrapping,
@@ -184,8 +204,10 @@ def lint_note(path: Path) -> list[LintViolation]:
     try:
         note = load_note(path)
     except ParseError as e:
-        return [LintViolation(path=path, message=f"parse error: {e.message}")]
-    return [v for rule_fn in RULES if (v := rule_fn(note)) is not None]
+        return [
+            LintViolation(path=path, rule="parse", message=f"parse error: {e.message}")
+        ]
+    return [v for rule_fn in RULES for v in rule_fn(note)]
 
 
 def lint_path(target: Path) -> list[LintViolation]:

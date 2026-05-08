@@ -87,8 +87,28 @@ def render_search_results(results: list[SearchResult]) -> RenderableType:
     return table
 
 
+def _body_offset(path: Path) -> int:
+    """Return the 1-based line number where the body starts in the file."""
+    for i, line in enumerate(path.read_text(encoding="utf-8").splitlines()):
+        if i > 0 and line.strip() == "---":
+            return i + 1
+    return 0
+
+
+def _render_detail_lines(path: Path, items: list[LintViolation]) -> list[Text]:
+    offset = _body_offset(path)
+    result = []
+    for v in items:
+        prefix = f"  :{offset + v.line}: " if v.line is not None else "  "
+        result.append(Text(f"{prefix}{v.message}", style="yellow"))
+    return result
+
+
 def render_lint_violations(
-    violations: list[LintViolation], notes_root: Path | None = None
+    violations: list[LintViolation],
+    notes_root: Path | None = None,
+    *,
+    detailed: bool = False,
 ) -> RenderableType:
     """Render lint violations as Rich text output."""
     if not violations:
@@ -102,11 +122,29 @@ def render_lint_violations(
                 pass
         return p.name
 
+    renderables: list[RenderableType] = []
+    key = lambda v: (v.path, v.rule)  # noqa: E731
+    for (path, rule), group in groupby(sorted(violations, key=key), key=key):
+        items = list(group)
+        if len(items) == 1 and items[0].line is None:
+            renderables.append(
+                Text(f"{fmt_path(path)}: [{rule}] {items[0].message}", style="yellow")
+            )
+        else:
+            renderables.append(
+                Text(
+                    f"{fmt_path(path)}: [{rule}] {len(items)} violation(s)",
+                    style="yellow",
+                )
+            )
+            if detailed:
+                renderables.extend(_render_detail_lines(path, items))
+
     files = len({v.path for v in violations})
-    return Group(
-        *[Text(f"{fmt_path(v.path)}: {v.message}", style="yellow") for v in violations],
-        Text(f"{len(violations)} warning(s) in {files} file(s).", style="yellow"),
+    renderables.append(
+        Text(f"{len(violations)} warning(s) in {files} file(s).", style="yellow")
     )
+    return Group(*renderables)
 
 
 def render_status(root: Path | None, synctank_dir: Path) -> RenderableType:

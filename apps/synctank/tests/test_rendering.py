@@ -101,23 +101,39 @@ class TestRenderSearchResults:
 
 class TestRenderLintViolations:
     def test_renders_violation_message(self, tmp_path: Path) -> None:
-        v = LintViolation(path=tmp_path / "001-test-spec.md", message="bad slug")
+        v = LintViolation(
+            path=tmp_path / "001-test-spec.md", rule="filename-slug", message="bad slug"
+        )
         output = render_to_str(render_lint_violations([v]))
         assert "bad slug" in output
         assert "1 warning(s) in 1 file(s)" in output
 
     def test_renders_summary_with_multiple_files(self, tmp_path: Path) -> None:
         violations = [
-            LintViolation(path=tmp_path / "001-a-spec.md", message="bad slug"),
-            LintViolation(path=tmp_path / "001-a-spec.md", message="bad kind"),
-            LintViolation(path=tmp_path / "002-b-spec.md", message="bad slug"),
+            LintViolation(
+                path=tmp_path / "001-a-spec.md",
+                rule="filename-slug",
+                message="bad slug",
+            ),
+            LintViolation(
+                path=tmp_path / "001-a-spec.md",
+                rule="filename-kind",
+                message="bad kind",
+            ),
+            LintViolation(
+                path=tmp_path / "002-b-spec.md",
+                rule="filename-slug",
+                message="bad slug",
+            ),
         ]
         output = render_to_str(render_lint_violations(violations))
         assert "3 warning(s) in 2 file(s)" in output
 
     def test_renders_relative_path_when_notes_root_given(self, tmp_path: Path) -> None:
         subdir = tmp_path / "sub"
-        v = LintViolation(path=subdir / "001-test-spec.md", message="bad slug")
+        v = LintViolation(
+            path=subdir / "001-test-spec.md", rule="filename-slug", message="bad slug"
+        )
         output = render_to_str(render_lint_violations([v], notes_root=tmp_path))
         assert "sub/001-test-spec.md" in output
 

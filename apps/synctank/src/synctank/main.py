@@ -231,7 +231,10 @@ def status(*, as_json: bool) -> None:
 
 @cli.command()
 @click.argument("target", required=False, default=None)
-def lint(target: str | None) -> None:
+@click.option(
+    "--detailed", is_flag=True, default=False, help="Show per-violation detail."
+)
+def lint(target: str | None, *, detailed: bool) -> None:
     """Validate notes in TARGET (file or directory, default: notes root)."""
     cwd = Path.cwd()
     synctank_dir = get_synctank_dir()
@@ -240,7 +243,9 @@ def lint(target: str | None) -> None:
     path = Path(target) if target else notes_root
 
     violations = lint_path(path)
-    print_renderable(render_lint_violations(violations, notes_root=notes_root))
+    print_renderable(
+        render_lint_violations(violations, notes_root=notes_root, detailed=detailed)
+    )
 
 
 @cli.command()
