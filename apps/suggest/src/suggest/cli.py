@@ -15,7 +15,7 @@ from humanize import naturalsize
 from rich.console import Console
 from rich.status import Status
 
-from .llm_client import LLMClient
+from .llm_client import LLMClient, LLMExplanationError, LLMGenerationError
 from .logging import configure_logging, get_logger
 from .mock_llm_client import MockLLMClient
 from .user_interface import (
@@ -148,11 +148,16 @@ async def main_loop(
 
         # Generate command
         msg = "[bold blue]Generating command[/bold blue]"
-        with console.status(f"{msg}...") as status:
-            result = await llm_client.request_command(
-                request,
-                on_progress=make_progress_callback(status, msg),
-            )
+        try:
+            with console.status(f"{msg}...") as status:
+                result = await llm_client.request_command(
+                    request,
+                    on_progress=make_progress_callback(status, msg),
+                )
+        except LLMGenerationError as e:
+            logger.error("Command generation failed: %s", e)
+            console.print(f"\n[bold red]Error:[/bold red] {e}")
+            return
 
         logger.info(
             "Generated command: %s (confidence: %s)",
@@ -189,12 +194,17 @@ async def main_loop(
             elif choice == "explain":
                 logger.info("Generating explanation for command")
                 msg = "[bold blue]Generating explanation[/bold blue]"
-                with console.status(f"{msg}...") as status:
-                    explanation = await llm_client.explain_command(
-                        on_progress=make_progress_callback(status, msg),
-                    )
-                console.print()
-                display_explanation(console, explanation)
+                try:
+                    with console.status(f"{msg}...") as status:
+                        explanation = await llm_client.explain_command(
+                            on_progress=make_progress_callback(status, msg),
+                        )
+                except LLMExplanationError as e:
+                    logger.error("Explanation generation failed: %s", e)
+                    console.print(f"\n[bold red]Error:[/bold red] {e}")
+                else:
+                    console.print()
+                    display_explanation(console, explanation)
 
             elif choice == "exit":
                 return

@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 
 from .logging import get_logger
 from .utilities import (
+    JSONParseError,
     get_system_info,
     load_prompt_template,
     parse_json_response,
@@ -227,7 +228,14 @@ class LLMClient:
             logger.debug("LLM response: %s", response_text)
 
             # Parse and return the JSON response
-            result = parse_json_response(response_text)
+            try:
+                result = parse_json_response(response_text)
+            except JSONParseError as e:
+                logger.error("Failed to parse LLM response: %s", e)
+                msg = f"Could not parse model response as JSON.\nModel said:\n{response_text}"
+                raise LLMGenerationError(msg) from e
+        except LLMGenerationError:
+            raise
         except Exception as e:
             logger.exception("LLM generation failed")
             msg = f"LLM generation failed: {e}"
