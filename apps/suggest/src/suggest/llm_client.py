@@ -6,7 +6,9 @@ command generation using any accessible language model.
 
 from collections.abc import Callable
 from dataclasses import replace
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypeVar
+
+_E = TypeVar("_E", bound=Exception)
 
 from .logging import get_logger
 from .utilities import (
@@ -20,7 +22,28 @@ from .utilities import (
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
-    from llm import AsyncConversation, AsyncModel
+    from llm import AsyncConversation, AsyncModel, AsyncResponse
+
+
+async def _collect_and_parse(
+    response: "AsyncResponse",
+    error_type: type[_E],
+    on_progress: Callable[[int], None] | None = None,
+) -> dict[str, Any]:
+    chunks: list[str] = []
+    bytes_received = 0
+    async for chunk in response:
+        chunks.append(chunk)
+        if on_progress:
+            bytes_received += len(chunk.encode("utf-8"))
+            on_progress(bytes_received)
+    response_text = "".join(chunks)
+    logger.debug("LLM response: %s", response_text)
+    try:
+        return parse_json_response(response_text)
+    except JSONParseError as e:
+        msg = f"Could not parse model response as JSON.\nModel said:\n{response_text}"
+        raise error_type(msg) from e
 
 
 # JSON schemas for structured output
@@ -209,37 +232,17 @@ class LLMClient:
 
         logger.debug("Prompt: %s", prompt)
 
-        # Use conversation.prompt() with schema to enforce JSON output
         try:
             response = await self._conversation.prompt(
                 prompt,
                 schema=COMMAND_GENERATION_SCHEMA,
             )
-
-            # Stream response chunks and report progress
-            chunks = []
-            async for chunk in response:
-                chunks.append(chunk)
-                if on_progress:
-                    bytes_received = len("".join(chunks).encode("utf-8"))
-                    on_progress(bytes_received)
-
-            response_text = "".join(chunks)
-            logger.debug("LLM response: %s", response_text)
-
-            # Parse and return the JSON response
-            try:
-                result = parse_json_response(response_text)
-            except JSONParseError as e:
-                logger.error("Failed to parse LLM response: %s", e)
-                msg = f"Could not parse model response as JSON.\nModel said:\n{response_text}"
-                raise LLMGenerationError(msg) from e
+            result = await _collect_and_parse(response, LLMGenerationError, on_progress)
         except LLMGenerationError:
             raise
         except Exception as e:
             logger.exception("LLM generation failed")
-            msg = f"LLM generation failed: {e}"
-            raise LLMGenerationError(msg) from e
+            raise LLMGenerationError(f"LLM generation failed: {e}") from e
         else:
             logger.info("Successfully generated command")
             return result
@@ -301,24 +304,14 @@ class LLMClient:
         prompt = render_prompt(template_content)
         logger.debug("Explanation prompt: %s", prompt)
 
-        # Get explanation on the branch
+        # Get explanation on the branch (discarded after, not assigned to self._conversation)
         try:
             response = await branch.prompt(prompt, schema=COMMAND_EXPLANATION_SCHEMA)
-
-            # Stream response chunks and report progress
-            chunks = []
-            async for chunk in response:
-                chunks.append(chunk)
-                if on_progress:
-                    bytes_received = len("".join(chunks).encode("utf-8"))
-                    on_progress(bytes_received)
-
-            response_text = "".join(chunks)
-            logger.debug("Explanation response: %s", response_text)
-
-            # Parse and return the JSON response
-            # Branch is discarded here (not assigned to self._conversation)
-            result = parse_json_response(response_text)
+            result = await _collect_and_parse(
+                response, LLMExplanationError, on_progress
+            )
+        except LLMExplanationError:
+            raise
         except Exception as e:
             logger.exception("LLM explanation failed")
             msg = f"LLM explanation failed: {e}"
