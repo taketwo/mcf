@@ -165,15 +165,21 @@ def check_heading_case(note: Note) -> list[LintViolation]:
         if not heading_text:
             continue
 
-        # Strip leading enumeration prefix (e.g. "2. ", "13) ", "1.2 ", "1.2.3 ") so
-        # numbered headings don't false-positive on the first real word.
-        heading_text = re.sub(r"^[\d.]+[.)]\s+|^\d+\.\d[\d.]*\s+", "", heading_text)
-        words = heading_text.split()
-        # Heuristic: skip all-caps words (acronyms) and words with non-alpha chars.
-        # Expect false positives on proper nouns (React, Docker, Kubernetes, etc.).
-        bad_words = [
-            w for w in words[1:] if w[0].isupper() and w.isalpha() and not w.isupper()
-        ]
+        # Split on em dash — each part is treated as a separate sentence.
+        # Strip leading enumeration prefix (e.g. "2. ", "13) ", "1.2 ", "1.2.3 ") from
+        # each part so numbered headings don't false-positive on the first real word.
+        parts = heading_text.split(" — ")
+        bad_words = []
+        for part in parts:
+            stripped = re.sub(r"^[\d.]+[.)]\s+|^\d+\.\d[\d.]*\s+", "", part)
+            words = stripped.split()
+            # Heuristic: skip all-caps words (acronyms) and words with non-alpha chars.
+            # Expect false positives on proper nouns (React, Docker, Kubernetes, etc.).
+            bad_words += [
+                w
+                for w in words[1:]
+                if w[0].isupper() and w.isalpha() and not w.isupper()
+            ]
         if bad_words:
             violations.append(
                 LintViolation(

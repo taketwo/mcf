@@ -255,6 +255,20 @@ class TestCheckHeadingCase:
         note = make_note(tmp_path, body="## Results for LED tracking\n\nBody.")
         assert check_heading_case(note) == []
 
+    def test_passes_em_dash_separated_heading(self, tmp_path: Path) -> None:
+        note = make_note(
+            tmp_path, body="### Commit 1 — Consolidate observation type\n\nBody."
+        )
+        assert check_heading_case(note) == []
+
+    def test_fails_title_case_after_em_dash(self, tmp_path: Path) -> None:
+        note = make_note(
+            tmp_path, body="### Section — Background And Motivation\n\nBody."
+        )
+        violations = check_heading_case(note)
+        assert len(violations) == 1
+        assert "And" in violations[0].message
+
     def test_passes_empty_heading(self, tmp_path: Path) -> None:
         note = make_note(tmp_path, body="##\n\nBody.")
         assert check_heading_case(note) == []
