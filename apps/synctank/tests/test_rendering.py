@@ -104,6 +104,16 @@ class TestRenderLintViolations:
         v = LintViolation(path=tmp_path / "001-test-spec.md", message="bad slug")
         output = render_to_str(render_lint_violations([v]))
         assert "bad slug" in output
+        assert "1 warning(s) in 1 file(s)" in output
+
+    def test_renders_summary_with_multiple_files(self, tmp_path: Path) -> None:
+        violations = [
+            LintViolation(path=tmp_path / "001-a-spec.md", message="bad slug"),
+            LintViolation(path=tmp_path / "001-a-spec.md", message="bad kind"),
+            LintViolation(path=tmp_path / "002-b-spec.md", message="bad slug"),
+        ]
+        output = render_to_str(render_lint_violations(violations))
+        assert "3 warning(s) in 2 file(s)" in output
 
     def test_no_violations_shows_ok_message(self, tmp_path: Path) -> None:
         output = render_to_str(render_lint_violations([]))

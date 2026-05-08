@@ -92,8 +92,10 @@ def render_lint_violations(violations: list[LintViolation]) -> RenderableType:
     if not violations:
         return Text("No violations found.", style="green")
 
+    files = len({v.path for v in violations})
     return Group(
-        *[Text(f"{v.path.name}: {v.message}", style="yellow") for v in violations]
+        *[Text(f"{v.path.name}: {v.message}", style="yellow") for v in violations],
+        Text(f"{len(violations)} warning(s) in {files} file(s).", style="yellow"),
     )
 
 
