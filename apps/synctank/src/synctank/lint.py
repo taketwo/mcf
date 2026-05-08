@@ -187,10 +187,39 @@ def check_heading_case(note: Note) -> list[LintViolation]:
     return violations
 
 
+def check_heading_blank_line(note: Note) -> list[LintViolation]:
+    """Check that each heading is followed by a blank line."""
+    lines = note.body.splitlines()
+    in_code_block = False
+    violations: list[LintViolation] = []
+
+    for lineno, line in enumerate(lines, start=1):
+        if line.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block:
+            continue
+        if not line.startswith("#"):
+            continue
+        # Check the next line exists and is non-empty
+        if lineno < len(lines) and lines[lineno].strip():
+            violations.append(
+                LintViolation(
+                    path=note.path,
+                    rule="heading-blank-line",
+                    message=f"heading not followed by a blank line: {line!r}",
+                    line=lineno,
+                )
+            )
+
+    return violations
+
+
 RULES: list[Callable[[Note], list[LintViolation]]] = [
     check_filename_kind,
     check_filename_slug,
     check_no_line_wrapping,
+    check_heading_blank_line,
     check_heading_case,
 ]
 

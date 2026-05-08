@@ -9,6 +9,7 @@ from synctank.lint import (
     LintViolation,
     check_filename_kind,
     check_filename_slug,
+    check_heading_blank_line,
     check_heading_case,
     check_no_line_wrapping,
     lint_note,
@@ -197,6 +198,33 @@ class TestCheckNoLineWrapping:
         violations = check_no_line_wrapping(note)
         assert len(violations) == 1
         assert violations[0].line == 3
+
+
+class TestCheckHeadingBlankLine:
+    def test_passes_blank_line_after_heading(self, tmp_path: Path) -> None:
+        note = make_note(tmp_path, body="## Section\n\nSome prose.")
+        assert check_heading_blank_line(note) == []
+
+    def test_passes_heading_at_end_of_body(self, tmp_path: Path) -> None:
+        note = make_note(tmp_path, body="## Section")
+        assert check_heading_blank_line(note) == []
+
+    def test_flags_heading_followed_by_content(self, tmp_path: Path) -> None:
+        note = make_note(tmp_path, body="## Section\nSome prose.")
+        violations = check_heading_blank_line(note)
+        assert len(violations) == 1
+        assert violations[0].line == 1
+
+    def test_flags_multiple_headings_without_blank(self, tmp_path: Path) -> None:
+        note = make_note(
+            tmp_path, body="## Section\nStatus: done\n\n## Other\nStatus: done"
+        )
+        violations = check_heading_blank_line(note)
+        assert len(violations) == 2
+
+    def test_passes_heading_inside_code_block(self, tmp_path: Path) -> None:
+        note = make_note(tmp_path, body="```\n## Not a heading\nsome code\n```")
+        assert check_heading_blank_line(note) == []
 
 
 class TestCheckHeadingCase:
