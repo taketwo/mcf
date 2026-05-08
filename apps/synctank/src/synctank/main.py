@@ -236,10 +236,11 @@ def lint(target: str | None) -> None:
     cwd = Path.cwd()
     synctank_dir = get_synctank_dir()
 
-    path = Path(target) if target else resolve_notes_root(cwd, synctank_dir)
+    notes_root = resolve_notes_root(cwd, synctank_dir)
+    path = Path(target) if target else notes_root
 
     violations = lint_path(path)
-    print_renderable(render_lint_violations(violations))
+    print_renderable(render_lint_violations(violations, notes_root=notes_root))
 
 
 @cli.command()

@@ -115,6 +115,12 @@ class TestRenderLintViolations:
         output = render_to_str(render_lint_violations(violations))
         assert "3 warning(s) in 2 file(s)" in output
 
+    def test_renders_relative_path_when_notes_root_given(self, tmp_path: Path) -> None:
+        subdir = tmp_path / "sub"
+        v = LintViolation(path=subdir / "001-test-spec.md", message="bad slug")
+        output = render_to_str(render_lint_violations([v], notes_root=tmp_path))
+        assert "sub/001-test-spec.md" in output
+
     def test_no_violations_shows_ok_message(self, tmp_path: Path) -> None:
         output = render_to_str(render_lint_violations([]))
         assert "No violations" in output

@@ -87,14 +87,24 @@ def render_search_results(results: list[SearchResult]) -> RenderableType:
     return table
 
 
-def render_lint_violations(violations: list[LintViolation]) -> RenderableType:
+def render_lint_violations(
+    violations: list[LintViolation], notes_root: Path | None = None
+) -> RenderableType:
     """Render lint violations as Rich text output."""
     if not violations:
         return Text("No violations found.", style="green")
 
+    def fmt_path(p: Path) -> str:
+        if notes_root is not None:
+            try:
+                return str(p.relative_to(notes_root))
+            except ValueError:
+                pass
+        return p.name
+
     files = len({v.path for v in violations})
     return Group(
-        *[Text(f"{v.path.name}: {v.message}", style="yellow") for v in violations],
+        *[Text(f"{fmt_path(v.path)}: {v.message}", style="yellow") for v in violations],
         Text(f"{len(violations)} warning(s) in {files} file(s).", style="yellow"),
     )
 
