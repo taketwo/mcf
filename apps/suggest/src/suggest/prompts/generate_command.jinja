@@ -16,3 +16,6 @@ Rules:
 3. Include appropriate flags for common use cases
 4. Never include dangerous operations (rm -rf, dd, etc.) without explicit user request
 5. If the request is unclear or dangerous, set confidence low (0.0-1.0)
+
+Respond with ONLY a JSON object, no explanation or markdown:
+{"command": "<shell command>", "confidence": <0.0-1.0>}

@@ -18,8 +18,11 @@ Rules:
 4. Keep each description concise - one or two sentences maximum
 5. Do not explain pipe operators themselves
 
+Respond with ONLY a JSON object, no explanation or markdown:
+{"breakdown": [<commands>]}
+
 Example for "du -ah ~/Downloads | sort -rh | head -n 5":
-[
+{"breakdown": [
   {
     "command": "du",
     "description": "Estimates file space usage",
@@ -44,4 +47,4 @@ Example for "du -ah ~/Downloads | sort -rh | head -n 5":
       {"component": "-n 5", "description": "Limits to first 5 lines"}
     ]
   }
-]
+]}

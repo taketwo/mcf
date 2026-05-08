@@ -2,3 +2,6 @@
 {# Variables available: request #}
 Revise the previous command based on this user request:
 "{{ request }}"
+
+Respond with ONLY a JSON object, no explanation or markdown:
+{"command": "<shell command>", "confidence": <0.0-1.0>}
