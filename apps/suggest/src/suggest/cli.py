@@ -105,7 +105,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         "-m",
-        default="openrouter/arcee-ai/trinity-large-preview:free",
+        default="gemma4:31b-cloud",
         help="LLM model to use",
     )
 
