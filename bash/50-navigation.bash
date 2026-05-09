@@ -19,7 +19,7 @@ function cd() {
   elif [ -f "$1" ]; then
     $EDITOR "$1"
   else
-    pushd "$1" >/dev/null || return
+    pushd -- "$1" >/dev/null || return
   fi
 }
 

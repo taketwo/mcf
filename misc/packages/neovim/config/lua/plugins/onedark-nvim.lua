@@ -43,6 +43,11 @@ return {
         MiniSnippetsFinal = { fg = '$purple' },
         MiniSnippetsUnvisited = { bg = '$bg1' },
         MiniSnippetsVisited = { bg = '$bg1' },
+        -- Styles for Synctank picker
+        SynctankStatusDraft = { fg = '$purple' },
+        SynctankStatusLiving = { fg = '$green' },
+        SynctankStatusComplete = { fg = '$blue' },
+        SynctankStatusSuperseded = { fg = '$grey' },
       },
     },
     config = function(_, opts)
