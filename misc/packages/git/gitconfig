@@ -25,7 +25,7 @@
   branches = branch -v
   tags = tag -l
   bd = branch -D
-  start = "!git init && git commit --allow-empty -m 'Initial commit'"
+  start = "!git init && git commit --allow-empty -m 'chore: initial commit'"
   amend = commit --amend
   fixup = commit --amend --no-edit
   reword = commit --amend --only
