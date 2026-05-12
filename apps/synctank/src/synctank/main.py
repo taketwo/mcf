@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 
 import click
+import pyperclip
 
 from . import migrate as migrate_mod
 from .lint import lint_path
@@ -412,13 +413,30 @@ def _run_fzf_search(results: list[SearchResult]) -> int:
             "--preview=bat -l md --style=plain --color=always {1}",
             "--preview-window=right:60%:wrap",
             f"--bind=enter:become({editor} +{{4}} {{1}})",
+            "--expect=ctrl-o",
             "--ansi",
         ],
         input=fzf_input,
         text=True,
         check=False,
+        capture_output=False,
+        stdout=subprocess.PIPE,
     )
-    return proc.returncode
+
+    if proc.returncode != 0:
+        return proc.returncode
+
+    output_lines = proc.stdout.splitlines()
+    if not output_lines or len(output_lines) == 1:
+        return 1
+
+    key, selected = output_lines[0], output_lines[1]
+    path = selected.split("\t")[0]
+
+    if key == "ctrl-o":
+        pyperclip.copy(path)
+
+    return 0
 
 
 def _all_project_roots(synctank_dir: Path) -> list[Path]:
