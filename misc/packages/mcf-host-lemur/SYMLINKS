@@ -1,4 +1,6 @@
 logitech-wake.rules:/etc/udev/rules.d/50-logitech-wake.rules:Udev rule to enable wake on wireless logitech devices
+ax88179.rules:/etc/udev/rules.d/99-ax88179.rules:Force ASIX AX88179 USB ethernet into native mode (config 1) so ax88179_178a driver is used instead of cdc_ncm
+ax88179-modules.conf:/etc/modules-load.d/ax88179.conf:Load ax88179_178a driver at boot
 mute-audio.service:.local/share/systemd/user/mute-audio.service:Mute audio systemd unit
 mute-audio.timer:.local/share/systemd/user/mute-audio.timer:Mute audio systemd timer
 wg0.conf:/etc/wireguard/wg0.conf:WireGuard configuration

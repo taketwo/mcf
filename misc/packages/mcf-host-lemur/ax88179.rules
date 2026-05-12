@@ -1,0 +1,3 @@
+# ASIX AX88179 Gigabit Ethernet: force native mode (config 1) so ax88179_178a
+# driver binds instead of the cdc_ncm fallback
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0b95", ATTR{idProduct}=="1790", ATTR{bConfigurationValue}="1"
