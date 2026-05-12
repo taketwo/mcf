@@ -24,6 +24,7 @@ class SearchResult:
     score: int
     excerpt: str | None
     line_number: int | None
+    name_matched: bool = False
 
 
 def search_notes(
@@ -51,13 +52,19 @@ def search_notes(
             if names_only:
                 score = int(fuzz.partial_ratio(query, path.name))
                 results.append(
-                    SearchResult(note=note, score=score, excerpt=None, line_number=None)
+                    SearchResult(
+                        note=note,
+                        score=score,
+                        excerpt=None,
+                        line_number=None,
+                        name_matched=True,
+                    )
                 )
             else:
                 result = _search_content(query, note)
                 results.append(result)
 
-    results.sort(key=lambda r: r.score, reverse=True)
+    results.sort(key=lambda r: (r.score, r.name_matched), reverse=True)
     return results
 
 
@@ -85,4 +92,5 @@ def _search_content(query: str, note: Note) -> SearchResult:
         score=best_score,
         excerpt=best_excerpt,
         line_number=best_line_number,
+        name_matched=best_score == name_score,
     )

@@ -84,6 +84,13 @@ class TestSearchNotes:
         results = search_notes("anything", [tmp_path])
         assert results == []
 
+    def test_name_match_wins_tiebreaker(self, tmp_path: Path) -> None:
+        make_note(tmp_path, "decoder", Kind.DESIGN)
+        make_note(tmp_path, "Unrelated Note", Kind.PLAN, body="decoder")
+
+        results = search_notes("decoder", [tmp_path])
+        assert results[0].note.meta.name == "decoder"
+
     def test_skips_unparseable_notes(self, tmp_path: Path) -> None:
         bad = tmp_path / "001-bad-spec.md"
         bad.write_text("---\nkind: bogus\n---\n\n# Bad\n", encoding="utf-8")
