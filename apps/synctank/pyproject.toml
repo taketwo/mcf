@@ -2,16 +2,15 @@
 name = "synctank"
 version = "0.1.0"
 description = "Manage synced ephemeral notes directories across machines"
-authors = [
-  { name = "Sergey Alexandrov", email = "alexandrov88@gmail.com" },
-]
+authors = [{ name = "Sergey Alexandrov", email = "alexandrov88@gmail.com" }]
 requires-python = ">= 3.14"
 license = { text = "MIT" }
 dependencies = [
-    "click>=8.3.2",
-    "python-frontmatter>=1.1.0",
-    "rapidfuzz>=3.14.5",
-    "rich>=14.3.3",
+  "click>=8.3.2",
+  "pyperclip>=1.11.0",
+  "python-frontmatter>=1.1.0",
+  "rapidfuzz>=3.14.5",
+  "rich>=14.3.3",
 ]
 
 [project.scripts]
@@ -19,11 +18,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.3",
-    "pytest-cov>=7.1.0",
-    "pytest-mock>=3.15.1",
-    "ruff>=0.15.10",
-    "ty>=0.0.29",
+  "pytest>=9.0.3",
+  "pytest-cov>=7.1.0",
+  "pytest-mock>=3.15.1",
+  "ruff>=0.15.10",
+  "ty>=0.0.29",
 ]
 
 [build-system]
