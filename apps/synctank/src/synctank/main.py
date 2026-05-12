@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -22,7 +23,7 @@ from .rendering import (
     render_status,
 )
 from .schema import Kind, Status
-from .search import search_notes
+from .search import SearchResult, search_notes
 from .workspace import (
     find_notes_symlink,
     find_workspace_root,
@@ -290,6 +291,8 @@ def search(query: str, *, everywhere: bool, names_only: bool, as_json: bool) -> 
                 ]
             )
         )
+    elif sys.stdout.isatty() and shutil.which("fzf"):
+        sys.exit(_run_fzf_search(results))
     else:
         print_renderable(render_search_results(results))
 
@@ -375,6 +378,47 @@ def _print_migrate_plan(
 
     if not dry_run:
         migrate_mod.apply_plan(plan)
+
+
+def _run_fzf_search(results: list[SearchResult]) -> int:
+    """Run fzf over search results. Returns fzf's exit code."""
+    if not results:
+        click.echo("No results found.", err=True)
+        return 1
+
+    fzf = shutil.which("fzf")
+    if fzf is None:
+        raise click.ClickException("fzf not found on PATH")
+
+    editor = os.environ.get("EDITOR", "vi")
+
+    lines = []
+    for r in results:
+        excerpt = r.excerpt or ""
+        if r.line_number is not None:
+            excerpt = f":{r.line_number}: {excerpt}"
+        content = f"{r.note.path.name:<40}  {r.note.meta.name:<35}  {excerpt}"
+        line_number = r.line_number or 0
+        lines.append(f"{r.note.path}\t{r.score:>3}\t{content}\t{line_number}")
+
+    fzf_input = "\n".join(lines)
+
+    proc = subprocess.run(
+        [
+            fzf,
+            "--delimiter=\t",
+            "--with-nth=2,3",
+            "--nth=2",
+            "--preview=bat -l md --style=plain --color=always {1}",
+            "--preview-window=right:60%:wrap",
+            f"--bind=enter:become({editor} +{{4}} {{1}})",
+            "--ansi",
+        ],
+        input=fzf_input,
+        text=True,
+        check=False,
+    )
+    return proc.returncode
 
 
 def _all_project_roots(synctank_dir: Path) -> list[Path]:
