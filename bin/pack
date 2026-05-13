@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+function print_help {
+  echo "Usage: $0 TYPE FILE"
+  echo ""
+  echo "Pack a file or directory into an archive of the requested type."
+  echo ""
+  echo "Supported archive types:"
+  echo "  tbz   tar + bzip2 (.tar.bz2)"
+  echo "  tgz   tar + gzip (.tar.gz)"
+  echo "  tar   uncompressed tar (.tar)"
+  echo "  bz2   bzip2 (.bz2)"
+  echo "  gz    gzip (.gz)"
+  echo "  zip   zip (.zip)"
+  echo "  7z    7-zip (.7z)"
+}
+
+if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  print_help
+  exit 0
+fi
+
+if [ $# -ne 2 ]; then
+  echo "Error: expected exactly 2 arguments"
+  print_help
+  exit 1
+fi
+
+TYPE="$1"
+TARGET="$2"
+
+if [ ! -f "$TARGET" ] && [ ! -d "$TARGET" ]; then
+  echo "Error: '$TARGET' is not a valid file or directory"
+  exit 1
+fi
+
+name="${TARGET%/}"
+
+case "$TYPE" in
+  tbz) tar cjvf "$name.tar.bz2" "$TARGET" ;;
+  tgz) tar czvf "$name.tar.gz" "$TARGET" ;;
+  tar) tar cpvf "$name.tar" "$TARGET" ;;
+  bz2) bzip2 "$TARGET" ;;
+  gz) gzip -c -9 -n "$TARGET" >"$name.gz" ;;
+  zip) zip -r "$name.zip" "$TARGET" ;;
+  7z) 7z a "$name.7z" "$TARGET" ;;
+  *)
+    echo "Error: do not know how to pack into '$TYPE'"
+    print_help
+    exit 1
+    ;;
+esac
