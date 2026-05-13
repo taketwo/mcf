@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
 function print_help {
-  echo "Usage: $0 TYPE FILE"
+  echo "Usage: $0 [OPTIONS] TYPE FILE"
   echo ""
   echo "Pack a file or directory into an archive of the requested type."
+  echo ""
+  echo "Options:"
+  echo "  -n, --no-top-dir     Pack directory contents directly, without a top-level directory."
+  echo "  -h, --help           Print this help message and exit."
   echo ""
   echo "Supported archive types:"
   echo "  tbz   tar + bzip2 (.tar.bz2)"
@@ -16,10 +20,36 @@ function print_help {
   echo "  7z    7-zip (.7z)"
 }
 
-if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+ARGS=$(getopt -o nh -l no-top-dir,help -n "$0" -- "$@")
+if [ $? != 0 ]; then
+  echo "Error: Invalid arguments"
   print_help
-  exit 0
+  exit 1
 fi
+
+eval set -- "$ARGS"
+
+while true; do
+  case "$1" in
+    -n | --no-top-dir)
+      NO_TOP_DIR=true
+      shift
+      ;;
+    -h | --help)
+      print_help
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "Error: Unknown option $1"
+      print_help
+      exit 1
+      ;;
+  esac
+done
 
 if [ $# -ne 2 ]; then
   echo "Error: expected exactly 2 arguments"
@@ -35,20 +65,45 @@ if [ ! -f "$TARGET" ] && [ ! -d "$TARGET" ]; then
   exit 1
 fi
 
+if [ -n "$NO_TOP_DIR" ] && [ ! -d "$TARGET" ]; then
+  echo "Error: --no-top-dir requires a directory target"
+  exit 1
+fi
+
 name="${TARGET%/}"
 
-case "$TYPE" in
-  tbz) tar cjvf "$name.tar.bz2" "$TARGET" ;;
-  tgz) tar czvf "$name.tar.gz" "$TARGET" ;;
-  txz) tar cJvf "$name.tar.xz" "$TARGET" ;;
-  tar) tar cpvf "$name.tar" "$TARGET" ;;
-  bz2) bzip2 "$TARGET" ;;
-  gz) gzip -c -9 -n "$TARGET" >"$name.gz" ;;
-  zip) zip -r "$name.zip" "$TARGET" ;;
-  7z) 7z a "$name.7z" "$TARGET" ;;
-  *)
-    echo "Error: do not know how to pack into '$TYPE'"
-    print_help
-    exit 1
-    ;;
-esac
+if [ -n "$NO_TOP_DIR" ]; then
+  case "$TYPE" in
+    tbz) tar cjvf "$name.tar.bz2" -C "$name" . ;;
+    tgz) tar czvf "$name.tar.gz"  -C "$name" . ;;
+    txz) tar cJvf "$name.tar.xz"  -C "$name" . ;;
+    tar) tar cpvf "$name.tar"     -C "$name" . ;;
+    zip) (cd "$name" && zip -r "../$name.zip" .) ;;
+    7z)  7z a "$name.7z" "$name/." ;;
+    bz2 | gz)
+      echo "Error: --no-top-dir is not supported for '$TYPE'"
+      exit 1
+      ;;
+    *)
+      echo "Error: do not know how to pack into '$TYPE'"
+      print_help
+      exit 1
+      ;;
+  esac
+else
+  case "$TYPE" in
+    tbz) tar cjvf "$name.tar.bz2" "$TARGET" ;;
+    tgz) tar czvf "$name.tar.gz" "$TARGET" ;;
+    txz) tar cJvf "$name.tar.xz" "$TARGET" ;;
+    tar) tar cpvf "$name.tar" "$TARGET" ;;
+    bz2) bzip2 "$TARGET" ;;
+    gz) gzip -c -9 -n "$TARGET" >"$name.gz" ;;
+    zip) zip -r "$name.zip" "$TARGET" ;;
+    7z) 7z a "$name.7z" "$TARGET" ;;
+    *)
+      echo "Error: do not know how to pack into '$TYPE'"
+      print_help
+      exit 1
+      ;;
+  esac
+fi

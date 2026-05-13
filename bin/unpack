@@ -8,12 +8,12 @@ function print_help {
   echo "Options:"
   echo "  -d, --delete         Delete the archive file after unpacking."
   echo "  -c, --clipboard      Use the path contained in the system clipboard instead of ARCHIVE_PATH."
-  echo "  -t, --remove-top-dir Remove the top-level directory if the archive extracts into a single directory."
+  echo "  -n, --no-top-dir     Move contents out of the top-level directory if the archive extracts into a single directory."
   echo "  -h, --help           Print this help message and exit."
 }
 
 # Parse command line options
-ARGS=$(getopt -o dcth -l delete,clipboard,remove-top-dir,help -n "$0" -- "$@")
+ARGS=$(getopt -o dcnh -l delete,clipboard,no-top-dir,help -n "$0" -- "$@")
 if [ $? != 0 ]; then
   echo "Error: Invalid arguments"
   print_help
@@ -37,8 +37,8 @@ while true; do
       ARCHIVE_PATH=$(xsel --clipboard --output)
       shift
       ;;
-    -t | --remove-top-dir)
-      REMOVE_TOP_DIR=true
+    -n | --no-top-dir)
+      NO_TOP_DIR=true
       shift
       ;;
     -h | --help)
@@ -117,7 +117,7 @@ fi
 files_before_unpack=$(ls -1a)
 
 if unpack "$ARCHIVE_PATH"; then
-  if [ -n "${REMOVE_TOP_DIR}" ]; then
+  if [ -n "${NO_TOP_DIR}" ]; then
     files_after_unpack=$(ls -1a)
     unpacked_files=$(comm -13 <(echo "$files_before_unpack") <(echo "$files_after_unpack"))
     unpacked_files_count=$(echo "$unpacked_files" | wc -l)
