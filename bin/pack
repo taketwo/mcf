@@ -8,6 +8,7 @@ function print_help {
   echo "Supported archive types:"
   echo "  tbz   tar + bzip2 (.tar.bz2)"
   echo "  tgz   tar + gzip (.tar.gz)"
+  echo "  txz   tar + xz (.tar.xz)"
   echo "  tar   uncompressed tar (.tar)"
   echo "  bz2   bzip2 (.bz2)"
   echo "  gz    gzip (.gz)"
@@ -39,6 +40,7 @@ name="${TARGET%/}"
 case "$TYPE" in
   tbz) tar cjvf "$name.tar.bz2" "$TARGET" ;;
   tgz) tar czvf "$name.tar.gz" "$TARGET" ;;
+  txz) tar cJvf "$name.tar.xz" "$TARGET" ;;
   tar) tar cpvf "$name.tar" "$TARGET" ;;
   bz2) bzip2 "$TARGET" ;;
   gz) gzip -c -9 -n "$TARGET" >"$name.gz" ;;
