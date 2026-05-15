@@ -144,10 +144,11 @@ def create(  # noqa: PLR0913
     A note can be created as a stub (frontmatter and heading only) or with body content passed via stdin. The tool assembles the complete file — frontmatter, heading, and body — so you never write frontmatter manually.
 
     \b
-    Body rules:
-      - No H1 heading. The tool generates the main heading from name and kind.
-      - No line wrapping. Write prose as one paragraph per line, no matter how long.
-      - Sentence case headings. Use '## Design decisions', not '## Design Decisions'.
+    Rules:
+      - Sentence case everywhere: names, headings, body text.
+      - Name is subject only, no kind: "Decoder refactor", not "Decoder refactor design".
+      - No H1 heading in body — generated from name and kind.
+      - No line wrapping — one paragraph per line, no matter how long.
 
     Notes are created within current project's notes root by default, or within a specified subdirectory. The latter is useful for grouping notes that belong to a distinct subproject or workstream. Use only when a subset of work is large enough to warrant its own namespace.
 
@@ -234,6 +235,11 @@ def update(  # noqa: PLR0913
 
     Prints the (possibly new) absolute path of the updated file. With --json,
     outputs the note metadata as a JSON object instead.
+
+    \b
+    Rules:
+      - Sentence case everywhere: names, headings, body text.
+      - Name is subject only, no kind: "Decoder refactor", not "Decoder refactor design".
 
     \b
     Example:
