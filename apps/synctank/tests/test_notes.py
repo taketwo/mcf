@@ -13,6 +13,7 @@ from synctank.notes import (
     load_note,
     next_index,
     slugify,
+    update_note,
     write_note,
 )
 from synctank.schema import Kind, Status
@@ -218,7 +219,7 @@ class TestLoadNote:
             encoding="utf-8",
         )
         note = load_note(path)
-        assert note.body == "# Test — Spec"
+        assert note.body == ""
 
 
 class TestEnumerateNotes:
@@ -375,3 +376,110 @@ class TestWriteNote:
         note = write_note(tmp_path, fm)
         loaded = load_note(note.path)
         assert loaded.meta.extra == {"superseded-by": "005-new-spec.md", "priority": 3}
+
+
+class TestUpdateNote:
+    def test_updates_status(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("My Note", Kind.SPEC, Status.DRAFT))
+        updated = update_note(
+            original.path, name=None, kind=None, status=Status.COMPLETE, related=None
+        )
+        assert updated.meta.status == Status.COMPLETE
+        assert load_note(updated.path).meta.status == Status.COMPLETE
+
+    def test_does_not_duplicate_h1(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("My Note", Kind.SPEC))
+        update_note(original.path, name=None, kind=None, status=Status.COMPLETE, related=None)
+        content = original.path.read_text(encoding="utf-8")
+        assert content.count("# My Note") == 1
+
+    def test_updates_name_and_renames_file(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("Old Name", Kind.SPEC))
+        updated = update_note(
+            original.path, name="New Name", kind=None, status=None, related=None
+        )
+        assert updated.path.name == "001-new-name-spec.md"
+        assert updated.path.exists()
+        assert not original.path.exists()
+
+    def test_updates_kind_and_renames_file(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("My Note", Kind.SPEC))
+        updated = update_note(
+            original.path, name=None, kind=Kind.DESIGN, status=None, related=None
+        )
+        assert updated.path.name == "001-my-note-design.md"
+        assert updated.meta.kind == Kind.DESIGN
+
+    def test_updates_related(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params())
+        updated = update_note(
+            original.path,
+            name=None,
+            kind=None,
+            status=None,
+            related=["002-other-spec.md"],
+        )
+        assert updated.meta.related == ["002-other-spec.md"]
+        assert load_note(updated.path).meta.related == ["002-other-spec.md"]
+
+    def test_clears_related_when_empty_list_provided(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params(related=["002-other-spec.md"]))
+        updated = update_note(
+            original.path, name=None, kind=None, status=None, related=[]
+        )
+        assert updated.meta.related == []
+        assert load_note(updated.path).meta.related == []
+
+    def test_preserves_unmodified_fields(self, tmp_path: Path) -> None:
+        fm = make_params(
+            "My Note", Kind.SPEC, Status.DRAFT, related=["001-foo-brief.md"]
+        )
+        original = write_note(tmp_path, fm)
+        updated = update_note(
+            original.path, name=None, kind=None, status=Status.COMPLETE, related=None
+        )
+        assert updated.meta.name == "My Note"
+        assert updated.meta.kind == Kind.SPEC
+        assert updated.meta.related == ["001-foo-brief.md"]
+        assert updated.meta.date == TODAY
+
+    def test_preserves_extra_fields(self, tmp_path: Path) -> None:
+        fm = make_params()
+        fm.extra = {"superseded-by": "005-new-spec.md"}
+        original = write_note(tmp_path, fm)
+        updated = update_note(
+            original.path, name=None, kind=None, status=Status.SUPERSEDED, related=None
+        )
+        assert load_note(updated.path).meta.extra == {
+            "superseded-by": "005-new-spec.md"
+        }
+
+    def test_preserves_index(self, tmp_path: Path) -> None:
+        write_note(tmp_path, make_params("First", Kind.BRIEF))
+        second = write_note(tmp_path, make_params("Second", Kind.SPEC))
+        updated = update_note(
+            second.path, name=None, kind=Kind.DESIGN, status=None, related=None
+        )
+        assert updated.path.name.startswith("002-")
+
+    def test_no_rename_when_filename_unchanged(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("My Note", Kind.SPEC))
+        updated = update_note(
+            original.path, name=None, kind=None, status=Status.COMPLETE, related=None
+        )
+        assert updated.path == original.path
+        assert updated.path.exists()
+
+    def test_updated_note_is_loadable(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("Round Trip", Kind.DESIGN))
+        updated = update_note(
+            original.path,
+            name="New Name",
+            kind=Kind.REPORT,
+            status=Status.COMPLETE,
+            related=None,
+        )
+        loaded = load_note(updated.path)
+        assert loaded.meta.name == "New Name"
+        assert loaded.meta.kind == Kind.REPORT
+        assert loaded.meta.status == Status.COMPLETE

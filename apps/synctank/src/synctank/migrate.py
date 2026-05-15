@@ -8,7 +8,13 @@ from typing import TYPE_CHECKING, Any
 import frontmatter
 import yaml
 
-from .notes import Frontmatter, _assemble_content, build_filename, slugify
+from .notes import (
+    Frontmatter,
+    _assemble_content,
+    _strip_leading_h1,
+    build_filename,
+    slugify,
+)
 from .schema import Kind, Status
 
 if TYPE_CHECKING:
@@ -123,17 +129,6 @@ def _merge_related(meta: dict[str, Any]) -> list[str]:
             add(val)
 
     return result
-
-
-def _strip_leading_h1(body: str) -> str:
-    """Remove the first H1 heading line from body, if present."""
-    lines = body.splitlines()
-    for i, line in enumerate(lines):
-        if line.startswith("# "):
-            return "\n".join(lines[i + 1 :]).strip()
-        if line.strip():
-            break
-    return body
 
 
 def _parse_file(text: str) -> tuple[dict[str, Any], str]:

@@ -15,7 +15,14 @@ import pyperclip
 from . import migrate as migrate_mod
 from .lint import lint_path
 from .logging import configure_logging
-from .notes import Frontmatter, ParseError, enumerate_notes, load_note, write_note
+from .notes import (
+    Frontmatter,
+    ParseError,
+    enumerate_notes,
+    load_note,
+    update_note,
+    write_note,
+)
 from .rendering import (
     print_renderable,
     render_lint_violations,
@@ -32,7 +39,7 @@ from .workspace import (
     resolve_notes_root,
 )
 
-_CREATE_EPILOG = (
+_KIND_STATUS_EPILOG = (
     "\b\nKind values:\n"
     + "\n".join(f"  {k.value:<18}  {k.description}" for k in Kind)
     + "\n\n\b\nStatus values:\n"
@@ -90,7 +97,7 @@ def setup(link_name: str) -> None:
     _ensure_git_excluded(cwd, link_name)
 
 
-@cli.command(epilog=_CREATE_EPILOG)
+@cli.command(epilog=_KIND_STATUS_EPILOG)
 @click.argument("name")
 @click.option(
     "--kind",
@@ -169,6 +176,84 @@ def create(  # noqa: PLR0913
         related=list(related),
     )
     note = write_note(notes_root / subdir if subdir else notes_root, fm, body)
+
+    if as_json:
+        click.echo(json.dumps(note.to_dict()))
+    else:
+        click.echo(str(note.path))
+
+
+@cli.command(epilog=_KIND_STATUS_EPILOG)
+@click.argument("path", type=click.Path(exists=True, dir_okay=False, path_type=Path))
+@click.option(
+    "--name",
+    default=None,
+    help="New document name.",
+)
+@click.option(
+    "--kind",
+    type=click.Choice([k.value for k in Kind]),
+    default=None,
+    help="New document kind (see vocabulary below).",
+)
+@click.option(
+    "--status",
+    type=click.Choice([s.value for s in Status]),
+    default=None,
+    help="New document status (see vocabulary below).",
+)
+@click.option(
+    "--related",
+    multiple=True,
+    default=None,
+    help="Replace related list with these filenames. Repeatable.",
+)
+@click.option(
+    "--json",
+    "as_json",
+    is_flag=True,
+    default=False,
+    help="Output metadata of updated note as JSON.",
+)
+@click.pass_context
+def update(  # noqa: PLR0913
+    ctx: click.Context,
+    path: Path,
+    name: str | None,
+    kind: str | None,
+    status: str | None,
+    related: tuple[str, ...],
+    *,
+    as_json: bool,
+) -> None:
+    """Update frontmatter fields of an existing note.
+
+    All options are optional — only provided fields are changed. The file is
+    rewritten with standardized frontmatter, and renamed if the name or kind
+    change affects the filename.
+
+    Prints the (possibly new) absolute path of the updated file. With --json,
+    outputs the note metadata as a JSON object instead.
+
+    \b
+    Example:
+      synctank update notes/001-foo-design.md --status complete
+      synctank update notes/001-foo-design.md --name "New name" --kind report
+    """  # noqa: D301
+    related_provided = (
+        ctx.get_parameter_source("related") != click.core.ParameterSource.DEFAULT
+    )
+
+    if name is None and kind is None and status is None and not related_provided:
+        raise click.UsageError("Nothing to update. Provide at least one option.")
+
+    note = update_note(
+        path,
+        name=name,
+        kind=Kind(kind) if kind else None,
+        status=Status(status) if status else None,
+        related=list(related) if related_provided else None,
+    )
 
     if as_json:
         click.echo(json.dumps(note.to_dict()))

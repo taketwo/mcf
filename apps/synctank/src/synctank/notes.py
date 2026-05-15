@@ -95,7 +95,7 @@ def load_note(path: Path) -> Note:
         raise ParseError(path=path, message=f"failed to parse frontmatter: {e}") from e
 
     raw = post.metadata
-    body = post.content.strip()
+    body = _strip_leading_h1(post.content.strip())
 
     name = _require_str(raw, "name", path)
     kind = _require_enum(raw, "kind", Kind, path)
@@ -123,6 +123,17 @@ def load_note(path: Path) -> Note:
         ),
         body=body,
     )
+
+
+def _strip_leading_h1(body: str) -> str:
+    """Remove the first H1 heading line from body, if present."""
+    lines = body.splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("# "):
+            return "\n".join(lines[i + 1 :]).strip()
+        if line.strip():
+            break
+    return body
 
 
 def slugify(name: str) -> str:
@@ -168,6 +179,49 @@ def write_note(target_dir: Path, meta: Frontmatter, body: str = "") -> Note:
     content = _assemble_content(meta, body)
     path.write_text(content, encoding="utf-8")
     return Note(path=path, index=index, slug=slug, meta=meta, body=body.strip())
+
+
+def update_note(
+    path: Path,
+    *,
+    name: str | None,
+    kind: Kind | None,
+    status: Status | None,
+    related: list[str] | None,
+) -> Note:
+    """Update frontmatter fields of an existing note. Returns the updated Note.
+
+    Renames the file if name or kind changes affect the filename.
+    Only fields explicitly provided (non-None) are changed; others are preserved.
+    """
+    note = load_note(path)
+
+    new_name = name if name is not None else note.meta.name
+    new_kind = kind if kind is not None else note.meta.kind
+    new_status = status if status is not None else note.meta.status
+    new_related = related if related is not None else note.meta.related
+
+    new_meta = Frontmatter(
+        name=new_name,
+        kind=new_kind,
+        status=new_status,
+        date=note.meta.date,
+        related=new_related,
+        extra=note.meta.extra,
+    )
+
+    new_slug = slugify(new_name)
+    new_filename = build_filename(note.index, new_slug, new_kind)
+    new_path = path.parent / new_filename
+
+    content = _assemble_content(new_meta, note.body)
+    path.write_text(content, encoding="utf-8")
+    if new_path != path:
+        path.rename(new_path)
+
+    return Note(
+        path=new_path, index=note.index, slug=new_slug, meta=new_meta, body=note.body
+    )
 
 
 def _assemble_content(meta: Frontmatter, body: str) -> str:
