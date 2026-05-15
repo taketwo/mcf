@@ -39,6 +39,43 @@ from .workspace import (
     resolve_notes_root,
 )
 
+
+def human_only(cmd: click.Command) -> click.Command:
+    """Mark a command as human-only (excluded from agent-facing help section)."""
+    cmd.human_only = True  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]
+    return cmd
+
+
+class _GroupedHelp(click.Group):
+    """Click Group that renders commands in two labelled sections."""
+
+    def format_commands(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
+        all_commands = list(self.list_commands(ctx))
+        limit = formatter.width - 6 - max((len(n) for n in all_commands), default=0)
+
+        agent_rows: list[tuple[str, str]] = []
+        human_rows: list[tuple[str, str]] = []
+
+        for name in all_commands:
+            cmd = self.get_command(ctx, name)
+            if cmd is None or cmd.hidden:
+                continue
+            row = (name, cmd.get_short_help_str(limit))
+            if getattr(cmd, "human_only", False):
+                human_rows.append(row)
+            else:
+                agent_rows.append(row)
+
+        if agent_rows:
+            with formatter.section("Commands (for agents)"):
+                formatter.write_dl(agent_rows)
+        if human_rows:
+            with formatter.section("Commands (for humans)"):
+                formatter.write_dl(human_rows)
+
+
 _KIND_STATUS_EPILOG = (
     "\b\nKind values:\n"
     + "\n".join(f"  {k.value:<18}  {k.description}" for k in Kind)
@@ -47,7 +84,7 @@ _KIND_STATUS_EPILOG = (
 )
 
 
-@click.group()
+@click.group(cls=_GroupedHelp)
 @click.option("--debug", is_flag=True, default=False, help="Enable debug logging.")
 @click.pass_context
 def cli(ctx: click.Context, *, debug: bool) -> None:
@@ -57,12 +94,13 @@ def cli(ctx: click.Context, *, debug: bool) -> None:
     configure_logging(debug=debug)
 
 
+@human_only
 @cli.command()
 @click.option(
     "--link-name", default="notes", show_default=True, help="Local symlink name."
 )
 def setup(link_name: str) -> None:
-    """Set up synctank for the current project (human-only).
+    """Set up synctank for the current project.
 
     Creates a project directory in the Synctank store, creates a local symlink,
     and adds the symlink to .git/info/exclude.
@@ -294,6 +332,7 @@ def list_notes(subdir: str | None, *, as_json: bool) -> None:
         print_renderable(render_notes_table(notes, errors, notes_root=notes_root))
 
 
+@human_only
 @cli.command()
 @click.option(
     "--json", "as_json", is_flag=True, default=False, help="Output status as JSON."
@@ -389,6 +428,7 @@ def search(query: str, *, everywhere: bool, names_only: bool, as_json: bool) -> 
         print_renderable(render_search_results(results))
 
 
+@human_only
 @cli.command()
 @click.argument(
     "path",

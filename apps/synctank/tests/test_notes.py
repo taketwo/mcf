@@ -389,7 +389,9 @@ class TestUpdateNote:
 
     def test_does_not_duplicate_h1(self, tmp_path: Path) -> None:
         original = write_note(tmp_path, make_params("My Note", Kind.SPEC))
-        update_note(original.path, name=None, kind=None, status=Status.COMPLETE, related=None)
+        update_note(
+            original.path, name=None, kind=None, status=Status.COMPLETE, related=None
+        )
         content = original.path.read_text(encoding="utf-8")
         assert content.count("# My Note") == 1
 
