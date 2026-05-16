@@ -119,6 +119,7 @@ return {
         'cmake',
         'comment',
         'cpp',
+        'css',
         'diff',
         'gitcommit',
         'glsl',
@@ -126,6 +127,7 @@ return {
         'hcl', -- for Terraform files
         -- 'hjson', seems to be broken, using a plugin instead
         'html',
+        'javascript',
         'json',
         'lua',
         'luadoc',
