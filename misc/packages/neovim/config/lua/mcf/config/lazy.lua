@@ -67,4 +67,8 @@ require('lazy').setup({
     patterns = { 'taketwo' },
     fallback = true,
   },
+  rocks = {
+    -- This removes healthcheck warnings; we do not use LuaRocks anyway
+    enabled = false,
+  },
 })
