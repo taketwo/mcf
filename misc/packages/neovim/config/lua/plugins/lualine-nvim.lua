@@ -12,6 +12,11 @@ return {
         lualine_x = {
           { 'overseer', separator = '' },
           { 'codecompanion', separator = '' },
+          {
+            'minuet',
+            display_name = 'model', -- Ideally, display nothing, but there is no such option
+            separator = '',
+          },
           { 'copilot' },
           { 'encoding' },
           { 'fileformat' },
