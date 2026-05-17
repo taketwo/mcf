@@ -91,6 +91,16 @@ return {
         function() require('sidekick.cli').select({ focus = true }) end,
         desc = 'Select Sidekick',
       },
+      {
+        '<Space>1',
+        function() require('sidekick.cli').toggle({ name = 'claude', focus = true }) end,
+        desc = 'Toggle Claude Sidekick',
+      },
+      {
+        '<Space>2',
+        function() require('sidekick.cli').toggle({ name = 'cursor', focus = true }) end,
+        desc = 'Toggle Cursor Sidekick',
+      },
     },
   },
 }
