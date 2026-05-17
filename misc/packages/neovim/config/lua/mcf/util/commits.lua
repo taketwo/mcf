@@ -54,6 +54,7 @@ The `body` should include the motivation for the change and contrast this with p
 - Use the imperative, present tense: "change" not "changed" nor "changes"
 - Write as normal prose that follows regular rules of punctuation and letter capitalization.
 - This is the place to mention issue identifiers and their relations
+- Do not wrap lines
 
 ## Footer
 The `footer` should contain any information about **Breaking Changes**.
@@ -76,7 +77,8 @@ The `description` contains a concise description of the change.
 The `body` should include the motivation for the change and contrast this with previous behavior.
 - Is an **optional** part of the format
 - Use the imperative, present tense: "change" not "changed" nor "changes"
-- Write as normal prose that follows regular rules of punctuation and letter capitalization.]]
+- Write as normal prose that follows regular rules of punctuation and letter capitalization
+- Do not wrap lines]]
 
 ---Load commit specification for the current repository
 ---@return string? commit_spec Commit spec file contents or nil if not found
