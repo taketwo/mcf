@@ -58,24 +58,31 @@ ssh_symbol = ""
 style = "color_green bold"
 
 [git_status]
-# NOTE: The change type (added, modified, renamed) is not important to me, I would prefer to only
-# see the status type (staged, unstaged, untracked). Unfortunately, this is not possible. The
-# following PR will probably add the necessary features: https://github.com/starship/starship/pull/5655
 format = """(\
   [](fg:color_git_status_bg)\
-  [$ahead_behind$stashed$conflicted$deleted$renamed$staged$modified$untracked ](bg:color_git_status_bg)\
+  [$ahead_behind$stashed$conflicted](bg:color_git_status_bg)\
+  [](fg:color_git_status_bg) \
+)(\
+  [](fg:color_git_status_bg)\
+  [$index_added$index_modified$index_deleted](bg:color_git_status_bg)\
+  [](fg:color_git_status_bg) \
+)(\
+  [](fg:color_git_status_bg)\
+  [$worktree_added$worktree_modified$worktree_deleted$untracked](bg:color_git_status_bg)\
   [](fg:color_git_status_bg) \
 )"""
 ahead = '[$count⇡](fg:color_fg bg:color_git_status_bg)'
 behind = '[$count⇣](fg:color_fg bg:color_git_status_bg)'
 diverged = '[${ahead_count}⇡${behind_count}⇣](fg:color_fg bg:color_git_status_bg)'
 stashed = '[ 󰏗 ](fg:color_yellow bg:color_git_status_bg)'
-conflicted = '[](fg:color_yellow bg:color_git_status_bg)'
-deleted = '[](fg:color_purple bg:color_git_status_bg)'
-renamed = '[](fg:color_purple bg:color_git_status_bg)'
-staged = '[](fg:color_green bg:color_git_status_bg)'
-modified = '[](fg:color_yellow bg:color_git_status_bg)'
-untracked = '[](fg:color_red bg:color_git_status_bg)'
+conflicted = '[■](fg:color_yellow bg:color_git_status_bg)'
+index_added = '[■](fg:color_green bg:color_git_status_bg)'
+index_modified = '[■](fg:color_yellow bg:color_git_status_bg)'
+index_deleted = '[■](fg:color_purple bg:color_git_status_bg)'
+worktree_added = '[●](fg:color_red bg:color_git_status_bg)'
+worktree_modified = '[●](fg:color_yellow bg:color_git_status_bg)'
+worktree_deleted = '[●](fg:color_purple bg:color_git_status_bg)'
+untracked = '[●](fg:color_red bg:color_git_status_bg)'
 
 [python]
 # We do not use Python 2, so we do not need it in the list
