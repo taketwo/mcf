@@ -11,7 +11,6 @@ return {
       sections = {
         lualine_x = {
           { 'overseer', separator = '' },
-          { 'codecompanion', separator = '' },
           {
             'minuet',
             display_name = 'model', -- Ideally, display nothing, but there is no such option
@@ -33,7 +32,6 @@ return {
         'nvim-dap-ui',
         'trouble',
         'overseer',
-        'codecompanion',
       },
     },
     init = function()

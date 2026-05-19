@@ -1,9 +1,9 @@
 return {
   'MeanderingProgrammer/render-markdown.nvim',
   commit = '617f9c2b', -- Pin to the last commit before TODO item support was refactored
-  ft = { 'markdown', 'norg', 'rmd', 'org', 'codecompanion' },
+  ft = { 'markdown', 'norg', 'rmd', 'org' },
   opts = {
-    file_types = { 'markdown', 'norg', 'rmd', 'org', 'codecompanion' },
+    file_types = { 'markdown', 'norg', 'rmd', 'org' },
     render_modes = { 'n', 'c', 't', 'i' },
     code = {
       sign = false,
