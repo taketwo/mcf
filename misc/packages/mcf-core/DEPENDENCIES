@@ -39,7 +39,7 @@ libxml2-utils                          # xmllint
 # Filesystem navigation/search
 bat
 broot
-ranger
+yazi
 lsd
 tree
 nix: fd
