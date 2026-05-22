@@ -2,7 +2,7 @@
 Comment=Log file navigator
 Type=Application
 Name=lnav
-Exec=alacritty -e lnav %F
+Exec=ghostty -e lnav %F
 Icon=utilities-log-viewer
 Terminal=true
 Categories=Development;System;

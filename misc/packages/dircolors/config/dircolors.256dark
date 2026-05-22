@@ -9,7 +9,7 @@
 
 # Term Section
 TERM Eterm
-TERM alacritty
+TERM xterm-ghostty
 TERM ansi
 TERM color-xterm
 TERM con132x25
