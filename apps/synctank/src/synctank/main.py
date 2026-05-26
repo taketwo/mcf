@@ -311,7 +311,12 @@ def update(  # noqa: PLR0913
     "--json", "as_json", is_flag=True, default=False, help="Output as JSON array."
 )
 def list_notes(subdir: str | None, *, as_json: bool) -> None:
-    """List notes (recursively from notes root or SUBDIR)."""
+    """List notes (recursively from notes root or SUBDIR within it)."""
+    if subdir is not None and Path(subdir).is_absolute():
+        raise click.UsageError(
+            f"SUBDIR must be a relative path within the notes root, not an absolute path: {subdir}"
+        )
+
     cwd = Path.cwd()
     synctank_dir = get_synctank_dir()
     notes_root = resolve_notes_root(cwd, synctank_dir)
