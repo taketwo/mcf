@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import date
 from pathlib import Path
 
@@ -341,6 +342,15 @@ class TestWriteNote:
         assert d["kind"] == "spec"
         assert d["status"] == "draft"
         assert d["date"] == "2026-04-22"
+
+    def test_to_dict_serializes_date_in_extra(self, tmp_path: Path) -> None:
+        fm = make_params()
+        fm.extra = {"updated": date(2026, 5, 22)}
+        note = write_note(tmp_path, fm)
+        loaded = load_note(note.path)
+        d = loaded.to_dict()
+        assert d["updated"] == "2026-05-22"
+        json.dumps(d)  # must not raise
 
     @pytest.mark.parametrize(
         "tricky_name",

@@ -57,6 +57,10 @@ class Note:
 
     def to_dict(self, *, include_body: bool = False) -> dict[str, Any]:
         """Return a JSON-serializable dictionary representation."""
+        extra = {
+            k: v.isoformat() if isinstance(v, date) else v
+            for k, v in self.meta.extra.items()
+        }
         d: dict[str, Any] = {
             "path": str(self.path),
             "index": self.index,
@@ -66,7 +70,7 @@ class Note:
             "name": self.meta.name,
             "date": self.meta.date.isoformat(),
             "related": self.meta.related,
-            **self.meta.extra,
+            **extra,
         }
         if include_body:
             d["body"] = self.body
