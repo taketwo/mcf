@@ -5,7 +5,7 @@ settings.json
 // Machine-specific files
 .credentials.json
 // Ephemeral files
-debug/
-statsig/
-telemetry/
-downloads/
+(?d)debug/
+(?d)statsig/
+(?d)telemetry/
+(?d)downloads/
