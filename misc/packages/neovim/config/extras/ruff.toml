@@ -6,6 +6,7 @@ select = ["ALL"]
 ignore = [
   "ANN003", # kwargs argument without type annotation is okay
   "D100",   # missing docstring in public module is okay
+  "D105",   # missing docstring in magic method is okay
   "E501",
   "EM",     # noisy warnings about need to store exception messages in variables
   "ERA001", # has false positives
