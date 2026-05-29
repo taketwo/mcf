@@ -1,0 +1,2 @@
+$MCF/ssh/config:.ssh/config:SSH client configuration
+$MCF/ssh/mcf.conf:.ssh/config.d/mcf.conf:MCF SSH hosts
