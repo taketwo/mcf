@@ -70,7 +70,7 @@ M.generate_commit = function()
 %s
 ```
 
-Based on the staged changes above, create a single git commit with an appropriate message following the format specified. Do not add an attribution footer. Do not wrap lines in the commit message body.]]
+Based on the staged changes above, create a single git commit with an appropriate message following the format specified. Do not add an attribution footer. Do not wrap lines in the commit message body. Do not run any additional git commands to verify or re-derive the diff, use only what is provided above.]]
 
   return string.format(template, commit_spec, branch, recent_commits_str, status, stat, diff)
 end
