@@ -81,6 +81,9 @@ map('i', ',', ',<c-g>u', { desc = 'Insert , and add undo breakpoint' })
 map('i', '.', '.<c-g>u', { desc = 'Insert . and add undo breakpoint' })
 map('i', ';', ';<c-g>u', { desc = 'Insert ; and add undo breakpoint' })
 
+-- Remap built-in "all lines" text object to avoid conflict with "last" keymaps from nvim-treesitter-textobjects
+map({ 'o', 'x' }, 'ae', 'al', { desc = 'Entire buffer' })
+
 -- Toggle buffer options
 Snacks.toggle.option('spell', { name = 'spellchecking' }):map('<Leader>us')
 Snacks.toggle.option('wrap', { name = 'word wrapping' }):map('<Leader>uw')
