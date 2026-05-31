@@ -88,7 +88,14 @@ _KIND_STATUS_EPILOG = (
 @click.option("--debug", is_flag=True, default=False, help="Enable debug logging.")
 @click.pass_context
 def cli(ctx: click.Context, *, debug: bool) -> None:
-    """Manage synced ephemeral notes directories across machines."""
+    """Manage synced ephemeral notes directories across machines.
+
+    Workspace resolution: commands operate on one project's notes. The project
+    is found either from the current directory (the nearest ancestor containing
+    a symlink into the notes store, e.g. `notes/`), or directly when you are
+    already inside the store under a single project (`$SYNCTANK_DIR/<project>/`,
+    default `~/Synctank/<project>/`).
+    """
     ctx.ensure_object(dict)
     ctx.obj["debug"] = debug
     configure_logging(debug=debug)

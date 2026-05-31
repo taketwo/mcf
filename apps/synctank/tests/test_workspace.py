@@ -150,6 +150,36 @@ class TestResolveNotesRoot:
 
         assert resolve_notes_root(workspace, synctank_dir) == project_dir.resolve()
 
+    def test_resolves_when_run_inside_store(self, tmp_path: Path) -> None:
+        synctank_dir = tmp_path / "Synctank"
+        project_dir = synctank_dir / "myproject"
+        project_dir.mkdir(parents=True)
+
+        assert resolve_notes_root(project_dir, synctank_dir) == project_dir.resolve()
+
+    def test_resolves_from_deeper_in_store(self, tmp_path: Path) -> None:
+        synctank_dir = tmp_path / "Synctank"
+        project_dir = synctank_dir / "myproject"
+        deep = project_dir / "subdir"
+        deep.mkdir(parents=True)
+
+        assert resolve_notes_root(deep, synctank_dir) == project_dir.resolve()
+
+    def test_raises_inside_store_but_no_single_project(self, tmp_path: Path) -> None:
+        synctank_dir = tmp_path / "Synctank"
+        synctank_dir.mkdir()
+
+        with pytest.raises(click.ClickException, match="not within a single project"):
+            resolve_notes_root(synctank_dir, synctank_dir)
+
+    def test_raises_under_dot_directory_in_store(self, tmp_path: Path) -> None:
+        synctank_dir = tmp_path / "Synctank"
+        stversions = synctank_dir / ".stversions" / "myproject"
+        stversions.mkdir(parents=True)
+
+        with pytest.raises(click.ClickException, match="not within a single project"):
+            resolve_notes_root(stversions, synctank_dir)
+
     def test_raises_when_not_in_workspace(self, tmp_path: Path) -> None:
         synctank_dir = tmp_path / "Synctank"
         synctank_dir.mkdir()
