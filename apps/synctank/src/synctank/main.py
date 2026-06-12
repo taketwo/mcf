@@ -373,6 +373,7 @@ def status(*, as_json: bool) -> None:
         print_renderable(render_status(root, synctank_dir))
 
 
+@human_only
 @cli.command()
 @click.argument("target", required=False, default=None)
 @click.option(
@@ -392,6 +393,7 @@ def lint(target: str | None, *, detailed: bool) -> None:
     )
 
 
+@human_only
 @cli.command()
 @click.argument("query")
 @click.option("--everywhere", is_flag=True, default=False, help="Search all projects.")
