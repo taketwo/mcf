@@ -1,0 +1,278 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#     "click>=8.4.1",
+#     "llm>=0.31",
+#     "llm-ollama>=0.16.1",
+#     "mutagen>=1.47.0",
+#     "rich>=15.0.0",
+#     "yt-dlp>=2026.6.9",
+# ]
+# ///
+
+import json
+import re
+import tempfile
+from pathlib import Path
+from typing import Any
+
+import click
+import llm
+import yt_dlp
+from mutagen.id3 import ID3, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TXXX
+from rich.console import Console
+from rich.panel import Panel
+from rich.syntax import Syntax
+from rich.table import Table
+
+MUSIC_ROOT = Path.home() / "Music" / "DJ Sets"
+DEFAULT_MODEL = "gemma4:31b-cloud"
+
+EXTRACT_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "artist": {
+            "type": "string",
+            "description": "Primary/main DJ name only, no b2b partner",
+        },
+        "b2b_partner": {
+            "type": ["string", "null"],
+            "description": "B2B partner name if present, otherwise null",
+        },
+        "event": {
+            "type": ["string", "null"],
+            "description": "Festival or venue name, prefer festival over stage name, null if unknown",
+        },
+        "year": {
+            "type": ["integer", "null"],
+            "description": "Year of the set, sanity-check for typos (e.g. 3022 -> 2022), null if unknown",
+        },
+        "title": {
+            "type": "string",
+            "description": "Composed title: '{event} {year}' if event known, else set's own name if meaningful, else raw title",
+        },
+    },
+    "required": ["artist", "b2b_partner", "event", "year", "title"],
+    "additionalProperties": False,
+}
+
+PROMPT_TEMPLATE = """\
+Extract structured metadata from this DJ set upload and return it as JSON.
+
+<uploader>{uploader}</uploader>
+<title>{title}</title>
+<url_slug>{slug}</url_slug>
+<upload_date>{upload_date}</upload_date>
+<description>{description}</description>
+
+Rules:
+- artist: the primary DJ (uploader), not the b2b partner
+- b2b_partner: the other DJ if this is a b2b set, otherwise null
+- event: festival name preferred over stage/area name; venue name if no festival; null if a private/home recording
+- year: year of the actual performance; sanity-check obvious typos (e.g. 3022 -> 2022); fall back to upload year if unclear; null only if truly unknown
+- title: compose as "{{event}} {{year}}" if event is known; use the set's own meaningful name if no event; fall back to raw title; use title case (capitalize major words, lowercase prepositions and conjunctions like "of", "at", "and", "in")
+
+Respond with a JSON object only, no other text.
+"""
+
+DEBUG_FIELDS = [
+    "uploader",
+    "channel",
+    "title",
+    "description",
+    "upload_date",
+    "webpage_url_basename",
+    "duration_string",
+    "genre",
+    "view_count",
+    "like_count",
+]
+
+
+def fetch_info(url: str) -> dict[str, Any]:
+    with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True}) as ydl:
+        return ydl.extract_info(url, download=False)  # type: ignore[return-value]
+
+
+def build_prompt(info: dict[str, Any]) -> str:
+    upload_date = info.get("upload_date") or ""
+    if len(upload_date) == 8:
+        upload_date = f"{upload_date[:4]}-{upload_date[4:6]}-{upload_date[6:]}"
+    return PROMPT_TEMPLATE.format(
+        uploader=info.get("uploader") or "",
+        title=info.get("title") or "",
+        slug=info.get("webpage_url_basename") or "",
+        upload_date=upload_date,
+        description=(info.get("description") or "")[:500],
+    )
+
+
+def extract_metadata(
+    info: dict[str, Any], model_name: str, debug: bool = False
+) -> dict[str, Any]:
+    console = Console(stderr=True)
+    prompt = build_prompt(info)
+
+    if debug:
+        table = Table(title="Raw Soundcloud metadata", show_header=False, box=None)
+        table.add_column(style="bold cyan", no_wrap=True)
+        table.add_column()
+        for field in DEBUG_FIELDS:
+            value = info.get(field)
+            if value is not None:
+                table.add_row(field, str(value))
+        console.print(table)
+        console.print(Panel(prompt, title="Prompt", border_style="yellow"))
+
+    model = llm.get_model(model_name)
+    response = model.prompt(prompt, schema=EXTRACT_SCHEMA)
+    raw = response.text()
+
+    # Try structured output first, fall back to parsing text
+    result: dict[str, Any] | None = response.json()
+    if result is None:
+        text = raw.strip()
+        if text.startswith("```"):
+            text = re.sub(r"^```[a-z]*\n?", "", text).rstrip("`").strip()
+        result = json.loads(text)
+
+    if debug:
+        console.print(Panel(raw, title="LLM raw response", border_style="dim"))
+        console.print(
+            Panel(
+                Syntax(json.dumps(result, indent=2), "json"),
+                title="LLM parsed response",
+                border_style="green",
+            )
+        )
+
+    return result
+
+
+def sanitize(name: str) -> str:
+    return re.sub(r'[<>:"/\\|?*]', "-", name).strip()
+
+
+def download_and_convert(url: str, out_path: Path) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    opts = {
+        "format": "bestaudio/best",
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "320",
+            }
+        ],
+        "outtmpl": str(out_path.with_suffix("")),
+        "quiet": True,
+        "no_warnings": True,
+    }
+    with yt_dlp.YoutubeDL(opts) as ydl:
+        ydl.download([url])
+
+
+def tag(
+    path: Path,
+    artist: str,
+    title: str,
+    year: int | None,
+    b2b_partner: str | None,
+    debug: bool = False,
+) -> None:
+    tags = ID3(path)
+    for frame in ["TIT2", "TPE1", "TPE2", "TALB", "TCON", "TDRC", "TRCK"]:
+        tags.delall(frame)
+    tags.add(TIT2(text=title))
+    tags.add(TPE1(text=artist))
+    tags.add(TPE2(text=artist))
+    tags.add(TALB(text="DJ Sets"))
+    tags.add(TCON(text="DJ Mix"))
+    if year:
+        tags.add(TDRC(text=str(year)))
+    if b2b_partner:
+        tags.delall("TXXX:B2B_ARTIST")
+        tags.add(TXXX(encoding=3, desc="B2B_ARTIST", text=b2b_partner))
+    tags.save()
+
+    if debug:
+        console = Console(stderr=True)
+        table = Table(show_header=False, box=None)
+        table.add_column(style="bold cyan", no_wrap=True)
+        table.add_column()
+        table.add_row("Title", title)
+        table.add_row("Artist", artist)
+        table.add_row("Album", "DJ Sets")
+        table.add_row("Genre", "DJ Mix")
+        if year:
+            table.add_row("Year", str(year))
+        if b2b_partner:
+            table.add_row("B2B Artist", b2b_partner)
+        console.print(Panel(table, title="Written tags", border_style="magenta"))
+
+
+@click.command()
+@click.argument("url")
+@click.option("--model", "-m", default=DEFAULT_MODEL, help="LLM model to use")
+@click.option(
+    "--debug", is_flag=True, help="Print raw metadata, prompt, and LLM response"
+)
+def main(url: str, model: str, debug: bool) -> None:
+    console = Console()
+
+    click.echo("Fetching metadata...")
+    info = fetch_info(url)
+
+    click.echo("Extracting metadata with LLM...")
+    meta = extract_metadata(info, model, debug=debug)
+
+    artist = meta["artist"]
+    title = meta["title"]
+    b2b_partner = meta.get("b2b_partner")
+    year = meta.get("year")
+    event = meta.get("event")
+
+    table = Table(show_header=False, box=None, padding=(0, 2))
+    table.add_column(style="bold cyan", no_wrap=True)
+    table.add_column()
+    table.add_row("Artist", artist)
+    if b2b_partner:
+        table.add_row("B2B", b2b_partner)
+    if event:
+        table.add_row("Event", event)
+    if year:
+        table.add_row("Year", str(year))
+    table.add_row("Title", title)
+    console.print(Panel(table, title="Extracted metadata", border_style="cyan"))
+
+    if not click.confirm("Correct?", default=True):
+        artist = click.prompt("Artist", default=artist)
+        title = click.prompt("Title", default=title)
+
+    dest = MUSIC_ROOT / sanitize(artist) / f"{sanitize(title)}.mp3"
+
+    if dest.exists() and not click.confirm(
+        f"Already exists: {dest}\nOverwrite?", default=False
+    ):
+        raise click.Abort()
+
+    with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+    try:
+        download_and_convert(url, tmp_path)
+        click.echo("Tagging...")
+        tag(tmp_path, artist, title, year, b2b_partner, debug=debug)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        tmp_path.rename(dest)
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
+
+    click.echo(f"Done: {dest}")
+
+
+if __name__ == "__main__":
+    main()
+
+# vim: ft=python
