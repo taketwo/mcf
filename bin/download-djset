@@ -13,6 +13,8 @@
 
 import json
 import re
+import shutil
+import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -154,6 +156,10 @@ def sanitize(name: str) -> str:
     return re.sub(r'[<>:"/\\|?*]', "-", name).strip()
 
 
+MAX_BITRATE_KBPS = 192
+MAX_BITRATE_VBR_QUALITY = 5  # ~192kbps average
+
+
 def download_and_convert(url: str, out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     opts = {
@@ -162,7 +168,7 @@ def download_and_convert(url: str, out_path: Path) -> None:
             {
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
-                "preferredquality": "320",
+                "preferredquality": "0",
             }
         ],
         "outtmpl": str(out_path.with_suffix("")),
@@ -171,6 +177,43 @@ def download_and_convert(url: str, out_path: Path) -> None:
     }
     with yt_dlp.YoutubeDL(opts) as ydl:
         ydl.download([url])
+    _cap_bitrate(out_path)
+
+
+def _cap_bitrate(path: Path) -> None:
+    from mutagen.mp3 import MP3
+
+    bitrate_kbps = MP3(path).info.bitrate // 1000
+    if bitrate_kbps <= MAX_BITRATE_KBPS:
+        return
+
+    click.echo(
+        f"Bitrate {bitrate_kbps}kbps exceeds {MAX_BITRATE_KBPS}kbps, re-encoding..."
+    )
+    with tempfile.NamedTemporaryFile(
+        suffix=".mp3", delete=False, dir=path.parent
+    ) as tmp:
+        tmp_path = Path(tmp.name)
+    try:
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-i",
+                str(path),
+                "-codec:a",
+                "libmp3lame",
+                "-q:a",
+                str(MAX_BITRATE_VBR_QUALITY),
+                str(tmp_path),
+            ],
+            check=True,
+            capture_output=True,
+        )
+        tmp_path.replace(path)
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
 
 
 def tag(
@@ -264,7 +307,7 @@ def main(url: str, model: str, debug: bool) -> None:
         click.echo("Tagging...")
         tag(tmp_path, artist, title, year, b2b_partner, debug=debug)
         dest.parent.mkdir(parents=True, exist_ok=True)
-        tmp_path.rename(dest)
+        shutil.move(str(tmp_path), dest)
     except Exception:
         tmp_path.unlink(missing_ok=True)
         raise
