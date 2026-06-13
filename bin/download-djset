@@ -225,8 +225,8 @@ def tag(
     debug: bool = False,
 ) -> None:
     tags = ID3(path)
-    for frame in ["TIT2", "TPE1", "TPE2", "TALB", "TCON", "TDRC", "TRCK"]:
-        tags.delall(frame)
+    tags.delete(path)
+    tags = ID3()
     tags.add(TIT2(text=title))
     tags.add(TPE1(text=artist))
     tags.add(TPE2(text=artist))
@@ -235,9 +235,8 @@ def tag(
     if year:
         tags.add(TDRC(text=str(year)))
     if b2b_partner:
-        tags.delall("TXXX:B2B_ARTIST")
         tags.add(TXXX(encoding=3, desc="B2B_ARTIST", text=b2b_partner))
-    tags.save()
+    tags.save(path)
 
     if debug:
         console = Console(stderr=True)
@@ -308,6 +307,7 @@ def main(url: str, model: str, debug: bool) -> None:
         tag(tmp_path, artist, title, year, b2b_partner, debug=debug)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(tmp_path), dest)
+        dest.chmod(0o660)
     except Exception:
         tmp_path.unlink(missing_ok=True)
         raise
