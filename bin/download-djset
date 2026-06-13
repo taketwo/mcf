@@ -16,13 +16,14 @@ import re
 import shutil
 import subprocess
 import tempfile
+import urllib.request
 from pathlib import Path
 from typing import Any
 
 import click
 import llm
 import yt_dlp
-from mutagen.id3 import ID3, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TXXX
+from mutagen.id3 import APIC, ID3, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TXXX
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
@@ -152,6 +153,19 @@ def extract_metadata(
     return result
 
 
+def fetch_thumbnail(info: dict[str, Any]) -> tuple[bytes, str] | None:
+    url = info.get("thumbnail")
+    if not url:
+        return None
+    try:
+        with urllib.request.urlopen(url) as response:
+            data = response.read()
+            mime = response.headers.get_content_type() or "image/jpeg"
+            return data, mime
+    except Exception:
+        return None
+
+
 def sanitize(name: str) -> str:
     return re.sub(r'[<>:"/\\|?*]', "-", name).strip()
 
@@ -222,6 +236,7 @@ def tag(
     title: str,
     year: int | None,
     b2b_partner: str | None,
+    thumbnail: tuple[bytes, str] | None = None,
     debug: bool = False,
 ) -> None:
     tags = ID3(path)
@@ -236,6 +251,9 @@ def tag(
         tags.add(TDRC(text=str(year)))
     if b2b_partner:
         tags.add(TXXX(encoding=3, desc="B2B_ARTIST", text=b2b_partner))
+    if thumbnail:
+        data, mime = thumbnail
+        tags.add(APIC(encoding=3, mime=mime, type=3, desc="", data=data))
     tags.save(path)
 
     if debug:
@@ -299,12 +317,17 @@ def main(url: str, model: str, debug: bool) -> None:
     ):
         raise click.Abort()
 
+    click.echo("Fetching artwork...")
+    thumbnail = fetch_thumbnail(info)
+
     with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
         tmp_path = Path(tmp.name)
     try:
         download_and_convert(url, tmp_path)
         click.echo("Tagging...")
-        tag(tmp_path, artist, title, year, b2b_partner, debug=debug)
+        tag(
+            tmp_path, artist, title, year, b2b_partner, thumbnail=thumbnail, debug=debug
+        )
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(tmp_path), dest)
         dest.chmod(0o660)
