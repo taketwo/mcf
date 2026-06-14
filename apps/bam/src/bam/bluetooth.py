@@ -74,10 +74,17 @@ class BluetoothController:
 
     def connect_device(self, mac_address: str) -> None:
         """Connect to a Bluetooth device."""
-        self._bluetoothctl(
-            f"bluetoothctl connect {mac_address}",
-            f"Failed to connect to {mac_address}",
-        )
+        try:
+            self._bluetoothctl(
+                f"bluetoothctl connect {mac_address}",
+                f"Failed to connect to {mac_address}",
+            )
+        except BluetoothError as e:
+            if "page-timeout" in str(e):
+                raise BluetoothError(
+                    f"{e} — device may be connected to another source, disconnect it there first"
+                ) from e
+            raise
         time.sleep(0.5)  # Wait for connection to establish
 
     def disconnect_device(self, mac_address: str) -> None:
