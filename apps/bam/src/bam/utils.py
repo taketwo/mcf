@@ -38,15 +38,15 @@ def run_command(command: str) -> tuple[str, str, int]:
     )
     stdout, stderr = process.communicate()
     if process.returncode != 0:
-        logger.error(
+        logger.debug(
             "Command %s failed with return code %d",
             command,
             process.returncode,
         )
         if stdout:
-            logger.error("Stdout: %s", stdout.strip())
+            logger.debug("Stdout: %s", stdout.strip())
         if stderr:
-            logger.error("Stderr: %s", stderr.strip())
+            logger.debug("Stderr: %s", stderr.strip())
     return stdout, stderr, process.returncode
 
 

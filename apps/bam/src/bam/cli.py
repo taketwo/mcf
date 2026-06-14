@@ -40,9 +40,21 @@ def get_manager() -> BTManager:
     envvar="BAM_DEBUG",
     help="Enable debug logging",
 )
-def cli(*, debug: bool) -> None:
+@click.pass_context
+def cli(ctx: click.Context, *, debug: bool) -> None:
     """BAM - Bluetooth Audio Manager."""
     configure_logging(debug=debug)
+    ctx.ensure_object(dict)
+    ctx.obj["debug"] = debug
+
+
+def _handle_error(error: Exception) -> None:
+    """Print error message or re-raise for full traceback in debug mode."""
+    ctx = click.get_current_context()
+    if ctx.obj and ctx.obj.get("debug"):
+        raise error
+    click.echo(f"Error: {error}", err=True)
+    raise click.Abort
 
 
 @cli.command()
@@ -52,7 +64,7 @@ def status() -> None:
         manager = get_manager()
         status_info = manager.get_device_status()
     except _SYSTEM_ERRORS as e:
-        raise click.Abort from e
+        _handle_error(e)
 
     # Connected Devices Section
     click.echo("Connected devices:")
@@ -105,7 +117,7 @@ def activate(device_name: str, mode: AudioMode | None) -> None:
         try:
             manager.activate_device(device, mode)
         except _SYSTEM_ERRORS as e:
-            raise click.Abort from e
+            _handle_error(e)
         return
 
     logger.error("Device '%s' is unknown", device_name)
@@ -128,7 +140,7 @@ def deactivate(device_name: str | None) -> None:
     try:
         manager.deactivate_device(device)
     except _SYSTEM_ERRORS as e:
-        raise click.Abort from e
+        _handle_error(e)
 
 
 @cli.command()
@@ -156,7 +168,7 @@ def mode(device_name: str | None, mode: AudioMode | None) -> None:
         else:
             manager.set_device_mode(device, mode)
     except _SYSTEM_ERRORS as e:
-        raise click.Abort from e
+        _handle_error(e)
 
 
 @cli.command()
@@ -168,7 +180,7 @@ def enroll(alias: str | None) -> None:
     try:
         connected = manager.bluetooth.get_connected_devices()
     except _SYSTEM_ERRORS as e:
-        raise click.Abort from e
+        _handle_error(e)
     known_macs = set(manager.devices.keys())
     unenrolled = [d for d in connected if d.mac_address not in known_macs]
 
@@ -204,7 +216,7 @@ def enroll(alias: str | None) -> None:
             device_info.mac_address,
         )
     except _SYSTEM_ERRORS as e:
-        raise click.Abort from e
+        _handle_error(e)
 
     # Set default mode
     mode_names = [m.name.lower() for m in modes]

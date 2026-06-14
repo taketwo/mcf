@@ -159,7 +159,6 @@ class BTManager:
                 self.set_device_mode(device, mode)
             self.pulseaudio.set_default_sink(device.mac_address)
         except (BluetoothError, PulseAudioError):
-            logger.exception("Failed to activate device %s", device.name)
             raise
 
     def deactivate_device(self, device: BTDevice) -> None:
@@ -171,7 +170,6 @@ class BTManager:
         try:
             self.bluetooth.disconnect_device(device.mac_address)
         except BluetoothError:
-            logger.exception("Failed to deactivate device %s", device.name)
             raise
 
     def set_device_mode(self, device: BTDevice, mode: AudioMode) -> None:

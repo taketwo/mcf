@@ -82,7 +82,7 @@ class BluetoothController:
         except BluetoothError as e:
             if "page-timeout" in str(e):
                 raise BluetoothError(
-                    f"{e} — device may be connected to another source, disconnect it there first"
+                    "Device may be connected to another source — disconnect it there first"
                 ) from e
             raise
         time.sleep(0.5)  # Wait for connection to establish
