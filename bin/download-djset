@@ -328,9 +328,9 @@ def main(url: str, model: str, debug: bool) -> None:
         tag(
             tmp_path, artist, title, year, b2b_partner, thumbnail=thumbnail, debug=debug
         )
-        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.parent.mkdir(mode=0o2775, parents=True, exist_ok=True)
         shutil.move(str(tmp_path), dest)
-        dest.chmod(0o660)
+        dest.chmod(0o664)
     except Exception:
         tmp_path.unlink(missing_ok=True)
         raise
