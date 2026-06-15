@@ -12,6 +12,14 @@ from synctank.schema import Kind, Status
 TODAY = date(2026, 4, 22)
 
 
+def _make_store(tmp_path: Path) -> tuple[Path, dict]:
+    """Create a store at tmp_path/store/myproject, return (notes_root, env)."""
+    notes_root = tmp_path / "store" / "myproject"
+    notes_root.mkdir(parents=True)
+    env = {"SYNCTANK_DIR": str(tmp_path / "store")}
+    return notes_root, env
+
+
 def make_params(
     name: str = "Test",
     kind: Kind = Kind.SPEC,
@@ -121,3 +129,62 @@ class TestUpdateCommand:
         note = write_note(tmp_path, make_params())
         result = runner.invoke(cli, ["update", str(note.path), "--kind", invalid_kind])
         assert result.exit_code != 0
+
+
+class TestListCommand:
+    def _invoke(
+        self,
+        runner: CliRunner,
+        notes_root: Path,
+        env: dict,
+        monkeypatch: pytest.MonkeyPatch,
+        args: list[str] | None = None,
+    ) -> list[dict]:
+        monkeypatch.chdir(notes_root)
+        result = runner.invoke(
+            cli, ["list", *(args or []), "--json"], env=env, catch_exceptions=False
+        )
+        assert result.exit_code == 0
+        return json.loads(result.output)
+
+    def test_subdir_empty_for_root_notes(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        notes_root, env = _make_store(tmp_path)
+        write_note(notes_root, make_params("Root note"))
+        items = self._invoke(runner, notes_root, env, monkeypatch)
+        assert items[0]["subdir"] == ""
+
+    def test_subdir_name_for_subdir_notes(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        notes_root, env = _make_store(tmp_path)
+        write_note(notes_root / "pipeline-rethink", make_params("Sub note"))
+        items = self._invoke(runner, notes_root, env, monkeypatch)
+        assert items[0]["subdir"] == "pipeline-rethink"
+
+    def test_group_sort_older_group_first(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The group whose max note date is older sorts before the newer group."""
+        notes_root, env = _make_store(tmp_path)
+        date_old = date(2026, 1, 1)
+        date_new = date(2026, 6, 1)
+
+        # Root group max = date_new (has both an old and a new note)
+        write_note(
+            notes_root, Frontmatter("Root old", Kind.SPEC, Status.DRAFT, date_old)
+        )
+        write_note(
+            notes_root, Frontmatter("Root new", Kind.SPEC, Status.DRAFT, date_new)
+        )
+        # Archive group max = date_old (only one note)
+        write_note(
+            notes_root / "archive",
+            Frontmatter("Archive", Kind.SPEC, Status.DRAFT, date_old),
+        )
+
+        items = self._invoke(runner, notes_root, env, monkeypatch)
+
+        assert [i["subdir"] for i in items] == ["archive", "", ""]
+        assert [i["index"] for i in items[1:]] == [1, 2]  # root group: ascending index

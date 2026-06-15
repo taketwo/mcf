@@ -54,6 +54,7 @@ class Note:
     slug: str
     meta: Frontmatter
     body: str
+    subdir: str = ""
 
     def to_dict(self, *, include_body: bool = False) -> dict[str, Any]:
         """Return a JSON-serializable dictionary representation."""
@@ -63,6 +64,7 @@ class Note:
         }
         d: dict[str, Any] = {
             "path": str(self.path),
+            "subdir": self.subdir,
             "index": self.index,
             "slug": self.slug,
             "kind": self.meta.kind.value,

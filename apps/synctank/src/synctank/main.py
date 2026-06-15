@@ -17,6 +17,7 @@ from .lint import lint_path
 from .logging import configure_logging
 from .notes import (
     Frontmatter,
+    Note,
     ParseError,
     enumerate_notes,
     load_note,
@@ -334,11 +335,15 @@ def list_notes(subdir: str | None, *, as_json: bool) -> None:
     errors: list[ParseError] = []
     for p in enumerate_notes(search_root):
         try:
-            notes.append(load_note(p))
+            note = load_note(p)
+            rel = note.path.parent.relative_to(notes_root)
+            note.subdir = "" if str(rel) == "." else str(rel)
+            notes.append(note)
         except ParseError as e:
             errors.append(e)
 
     if as_json:
+        notes = _sort_notes_by_group(notes)
         click.echo(json.dumps([n.to_dict() for n in notes]))
     else:
         print_renderable(render_notes_table(notes, errors, notes_root=notes_root))
@@ -582,6 +587,20 @@ def _run_fzf_search(results: list[SearchResult]) -> int:
         pyperclip.copy(path)
 
     return 0
+
+
+def _sort_notes_by_group(notes: list[Note]) -> list[Note]:
+    """Sort notes by (group_max_date, index) for group-aware ordering.
+
+    Groups are defined by subdir. The group with the most recent note date sorts
+    last. Within a group, notes are ordered by ascending index.
+    """
+    group_max: dict[str, date] = {}
+    for note in notes:
+        current = group_max.get(note.subdir)
+        if current is None or note.meta.date > current:
+            group_max[note.subdir] = note.meta.date
+    return sorted(notes, key=lambda n: (group_max[n.subdir], n.index))
 
 
 def _all_project_roots(synctank_dir: Path) -> list[Path]:
