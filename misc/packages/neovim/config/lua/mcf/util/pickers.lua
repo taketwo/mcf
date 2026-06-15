@@ -8,6 +8,7 @@ local M = {}
 
 ---@class SynctankFile
 ---@field path string Absolute path to the note file
+---@field subdir string Subdirectory relative to notes root, empty string for root notes
 ---@field index integer Sequential file index
 ---@field slug string URL-friendly identifier
 ---@field kind string Document kind (e.g. spec, design, report)
@@ -33,26 +34,34 @@ function M.synctank()
   ---@type SynctankFile[]
   local files = vim.json.decode(list_result.stdout)
 
-  local status_width, kind_width, name_width = 0, 0, 0
+  local name_col_cap = 55
+
+  local status_width, kind_width = 0, 0
   for _, f in ipairs(files) do
     status_width = math.max(status_width, #f.status)
     kind_width = math.max(kind_width, #f.kind)
-    name_width = math.max(name_width, #f.name)
+  end
+
+  -- CLI returns oldest-first; reverse so highest index is at the bottom of the picker.
+  local reversed = {}
+  for i = #files, 1, -1 do
+    reversed[#reversed + 1] = files[i]
   end
 
   local items = vim.tbl_map(
     function(f)
       return {
-        text = string.format('%d %s %s %s', f.index, f.status, f.kind, f.name),
+        text = string.format('%s %d %s %s %s', f.subdir, f.index, f.status, f.kind, f.name),
         file = f.path,
         _index = f.index,
         _name = f.name,
         _kind = f.kind,
         _status = f.status,
         _date = f.date,
+        _subdir = f.subdir,
       }
     end,
-    files
+    reversed
   )
 
   local status_hl = {
@@ -68,12 +77,18 @@ function M.synctank()
     items = items,
     format = function(item)
       local hl = status_hl[item._status]
+      -- Name column: optional "subdir / " prefix in Comment, then name in status hl,
+      -- both sharing a capped column width so the date always fits.
+      local prefix = item._subdir ~= '' and (item._subdir .. ' / ') or ''
+      local name_budget = name_col_cap - #prefix
+      local name_part = a(item._name, name_budget)
       return {
+        { item._date .. '  ', 'Comment' },
         { a(item._status, status_width + 1), hl },
         { ' ' .. a(tostring(item._index), 4) },
         { ' ' .. a(item._kind, kind_width + 1) },
-        { ' ' .. a(item._name, name_width), hl },
-        { '  ' .. item._date, 'Comment' },
+        { ' ' .. prefix, 'Comment' },
+        { name_part, hl },
       }
     end,
   })
