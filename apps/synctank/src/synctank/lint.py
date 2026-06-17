@@ -96,15 +96,22 @@ def _flush(current: list[str], start: int, results: list[int]) -> None:
         results.append(start)
 
 
+def _is_indented_code_line(line: str) -> bool:
+    """Return True if the line belongs to a markdown indented code block."""
+    return bool(line) and (line.startswith("    ") or line.startswith("\t"))
+
+
 def _find_wrapped_paragraphs(body_lines: list[str]) -> list[int]:
     """Return 1-based line numbers of the first line of each hard-wrapped paragraph."""
     in_code_block = False
+    in_indented_code = False
     results: list[int] = []
     current: list[str] = []
     current_start: int = 0
 
     for i, line in enumerate(body_lines, start=1):
         if line.startswith("```"):
+            in_indented_code = False
             in_code_block = not in_code_block
             if not in_code_block:
                 _flush(current, current_start, results)
@@ -112,6 +119,15 @@ def _find_wrapped_paragraphs(body_lines: list[str]) -> list[int]:
             continue
         if in_code_block:
             continue
+        if _is_indented_code_line(line):
+            _flush(current, current_start, results)
+            current = []
+            in_indented_code = True
+            continue
+        if in_indented_code:
+            if not line.strip():
+                continue
+            in_indented_code = False
         if not line.strip():
             _flush(current, current_start, results)
             current = []

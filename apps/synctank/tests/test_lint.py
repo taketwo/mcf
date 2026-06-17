@@ -199,6 +199,20 @@ class TestCheckNoLineWrapping:
         assert len(violations) == 1
         assert violations[0].line == 3
 
+    def test_passes_indented_code_block(self, tmp_path: Path) -> None:
+        body = (
+            "Schema:\n"
+            "\n"
+            "    {\n"
+            '      "version": 1,\n'
+            '      "key": "value"\n'
+            "    }\n"
+            "\n"
+            "Explanation on one line."
+        )
+        note = make_note(tmp_path, body=body)
+        assert check_no_line_wrapping(note) == []
+
 
 class TestCheckHeadingBlankLine:
     def test_passes_blank_line_after_heading(self, tmp_path: Path) -> None:
