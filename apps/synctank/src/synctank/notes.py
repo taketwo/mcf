@@ -142,6 +142,30 @@ def _strip_leading_h1(body: str) -> str:
     return body
 
 
+def find_body_start_line(path: Path) -> int:
+    """Return the 1-based file line number where note.body line 1 begins."""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    i = 0
+    fm_count = 0
+    while i < len(lines):
+        if lines[i].strip() == "---":
+            fm_count += 1
+            if fm_count == 2:
+                i += 1
+                break
+        i += 1
+    else:
+        return 1
+
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    if i < len(lines) and lines[i].startswith("# "):
+        i += 1
+        while i < len(lines) and not lines[i].strip():
+            i += 1
+    return i + 1
+
+
 def slugify(name: str) -> str:
     """Convert a name to a lowercase hyphenated slug."""
     slug = name.lower()

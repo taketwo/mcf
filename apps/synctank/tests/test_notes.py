@@ -9,6 +9,7 @@ import pytest
 from synctank.notes import (
     Frontmatter,
     ParseError,
+    find_body_start_line,
     build_filename,
     enumerate_notes,
     load_note,
@@ -221,6 +222,30 @@ class TestLoadNote:
         )
         note = load_note(path)
         assert note.body == ""
+
+
+class TestFindBodyStartLine:
+    def test_skips_frontmatter_and_h1(self, tmp_path: Path) -> None:
+        path = tmp_path / "001-test-spec.md"
+        make_note_file(
+            path,
+            body="## Overview\n\nSome content.",
+        )
+        file_lines = path.read_text(encoding="utf-8").splitlines()
+        expected = next(i + 1 for i, line in enumerate(file_lines) if line == "## Overview")
+        assert find_body_start_line(path) == expected
+
+    def test_matches_first_body_line(self, tmp_path: Path) -> None:
+        note = write_note(
+            tmp_path,
+            Frontmatter("Test", Kind.SPEC, Status.DRAFT, TODAY),
+            body="First body line.\n\nSecond paragraph.",
+        )
+        file_lines = note.path.read_text(encoding="utf-8").splitlines()
+        expected = next(
+            i + 1 for i, line in enumerate(file_lines) if line == "First body line."
+        )
+        assert find_body_start_line(note.path) == expected
 
 
 class TestEnumerateNotes:

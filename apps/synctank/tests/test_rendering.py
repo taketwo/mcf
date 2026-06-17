@@ -6,7 +6,7 @@ from pathlib import Path
 
 from rich.console import Console
 
-from synctank.lint import LintViolation
+from synctank.lint import LintViolation, check_no_line_wrapping
 from synctank.notes import Frontmatter, Note, ParseError, write_note
 from synctank.rendering import (
     render_lint_violations,
@@ -140,6 +140,22 @@ class TestRenderLintViolations:
     def test_no_violations_shows_ok_message(self, tmp_path: Path) -> None:
         output = render_to_str(render_lint_violations([]))
         assert "No violations" in output
+
+    def test_renders_violation_at_file_line(self, tmp_path: Path) -> None:
+        note = write_note(
+            tmp_path,
+            Frontmatter("Test", Kind.SPEC, Status.DRAFT, TODAY),
+            body="## Section\n\nThis paragraph has been\nhard wrapped badly.\n",
+        )
+        file_lines = note.path.read_text(encoding="utf-8").splitlines()
+        expected = next(
+            i + 1
+            for i, line in enumerate(file_lines)
+            if line.startswith("This paragraph")
+        )
+        violations = check_no_line_wrapping(note)
+        output = render_to_str(render_lint_violations(violations, detailed=True))
+        assert f":{expected}:" in output
 
 
 class TestRenderStatus:

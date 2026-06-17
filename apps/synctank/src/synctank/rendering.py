@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 from itertools import groupby
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from rich.console import Console, Group
 from rich.table import Table
 from rich.text import Text
 
-if TYPE_CHECKING:
-    from pathlib import Path
+from .notes import find_body_start_line
 
+if TYPE_CHECKING:
     from rich.console import RenderableType
 
     from .lint import LintViolation
@@ -87,19 +88,11 @@ def render_search_results(results: list[SearchResult]) -> RenderableType:
     return table
 
 
-def _body_offset(path: Path) -> int:
-    """Return the 1-based line number where the body starts in the file."""
-    for i, line in enumerate(path.read_text(encoding="utf-8").splitlines()):
-        if i > 0 and line.strip() == "---":
-            return i + 1
-    return 0
-
-
 def _render_detail_lines(path: Path, items: list[LintViolation]) -> list[Text]:
-    offset = _body_offset(path)
+    line_offset = find_body_start_line(path) - 1
     result = []
     for v in items:
-        prefix = f"  :{offset + v.line}: " if v.line is not None else "  "
+        prefix = f"  :{line_offset + v.line}: " if v.line is not None else "  "
         result.append(Text(f"{prefix}{v.message}", style="yellow"))
     return result
 
