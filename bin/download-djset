@@ -23,13 +23,14 @@ from typing import Any
 import click
 import llm
 import yt_dlp
-from mutagen.id3 import APIC, ID3, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TXXX
+from mutagen.id3 import APIC, ID3, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TRCK, TXXX
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.table import Table
 
-MUSIC_ROOT = Path.home() / "Music" / "DJ Sets"
+MUSIC_ROOT = Path.home() / "Music"
+SETS_SUBDIR = "DJ Sets"
 DEFAULT_MODEL = "gemma4:31b-cloud"
 
 EXTRACT_SCHEMA = {
@@ -170,6 +171,40 @@ def sanitize(name: str) -> str:
     return re.sub(r'[<>:"/\\|?*]', "-", name).strip()
 
 
+def _read_track(path: Path) -> int | None:
+    try:
+        tags = ID3(path)
+    except Exception:
+        return None
+    trck = tags.get("TRCK")
+    if trck is None:
+        return None
+    # TRCK may be "5" or "5/12"; we only care about the leading number.
+    raw = str(trck).split("/", 1)[0].strip()
+    return int(raw) if raw.isdigit() else None
+
+
+def next_track_number(dest: Path) -> int:
+    """Track number for a set landing at `dest`.
+
+    Reuse the destination's existing number on overwrite; otherwise take the
+    max track number among sibling sets plus one (first set is 1).
+    """
+    if dest.exists():
+        existing = _read_track(dest)
+        if existing is not None:
+            return existing
+
+    highest = 0
+    for mp3 in dest.parent.glob("*.mp3"):
+        if mp3 == dest:
+            continue
+        track = _read_track(mp3)
+        if track is not None:
+            highest = max(highest, track)
+    return highest + 1
+
+
 MAX_BITRATE_KBPS = 192
 MAX_BITRATE_VBR_QUALITY = 5  # ~192kbps average
 
@@ -236,6 +271,7 @@ def tag(
     title: str,
     year: int | None,
     b2b_partner: str | None,
+    track: int | None = None,
     thumbnail: tuple[bytes, str] | None = None,
     debug: bool = False,
 ) -> None:
@@ -247,6 +283,8 @@ def tag(
     tags.add(TPE2(text=artist))
     tags.add(TALB(text="DJ Sets"))
     tags.add(TCON(text="DJ Mix"))
+    if track:
+        tags.add(TRCK(text=str(track)))
     if year:
         tags.add(TDRC(text=str(year)))
     if b2b_partner:
@@ -265,6 +303,8 @@ def tag(
         table.add_row("Artist", artist)
         table.add_row("Album", "DJ Sets")
         table.add_row("Genre", "DJ Mix")
+        if track:
+            table.add_row("Track", str(track))
         if year:
             table.add_row("Year", str(year))
         if b2b_partner:
@@ -310,12 +350,14 @@ def main(url: str, model: str, debug: bool) -> None:
         artist = click.prompt("Artist", default=artist)
         title = click.prompt("Title", default=title)
 
-    dest = MUSIC_ROOT / sanitize(artist) / f"{sanitize(title)}.mp3"
+    dest = MUSIC_ROOT / sanitize(artist) / SETS_SUBDIR / f"{sanitize(title)}.mp3"
 
     if dest.exists() and not click.confirm(
         f"Already exists: {dest}\nOverwrite?", default=False
     ):
         raise click.Abort()
+
+    track = next_track_number(dest)
 
     click.echo("Fetching artwork...")
     thumbnail = fetch_thumbnail(info)
@@ -326,7 +368,14 @@ def main(url: str, model: str, debug: bool) -> None:
         download_and_convert(url, tmp_path)
         click.echo("Tagging...")
         tag(
-            tmp_path, artist, title, year, b2b_partner, thumbnail=thumbnail, debug=debug
+            tmp_path,
+            artist,
+            title,
+            year,
+            b2b_partner,
+            track=track,
+            thumbnail=thumbnail,
+            debug=debug,
         )
         dest.parent.mkdir(mode=0o2775, parents=True, exist_ok=True)
         shutil.move(str(tmp_path), dest)
