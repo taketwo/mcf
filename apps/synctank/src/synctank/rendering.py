@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from itertools import groupby
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from rich.console import Console, Group
@@ -11,6 +10,8 @@ from rich.text import Text
 from .notes import find_body_start_line
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from rich.console import RenderableType
 
     from .lint import LintViolation

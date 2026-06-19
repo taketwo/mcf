@@ -84,10 +84,10 @@ def _looks_wrapped(paragraph: list[str]) -> bool:
     """Return True if a paragraph is hard-wrapped (multiple lines, not a list or table)."""
     if len(paragraph) < 2:  # noqa: PLR2004
         return False
-    list_items = sum(1 for line in paragraph if _LIST_ITEM_RE.match(line))
+    list_items = sum(1 for line in paragraph if _LIST_ITEM_RE.match(line.lstrip()))
     if list_items > len(paragraph) // 2:
         return False
-    table_rows = sum(1 for line in paragraph if line.startswith("|"))
+    table_rows = sum(1 for line in paragraph if line.lstrip().startswith("|"))
     return table_rows <= len(paragraph) // 2
 
 
@@ -96,9 +96,14 @@ def _flush(current: list[str], start: int, results: list[int]) -> None:
         results.append(start)
 
 
+def _is_fence_line(line: str) -> bool:
+    """Return True if the line opens or closes a fenced code block."""
+    return line.lstrip().startswith("```")
+
+
 def _is_indented_code_line(line: str) -> bool:
     """Return True if the line belongs to a markdown indented code block."""
-    return bool(line) and (line.startswith("    ") or line.startswith("\t"))
+    return bool(line) and line.startswith(("    ", "\t"))
 
 
 def _find_wrapped_paragraphs(body_lines: list[str]) -> list[int]:
@@ -110,12 +115,12 @@ def _find_wrapped_paragraphs(body_lines: list[str]) -> list[int]:
     current_start: int = 0
 
     for i, line in enumerate(body_lines, start=1):
-        if line.startswith("```"):
+        if _is_fence_line(line):
             in_indented_code = False
-            in_code_block = not in_code_block
             if not in_code_block:
                 _flush(current, current_start, results)
                 current = []
+            in_code_block = not in_code_block
             continue
         if in_code_block:
             continue

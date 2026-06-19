@@ -142,6 +142,9 @@ def _strip_leading_h1(body: str) -> str:
     return body
 
 
+_FRONTMATTER_DELIMITERS = 2
+
+
 def find_body_start_line(path: Path) -> int:
     """Return the 1-based file line number where note.body line 1 begins."""
     lines = path.read_text(encoding="utf-8").splitlines()
@@ -150,7 +153,7 @@ def find_body_start_line(path: Path) -> int:
     while i < len(lines):
         if lines[i].strip() == "---":
             fm_count += 1
-            if fm_count == 2:
+            if fm_count == _FRONTMATTER_DELIMITERS:
                 i += 1
                 break
         i += 1

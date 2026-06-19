@@ -9,9 +9,9 @@ import pytest
 from synctank.notes import (
     Frontmatter,
     ParseError,
-    find_body_start_line,
     build_filename,
     enumerate_notes,
+    find_body_start_line,
     load_note,
     next_index,
     slugify,
@@ -232,7 +232,9 @@ class TestFindBodyStartLine:
             body="## Overview\n\nSome content.",
         )
         file_lines = path.read_text(encoding="utf-8").splitlines()
-        expected = next(i + 1 for i, line in enumerate(file_lines) if line == "## Overview")
+        expected = next(
+            i + 1 for i, line in enumerate(file_lines) if line == "## Overview"
+        )
         assert find_body_start_line(path) == expected
 
     def test_matches_first_body_line(self, tmp_path: Path) -> None:

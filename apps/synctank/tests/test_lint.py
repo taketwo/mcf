@@ -213,6 +213,21 @@ class TestCheckNoLineWrapping:
         note = make_note(tmp_path, body=body)
         assert check_no_line_wrapping(note) == []
 
+    def test_passes_numbered_list_with_indented_fence(self, tmp_path: Path) -> None:
+        body = (
+            "1. **Modify models** in `src/foo.py`\n"
+            "\n"
+            "2. **Create migration**:\n"
+            "   ```bash\n"
+            '   just db-revision "Add field"\n'
+            "   ```\n"
+            "\n"
+            "3. **Review the generated migration** in `alembic/versions/`\n"
+            "   - Autogenerate is not perfect - always review!\n"
+        )
+        note = make_note(tmp_path, body=body)
+        assert check_no_line_wrapping(note) == []
+
 
 class TestCheckHeadingBlankLine:
     def test_passes_blank_line_after_heading(self, tmp_path: Path) -> None:
