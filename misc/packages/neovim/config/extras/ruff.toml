@@ -1,6 +1,11 @@
 line-length = 88
 indent-width = 4
 
+# Skip the cookiecutter template in ~/.mcf: its pyproject.toml contains Jinja
+# placeholders that aren't valid TOML, which breaks ruff's workspace config
+# discovery. Harmless no-op in other projects.
+extend-exclude = ["templates/cookiecutter-app"]
+
 [lint]
 select = ["ALL"]
 ignore = [
