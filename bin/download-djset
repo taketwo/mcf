@@ -6,11 +6,13 @@
 #     "llm>=0.31",
 #     "llm-ollama>=0.16.1",
 #     "mutagen>=1.47.0",
+#     "pillow>=12.2.0",
 #     "rich>=15.0.0",
 #     "yt-dlp>=2026.6.9",
 # ]
 # ///
 
+import io
 import json
 import re
 import shutil
@@ -24,6 +26,7 @@ import click
 import llm
 import yt_dlp
 from mutagen.id3 import APIC, ID3, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TRCK, TXXX
+from PIL import Image
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
@@ -154,17 +157,27 @@ def extract_metadata(
     return result
 
 
-def fetch_thumbnail(info: dict[str, Any]) -> tuple[bytes, str] | None:
+# Plex skips embedded cover art above ~500px / a few hundred KB, so we
+# downscale and re-encode to JPEG before embedding.
+COVER_MAX_EDGE = 500
+COVER_JPEG_QUALITY = 85
+
+
+def fetch_thumbnail(info: dict[str, Any]) -> bytes | None:
     url = info.get("thumbnail")
     if not url:
         return None
     try:
         with urllib.request.urlopen(url) as response:
             data = response.read()
-            mime = response.headers.get_content_type() or "image/jpeg"
-            return data, mime
     except Exception:
         return None
+
+    img = Image.open(io.BytesIO(data)).convert("RGB")
+    img.thumbnail((COVER_MAX_EDGE, COVER_MAX_EDGE))
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=COVER_JPEG_QUALITY)
+    return buf.getvalue()
 
 
 def sanitize(name: str) -> str:
@@ -272,7 +285,7 @@ def tag(
     year: int | None,
     b2b_partner: str | None,
     track: int | None = None,
-    thumbnail: tuple[bytes, str] | None = None,
+    thumbnail: bytes | None = None,
     debug: bool = False,
 ) -> None:
     tags = ID3(path)
@@ -290,8 +303,7 @@ def tag(
     if b2b_partner:
         tags.add(TXXX(encoding=3, desc="B2B_ARTIST", text=b2b_partner))
     if thumbnail:
-        data, mime = thumbnail
-        tags.add(APIC(encoding=3, mime=mime, type=3, desc="", data=data))
+        tags.add(APIC(encoding=0, mime="image/jpeg", type=3, desc="", data=thumbnail))
     tags.save(path)
 
     if debug:
