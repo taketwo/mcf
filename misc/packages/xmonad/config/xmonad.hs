@@ -17,6 +17,7 @@ import XMonad.Core
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.OnPropertyChange
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
@@ -43,7 +44,7 @@ import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.FlexibleResize as FR
 import qualified XMonad.StackSet as W
 
-import Control.Monad (liftM2)
+import Control.Monad (liftM2, when)
 import Data.Ratio ((%))
 import System.Directory
 import System.Environment (lookupEnv)
@@ -390,6 +391,18 @@ gridSelectConfig = def { gs_navigate = myNavigation
                        , gs_font = fontSpec }
 
 -- }}}
+-- Pointer warp ------------------------------------------------------------ {{{
+
+-- True if the currently focused window has the given WM_CLASS. Used to skip
+-- pointer warping while a Zoom window is focused (see logHook).
+focusedHasClass :: String -> X Bool
+focusedHasClass c = do
+  mw <- gets (W.peek . windowset)
+  case mw of
+    Nothing -> return False
+    Just w  -> runQuery (className =? c) w
+
+-- }}}
 -- Main -------------------------------------------------------------------- {{{
 
 main :: IO ()
@@ -402,7 +415,8 @@ main = do
         Just "xmonad" -> gnomeConfig
         Just "plasma" -> kde4Config
         _             -> desktopConfig
-  xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ewmhFullscreen $ ewmh myDesktopConfig
+  xmonad $ docks $ withUrgencyHook NoUrgencyHook $ ewmhFullscreen
+         $ setEwmhActivateHook myActivateHook $ ewmh myDesktopConfig
     { modMask            = mod4Mask          -- changes the mode key to "super"
     , focusedBorderColor = colorBorderActive -- color of focused border
     , normalBorderColor  = colorBorder       -- color of inactive border
@@ -410,8 +424,12 @@ main = do
     , terminal           = appTerminal       -- default terminal program
     , workspaces         = myTopicNames
     , manageHook         = manageHook myDesktopConfig <+> myManageHook
+    , handleEventHook    = handleEventHook myDesktopConfig
+                             <+> onTitleChange manageZoomHook
     , logHook            = do
-        updatePointer (0.5, 0.5) (0, 0)
+        -- Skip pointer warping onto Zoom windows (feeds the focus flicker).
+        onZoom <- focusedHasClass "zoom"
+        when (not onZoom) $ updatePointer (0.5, 0.5) (0, 0)
         logHook myDesktopConfig
         dynamicLogWithPP (logHookPolybar dbus)
     , layoutHook         = myLayoutHook
@@ -522,5 +540,31 @@ manageWindows = composeAll . concat $
     isTooltip  = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_TOOLTIP"
 
 -- Hint: use `xprop` to figure out window class name
+
+-- Ignore _NET_ACTIVE_WINDOW from Zoom so its windows can't steal focus.
+myActivateHook :: ManageHook
+myActivateHook = composeOne
+  [ className =? "zoom" -?> idHook
+  , pure True           -?> doFocus
+  ]
+
+-- Float Zoom's popups, keep the meeting window tiled. Run via onTitleChange
+-- since Zoom renames its windows after mapping.
+manageZoomHook :: ManageHook
+manageZoomHook = composeAll
+  [ (className =? zoomClass) <&&> (shouldFloat <$> title) --> doFloat
+  , (className =? zoomClass) <&&> (shouldSink  <$> title) --> doSink
+  ]
+  where
+    zoomClass  = "zoom"
+    -- Titles of the real meeting/main window (from xwininfo on this host).
+    tileTitles = [ "Zoom Workplace"
+                 , "Zoom Workplace - Licensed account"
+                 , "Meeting"
+                 , "Zoom Meeting"
+                 ]
+    shouldSink  t = t `elem` tileTitles
+    shouldFloat t = not (shouldSink t)
+    doSink = (ask >>= doF . W.sink) <+> doF W.swapDown
 
 -- }}}
