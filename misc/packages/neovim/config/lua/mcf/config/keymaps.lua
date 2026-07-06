@@ -19,9 +19,9 @@ map({ 'n', 'x' }, 't', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true
 -- -- Accelerated up and down (a.k.a. scrolling)
 map('n', 'C', '<PageUp>', { desc = 'Scroll window up' })
 map('n', 'T', '<PageDown>', { desc = 'Scroll window down' })
--- -- Beginning and end of line
-map({ 'n', 'v' }, '-', '$', { desc = 'End of line' })
-map({ 'n', 'v' }, '_', '^', { desc = 'Start of line (non-blank)' })
+-- -- Beginning and end of line (screen lines, like c/t above)
+map({ 'n', 'v' }, '-', 'g$', { desc = 'End of line' })
+map({ 'n', 'v' }, '_', 'g^', { desc = 'Start of line (non-blank)' })
 
 -- Change (delete-insert) mode
 map({ 'n', 'x' }, 'k', 'c', { desc = 'Delete and enter insert mode' })
