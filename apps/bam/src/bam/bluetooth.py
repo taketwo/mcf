@@ -82,7 +82,11 @@ class BluetoothController:
         except BluetoothError as e:
             if "page-timeout" in str(e):
                 raise BluetoothError(
-                    "Device may be connected to another source — disconnect it there first"
+                    "Device may be connected to another source — disconnect it there first",
+                ) from e
+            if "br-connection-unknown" in str(e):
+                raise BluetoothError(
+                    "Audio profile connection refused by bluetoothd — this usually means bluetoothd's media endpoints are stuck. Try: sudo systemctl restart bluetooth. If that doesn't help, the pairing may be stale — remove and re-pair the device.",
                 ) from e
             raise
         time.sleep(0.5)  # Wait for connection to establish
