@@ -39,6 +39,7 @@
     "elements-of-style@superpowers-marketplace": true
   },
   "alwaysThinkingEnabled": false,
+  "theme": "dark-daltonized",
   "autoCompactEnabled": false,
-  "theme": "dark-daltonized"
+  "agentPushNotifEnabled": true
 }
