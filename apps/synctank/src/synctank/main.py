@@ -165,7 +165,10 @@ def setup(link_name: str) -> None:
 @click.option(
     "--related",
     multiple=True,
-    help="Filename of a related note, e.g. 001-foo-design.md. Repeatable.",
+    help=(
+        "Filename of an existing note (as assigned by synctank), "
+        "e.g. 001-foo-design.md. Repeatable."
+    ),
 )
 @click.option(
     "--json",
@@ -187,7 +190,14 @@ def create(  # noqa: PLR0913
 
     Each note requires a kind and a status from fixed vocabularies — see the descriptions at the end of this help to pick the right values. Both are required so that notes are meaningfully categorized from the start.
 
-    A note can be created as a stub (frontmatter and heading only) or with body content passed via stdin. The tool assembles the complete file — frontmatter, heading, and body — so you never write frontmatter manually.
+    A note can be created as a stub (frontmatter and heading only) or with body content passed via stdin. The tool assembles the complete note — filename, frontmatter, heading, and body — so you never construct any of these manually.
+
+    \b
+    Filename (assigned by the tool, no need to construct externally):
+      - Pattern: NNN-slug-kind.md (NNN-slug.md when kind is 'other').
+      - NNN: next available three-digit index in the target directory.
+      - slug: derived from NAME (lowercase, hyphen-separated).
+      - kind: taken from --kind; omitted from the filename when kind is 'other'.
 
     \b
     Rules:
@@ -206,6 +216,7 @@ def create(  # noqa: PLR0913
       ## Overview
       Body content here.
       EOF
+      # -> .../notes/001-decoder-refactor-design.md
     """  # noqa: D301
     cwd = Path.cwd()
     synctank_dir = get_synctank_dir()
@@ -253,7 +264,10 @@ def create(  # noqa: PLR0913
     "--related",
     multiple=True,
     default=None,
-    help="Replace related list with these filenames. Repeatable.",
+    help=(
+        "Replace related list with these note filenames "
+        "(as assigned by synctank). Repeatable."
+    ),
 )
 @click.option(
     "--json",
@@ -277,7 +291,12 @@ def update(  # noqa: PLR0913
 
     All options are optional — only provided fields are changed. The file is
     rewritten with standardized frontmatter, and renamed if the name or kind
-    change affects the filename.
+    change affects the filename. The numeric index (NNN) in the filename is
+    preserved across renames; slug and kind suffix are recomputed from the
+    updated fields.
+
+    PATH must be an existing note file (typically the path printed by create or
+    list). Do not invent filenames — use paths returned by the tool.
 
     Prints the (possibly new) absolute path of the updated file. With --json,
     outputs the note metadata as a JSON object instead.
@@ -291,6 +310,7 @@ def update(  # noqa: PLR0913
     Example:
       synctank update notes/001-foo-design.md --status complete
       synctank update notes/001-foo-design.md --name "New name" --kind report
+      # -> .../notes/001-new-name-report.md
     """  # noqa: D301
     related_provided = (
         ctx.get_parameter_source("related") != click.core.ParameterSource.DEFAULT
