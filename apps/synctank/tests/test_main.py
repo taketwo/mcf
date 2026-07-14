@@ -38,6 +38,51 @@ def test_debug_flag(runner: CliRunner) -> None:
     assert result.exit_code == 0
 
 
+class TestCreateCommand:
+    def test_strips_trailing_kind_from_name(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        notes_root, env = _make_store(tmp_path)
+        monkeypatch.chdir(notes_root)
+        result = runner.invoke(
+            cli,
+            [
+                "create",
+                "Decoder refactor design",
+                "--kind",
+                "design",
+                "--status",
+                "draft",
+            ],
+            env=env,
+        )
+        assert result.exit_code == 0
+        note = load_note(Path(result.output.strip()))
+        assert note.meta.name == "Decoder refactor"
+        assert note.path.name == "001-decoder-refactor-design.md"
+
+    def test_aborts_on_kind_mismatch(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        notes_root, env = _make_store(tmp_path)
+        monkeypatch.chdir(notes_root)
+        result = runner.invoke(
+            cli,
+            [
+                "create",
+                "Decoder refactor design",
+                "--kind",
+                "spec",
+                "--status",
+                "draft",
+            ],
+            env=env,
+        )
+        assert result.exit_code != 0
+        assert "ends with kind 'design'" in result.output
+        assert "spec" in result.output
+
+
 class TestUpdateCommand:
     def test_updates_status(self, runner: CliRunner, tmp_path: Path) -> None:
         note = write_note(tmp_path, make_params("My Note", Kind.SPEC, Status.DRAFT))
@@ -129,6 +174,16 @@ class TestUpdateCommand:
         note = write_note(tmp_path, make_params())
         result = runner.invoke(cli, ["update", str(note.path), "--kind", invalid_kind])
         assert result.exit_code != 0
+
+    def test_aborts_when_name_kind_mismatch(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
+        note = write_note(tmp_path, make_params("My Note", Kind.SPEC))
+        result = runner.invoke(
+            cli, ["update", str(note.path), "--name", "Decoder refactor design"]
+        )
+        assert result.exit_code != 0
+        assert "ends with kind 'design'" in result.output
 
 
 class TestListCommand:

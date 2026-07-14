@@ -15,6 +15,7 @@ from synctank.notes import (
     load_note,
     next_index,
     slugify,
+    strip_trailing_kind_from_name,
     update_note,
     write_note,
 )
@@ -61,6 +62,31 @@ class TestSlugify:
     )
     def test_slugify(self, name: str, expected: str) -> None:
         assert slugify(name) == expected
+
+
+class TestStripTrailingKindFromName:
+    @pytest.mark.parametrize(
+        ("name", "kind", "expected"),
+        [
+            ("Decoder refactor design", Kind.DESIGN, "Decoder refactor"),
+            ("Decoder refactor Design", Kind.DESIGN, "Decoder refactor"),
+            ("Project overview brief", Kind.BRIEF, "Project overview"),
+            ("Retrospective lessons learned", Kind.LESSONS_LEARNED, "Retrospective"),
+            ("Decoder refactor", Kind.DESIGN, "Decoder refactor"),
+            ("Redesign", Kind.DESIGN, "Redesign"),
+            ("Spec sheet spec", Kind.SPEC, "Spec sheet"),
+        ],
+    )
+    def test_strips_matching_kind(self, name: str, kind: Kind, expected: str) -> None:
+        assert strip_trailing_kind_from_name(name, kind) == expected
+
+    def test_aborts_on_kind_mismatch(self) -> None:
+        with pytest.raises(ValueError, match=r"design.*spec"):
+            strip_trailing_kind_from_name("Decoder refactor design", Kind.SPEC)
+
+    def test_aborts_on_empty_name_after_strip(self) -> None:
+        with pytest.raises(ValueError, match="design"):
+            strip_trailing_kind_from_name("Design", Kind.DESIGN)
 
 
 class TestNextIndex:
@@ -309,6 +335,11 @@ class TestWriteNote:
         note = write_note(tmp_path, make_params("Decoder Refactor", Kind.DESIGN))
         assert note.path.name == "001-decoder-refactor-design.md"
 
+    def test_strips_trailing_kind_from_name(self, tmp_path: Path) -> None:
+        note = write_note(tmp_path, make_params("Decoder refactor design", Kind.DESIGN))
+        assert note.meta.name == "Decoder refactor"
+        assert note.path.name == "001-decoder-refactor-design.md"
+
     def test_increments_index(self, tmp_path: Path) -> None:
         make_note_file(tmp_path / "001-existing-spec.md")
         note = write_note(tmp_path, make_params("New Note", Kind.SPEC))
@@ -440,6 +471,18 @@ class TestUpdateNote:
         assert updated.path.name == "001-new-name-spec.md"
         assert updated.path.exists()
         assert not original.path.exists()
+
+    def test_strips_trailing_kind_when_updating_name(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params("Old Name", Kind.DESIGN))
+        updated = update_note(
+            original.path,
+            name="Decoder refactor design",
+            kind=None,
+            status=None,
+            related=None,
+        )
+        assert updated.meta.name == "Decoder refactor"
+        assert updated.path.name == "001-decoder-refactor-design.md"
 
     def test_updates_kind_and_renames_file(self, tmp_path: Path) -> None:
         original = write_note(tmp_path, make_params("My Note", Kind.SPEC))

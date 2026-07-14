@@ -169,6 +169,32 @@ def find_body_start_line(path: Path) -> int:
     return i + 1
 
 
+def strip_trailing_kind_from_name(name: str, expected_kind: Kind) -> str:
+    """Strip a trailing kind keyword from name when agents include it by mistake."""
+    text = name.strip()
+    for kind in sorted(Kind, key=lambda k: len(k.value), reverse=True):
+        phrase = kind.value.replace("-", " ")
+        n = len(phrase)
+        if not text.lower().endswith(phrase):
+            continue
+        if len(text) > n and text[-n - 1] != " ":
+            continue
+        base = text[:-n].rstrip()
+        if kind != expected_kind:
+            raise ValueError(
+                f"name {name!r} ends with kind {kind.value!r}, "
+                f"but {expected_kind.value!r} was provided — "
+                f"remove the kind from the name or fix --kind"
+            )
+        if not base:
+            raise ValueError(
+                f"name {name!r} is only the kind {kind.value!r}; "
+                f"provide a subject without the kind suffix"
+            )
+        return base
+    return name
+
+
 def slugify(name: str) -> str:
     """Convert a name to a lowercase hyphenated slug."""
     slug = name.lower()
@@ -203,6 +229,8 @@ def write_note(target_dir: Path, meta: Frontmatter, body: str = "") -> Note:
     """Create a new note file. Returns the created Note."""
     target_dir.mkdir(parents=True, exist_ok=True)
 
+    meta.name = strip_trailing_kind_from_name(meta.name, meta.kind)
+
     existing = [p.name for p in target_dir.iterdir() if _is_note_file(p.name)]
     index = next_index(existing)
     slug = slugify(meta.name)
@@ -229,8 +257,12 @@ def update_note(
     """
     note = load_note(path)
 
-    new_name = name if name is not None else note.meta.name
     new_kind = kind if kind is not None else note.meta.kind
+    new_name = (
+        strip_trailing_kind_from_name(name, new_kind)
+        if name is not None
+        else note.meta.name
+    )
     new_status = status if status is not None else note.meta.status
     new_related = related if related is not None else note.meta.related
 

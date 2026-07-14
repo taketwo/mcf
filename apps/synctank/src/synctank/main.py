@@ -226,14 +226,17 @@ def create(  # noqa: PLR0913
     if not sys.stdin.isatty():
         body = sys.stdin.read()
 
-    fm = Frontmatter(
-        name=name,
-        kind=Kind(kind),
-        status=Status(status),
-        date=date.today(),
-        related=list(related),
-    )
-    note = write_note(notes_root / subdir if subdir else notes_root, fm, body)
+    try:
+        fm = Frontmatter(
+            name=name,
+            kind=Kind(kind),
+            status=Status(status),
+            date=date.today(),
+            related=list(related),
+        )
+        note = write_note(notes_root / subdir if subdir else notes_root, fm, body)
+    except ValueError as e:
+        raise click.ClickException(str(e)) from e
 
     if as_json:
         click.echo(json.dumps(note.to_dict()))
@@ -319,13 +322,16 @@ def update(  # noqa: PLR0913
     if name is None and kind is None and status is None and not related_provided:
         raise click.UsageError("Nothing to update. Provide at least one option.")
 
-    note = update_note(
-        path,
-        name=name,
-        kind=Kind(kind) if kind else None,
-        status=Status(status) if status else None,
-        related=list(related) if related_provided else None,
-    )
+    try:
+        note = update_note(
+            path,
+            name=name,
+            kind=Kind(kind) if kind else None,
+            status=Status(status) if status else None,
+            related=list(related) if related_provided else None,
+        )
+    except ValueError as e:
+        raise click.ClickException(str(e)) from e
 
     if as_json:
         click.echo(json.dumps(note.to_dict()))
