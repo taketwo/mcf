@@ -1,0 +1,17 @@
+[$Version]
+update_info=kscreenlocker.upd:0.1-autolock
+
+[Daemon]
+Timeout=30
+LockOnStart=true
+
+[Greeter]
+WallpaperPlugin=org.kde.potd
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=/usr/share/wallpapers/Altai/
+PreviewImage=/usr/share/wallpapers/Altai/
+
+[Greeter][Wallpaper][org.kde.potd][General]
+FillMode=2
+Provider=bing

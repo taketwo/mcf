@@ -1,1 +1,3 @@
 wg0.conf:/etc/wireguard/wg0.conf:WireGuard configuration
+kscreenlockerrc:.config/kscreenlockerrc:KDE screen locker config
+sddm-autologin.conf:/etc/sddm.conf.d/autologin.conf:SDDM autologin config
