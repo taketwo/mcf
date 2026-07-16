@@ -10,18 +10,45 @@ def remove(dest):
     try:
         os.unlink(dest)
         return True
-    except OSError:
-        pass
-    try:
-        os.remove(dest)
+    except FileNotFoundError:
         return True
-    except OSError:
+    except IsADirectoryError:
         pass
+    except PermissionError:
+        return subprocess.call(["sudo", "rm", "-rf", dest]) == 0
+    except OSError:
+        return False
     try:
         shutil.rmtree(dest)
         return True
+    except PermissionError:
+        return subprocess.call(["sudo", "rm", "-rf", dest]) == 0
     except OSError:
-        pass
+        return False
+
+
+def _current_link_target(dest):
+    """
+    Return what dest currently points to, or None if it doesn't exist or
+    isn't a symlink. Falls back to sudo if dest sits behind a directory we
+    can't read (os.readlink raises PermissionError in that case, unlike
+    os.path.islink, which silently reports False).
+    """
+    try:
+        return os.readlink(dest)
+    except PermissionError:
+        try:
+            return (
+                subprocess.check_output(
+                    ["sudo", "readlink", dest], stderr=subprocess.DEVNULL
+                )
+                .decode()
+                .strip()
+            )
+        except subprocess.CalledProcessError:
+            return None
+    except OSError:
+        return None
 
 
 def link(src, dest, description=None, verbose=False):
@@ -31,16 +58,15 @@ def link(src, dest, description=None, verbose=False):
     If dest already exists and points to src, it's a no-op. Otherwise, removes
     whatever existed in the destination before. Creates directories as necessary.
     """
-    if os.path.lexists(dest):
-        if os.path.islink(dest) and os.readlink(dest) == src:
-            if description:
-                print("[+]", description)
-                print("   ", dest, "->", src, "(already linked)")
-            elif verbose:
-                print("[+]", dest)
-                print("   ", "->", src, "(already linked)")
-            return
-        remove(dest)
+    if _current_link_target(dest) == src:
+        if description:
+            print("[+]", description)
+            print("   ", dest, "->", src, "(already linked)")
+        elif verbose:
+            print("[+]", dest)
+            print("   ", "->", src, "(already linked)")
+        return
+    remove(dest)
     path, fl = os.path.split(os.path.realpath(dest))
     if not os.path.isdir(path):
         os.makedirs(path)
