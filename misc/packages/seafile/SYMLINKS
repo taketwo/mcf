@@ -1,0 +1,4 @@
+seafile.conf:.seafile.conf:Seafile account credentials
+seafilerc:.seafilerc:Seafile GUI preconfigure
+seafile.service:.local/share/systemd/user/seafile.service:Seafile daemon systemd unit
+seafile.desktop:.config/autostart/seafile.desktop:Seafile tray applet autostart

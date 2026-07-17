@@ -1,0 +1,2 @@
+nix: seafile-shared
+nix: seafile-client

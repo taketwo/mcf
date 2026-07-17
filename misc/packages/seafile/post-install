@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ $HOSTNAME == *"docker"* ]]; then
+  echo "Not enabling Seafile systemd unit in Docker container"
+  exit 0
+fi
+
+systemctl --user daemon-reload
+systemctl --user enable seafile.service
+systemctl --user start seafile.service

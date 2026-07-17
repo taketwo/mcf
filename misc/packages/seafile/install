@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SEAFILE_ROOT="$HOME/Seafile"
+CCNET_DIR="$HOME/.ccnet"
+INI_FILE="$CCNET_DIR/seafile.ini"
+DATA_DIR="$SEAFILE_ROOT/.seafile-data"
+CLI_DATA_DIR="$SEAFILE_ROOT/seafile-data"
+
+already_bootstrapped() {
+  [[ -f "$INI_FILE" && -d "$DATA_DIR" && "$(cat "$INI_FILE")" == "$DATA_DIR" ]]
+}
+
+remove_legacy_worktree() {
+  rm -rf "$SEAFILE_ROOT/seafile"
+}
+
+bootstrap() {
+  mkdir -p "$SEAFILE_ROOT"
+  seaf-cli init -d "$SEAFILE_ROOT"
+  seaf-cli start
+  seaf-cli stop
+  mv "$CLI_DATA_DIR" "$DATA_DIR"
+  echo "$DATA_DIR" >"$INI_FILE"
+  remove_legacy_worktree
+}
+
+if already_bootstrapped; then
+  echo "Seafile already bootstrapped at $DATA_DIR"
+  exit 0
+fi
+
+if [[ -d "$CCNET_DIR" ]]; then
+  echo "Existing Seafile config in $CCNET_DIR; skipping bootstrap"
+  exit 0
+fi
+
+echo "Bootstrapping Seafile (init, start, relocate to .seafile-data)..."
+bootstrap

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Seafile
+Comment=Seafile desktop sync client
+Exec=/home/sergey/.nix-profile/bin/seafile-applet
+Terminal=false
+Type=Application
+Icon=seafile
+Categories=Network;FileTransfer;
+StartupNotify=false
+NoDisplay=true

@@ -1,0 +1,13 @@
+[Unit]
+Description=Seafile sync daemon
+After=network.target
+ConditionPathExists=%h/.ccnet/seafile.ini
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=%h/.nix-profile/bin/seaf-daemon --daemon -c %h/.ccnet -d %h/Seafile/.seafile-data -w %h/Seafile
+ExecStop=%h/.nix-profile/bin/seaf-cli stop -c %h/.ccnet
+
+[Install]
+WantedBy=default.target

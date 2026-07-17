@@ -9,6 +9,7 @@ openssh
 openvpn
 net-tools                              # ifconfig
 nix: mosh
+seafile
 
 # X11
 xcape

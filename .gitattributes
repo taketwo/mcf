@@ -8,6 +8,8 @@ misc/packages/mcf-host-alpaca/wg0.conf filter=git-crypt diff=git-crypt
 misc/packages/mcf-host-lemur/wg0.conf filter=git-crypt diff=git-crypt
 misc/packages/mpdas/mpdasrc filter=git-crypt diff=git-crypt
 misc/packages/nb/post-install filter=git-crypt diff=git-crypt
+misc/packages/seafile/seafile.conf filter=git-crypt diff=git-crypt
+misc/packages/seafile/seafilerc filter=git-crypt diff=git-crypt
 misc/packages/sunshine/config/credentials/* filter=git-crypt diff=git-crypt
 misc/packages/sunshine/config/sunshine_state.json filter=git-crypt diff=git-crypt
 misc/packages/syncthing/config.yaml filter=git-crypt diff=git-crypt
