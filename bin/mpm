@@ -1,34 +1,45 @@
 #!/usr/bin/env python3
 
+import argparse
 import sys
-
-import click
 
 import package_manager
 
 
-@click.command()
-@click.argument("package", type=str)
-@click.option("--reinstall", help="force reinstallation", is_flag=True)
-@click.option("--update", help="update", is_flag=True)
-def install(package: str, *, reinstall: bool, update: bool) -> bool:
-    """Install a package.
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="""Install a package.
 
-    Package argument should be one of:
-      * package name of a package that exists in mcf/misc/packages or in native platform
-        package manager repository
-      * package spec in the format "manager: package"
-      * full path to package
-    """
-    click.echo(f"Package name: {package}")
-    return package_manager.install(
-        package,
-        verbose=True,
-        force_reinstall=reinstall,
-        update=update,
+Package argument should be one of:
+  * package name of a package that exists in mcf/misc/packages or in native
+    platform package manager repository
+  * package spec in the format "manager: package"
+  * full path to package""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+    parser.add_argument("package", help="package name, manager:spec, or path")
+    parser.add_argument(
+        "--reinstall",
+        action="store_true",
+        help="force reinstallation",
+    )
+    parser.add_argument(
+        "--update",
+        action="store_true",
+        help="update",
+    )
+    args = parser.parse_args()
+
+    print(f"Package name: {args.package}")
+    ok = package_manager.install(
+        args.package,
+        verbose=True,
+        force_reinstall=args.reinstall,
+        update=args.update,
+    )
+    if not ok:
+        sys.exit("Package installation failed")
 
 
 if __name__ == "__main__":
-    if not install():
-        sys.exit("Package installation failed")
+    main()
