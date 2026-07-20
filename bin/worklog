@@ -594,8 +594,16 @@ class WorkLogApp(App[None]):
 def main() -> None:
     """Main entry point for the work log application."""
     parser = argparse.ArgumentParser(description="Track work time with simple toggling")
-    parser.add_argument("file", type=Path, help="Path to tracking file")
+    parser.add_argument(
+        "file",
+        type=Path,
+        nargs="?",
+        help="Path to tracking file (default: YYYY-DD-MM.txt in current directory)",
+    )
     args = parser.parse_args()
+
+    if args.file is None:
+        args.file = Path(now().date().strftime("%Y-%d-%m.txt"))
 
     app = WorkLogApp(args.file)
     app.run()
