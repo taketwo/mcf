@@ -3,5 +3,10 @@ use = "llanosrocas/yaziline"
 rev = "c975c26"
 hash = "f5e051378c7ee472234ed2abdf0252e7"
 
+[[plugin.deps]]
+use = "pirafrank/what-size"
+rev = "179ebf6"
+hash = "57056b9728006881d580ccabe8154a9c"
+
 [flavor]
 deps = []

@@ -11,4 +11,7 @@ prepend_keymap = [
   # c: copy (with submenu)
   # t: tab creation
   # n: next found item
+  #
+  # Misc
+  { on = "s", run = "plugin what-size", desc = "Show the size of the selected files or cwd" },
 ]
