@@ -39,6 +39,7 @@
     "elements-of-style@superpowers-marketplace": true
   },
   "alwaysThinkingEnabled": false,
+  "effortLevel": "xhigh",
   "theme": "dark-daltonized",
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true
