@@ -3,3 +3,11 @@
 [mgr]
 show_hidden = true
 linemode = "size"
+
+[plugin]
+prepend_spotters = [
+  { mime = "audio/mpegurl", run = "code" },  # ignore .m3u files
+  { mime = "audio/*", run = "spot-audio" },
+  { mime = "image/*", run = "spot-image" },
+  { mime = "video/*", run = "spot-video" },
+]

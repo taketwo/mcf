@@ -1,1 +1,4 @@
 nix: yazi
+xxhash      # needed for spotters
+exiftool    # needed for audio spotter
+ffmpeg      # needed for video spotter
