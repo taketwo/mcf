@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+reference="$(dirname "$0")/cli-config.settings.json"
+target="$HOME/.cursor/cli-config.json"
+
+if [ ! -f "$reference" ]; then
+  echo "No cli-config.settings.json reference found, skipping"
+  exit 0
+fi
+
+mkdir -p "$(dirname "$target")"
+if [ ! -f "$target" ]; then
+  echo "Creating $target"
+  cp "$reference" "$target"
+  exit 0
+fi
+
+echo "Aligning $target with $reference"
+merged=$(jq -s '.[0] * .[1]' "$target" "$reference")
+echo "$merged" >"$target"
