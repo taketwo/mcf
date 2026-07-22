@@ -1,1 +1,2 @@
 config:.ncmpcpp:NCMPCPP config directory
+ncmpcpp.desktop:.local/share/applications/ncmpcpp.desktop:Application file for ncmpcpp

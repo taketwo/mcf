@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment=Ncurses MPD client
+Type=Application
+Name=ncmpcpp
+Exec=ncmpcpp
+Icon=ncmpcpp
+Terminal=true
+Categories=AudioVideo;Audio;Player;
+NoDisplay=false
