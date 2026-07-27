@@ -1,13 +1,16 @@
 import json
+import os
+import subprocess
 from datetime import date
 from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
 
-from synctank.main import cli
+from synctank.main import _run_fzf_search, cli
 from synctank.notes import Frontmatter, load_note, write_note
 from synctank.schema import Kind, Status
+from synctank.search import SearchResult
 
 TODAY = date(2026, 4, 22)
 
@@ -243,3 +246,115 @@ class TestListCommand:
 
         assert [i["subdir"] for i in items] == ["archive", "", ""]
         assert [i["index"] for i in items[1:]] == [1, 2]  # root group: ascending index
+
+
+class TestFzfSearch:
+    """Tests for _run_fzf_search subprocess orchestration.
+
+    The editor must be launched as its own subprocess with the terminal
+    attached; launching it from inside fzf (via `become`) makes it inherit
+    fzf's piped stdout and hang.
+    """
+
+    def _result(self, tmp_path: Path, line_number: int | None) -> SearchResult:
+        write_note(
+            tmp_path,
+            Frontmatter(
+                name="Decoder Refactor",
+                kind=Kind.DESIGN,
+                status=Status.DRAFT,
+                date=date(2026, 4, 22),
+            ),
+            "body text",
+        )
+        note = load_note(next(tmp_path.glob("*.md")))
+        return SearchResult(
+            note=note, score=90, excerpt="body text", line_number=line_number
+        )
+
+    def _run(self, mocker, results, key: str, line_number: int):
+        """Drive _run_fzf_search with a stubbed fzf; return (rc, subprocess calls)."""
+        path = results[0].note.path
+        selected = f"{path}\t 90\tcontent\t{line_number}"
+
+        def fake_run(argv, **kwargs):
+            if "fzf" in str(argv[0]):
+                return subprocess.CompletedProcess(
+                    argv, 0, stdout=f"{key}\n{selected}\n"
+                )
+            return subprocess.CompletedProcess(argv, 0)
+
+        run = mocker.patch("synctank.main.subprocess.run", side_effect=fake_run)
+        mocker.patch(
+            "synctank.main.shutil.which", side_effect=lambda n: f"/usr/bin/{n}"
+        )
+        mocker.patch.dict(os.environ, {"EDITOR": "nvim"})
+        rc = _run_fzf_search(results)
+        return rc, run.call_args_list
+
+    def test_enter_launches_editor_as_separate_process(self, tmp_path, mocker) -> None:
+        results = [self._result(tmp_path, 7)]
+        rc, calls = self._run(mocker, results, key="", line_number=7)
+
+        assert rc == 0
+        assert len(calls) == 2, "expected an fzf call and a separate editor call"
+
+        editor_argv = calls[1].args[0]
+        assert editor_argv == ["nvim", "+7", str(results[0].note.path)]
+
+    def test_editor_stdout_is_not_piped(self, tmp_path, mocker) -> None:
+        """The editor needs the real terminal; a piped stdout is what hung it."""
+        results = [self._result(tmp_path, 7)]
+        _, calls = self._run(mocker, results, key="", line_number=7)
+
+        assert "stdout" not in calls[1].kwargs
+        assert "capture_output" not in calls[1].kwargs
+
+    def test_fzf_does_not_use_become_binding(self, tmp_path, mocker) -> None:
+        results = [self._result(tmp_path, 7)]
+        _, calls = self._run(mocker, results, key="", line_number=7)
+
+        fzf_argv = calls[0].args[0]
+        assert not any("become" in arg for arg in fzf_argv)
+
+    def test_filename_match_opens_without_line_number(self, tmp_path, mocker) -> None:
+        results = [self._result(tmp_path, None)]
+        _, calls = self._run(mocker, results, key="", line_number=0)
+
+        assert calls[1].args[0] == ["nvim", str(results[0].note.path)]
+
+    def test_ctrl_o_copies_path_without_opening_editor(self, tmp_path, mocker) -> None:
+        results = [self._result(tmp_path, 7)]
+        copy = mocker.patch("synctank.main.pyperclip.copy")
+        rc, calls = self._run(mocker, results, key="ctrl-o", line_number=7)
+
+        assert rc == 0
+        copy.assert_called_once_with(str(results[0].note.path))
+        assert len(calls) == 1, "editor must not be launched for ctrl-o"
+
+    def test_preview_falls_back_to_cat_without_bat(self, tmp_path, mocker) -> None:
+        """fzf must get a usable preview command when bat is not installed."""
+        results = [self._result(tmp_path, 7)]
+        path = results[0].note.path
+
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(
+                argv, 0, stdout=f"\n{path}\t 90\tcontent\t7\n"
+            )
+
+        run = mocker.patch("synctank.main.subprocess.run", side_effect=fake_run)
+        mocker.patch(
+            "synctank.main.shutil.which",
+            side_effect=lambda n: None if n == "bat" else f"/usr/bin/{n}",
+        )
+        mocker.patch.dict(os.environ, {"EDITOR": "nvim"})
+        _run_fzf_search(results)
+
+        fzf_argv = run.call_args_list[0].args[0]
+        preview = next(a for a in fzf_argv if a.startswith("--preview="))
+        assert "bat" not in preview
+        assert preview == "--preview=cat {1}"
+
+    def test_no_results_returns_error(self, mocker) -> None:
+        mocker.patch("synctank.main.shutil.which", return_value="/usr/bin/fzf")
+        assert _run_fzf_search([]) == 1

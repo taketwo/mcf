@@ -586,33 +586,44 @@ def _run_fzf_search(results: list[SearchResult]) -> int:
             "--delimiter=\t",
             "--with-nth=2,3",
             "--nth=2",
-            "--preview=bat -l md --style=plain --color=always {1}",
+            f"--preview={_preview_command()}",
             "--preview-window=right:60%:wrap",
-            f"--bind=enter:become({editor} +{{4}} {{1}})",
             "--expect=ctrl-o",
             "--ansi",
         ],
         input=fzf_input,
         text=True,
         check=False,
-        capture_output=False,
         stdout=subprocess.PIPE,
     )
 
     if proc.returncode != 0:
         return proc.returncode
 
+    # With --expect, fzf prints the pressed key (empty line for enter) then the
+    # selected line.
     output_lines = proc.stdout.splitlines()
-    if not output_lines or len(output_lines) == 1:
+    if len(output_lines) < 2:  # noqa: PLR2004
         return 1
 
     key, selected = output_lines[0], output_lines[1]
-    path = selected.split("\t")[0]
+    fields = selected.split("\t")
+    path, line_number = fields[0], fields[3]
 
     if key == "ctrl-o":
         pyperclip.copy(path)
+        return 0
 
-    return 0
+    # A line number of 0 means the match came from the filename, not the body.
+    argv = [editor, path] if line_number == "0" else [editor, f"+{line_number}", path]
+    return subprocess.run(argv, check=False).returncode
+
+
+def _preview_command() -> str:
+    """Build the fzf preview command, falling back to cat when bat is missing."""
+    if shutil.which("bat"):
+        return "bat -l md --style=plain --color=always {1}"
+    return "cat {1}"
 
 
 def _sort_notes_by_group(notes: list[Note]) -> list[Note]:
