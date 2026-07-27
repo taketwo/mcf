@@ -435,7 +435,19 @@ def lint(target: str | None, *, detailed: bool) -> None:
     "--json", "as_json", is_flag=True, default=False, help="Output as JSON array."
 )
 def search(query: str, *, everywhere: bool, names_only: bool, as_json: bool) -> None:
-    """Fuzzy search notes. Searches current project by default."""
+    """Fuzzy search notes. Searches current project by default.
+
+    Matches against filenames and body content, and reports the best-matching line as an excerpt. With --names-only, matches filenames alone.
+
+    When run in a terminal with fzf installed, results open in an interactive picker. Otherwise, and always with --json, results are written to stdout instead.
+
+    \b
+    Picker keys:
+      - enter:  open the note in $EDITOR (vi if unset). Jumps to the matched
+                line when the match came from the body.
+      - ctrl-o: copy the note's absolute path to the clipboard and exit.
+      - esc:    exit without selecting.
+    """  # noqa: D301
     cwd = Path.cwd()
     synctank_dir = get_synctank_dir()
 
