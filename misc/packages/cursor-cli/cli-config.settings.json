@@ -1,4 +1,16 @@
 {
+  "permissions": {
+    "allow": [
+      "Shell(echo)",
+      "Shell(find)",
+      "Shell(head)",
+      "Shell(ls)",
+      "Shell(rg)",
+      "Shell(tail)",
+      "Shell(wc)"
+    ],
+    "deny": []
+  },
   "attribution": {
     "attributeCommitsToAgent": false,
     "attributePRsToAgent": false
