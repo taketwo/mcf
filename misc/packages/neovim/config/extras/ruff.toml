@@ -10,6 +10,7 @@ extend-exclude = ["templates/cookiecutter-app"]
 select = ["ALL"]
 ignore = [
   "ANN003", # kwargs argument without type annotation is okay
+  "CPY001", # no need to put copyright notice in every file
   "D100",   # missing docstring in public module is okay
   "D105",   # missing docstring in magic method is okay
   "E501",
