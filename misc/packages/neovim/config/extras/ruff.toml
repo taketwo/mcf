@@ -9,33 +9,33 @@ extend-exclude = ["templates/cookiecutter-app"]
 [lint]
 select = ["ALL"]
 ignore = [
-  "ANN003", # kwargs argument without type annotation is okay
-  "CPY001", # no need to put copyright notice in every file
-  "D100",   # missing docstring in public module is okay
-  "D105",   # missing docstring in magic method is okay
+  "ANN003",       # kwargs argument without type annotation is okay
+  "CPY001",       # no need to put copyright notice in every file
+  "D100",         # missing docstring in public module is okay
+  "D105",         # missing docstring in magic method is okay
   "E501",
-  "EM",     # noisy warnings about need to store exception messages in variables
-  "ERA001", # has false positives
-  "FA102",  # no need to import from __future__ to support fancy annotations
-  "FIX002", # not every TODO comment needs to be fixed
-  "I",      # imports are sorted automatically by usort
-  "S603",   # calling subprocess with shell=True is okay
-  "T20",    # print statements are okay
-  "TD002",  # no need to mention author in TODO comments (use git blame instead)
-  "TD003",  # no need to create ticket for every TODO comment
-  "TRY003", # it is okay to specify long descriptive messages in exceptions
+  "EM",           # noisy warnings about need to store exception messages in variables
+  "ERA001",       # has false positives
+  "FA102",        # no need to import from __future__ to support fancy annotations
+  "FIX002",       # not every TODO comment needs to be fixed
+  "I",            # imports are sorted automatically by usort
+  "S603",         # calling subprocess with shell=True is okay
+  "T20",          # print statements are okay
+  "TD002",        # no need to mention author in TODO comments (use git blame instead)
+  "TD003",        # no need to create ticket for every TODO comment
+  "TRY003",       # it is okay to specify long descriptive messages in exceptions
 ]
 
 [lint.pep8-naming]
 extend-ignore-names = [
-  "*_T_*", # allow robotics transform notation (e.g. inertial_T_sensor)
+  "*_T_*",               # allow robotics transform notation (e.g. inertial_T_sensor)
 ]
 
 [lint.per-file-ignores]
 "**/{test_*,*_test}.py" = [
-  "ANN",     # type annotations are not required in tests
-  "ARG001",  # "unused" function arguments are needed to pass mock objects
-  "D",       # docstrings are not required in tests
-  "PLR2004", # magic values are allowed in tests
-  "S101",    # asserts are allowed in tests
+  "ANN",                     # type annotations are not required in tests
+  "ARG001",                  # "unused" function arguments are needed to pass mock objects
+  "D",                       # docstrings are not required in tests
+  "PLR2004",                 # magic values are allowed in tests
+  "S101",                    # asserts are allowed in tests
 ]
