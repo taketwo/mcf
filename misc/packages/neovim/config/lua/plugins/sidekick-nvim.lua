@@ -1,6 +1,6 @@
 return {
   {
-    'folke/sidekick.nvim',
+    'taketwo/sidekick.nvim',
     dependencies = {
       {
         'nvim-lualine/lualine.nvim',
