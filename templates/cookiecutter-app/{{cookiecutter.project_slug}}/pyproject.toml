@@ -26,6 +26,7 @@ lint.select = ["ALL"]
 lint.ignore = [
   "ANN003", # kwargs argument without type annotation is okay
   "COM812", # conflicts with ruff formatter
+  "CPY001", # no need to put copyright notice in every file
   "D100",   # missing docstring in public module is okay
   "D104",   # missing docstring in public package is okay
   "D203",   # conflicts with D211
