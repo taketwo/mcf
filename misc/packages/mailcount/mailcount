@@ -29,6 +29,7 @@ IMAP_HOST = "imap.gmail.com"
 IMAP_PORT = 993
 IMAP_TIMEOUT = 15
 CHECK_INTERVAL = int(os.getenv("MAILCOUNT_CHECK_INTERVAL", "10"))
+FAILURE_THRESHOLD = int(os.getenv("MAILCOUNT_FAILURE_THRESHOLD", "3"))
 LOG_LEVEL = os.getenv("MAILCOUNT_LOG_LEVEL", "INFO").upper()
 
 THREAD_ID_RE = re.compile(r"X-GM-THRID (\d+) UID")
@@ -61,6 +62,7 @@ class MailcountMonitor:
         self.logger = logging.getLogger("mailcount")
         self.unread: int = 0
         self.check_failed: bool = False
+        self._consecutive_failures: int = 0
         self.running = True
         self.socket_server: socket.socket | None = None
         self._socket_path = Path(socket_path())
@@ -91,11 +93,14 @@ class MailcountMonitor:
             with self._lock:
                 self.unread = count
                 self.check_failed = False
+                self._consecutive_failures = 0
             self.logger.debug("Unread threads: %d", count)
-        except Exception:
+        except Exception as err:
             with self._lock:
-                self.check_failed = True
-            self.logger.exception("Failed to fetch unread count")
+                self._consecutive_failures += 1
+                if self._consecutive_failures >= FAILURE_THRESHOLD:
+                    self.check_failed = True
+            self.logger.warning("Failed to fetch unread count: %s", err)
 
     def _handle_client(self, client: socket.socket) -> None:
         try:
