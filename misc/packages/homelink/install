@@ -18,5 +18,5 @@ echo "Reload systemd and enable monitor service..."
 sudo systemctl daemon-reload
 sudo systemctl enable homelink-monitor.service
 
-echo "Start monitor service..."
-sudo systemctl start homelink-monitor.service
+echo "Restart monitor service..."
+sudo systemctl restart homelink-monitor.service
