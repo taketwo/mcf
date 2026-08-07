@@ -96,6 +96,8 @@ class HomeLinkMonitor:
             os.getenv("HOMELINK_INTERNET_HISTORY_SIZE", "3"),
         )
         self.ping_timeout = int(os.getenv("HOMELINK_PING_TIMEOUT", "3"))
+        self.vpn_grace_period = int(os.getenv("HOMELINK_VPN_GRACE_PERIOD", "90"))
+        self.vpn_backoff_max = int(os.getenv("HOMELINK_VPN_BACKOFF_MAX", "600"))
 
         # State tracking
         self.state = {
@@ -104,6 +106,8 @@ class HomeLinkMonitor:
             "vpn": "down",
             "vpn_control_signal": "noop",
             "next_check_at": None,
+            "vpn_attempts": 0,
+            "vpn_last_action_at": None,
         }
         self.running = True
         self.socket_server = None
@@ -234,6 +238,33 @@ class HomeLinkMonitor:
         self.state["location"] = "home" if location_is_home else "remote"
         self.state["vpn"] = vpn_status
 
+        # A healthy tunnel clears the debt of any previous failed attempts
+        if vpn_status == "up":
+            self._reset_vpn_backoff()
+
+    def _record_vpn_action(self) -> None:
+        """Note that the tunnel was just touched, so the next attempt backs off."""
+        self.state["vpn_attempts"] += 1
+        self.state["vpn_last_action_at"] = datetime.now(timezone.utc)
+
+    def _reset_vpn_backoff(self) -> None:
+        """Forget past attempts so the next one happens without delay."""
+        self.state["vpn_attempts"] = 0
+        self.state["vpn_last_action_at"] = None
+
+    def _in_vpn_backoff(self) -> bool:
+        """Check whether the last VPN action is still within its backoff window."""
+        last_action = self.state["vpn_last_action_at"]
+        if last_action is None:
+            return False
+
+        # First attempt gets the plain grace period, each failure doubles it. The
+        # grace period must outlast WireGuard's own handshake retries, otherwise
+        # we tear the interface down before it can ever succeed.
+        delay = self.vpn_grace_period * 2 ** (self.state["vpn_attempts"] - 1)
+        window = timedelta(seconds=min(delay, self.vpn_backoff_max))
+        return datetime.now(timezone.utc) < last_action + window
+
     def _determine_control_signal(self) -> str:
         """Determine VPN control signal using 3-variable model."""
         location = self.state["location"]
@@ -253,11 +284,15 @@ class HomeLinkMonitor:
             return "noop"
 
         # Remote with working internet (internet_consensus is True)
-        if vpn == "down":
-            return "up"
-        if vpn == "degraded":
-            return "restart"
-        return "noop"
+        if vpn == "up":
+            return "noop"
+
+        # Tunnel needs attention, but an unreachable peer must not turn into a
+        # restart every check interval - let the previous attempt play out first
+        if self._in_vpn_backoff():
+            return "noop"
+
+        return "up" if vpn == "down" else "restart"
 
     def update_and_act(self) -> None:
         """Update state and take action - main logic loop."""
@@ -270,6 +305,7 @@ class HomeLinkMonitor:
         ] + timedelta(seconds=self.check_interval * 2):
             self.logger.info("System resume detected, resetting consensus tracker")
             self.state["internet_tracker"].reset()
+            self._reset_vpn_backoff()
 
         # Set next check time for normal operation
         self.state["next_check_at"] = now + timedelta(seconds=self.check_interval)
@@ -297,24 +333,34 @@ class HomeLinkMonitor:
         )
         internet = "up" if internet else ("uncertain" if internet is None else "down")
 
-        if control_signal == "down" and vpn != "down":
+        # The control signal already encodes the current VPN state, so each action
+        # can be dispatched on the signal alone
+        if control_signal == "down":
             self.logger.info(
                 "Bringing down HomeLink (location=%s, internet=%s)",
                 location,
                 internet,
             )
             self._systemctl("stop")
-        elif control_signal == "up" and vpn == "down":
+            self._reset_vpn_backoff()
+        elif control_signal == "up":
             self.logger.info(
-                "Starting HomeLink (location=%s, internet=%s)",
+                "Starting HomeLink (location=%s, internet=%s, attempt=%d)",
                 location,
                 internet,
+                self.state["vpn_attempts"] + 1,
             )
             self._systemctl("start")
+            self._record_vpn_action()
         elif control_signal == "restart":
-            self.logger.warning("Restarting HomeLink (vpn=%s)", vpn)
+            self.logger.warning(
+                "Restarting HomeLink (vpn=%s, attempt=%d)",
+                vpn,
+                self.state["vpn_attempts"] + 1,
+            )
             self._systemctl("restart")
-        elif control_signal == "noop":
+            self._record_vpn_action()
+        else:
             self.logger.debug(
                 "No VPN action needed (location=%s, internet=%s, vpn=%s)",
                 location,
@@ -322,7 +368,7 @@ class HomeLinkMonitor:
                 vpn,
             )
 
-    def get_status(self) -> dict[str, str | bool]:
+    def get_status(self) -> dict[str, Any]:
         """Get current status for API."""
         # Get internet status from tracker
         internet_consensus = self.state["internet_tracker"].get()
@@ -339,9 +385,10 @@ class HomeLinkMonitor:
         }
         status["internet"] = internet_status
 
-        # Format next_check_at as ISO string if available
-        if self.state["next_check_at"]:
-            status["next_check_at"] = self.state["next_check_at"].isoformat()
+        # Format timestamps as ISO strings so the response stays JSON-serializable
+        for key in ("next_check_at", "vpn_last_action_at"):
+            if self.state[key]:
+                status[key] = self.state[key].isoformat()
 
         return status
 
@@ -450,6 +497,36 @@ def cmd_monitor() -> None:
     HomeLinkMonitor().run()
 
 
+def format_status(status: dict[str, Any]) -> str:
+    """Render a status response as human-readable lines."""
+    lines = [
+        f"Location: {status.get('location', 'unknown')}",
+        f"Internet: {status.get('internet', 'unknown')}",
+        f"VPN: {status.get('vpn', 'unknown')}",
+        f"VPN control signal: {status.get('vpn_control_signal', 'unknown')}",
+    ]
+
+    if status.get("vpn_attempts"):
+        lines.append(f"VPN attempts since last healthy: {status['vpn_attempts']}")
+
+    if "next_check_at" in status:
+        try:
+            next_check = datetime.fromisoformat(
+                status["next_check_at"].replace("Z", "+00:00"),
+            )
+            seconds_until = int(
+                (next_check - datetime.now(timezone.utc)).total_seconds(),
+            )
+            next_text = (
+                f"in {seconds_until} seconds" if seconds_until > 0 else "overdue"
+            )
+            lines.append(f"Next check: {next_text}")
+        except (ValueError, TypeError):
+            lines.append(f"Next check: {status['next_check_at']}")
+
+    return "\n".join(lines)
+
+
 def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
     """Get HomeLink status from socket."""
     try:
@@ -487,29 +564,7 @@ def cmd_status(*, json_output: bool = False) -> int:  # noqa: C901
         print(f"Error: {status['error']}")
         return 1
 
-    lines = [
-        f"Location: {status.get('location', 'unknown')}",
-        f"Internet: {status.get('internet', 'unknown')}",
-        f"VPN: {status.get('vpn', 'unknown')}",
-        f"VPN Control Signal: {status.get('vpn_control_signal', 'unknown')}",
-    ]
-
-    if "next_check_at" in status:
-        try:
-            next_check = datetime.fromisoformat(
-                status["next_check_at"].replace("Z", "+00:00"),
-            )
-            seconds_until = int(
-                (next_check - datetime.now(timezone.utc)).total_seconds(),
-            )
-            next_text = (
-                f"in {seconds_until} seconds" if seconds_until > 0 else "overdue"
-            )
-            lines.append(f"Next check: {next_text}")
-        except (ValueError, TypeError):
-            lines.append(f"Next check: {status['next_check_at']}")
-
-    print("\n".join(lines))
+    print(format_status(status))
     return 0
 
 

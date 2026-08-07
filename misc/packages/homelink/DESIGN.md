@@ -10,6 +10,7 @@ HomeLink operates as a daemon with configurable monitoring intervals, providing:
 - **Fast response times**: Immediate detection of network changes
 - **Hysteresis logic**: Sliding window of connectivity checks prevents flapping
 - **Resume detection**: Automatic stabilization delay after system wake from suspend
+- **Retry backoff**: Exponential delay between bring-up attempts when the peer is unreachable
 - **Real-time status**: Unix socket API for Polybar/desktop integration
 - **Structured logging**: SystemD journal integration for monitoring
 
@@ -84,6 +85,8 @@ If interface is up but no recent handshake and ping fails, status is marked as "
 - `HOMELINK_CHECK_INTERVAL` - Check frequency seconds (default: 10)
 - `HOMELINK_INTERNET_HISTORY_SIZE` - Sliding window size (default: 3)
 - `HOMELINK_PING_TIMEOUT` - Ping timeout seconds (default: 3)
+- `HOMELINK_VPN_GRACE_PERIOD` - Seconds to leave a fresh tunnel alone (default: 90)
+- `HOMELINK_VPN_BACKOFF_MAX` - Cap on the retry backoff seconds (default: 600)
 - `HOMELINK_LOG_LEVEL` - Logging verbosity (default: INFO)
 
 ## Core State Model
@@ -117,11 +120,11 @@ if internet_consensus is False:
 if internet_consensus is None:
     return "noop"                                 # Uncertain internet, maintain state
 # internet_consensus is True (working internet)
-if vpn == "down":
-    return "up"                                   # Start VPN when remote with internet
-if vpn == "degraded":
-    return "restart"                              # Fix broken tunnel
-return "noop"                                     # VPN working correctly
+if vpn == "up":
+    return "noop"                                 # VPN working correctly
+if in_vpn_backoff():
+    return "noop"                                 # Previous attempt still settling
+return "up" if vpn == "down" else "restart"       # Start or repair the tunnel
 ```
 
 **Control Signals:**
@@ -129,6 +132,33 @@ return "noop"                                     # VPN working correctly
 - `"up"` - Start VPN service
 - `"restart"` - Restart VPN service
 - `"noop"` - No action needed
+
+Teardown is never delayed: the `"down"` paths run as soon as the state calls for
+them. Only the paths that bring the tunnel *up* are rate-limited.
+
+## Retry Backoff
+
+Bringing up a tunnel does not produce a handshake instantly, so a freshly started
+interface always reads as `"degraded"`. Acting on that immediately produces a
+restart every check interval for as long as the peer is unreachable, which tears
+the interface down mid-negotiation and never lets WireGuard's own handshake
+retries finish.
+
+Each `"up"` or `"restart"` action therefore opens a window during which the tunnel
+is left alone:
+
+```python
+delay = min(vpn_grace_period * 2 ** (vpn_attempts - 1), vpn_backoff_max)
+```
+
+With the defaults, successive attempts wait 90s, 180s, 360s, then 600s from there
+on. The counter resets whenever the tunnel is observed `"up"`, whenever the VPN is
+deliberately stopped, and on resume from suspend, so a genuine network change gets
+an immediate retry rather than inheriting the previous outage's backoff.
+
+The first window doubles as a grace period: it must outlast WireGuard's own
+handshake retry sequence (~90 seconds) so a slow-but-recoverable peer is never
+interrupted.
 
 ## Socket API
 
@@ -141,9 +171,14 @@ HomeLink provides real-time status through a Unix domain socket at `/run/homelin
   "internet": "up",
   "vpn": "up",
   "vpn_control_signal": "noop",
-  "next_check_at": "2025-01-15T10:31:00+00:00"
+  "next_check_at": "2025-01-15T10:31:00+00:00",
+  "vpn_attempts": 0,
+  "vpn_last_action_at": null
 }
 ```
+
+`vpn_attempts` counts bring-up actions since the tunnel was last healthy, and
+`vpn_last_action_at` marks when the current backoff window started.
 
 ## System Requirements
 
@@ -166,8 +201,9 @@ HomeLink detects system resume from suspend using timing gap analysis and resets
 **Detection Logic:**
 ```python
 if next_check_at and now > next_check_at + timedelta(seconds=check_interval * 2):
-    # Resume detected - reset consensus tracker
+    # Resume detected - reset consensus tracker and retry backoff
     internet_tracker.reset()
+    reset_vpn_backoff()
 ```
 
 **How It Works:**

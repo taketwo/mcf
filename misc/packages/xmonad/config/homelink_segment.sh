@@ -13,6 +13,9 @@ source "$HOME/.xmonad/onedark.bash"
 ICON_GOOD=" "
 ICON_BAD=" "
 
+# Bring-up attempts before blaming the home side rather than a transient hiccup
+HOME_UNREACHABLE_ATTEMPTS=2
+
 # Get status from homelink daemon
 status=$(homelink status --json 2>/dev/null)
 
@@ -37,6 +40,9 @@ if check_status '.location == "home"'; then
 elif check_status '.internet == "down"'; then
   icon=$ICON_BAD
   foreground="$OneDarkYellow"
+elif check_status ".vpn != \"up\" and .vpn_attempts >= $HOME_UNREACHABLE_ATTEMPTS"; then
+  icon=$ICON_BAD
+  foreground="$OneDarkRed"
 elif check_status '.vpn != "up"'; then
   icon=$ICON_BAD
   foreground="$OneDarkOrange"
