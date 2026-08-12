@@ -13,6 +13,36 @@ from .utils import run_command
 
 logger = get_logger(__name__)
 
+# Substrings that show up in CMake/curl output when a dependency download
+# fails due to a transient network issue rather than a real build problem.
+_NETWORK_FAILURE_MARKERS = (
+    "Each download failed!",
+    "Failure when receiving data from the peer",
+    "Could not resolve host",
+    "Connection died",
+    "Operation timed out",
+    "SSL connect error",
+    "Empty reply from server",
+)
+
+
+def _is_network_failure(output: str) -> bool:
+    """Check whether build output indicates a transient network failure.
+
+    Parameters
+    ----------
+    output : str
+        Captured stdout and stderr from a failed build step.
+
+    Returns
+    -------
+    bool
+        True if the failure looks like a transient network or download error
+        rather than a genuine compilation problem.
+
+    """
+    return any(marker in output for marker in _NETWORK_FAILURE_MARKERS)
+
 
 class NeovimBuildError(Exception):
     """Base exception for Neovim build failures."""
@@ -270,13 +300,21 @@ class NeovimBuilder:
                     len(commands),
                     " ".join(command),
                 )
-                if not self._execute_build_command(
+                failure_output = self._execute_build_command(
                     command,
                     source_dir,
                     stdout_f,
                     stderr_f,
-                ):
-                    msg = f"Build failed at step {i}/{len(commands)}; logs preserved in {build_dir}"
+                )
+                if failure_output is not None:
+                    if _is_network_failure(failure_output):
+                        msg = (
+                            f"Build failed at step {i}/{len(commands)} due to a transient "
+                            f"network error while downloading dependencies; retry the sync. "
+                            f"Logs preserved in {build_dir}"
+                        )
+                    else:
+                        msg = f"Build failed at step {i}/{len(commands)}; logs preserved in {build_dir}"
                     logger.error(msg)
                     raise NeovimCompileError(msg)
 
@@ -286,7 +324,7 @@ class NeovimBuilder:
         cwd: Path,
         stdout_file: TextIO,
         stderr_file: TextIO,
-    ) -> bool:
+    ) -> str | None:
         """Execute build command and preserve output for debugging.
 
         Parameters
@@ -302,8 +340,9 @@ class NeovimBuilder:
 
         Returns
         -------
-        bool
-            True if command succeeded, False otherwise.
+        str | None
+            None if the command succeeded, otherwise its combined stdout and
+            stderr for diagnosing the failure.
 
         """
         command_str = " ".join(args)
@@ -330,7 +369,7 @@ class NeovimBuilder:
 
             stdout_file.flush()
             stderr_file.flush()
-            return False
+            return (e.stdout or "") + (e.stderr or "")
         else:
             # Write successful output
             if result.stdout:
@@ -341,7 +380,7 @@ class NeovimBuilder:
                 stderr_file.write("\n")
             stdout_file.flush()
             stderr_file.flush()
-            return True
+            return None
 
     def _prune_build_cache(self) -> None:
         """Remove old cached builds to stay within size limit.
