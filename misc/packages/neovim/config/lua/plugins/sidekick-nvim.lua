@@ -21,7 +21,13 @@ return {
     opts = {
       cli = {
         mux = {
-          backend = 'tmux',
+          backend = vim.env.HERDR_ENV == '1' and 'herdr' or 'tmux',
+          -- herdr's "terminal" create mode (the default) spins up a separate
+          -- nested herdr session instead of attaching to the current one, so
+          -- the agent pane never shows up in the live sidebar (see PR #333
+          -- review comments). Use a real split there instead; tmux keeps its
+          -- existing embedded-terminal behavior.
+          create = vim.env.HERDR_ENV == '1' and 'split' or 'terminal',
           enabled = true,
         },
       },
