@@ -1,5 +1,10 @@
+onboarding = false
+
 [theme]
 name = "one-dark"
+
+[terminal]
+default_shell = "/bin/bash"
 
 [advanced]
 scrollback_limit_bytes = 50000000
