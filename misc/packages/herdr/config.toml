@@ -1,0 +1,84 @@
+[theme]
+name = "one-dark"
+
+[advanced]
+scrollback_limit_bytes = 50000000
+
+[ui]
+agent_panel_sort = "spaces"
+show_agent_labels_on_pane_borders = true
+pane_gaps = false
+
+[keys]
+prefix = "ctrl+a"
+
+# Fuzzy picker for workspaces, tabs, and panes
+goto = "alt+s"
+
+# Sidebar with workspace and agent list
+toggle_sidebar = "f1"
+
+# Navigation mode (aka "workspace picker")
+workspace_picker = "prefix+n"
+navigate_pane_left = "h"
+navigate_pane_down = "t"
+navigate_pane_up = "c"
+navigate_pane_right = "n"
+navigate_workspace_up = "alt+c"
+navigate_workspace_down = "alt+t"
+
+# -----------#
+# Workspaces #
+# -----------#
+
+rename_workspace = "prefix+>"
+
+# -----#
+# Tabs #
+# -----#
+
+previous_tab = "alt+g"
+next_tab = "alt+r"
+
+new_tab = "prefix+w"
+rename_tab = "prefix+,"
+
+zoom = "alt+enter"
+
+split_horizontal = "alt+'"
+split_vertical = "alt+,"
+
+# ------#
+# Panes #
+# ------#
+
+# We do not use built-in herdr pane navigation because it does not integrate with Neovim
+focus_pane_left = ""
+focus_pane_down = ""
+focus_pane_up = ""
+focus_pane_right = ""
+
+# Instead, we shell out to a custom script
+[[keys.command]]
+key = "alt+h"
+type = "shell"
+command = "herdr-navigate left alt+h"
+description = "focus pane left"
+
+[[keys.command]]
+key = "alt+t"
+type = "shell"
+command = "herdr-navigate down alt+t"
+description = "focus pane down"
+
+[[keys.command]]
+key = "alt+c"
+type = "shell"
+command = "herdr-navigate up alt+c"
+description = "focus pane up"
+
+[[keys.command]]
+key = "alt+n"
+type = "shell"
+command = "herdr-navigate right alt+n"
+description = "focus pane right"

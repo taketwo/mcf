@@ -1,0 +1,2 @@
+config.toml:.config/herdr/config.toml:Herdr configuration file
+herdr-navigate:.local/bin/herdr-navigate:Pane navigation for herdr

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Herdr equivalent of vim-tmux-navigator's tmux-side "is_vim" check: forwards
+# a directional alt-key into the focused pane when it's running vim/fzf (which
+# want to handle the key themselves), otherwise moves herdr's pane focus.
+#
+# Bound from config.toml via [[keys.command]], one entry per direction:
+#   [[keys.command]]
+#   key = "alt+h"
+#   type = "shell"
+#   command = "herdr-navigate left alt+h"
+#
+# Usage: herdr-navigate <left|right|up|down> <key-to-forward>
+
+set -euo pipefail
+
+direction=$1
+key=$2
+
+pane_id=$(herdr pane current | jq -r '.result.pane.pane_id')
+name=$(herdr pane process-info --pane "$pane_id" |
+  jq -r '.result.process_info.foreground_processes[0].name // empty')
+
+if [[ "$name" =~ ^g?(view|n?vim?x?|fzf)(diff)?$ ]]; then
+  herdr pane send-keys "$pane_id" "$key"
+else
+  herdr pane focus --direction "$direction"
+fi
