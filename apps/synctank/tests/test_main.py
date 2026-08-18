@@ -41,6 +41,131 @@ def test_debug_flag(runner: CliRunner) -> None:
     assert result.exit_code == 0
 
 
+class TestSetupCommand:
+    @staticmethod
+    def _paths(
+        tmp_path: Path, checkout_name: str = "checkout"
+    ) -> tuple[Path, Path, dict[str, str]]:
+        """Return (store, checkout, env). Creates checkout; does not create store."""
+        store = tmp_path / "store"
+        checkout = tmp_path / checkout_name
+        checkout.mkdir()
+        return store, checkout, {"SYNCTANK_DIR": str(store)}
+
+    def test_default_name_is_cwd_name(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, checkout, env = self._paths(tmp_path, "myproject")
+        monkeypatch.chdir(checkout)
+        result = runner.invoke(cli, ["setup"], env=env)
+        assert result.exit_code == 0
+        notes = checkout / "notes"
+        assert notes.is_symlink()
+        assert notes.resolve() == (store / "myproject").resolve()
+
+    def test_project_creates_named_store_dir(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, checkout, env = self._paths(tmp_path, "submodule")
+        monkeypatch.chdir(checkout)
+        result = runner.invoke(cli, ["setup", "--project", "synctank"], env=env)
+        assert result.exit_code == 0
+        notes = checkout / "notes"
+        assert notes.is_symlink()
+        assert notes.resolve() == (store / "synctank").resolve()
+        assert not (store / "submodule").exists()
+
+    def test_project_joins_existing_store_dir(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, checkout, env = self._paths(tmp_path, "submodule")
+        existing = store / "synctank"
+        existing.mkdir(parents=True)
+        (existing / "keep.md").write_text("x")
+        monkeypatch.chdir(checkout)
+
+        result = runner.invoke(cli, ["setup", "--project", "synctank"], env=env)
+        assert result.exit_code == 0
+        notes = checkout / "notes"
+        assert notes.is_symlink()
+        assert notes.resolve() == existing.resolve()
+        assert (existing / "keep.md").read_text() == "x"
+        assert not (store / "submodule").exists()
+
+    @pytest.mark.parametrize("name", ["foo/bar", ".", "..", "", ".hidden"])
+    def test_rejects_invalid_project_name(
+        self,
+        runner: CliRunner,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        name: str,
+    ) -> None:
+        _, checkout, env = self._paths(tmp_path)
+        monkeypatch.chdir(checkout)
+        result = runner.invoke(cli, ["setup", "--project", name], env=env)
+        assert result.exit_code != 0
+        assert "Invalid project name" in result.output
+        assert not (checkout / "notes").exists()
+
+    def test_already_linked_without_project_is_noop(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, checkout, env = self._paths(tmp_path, "submodule")
+        project_dir = store / "synctank"
+        project_dir.mkdir(parents=True)
+        (checkout / "notes").symlink_to(project_dir)
+        monkeypatch.chdir(checkout)
+
+        result = runner.invoke(cli, ["setup"], env=env)
+        assert result.exit_code == 0
+        assert "Already set up" in result.output
+        assert (checkout / "notes").resolve() == project_dir.resolve()
+        assert not (store / "submodule").exists()
+
+    def test_already_linked_matching_project_is_noop(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, checkout, env = self._paths(tmp_path, "submodule")
+        project_dir = store / "synctank"
+        project_dir.mkdir(parents=True)
+        (checkout / "notes").symlink_to(project_dir)
+        monkeypatch.chdir(checkout)
+
+        result = runner.invoke(cli, ["setup", "--project", "synctank"], env=env)
+        assert result.exit_code == 0
+        assert "Already set up" in result.output
+        assert (checkout / "notes").resolve() == project_dir.resolve()
+
+    def test_already_linked_mismatch_errors(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, checkout, env = self._paths(tmp_path, "submodule")
+        project_dir = store / "synctank"
+        project_dir.mkdir(parents=True)
+        (checkout / "notes").symlink_to(project_dir)
+        monkeypatch.chdir(checkout)
+
+        result = runner.invoke(cli, ["setup", "--project", "other"], env=env)
+        assert result.exit_code != 0
+        assert "already points at" in result.output
+        assert (checkout / "notes").resolve() == project_dir.resolve()
+        assert not (store / "other").exists()
+
+    def test_outside_store_symlink_errors(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _, checkout, env = self._paths(tmp_path)
+        outside = tmp_path / "elsewhere"
+        outside.mkdir()
+        (checkout / "notes").symlink_to(outside)
+        monkeypatch.chdir(checkout)
+
+        result = runner.invoke(cli, ["setup"], env=env)
+        assert result.exit_code != 0
+        assert "outside the Synctank directory" in result.output
+        assert (checkout / "notes").resolve() == outside.resolve()
+
+
 class TestCreateCommand:
     def test_strips_trailing_kind_from_name(
         self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

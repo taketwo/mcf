@@ -107,7 +107,12 @@ def cli(ctx: click.Context, *, debug: bool) -> None:
 @click.option(
     "--link-name", default="notes", show_default=True, help="Local symlink name."
 )
-def setup(link_name: str) -> None:
+@click.option(
+    "--project",
+    default=None,
+    help="Project directory under the store. Default: current directory name.",
+)
+def setup(link_name: str, project: str | None) -> None:
     """Set up synctank for the current project.
 
     Creates a project directory in the Synctank store, creates a local symlink,
@@ -120,20 +125,28 @@ def setup(link_name: str) -> None:
     cwd = Path.cwd()
     synctank_dir = get_synctank_dir()
 
+    if project is not None:
+        _validate_project_name(project)
+
+    project_name = project if project is not None else cwd.name
+    project_dir = synctank_dir / project_name
+
     symlink_path = cwd / link_name
     if symlink_path.is_symlink():
         target = symlink_path.resolve()
         try:
             target.relative_to(synctank_dir)
-            click.echo(f"Already set up: {link_name} -> {target}")
         except ValueError:
             raise click.ClickException(
                 f"{link_name} exists but points outside the Synctank directory"
             ) from None
+        if project is not None and target != project_dir.resolve():
+            raise click.ClickException(
+                f"{link_name} already points at {target}, not project {project!r}"
+            )
+        click.echo(f"Already set up: {link_name} -> {target}")
         return
 
-    project_name = cwd.name
-    project_dir = synctank_dir / project_name
     project_dir.mkdir(parents=True, exist_ok=True)
     click.echo(f"Created {project_dir}/")
 
@@ -661,6 +674,15 @@ def _all_project_roots(synctank_dir: Path) -> list[Path]:
         for d in sorted(synctank_dir.iterdir())
         if d.is_dir() and not d.name.startswith(".")
     ]
+
+
+def _validate_project_name(name: str) -> None:
+    """Reject a name that is not a single non-hidden path component."""
+    if not name or name.startswith(".") or "/" in name:
+        raise click.ClickException(
+            f"Invalid project name {name!r}: must be a single path component "
+            "and must not start with '.'"
+        )
 
 
 def _ensure_git_excluded(cwd: Path, name: str) -> None:
