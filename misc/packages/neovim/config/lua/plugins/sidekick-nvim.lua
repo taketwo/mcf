@@ -88,12 +88,12 @@ return {
         desc = 'Send prompt to Sidekick',
       },
       {
-        '<Leader>a<Space>',
+        '<Space>T',
         function() require('sidekick.cli').toggle({ focus = true }) end,
         desc = 'Toggle Sidekick',
       },
       {
-        '<Leader>as',
+        '<Space>S',
         function() require('sidekick.cli').select({ focus = true }) end,
         desc = 'Select Sidekick',
       },
