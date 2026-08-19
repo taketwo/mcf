@@ -18,10 +18,15 @@ direction=$1
 key=$2
 
 pane_id=$(herdr pane current | jq -r '.result.pane.pane_id')
-name=$(herdr pane process-info --pane "$pane_id" |
-  jq -r '.result.process_info.foreground_processes[0].name // empty')
 
-if [[ "$name" =~ ^g?(view|n?vim?x?|fzf)(diff)?$ ]]; then
+# foreground_processes can hold a whole chain (e.g. fzf invoked via a shell
+# widget like Ctrl-R history search runs as bash -> bash -> fzf), so check
+# every entry rather than assuming vim/fzf is first.
+match=$(herdr pane process-info --pane "$pane_id" |
+  jq -r '.result.process_info.foreground_processes[].name' |
+  grep -E '^g?(view|n?vim?x?|fzf)(diff)?$' | head -1) || true
+
+if [[ -n "$match" ]]; then
   herdr pane send-keys "$pane_id" "$key"
 else
   herdr pane focus --direction "$direction"
