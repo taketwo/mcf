@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#
+# format-docstrings: rewrap Python docstrings to 88 columns with docformatter.
+#
+# Ruff's formatter deliberately never reflows docstring prose, so long docstrings
+# keep whatever line breaks they were written with. This fills them to 88 (Ruff's
+# line length) and splits multi-sentence summaries per PEP 257.
+#
+# docformatter is run via uvx, so nothing needs to be installed.
+#
+# NOTE: docformatter produces two things Ruff disagrees with -- a blank line
+# between a docstring and a following `async with` (Ruff's D202), and one blank
+# line where PEP 8 wants two after a module docstring followed by a top-level def.
+# Run your formatter afterwards to settle them.
+
+set -euo pipefail
+
+WIDTH=88
+
+# Never descend into these; docformatter walks everything under a recursive
+# target, so a bare `.` would otherwise reformat the virtualenv.
+EXCLUDE=(.venv venv .git .tox .mypy_cache .ruff_cache .pytest_cache __pycache__ node_modules build dist)
+
+usage() {
+  cat >&2 <<'EOF'
+Usage: format-docstrings [DIR...]
+
+Rewrap Python docstrings to 88 columns. Defaults to the current directory.
+Run your project's formatter afterwards: docformatter leaves blank lines that
+ruff format / ruff check --fix disagree with.
+
+Options:
+  -h, --help  Show this help
+EOF
+  exit 1
+}
+
+case "${1:-}" in
+  -h | --help) usage ;;
+esac
+
+if [[ $# -eq 0 ]]; then
+  dirs=(.)
+else
+  dirs=("$@")
+fi
+
+for dir in "${dirs[@]}"; do
+  if [[ ! -d "$dir" ]]; then
+    echo "format-docstrings: '$dir' is not a directory" >&2
+    exit 1
+  fi
+done
+
+# docformatter exits 3 when it rewrites a file (success for us) and 1 when it
+# cannot parse one. Its parser lags CPython, so a file using new syntax -- e.g.
+# PEP 758's unparenthesized `except A, B:` -- aborts the run with an empty error
+# message. Treat 1 as a warning so one such file does not stop the rest.
+status=0
+uvx --quiet docformatter \
+  --wrap-summaries "$WIDTH" \
+  --wrap-descriptions "$WIDTH" \
+  --in-place \
+  --recursive \
+  --exclude "${EXCLUDE[@]}" \
+  -- \
+  "${dirs[@]}" || status=$?
+
+case $status in
+  0 | 3) ;;
+  1) echo "format-docstrings: docformatter could not parse some files (skipped)" >&2 ;;
+  *)
+    echo "format-docstrings: docformatter failed (exit $status)" >&2
+    exit "$status"
+    ;;
+esac
