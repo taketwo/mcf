@@ -1,2 +1,2 @@
 nix: tmux
-uvx: tmuxp pyyaml                         # tmux session management
+uvx: tmuxp pyyaml shtab                   # tmux session management
