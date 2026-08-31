@@ -1,0 +1,58 @@
+{
+  "$schema": "https://lnav.org/schemas/format-v1.schema.json",
+  "reco_log": {
+    "title": "Reco",
+    "description": "Recognition (entity dealer) stdout log, spdlog pattern '%Y-%m-%d %H:%M:%S.%e %L %P %t %-15!s: %v'",
+    "file-pattern": ".*\\.(log|txt)",
+    "multiline": false,
+    "regex": {
+      "std": {
+        "pattern": "^(?<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) (?<level>[TDIWEC]) (?<pid>\\d+) (?<tid>\\d+) (?<src_file>\\S+) {0,14}: (?<body>.*)$"
+      }
+    },
+    "timestamp-format": [
+      "%Y-%m-%d %H:%M:%S.%L"
+    ],
+    "level": {
+      "critical": "C",
+      "error": "E",
+      "warning": "W",
+      "info": "I",
+      "debug": "D",
+      "trace": "T"
+    },
+    "thread-id-field": "tid",
+    "value": {
+      "pid": {
+        "kind": "integer",
+        "identifier": true
+      },
+      "tid": {
+        "kind": "integer",
+        "identifier": true
+      },
+      "src_file": {
+        "kind": "string",
+        "identifier": true
+      }
+    },
+    "sample": [
+      {
+        "line": "2026-08-28 19:25:22.403 D 1121192 1121192 entity_dealer.c: num_workers: 3",
+        "level": "debug"
+      },
+      {
+        "line": "2026-08-28 19:25:32.781 W 1121192 1121192 model_manager.h: load model failed: /var/aeolus/data_ws/src/site/aichi_nagakute/reco_model",
+        "level": "warning"
+      },
+      {
+        "line": "2026-08-28 19:34:42.397 I 1121192 1123207 reid_op.cpp    : 1787945681727569556 Face:Id{3:1:,1:unknown,1:unknown,1:unknown}",
+        "level": "info"
+      },
+      {
+        "line": "2026-08-28 19:42:44.225 D 1121192 1123208 scope_logger.hp: - face_id_handler.cpp, operator(), rgb360, 1787946163537631667",
+        "level": "debug"
+      }
+    ]
+  }
+}
