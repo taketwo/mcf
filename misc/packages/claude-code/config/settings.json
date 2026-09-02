@@ -15,7 +15,8 @@
     ],
     "ask": [
       "Bash(git commit:*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "statusLine": {
     "type": "command",
