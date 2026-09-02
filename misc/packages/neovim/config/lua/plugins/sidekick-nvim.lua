@@ -34,6 +34,10 @@ return {
     },
     config = function(_, opts)
       require('sidekick').setup(opts)
+      -- Drop opencode: loading it registers a session backend whose
+      -- sessions() runs a blocking `lsof -iTCP` scan that can hang Neovim
+      -- when another process has many fds on slow mounts (e.g. bfs over NFS).
+      require('sidekick.config').cli.tools.opencode = nil
       Snacks.toggle({
         name = 'Next edit suggestions',
         get = function() return require('sidekick.nes').enabled end,
