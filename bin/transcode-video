@@ -48,6 +48,17 @@ class Resolution(Enum):
     P240 = 240
 
 
+LEGACY_CONTAINERS = frozenset({".avi", ".wmv", ".flv", ".mpg", ".mpeg", ".3gp"})
+DEFAULT_CONTAINER = ".mkv"
+
+
+def default_container_suffix(input_suffix: str) -> str:
+    """Map legacy/limited containers to a more capable default (e.g. .avi -> .mkv)."""
+    return (
+        DEFAULT_CONTAINER if input_suffix.lower() in LEGACY_CONTAINERS else input_suffix
+    )
+
+
 @dataclass
 class StreamInfo:
     """Media stream information."""
@@ -370,7 +381,12 @@ about video file(s).
         if args.output_path:
             output_path = Path(args.output_path)
         else:
-            output_path = input_path.with_stem(f"{input_path.stem}.transcoded")
+            suffix = default_container_suffix(input_path.suffix)
+            output_path = input_path.with_stem(
+                f"{input_path.stem}.transcoded"
+            ).with_suffix(
+                suffix,
+            )
 
         transcode_video(
             input_path,
@@ -394,7 +410,8 @@ about video file(s).
         for file in sorted(input_path.iterdir()):
             if file.is_file():
                 try:
-                    output_file = output_path / file.name
+                    suffix = default_container_suffix(file.suffix)
+                    output_file = output_path / file.with_suffix(suffix).name
                     transcode_video(
                         file,
                         output_file,
