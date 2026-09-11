@@ -2,9 +2,10 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git show:*)",
-      "Bash(git diff:*)",
       "Bash(ael catkin build:*)",
       "Bash(ael test:*)",
       "Bash(synctank create:*)",
@@ -14,7 +15,7 @@
       "Bash(synctank lint:*)"
     ],
     "ask": [
-      "Bash(git commit:*)"
+      "Bash(git push:*)"
     ],
     "defaultMode": "auto"
   },
