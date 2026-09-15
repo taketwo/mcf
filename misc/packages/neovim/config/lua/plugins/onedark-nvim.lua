@@ -45,6 +45,7 @@ return {
         MiniSnippetsVisited = { bg = '$bg1' },
         -- Styles for Synctank picker
         SynctankStatusDraft = { fg = '$purple' },
+        SynctankStatusInProgress = { fg = '$orange' },
         SynctankStatusLiving = { fg = '$green' },
         SynctankStatusComplete = { fg = '$blue' },
         SynctankStatusSuperseded = { fg = '$grey' },

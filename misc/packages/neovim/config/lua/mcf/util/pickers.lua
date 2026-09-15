@@ -65,10 +65,11 @@ function M.synctank()
   )
 
   local status_hl = {
-    draft = 'SynctankStatusDraft',
-    living = 'SynctankStatusLiving',
-    complete = 'SynctankStatusComplete',
-    superseded = 'SynctankStatusSuperseded',
+    ['draft'] = 'SynctankStatusDraft',
+    ['in-progress'] = 'SynctankStatusInProgress',
+    ['living'] = 'SynctankStatusLiving',
+    ['complete'] = 'SynctankStatusComplete',
+    ['superseded'] = 'SynctankStatusSuperseded',
   }
 
   local a = Snacks.picker.util.align
