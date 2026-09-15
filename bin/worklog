@@ -252,7 +252,9 @@ class SummaryTableWidget(DataTable):
                 self.add_row(
                     RichText(date.strftime("%Y-%m-%d"), style="bold yellow"),
                     RichText(date.strftime("%A"), style="bold yellow"),
-                    RichText(str(len(by_date[date])), style="bold yellow", justify="right"),
+                    RichText(
+                        str(len(by_date[date])), style="bold yellow", justify="right"
+                    ),
                     RichText(
                         format_duration(day_total), style="bold yellow", justify="right"
                     ),
@@ -603,7 +605,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.file is None:
-        args.file = Path(now().date().strftime("%Y-%d-%m.txt"))
+        args.file = Path(now().date().strftime("%Y-%m-%d.txt"))
 
     app = WorkLogApp(args.file)
     app.run()
