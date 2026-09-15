@@ -57,6 +57,7 @@ class TestStatus:
         ("value", "expected"),
         [
             ("draft", Status.DRAFT),
+            ("in-progress", Status.IN_PROGRESS),
             ("living", Status.LIVING),
             ("complete", Status.COMPLETE),
             ("superseded", Status.SUPERSEDED),

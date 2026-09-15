@@ -82,6 +82,7 @@ class Status(StrEnum):
     """Document status vocabulary."""
 
     DRAFT = "draft"
+    IN_PROGRESS = "in-progress"
     LIVING = "living"
     COMPLETE = "complete"
     SUPERSEDED = "superseded"
@@ -94,15 +95,22 @@ class Status(StrEnum):
 
 _STATUS_DESCRIPTIONS: dict[Status, str] = {
     Status.DRAFT: (
-        "Incomplete, not yet ready to act on. The normal starting state. "
-        "Use this when the document will eventually reach a finished state — "
-        "do not use 'living' just because the document might change during implementation."
+        "The document itself is still the main activity — being written or revised, "
+        "not yet being acted on. The normal starting state. "
+        "Switch to 'in-progress' once the work this document describes is underway."
+    ),
+    Status.IN_PROGRESS: (
+        "The work this document describes is underway — implementing a design, "
+        "executing a plan, and so on. The document may still be refined as that work "
+        "feeds back, but writing the document is no longer the main activity. "
+        "Use 'draft' until that work has started."
     ),
     Status.LIVING: (
         "Permanently incomplete by design — continuously updated as the project evolves "
         "and never expected to be 'done.' "
         "Examples: a running log, a glossary, a lessons-learned document that accumulates entries over time. "
-        "Do not use for documents that are simply in progress."
+        "Do not use for documents that are simply in flight — use 'draft' while writing them, "
+        "or 'in-progress' once the work they describe is underway."
     ),
     Status.COMPLETE: (
         "No further updates expected; reflects a finished state. The document has served its purpose."
