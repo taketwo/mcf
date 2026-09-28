@@ -213,6 +213,46 @@ class TestCheckNoLineWrapping:
         note = make_note(tmp_path, body=body)
         assert check_no_line_wrapping(note) == []
 
+    def test_passes_multipart_blockquote(self, tmp_path: Path) -> None:
+        body = (
+            "> First quoted paragraph, one line.\n"
+            ">\n"
+            "> Second quoted paragraph, one line.\n"
+        )
+        note = make_note(tmp_path, body=body)
+        assert check_no_line_wrapping(note) == []
+
+    def test_passes_blockquote_blank_marker_with_space(self, tmp_path: Path) -> None:
+        body = (
+            "> First quoted paragraph, one line.\n"
+            "> \n"
+            "> Second quoted paragraph, one line.\n"
+        )
+        note = make_note(tmp_path, body=body)
+        assert check_no_line_wrapping(note) == []
+
+    def test_passes_hard_wrapped_blockquote(self, tmp_path: Path) -> None:
+        body = (
+            "> This quoted paragraph has been\n"
+            "> hard wrapped at a short\n"
+            "> column width.\n"
+        )
+        note = make_note(tmp_path, body=body)
+        assert check_no_line_wrapping(note) == []
+
+    def test_flags_wrapped_prose_before_blockquote(self, tmp_path: Path) -> None:
+        body = (
+            "This paragraph has been\n"
+            "hard wrapped at a short\n"
+            "column width which is bad.\n"
+            "\n"
+            "> A quoted line.\n"
+            ">\n"
+            "> Another quoted line.\n"
+        )
+        note = make_note(tmp_path, body=body)
+        assert len(check_no_line_wrapping(note)) == 1
+
     def test_passes_numbered_list_with_indented_fence(self, tmp_path: Path) -> None:
         body = (
             "1. **Modify models** in `src/foo.py`\n"

@@ -78,6 +78,7 @@ def check_filename_slug(note: Note) -> list[LintViolation]:
 
 
 _LIST_ITEM_RE = re.compile(r"^[-*+]\s|^\d+[.)]\s")
+_BLOCKQUOTE_LINE_RE = re.compile(r"^ {0,3}>")
 
 
 def _looks_wrapped(paragraph: list[str]) -> bool:
@@ -106,8 +107,22 @@ def _is_indented_code_line(line: str) -> bool:
     return bool(line) and line.startswith(("    ", "\t"))
 
 
+def _is_blockquote_line(line: str) -> bool:
+    """Return True if the line is a markdown blockquote line."""
+    return _BLOCKQUOTE_LINE_RE.match(line) is not None
+
+
+def _mask_blockquote_lines(lines: list[str]) -> list[str]:
+    """Return lines with blockquote lines replaced by blanks."""
+    return ["" if _is_blockquote_line(line) else line for line in lines]
+
+
 def _find_wrapped_paragraphs(body_lines: list[str]) -> list[int]:
-    """Return 1-based line numbers of the first line of each hard-wrapped paragraph."""
+    """Return 1-based line numbers of the first line of each hard-wrapped paragraph.
+
+    Fenced code, indented code, and blockquotes are skipped.
+    """
+    body_lines = _mask_blockquote_lines(body_lines)
     in_code_block = False
     in_indented_code = False
     results: list[int] = []
