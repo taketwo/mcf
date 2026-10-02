@@ -1,14 +1,14 @@
 return {
-  'selimacerbas/markdown-preview.nvim',
+  'selimacerbas/mdkite.nvim',
   dependencies = {
     {
-      'selimacerbas/live-server.nvim',
-      cmd = { 'LiveServerStart', 'LiveServerStop' },
+      'selimacerbas/kitehost.nvim',
+      cmd = { 'KiteHost' },
     },
   },
-  cmd = { 'MarkdownPreview' },
+  cmd = { 'MdKite' },
   config = function()
-    require('markdown_preview').setup({
+    require('mdkite').setup({
       hooks = {
         on_start = function(url) vim.notify('Preview started: ' .. url, vim.log.levels.INFO) end,
         on_stop = function() vim.notify('Preview stopped', vim.log.levels.INFO) end,
