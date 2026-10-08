@@ -19,11 +19,6 @@
     ],
     "defaultMode": "auto"
   },
-  "statusLine": {
-    "type": "command",
-    "command": "ccstatusline",
-    "padding": 0
-  },
   "enabledPlugins": {
     "elements-of-style@superpowers-marketplace": true
   },
