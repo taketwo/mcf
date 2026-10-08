@@ -44,6 +44,8 @@ rename_workspace = "prefix+>"
 
 previous_tab = "alt+g"
 next_tab = "alt+r"
+move_tab_previous = "alt+shift+g"
+move_tab_next = "alt+shift+r"
 
 new_tab = "prefix+w"
 rename_tab = "prefix+,"
