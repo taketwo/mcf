@@ -3,6 +3,9 @@ onboarding = false
 [theme]
 name = "one-dark"
 
+[theme.custom]
+sidebar_bg = "#1b1c1e"
+
 [terminal]
 default_shell = "/bin/bash"
 
