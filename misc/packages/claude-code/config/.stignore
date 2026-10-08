@@ -2,6 +2,7 @@
 .gitignore
 .stignore
 settings.json
+statusline.sh
 // Machine-specific files
 .credentials.json
 // Ephemeral files

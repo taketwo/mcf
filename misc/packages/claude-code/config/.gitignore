@@ -2,3 +2,4 @@
 !.gitignore
 !.stignore
 !settings.json
+!statusline.sh

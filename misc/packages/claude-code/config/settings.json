@@ -19,6 +19,11 @@
     ],
     "defaultMode": "auto"
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "refreshInterval": 60
+  },
   "enabledPlugins": {
     "elements-of-style@superpowers-marketplace": true
   },
