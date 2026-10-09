@@ -16,6 +16,11 @@ scrollback_limit_bytes = 50000000
 agent_panel_sort = "spaces"
 show_agent_labels_on_pane_borders = true
 pane_gaps = false
+tab_bar_right = [
+  { type = "hostname" },
+  { type = "datetime", format = "%H:%M" },
+]
+tab_bar_right_separator = " · "
 
 [ui.toast]
 # In-terminal toast in bottom-right corner
