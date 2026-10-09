@@ -92,3 +92,15 @@ key = "alt+n"
 type = "shell"
 command = "herdr-navigate right alt+n"
 description = "focus pane right"
+
+[[keys.command]]
+key = "prefix+y"
+type = "shell"
+command = "herdr-copy line"
+description = "copy command line"
+
+[[keys.command]]
+key = "prefix+shift+y"
+type = "shell"
+command = "herdr-copy cwd"
+description = "copy current directory"

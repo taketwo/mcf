@@ -1,2 +1,4 @@
 config.toml:.config/herdr/config.toml:Herdr configuration file
 herdr-navigate:.local/bin/herdr-navigate:Pane navigation for herdr
+herdr-copy:.local/bin/herdr-copy:Copy pane directory or command line
+herdr.bash:.local/bash/70-herdr.bash:Copy the command line from a Herdr pane

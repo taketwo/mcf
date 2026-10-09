@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+# Copy the focused pane's directory, or the command line bash is editing.
+#
+# Bound from config.toml:
+#   prefix+y        herdr-copy line
+#   prefix+shift+y  herdr-copy cwd
+#
+# The line action injects Ctrl-x Ctrl-y into the pane. herdr.bash binds that
+# sequence and copies $READLINE_LINE. The bytes here and the bind in herdr.bash
+# are the same sequence; change them together. The toast is raised here, same
+# as the directory copy, because the shell that is already running does not
+# have to learn a new widget.
+#
+# Clipboard. xsel writes the desktop clipboard on the machine where this
+# command runs. That is the host when the server is local, and it is also the
+# host for a container that has the host display. A server with no display
+# still reaches the attached client: the text is written to the pane as
+# OSC 52, and Herdr hands that to the client, which copies it locally.
+#
+# Usage: herdr-copy <cwd|line>
+
+set -euo pipefail
+
+copy_to_clipboard() {
+  local text=$1 pane_id=$2 ok=0
+  if command -v xsel >/dev/null 2>&1; then
+    if printf '%s' "$text" | xsel --clipboard --input 2>/dev/null; then
+      ok=1
+    fi
+  fi
+  if copy_via_pane_osc52 "$pane_id" "$text"; then
+    ok=1
+  fi
+  if [[ $ok -eq 0 ]]; then
+    echo "herdr-copy: could not copy" >&2
+    exit 1
+  fi
+}
+
+# OSC 52 on the pane pty. Herdr forwards it to the foreground client.
+copy_via_pane_osc52() {
+  local pane_id=$1 text=$2 pid tty payload
+  [[ -n $pane_id ]] || return 1
+  pid=$(herdr pane process-info --pane "$pane_id" |
+    jq -r '.result.process_info.shell_pid // empty') || return 1
+  [[ -n $pid && $pid != null ]] || return 1
+  tty=$(readlink -f "/proc/$pid/fd/1" 2>/dev/null || true)
+  [[ -n $tty && -w $tty ]] || return 1
+  payload=$(printf '%s' "$text" | base64 -w0 2>/dev/null ||
+    printf '%s' "$text" | base64 | tr -d '\n') || return 1
+  printf '\033]52;c;%s\a' "$payload" >"$tty"
+}
+
+# In-app toast. Herdr draws it when ui.toast.delivery is "herdr".
+notify_copied() {
+  local title=$1 body=${2:-}
+  if [[ -n $body ]]; then
+    herdr notification show "$title" --body "$body" >/dev/null 2>&1 || true
+  else
+    herdr notification show "$title" >/dev/null 2>&1 || true
+  fi
+}
+
+copy_cwd() {
+  local cwd="${HERDR_ACTIVE_PANE_CWD:-}"
+  if [[ -z "$cwd" ]]; then
+    cwd=$(herdr pane current | jq -r '.result.pane.cwd // empty')
+  fi
+  if [[ -z "$cwd" || "$cwd" == "null" ]]; then
+    echo "herdr-copy: pane has no directory" >&2
+    exit 1
+  fi
+  local pane_id="${HERDR_ACTIVE_PANE_ID:-}"
+  if [[ -z $pane_id ]]; then
+    pane_id=$(herdr pane current | jq -r '.result.pane.pane_id // empty')
+  fi
+  copy_to_clipboard "$cwd" "$pane_id"
+  notify_copied "Directory copied" "$cwd"
+}
+
+# Ctrl-x Ctrl-y. Matches bind -x '"\C-x\C-y"' in herdr.bash.
+line_keys=$'\x18\x19'
+
+# The prompt ends with ❯ and a space, sometimes non-breaking. The command
+# bash is editing is the rest of that line.
+command_from_screen() {
+  local pane_id=$1 screen last body
+  screen=$(herdr pane read "$pane_id" --source visible --lines 6)
+  last=$(printf '%s\n' "$screen" | awk 'NF { line=$0 } END { print line }')
+  if [[ "$last" != *❯* ]]; then
+    return 0
+  fi
+  body=${last##*❯}
+  body=${body#$'\u00a0'}
+  body=${body# }
+  printf '%s' "$body"
+}
+
+copy_line() {
+  local pane_id="${HERDR_ACTIVE_PANE_ID:-}"
+  if [[ -z "$pane_id" ]]; then
+    pane_id=$(herdr pane current | jq -r '.result.pane.pane_id')
+  fi
+
+  # A shell widget such as Ctrl-r leaves bash and fzf in the same foreground
+  # chain. Inject the sequence only when every foreground process is bash, so
+  # vim, fzf, and ssh keep the bytes.
+  local names name
+  names=$(herdr pane process-info --pane "$pane_id" |
+    jq -r '.result.process_info.foreground_processes[].name')
+  if [[ -z "$names" ]]; then
+    exit 0
+  fi
+  while IFS= read -r name; do
+    if [[ "$name" != "bash" && "$name" != "-bash" ]]; then
+      exit 0
+    fi
+  done <<<"$names"
+
+  local body
+  body=$(command_from_screen "$pane_id")
+
+  # send-text writes these bytes straight to the pty. send-keys would encode
+  # them through the pane's keyboard protocol, and readline would miss the bind.
+  herdr pane send-text "$pane_id" "$line_keys"
+  notify_copied "Line copied" "$body"
+}
+
+case "${1:-}" in
+  cwd) copy_cwd ;;
+  line) copy_line ;;
+  *)
+    echo "usage: herdr-copy cwd|line" >&2
+    exit 2
+    ;;
+esac

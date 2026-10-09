@@ -1,2 +1,3 @@
 nix: herdr
-jq                     # for JSON parsing herdr-navigate
+jq                     # for JSON parsing herdr-navigate and herdr-copy
+xsel                   # local clipboard for herdr-copy; OSC 52 reaches a remote client
