@@ -28,6 +28,7 @@ from .rendering import (
     print_renderable,
     render_lint_violations,
     render_notes_table,
+    render_projects,
     render_search_results,
     render_status,
 )
@@ -37,6 +38,7 @@ from .workspace import (
     find_notes_symlink,
     find_workspace_root,
     get_synctank_dir,
+    list_projects,
     resolve_notes_root,
 )
 
@@ -95,7 +97,8 @@ def cli(ctx: click.Context, *, debug: bool) -> None:
     is found either from the current directory (the nearest ancestor containing
     a symlink into the notes store, e.g. `notes/`), or directly when you are
     already inside the store under a single project (`$SYNCTANK_DIR/<project>/`,
-    default `~/Synctank/<project>/`).
+    default `~/Synctank/<project>/`). `projects` lists every project directory
+    in the store and does not use this resolution.
     """
     ctx.ensure_object(dict)
     ctx.obj["debug"] = debug
@@ -386,6 +389,33 @@ def list_notes(subdir: str | None, *, as_json: bool) -> None:
         click.echo(json.dumps([n.to_dict() for n in notes]))
     else:
         print_renderable(render_notes_table(notes, errors, notes_root=notes_root))
+
+
+@cli.command()
+@click.option(
+    "--json", "as_json", is_flag=True, default=False, help="Output as JSON array."
+)
+def projects(*, as_json: bool) -> None:
+    """List project directories in the notes store.
+
+    Does not require a linked workspace. Skips names that start with a dot.
+    """
+    found = list_projects(get_synctank_dir())
+    if as_json:
+        click.echo(
+            json.dumps(
+                [
+                    {
+                        "name": project.name,
+                        "path": str(project.path),
+                        "notes": project.notes,
+                    }
+                    for project in found
+                ]
+            )
+        )
+    else:
+        print_renderable(render_projects(found))
 
 
 @human_only

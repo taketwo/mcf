@@ -1,7 +1,23 @@
 import os
+from dataclasses import dataclass
+from operator import attrgetter
 from pathlib import Path
 
 import click
+
+from .notes import enumerate_notes
+
+
+@dataclass
+class Project:
+    """A directory in the notes store.
+
+    notes is the number of note files it contains.
+    """
+
+    name: str
+    path: Path
+    notes: int
 
 
 def get_synctank_dir() -> Path:
@@ -48,6 +64,30 @@ def find_notes_symlink(workspace_root: Path, synctank_dir: Path) -> Path | None:
             else:
                 return target
     return None
+
+
+def list_projects(synctank_dir: Path) -> list[Project]:
+    """Return project directories in the store, sorted by name.
+
+    Skips files and names that start with a dot. The note count includes
+    subdirectories. Raises click.ClickException if the store does not exist.
+    """
+    synctank_dir = synctank_dir.expanduser()
+    if not synctank_dir.is_dir():
+        raise click.ClickException(f"Notes store not found: {synctank_dir}")
+
+    return sorted(
+        (
+            Project(
+                name=path.name,
+                path=path.resolve(),
+                notes=sum(1 for _ in enumerate_notes(path)),
+            )
+            for path in synctank_dir.iterdir()
+            if path.is_dir() and not path.name.startswith(".")
+        ),
+        key=attrgetter("name"),
+    )
 
 
 def resolve_notes_root(cwd: Path, synctank_dir: Path) -> Path:

@@ -7,6 +7,7 @@ from synctank.workspace import (
     find_notes_symlink,
     find_workspace_root,
     get_synctank_dir,
+    list_projects,
     resolve_notes_root,
 )
 
@@ -190,3 +191,31 @@ class TestResolveNotesRoot:
             click.ClickException, match="Not inside a synctank workspace"
         ):
             resolve_notes_root(cwd, synctank_dir)
+
+
+class TestListProjects:
+    def test_lists_projects_sorted_with_note_counts(self, tmp_path: Path) -> None:
+        store = tmp_path / "Synctank"
+        alpha = store / "alpha"
+        (alpha / "nested").mkdir(parents=True)
+        (alpha / "001-one.md").write_text("\n")
+        (alpha / "nested" / "002-two.md").write_text("\n")
+        (alpha / "README.md").write_text("not a note\n")
+        (store / "zebra").mkdir()
+        (store / ".stversions").mkdir()
+        (store / ".stversions" / "001-hidden.md").write_text("\n")
+        (store / "loose.txt").write_text("x\n")
+
+        assert [(p.name, p.path, p.notes) for p in list_projects(store)] == [
+            ("alpha", alpha.resolve(), 2),
+            ("zebra", (store / "zebra").resolve(), 0),
+        ]
+
+    def test_empty_store(self, tmp_path: Path) -> None:
+        store = tmp_path / "Synctank"
+        store.mkdir()
+        assert list_projects(store) == []
+
+    def test_missing_store(self, tmp_path: Path) -> None:
+        with pytest.raises(click.ClickException, match="Notes store not found"):
+            list_projects(tmp_path / "missing")

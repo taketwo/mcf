@@ -11,11 +11,13 @@ from synctank.notes import Frontmatter, Note, ParseError, write_note
 from synctank.rendering import (
     render_lint_violations,
     render_notes_table,
+    render_projects,
     render_search_results,
     render_status,
 )
 from synctank.schema import Kind, Status
 from synctank.search import SearchResult
+from synctank.workspace import Project
 
 TODAY = date(2026, 4, 22)
 
@@ -156,6 +158,22 @@ class TestRenderLintViolations:
         violations = check_no_line_wrapping(note)
         output = render_to_str(render_lint_violations(violations, detailed=True))
         assert f":{expected}:" in output
+
+
+class TestRenderProjects:
+    def test_empty(self) -> None:
+        output = render_to_str(render_projects([]))
+        assert "No projects found." in output
+
+    def test_lists_name_and_count(self, tmp_path: Path) -> None:
+        projects = [
+            Project("alpha", tmp_path / "alpha", 2),
+            Project("zebra", tmp_path / "zebra", 0),
+        ]
+        output = render_to_str(render_projects(projects))
+        assert "alpha" in output
+        assert "zebra" in output
+        assert "2" in output
 
 
 class TestRenderStatus:

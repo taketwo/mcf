@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from .lint import LintViolation
     from .notes import Note, ParseError
     from .search import SearchResult
+    from .workspace import Project
 
 
 def render_notes_table(
@@ -139,6 +140,22 @@ def render_lint_violations(
         Text(f"{len(violations)} warning(s) in {files} file(s).", style="yellow")
     )
     return Group(*renderables)
+
+
+def render_projects(projects: list[Project]) -> RenderableType:
+    """Render a table of project name and note count.
+
+    An empty list renders as "No projects found."
+    """
+    if not projects:
+        return Text("No projects found.", style="dim")
+
+    table = Table(show_header=True, header_style="bold", box=None, padding=(0, 1))
+    table.add_column("Project")
+    table.add_column("Notes", justify="right")
+    for project in projects:
+        table.add_row(project.name, str(project.notes))
+    return table
 
 
 def render_status(root: Path | None, synctank_dir: Path) -> RenderableType:

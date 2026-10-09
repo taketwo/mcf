@@ -373,6 +373,51 @@ class TestListCommand:
         assert [i["index"] for i in items[1:]] == [1, 2]  # root group: ascending index
 
 
+class TestProjectsCommand:
+    @staticmethod
+    def _store(tmp_path: Path) -> tuple[Path, Path]:
+        store = tmp_path / "store"
+        project = store / "alpha"
+        project.mkdir(parents=True)
+        (project / "001-one.md").write_text("\n")
+        return store, project
+
+    def test_json_ignores_working_directory(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        store, project = self._store(tmp_path)
+        monkeypatch.chdir(tmp_path)
+        result = runner.invoke(
+            cli, ["projects", "--json"], env={"SYNCTANK_DIR": str(store)}
+        )
+        assert result.exit_code == 0
+        assert json.loads(result.output) == [
+            {"name": "alpha", "path": str(project.resolve()), "notes": 1},
+        ]
+
+    def test_text_lists_project_names(self, runner: CliRunner, tmp_path: Path) -> None:
+        store, _ = self._store(tmp_path)
+        result = runner.invoke(cli, ["projects"], env={"SYNCTANK_DIR": str(store)})
+        assert result.exit_code == 0
+        assert "alpha" in result.output
+
+    def test_missing_store(self, runner: CliRunner, tmp_path: Path) -> None:
+        result = runner.invoke(
+            cli, ["projects"], env={"SYNCTANK_DIR": str(tmp_path / "missing")}
+        )
+        assert result.exit_code != 0
+        assert "Notes store not found" in result.output
+
+    def test_listed_with_agent_commands(self, runner: CliRunner) -> None:
+        result = runner.invoke(cli, ["--help"])
+        assert result.exit_code == 0
+        agent_section, _, human_section = result.output.partition(
+            "Commands (for humans):"
+        )
+        assert "\n  projects " in agent_section
+        assert "\n  projects " not in human_section
+
+
 class TestFzfSearch:
     """Tests for _run_fzf_search subprocess orchestration.
 
