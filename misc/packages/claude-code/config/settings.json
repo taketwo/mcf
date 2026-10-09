@@ -19,6 +19,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
@@ -28,6 +29,11 @@
     "elements-of-style@superpowers-marketplace": true
   },
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
   "theme": "dark-daltonized",
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true
