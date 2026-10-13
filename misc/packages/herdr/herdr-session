@@ -50,6 +50,19 @@ def herdr(session: str, *args: str) -> dict[str, Any]:
     return json.loads(proc.stdout) if proc.stdout.strip() else {}
 
 
+def shell_environment() -> dict[str, str]:
+    """Return the environment without the venv that `uv run` set up."""
+    env = dict(os.environ)
+    venv = env.pop("VIRTUAL_ENV", None)
+    env.pop("UV_RUN_RECURSION_DEPTH", None)
+    if venv:
+        venv_bin = str(Path(venv) / "bin")
+        env["PATH"] = os.pathsep.join(
+            entry for entry in env["PATH"].split(os.pathsep) if entry != venv_bin
+        )
+    return env
+
+
 def ensure_server(session: str) -> None:
     def running() -> bool:
         try:
@@ -66,6 +79,8 @@ def ensure_server(session: str) -> None:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         start_new_session=True,
+        # Pane shells inherit the server's environment.
+        env=shell_environment(),
     )
     deadline = time.monotonic() + SERVER_TIMEOUT_SEC
     while not running():
