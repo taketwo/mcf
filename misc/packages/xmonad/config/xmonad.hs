@@ -132,7 +132,7 @@ myTopics :: [TopicItem]
 myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
   , TI "music"    ""                                         (spawnInTerminal "ncmpcpp")
-  , TI "mcf"      "~/.mcf"                                   (spawnTmux)
+  , TI "mcf"      "~/.mcf"                                   (spawnHerdr)
   , TI "ael"      ""                                         (spawnInTerminal "ael tmux load ael")
   , TI "alpaca"   ""                                         (spawnInTerminal "mosh alpaca")
   , TI "remmina"  ""                                         (spawn "remmina")
@@ -144,7 +144,7 @@ myTopics =
   ]
   where
     -- Make a default topic item that just spawns a shell.
-    ti t d = TI t d spawnTmux
+    ti t d = TI t d spawnHerdr
 
 myTopicNames :: [Topic]
 myTopicNames = map tiName myTopics
@@ -177,6 +177,15 @@ spawnTmuxSession (session, dir) = do
                 else "tmux new -s " ++ session
   spawn $ appTerminal ++ " --working-directory=" ++ dir ++ " -e " ++ command
 
+-- Spawn herdr for a given topic
+spawnHerdr :: X ()
+spawnHerdr = currentTopicDirName myTopicConfig >>= spawnHerdrSession
+
+-- Spawn herdr session in a given working directory.
+-- herdr-session loads the matching $MCF/tmux/sessions/ file, if any.
+spawnHerdrSession :: (String, String) -> X ()
+spawnHerdrSession (session, dir) =
+  spawn $ appTerminal ++ " --working-directory=" ++ dir ++ " -e herdr-session " ++ session ++ " '" ++ dir ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
