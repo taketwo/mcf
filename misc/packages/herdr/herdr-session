@@ -1,0 +1,182 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "pyyaml",
+# ]
+# ///
+
+"""Attach to a named Herdr session, building its workspace from a tmuxp file.
+
+Counterpart of `tmuxp load $MCF/tmux/sessions/<name>.yaml`. The Herdr session
+is named <name>. Its server is started if needed. If the session has no
+workspace labelled <name>, one is created from the tmuxp file (or as a plain
+shell in <dir> when there is no file). Then the terminal attaches.
+
+Supported tmuxp subset: session_name, start_directory, windows with
+window_name, start_directory, focus, layout (even-horizontal, main-vertical)
+and panes whose shell_command is a string or a list of strings.
+
+Usage: herdr-session <name> [<dir>]
+"""
+
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+SERVER_TIMEOUT_SEC = 10
+LAYOUT_SPLITS = {"even-horizontal": "right", "main-vertical": "down"}
+
+
+class LayoutError(Exception):
+    pass
+
+
+def herdr(session: str, *args: str) -> dict[str, Any]:
+    proc = subprocess.run(
+        ["herdr", "--session", session, *args],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"herdr {' '.join(args)}: {proc.stderr or proc.stdout}")
+    return json.loads(proc.stdout) if proc.stdout.strip() else {}
+
+
+def ensure_server(session: str) -> None:
+    def running() -> bool:
+        try:
+            herdr(session, "workspace", "list")
+        except RuntimeError:
+            return False
+        return True
+
+    if running():
+        return
+    subprocess.Popen(
+        ["herdr", "--session", session, "server"],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    deadline = time.monotonic() + SERVER_TIMEOUT_SEC
+    while not running():
+        if time.monotonic() > deadline:
+            raise RuntimeError(f"herdr server for {session!r} did not start")
+        time.sleep(0.1)
+
+
+def expand(path: str, base: Path) -> Path:
+    return base / os.path.expanduser(os.path.expandvars(path))
+
+
+def commands(pane: Any, where: str) -> list[str]:
+    if pane in (None, "blank", "pane"):
+        return []
+    if isinstance(pane, dict):
+        pane = pane.get("shell_command")
+    if isinstance(pane, str):
+        return [pane]
+    if isinstance(pane, list) and all(isinstance(c, str) for c in pane):
+        return pane
+    raise LayoutError(f"{where}: unsupported pane {pane!r}")
+
+
+def split_direction(window: dict[str, Any], where: str) -> str:
+    layout = window.get("layout", "even-horizontal")
+    if layout not in LAYOUT_SPLITS:
+        raise LayoutError(f"{where}: unsupported layout {layout!r}")
+    return LAYOUT_SPLITS[layout]
+
+
+def populate(session: str, workspace: str, tab: dict, window: dict, cwd: Path) -> None:
+    where = f"window {window['window_name']!r}"
+    panes = window.get("panes") or [None]
+    direction = split_direction(window, where) if len(panes) > 1 else "right"
+    listing = herdr(session, "pane", "list", "--workspace", workspace)
+    pane_id = next(
+        p["pane_id"] for p in listing["result"]["panes"] if p["tab_id"] == tab["tab_id"]
+    )
+    for index, pane in enumerate(panes):
+        if index:
+            result = herdr(
+                session, "pane", "split", pane_id,
+                "--direction", direction, "--no-focus", "--cwd", str(cwd),
+            )  # fmt: skip
+            pane_id = result["result"]["pane"]["pane_id"]
+        for command in commands(pane, where):
+            herdr(session, "pane", "run", pane_id, command)
+
+
+def build_from_layout(session: str, layout: dict[str, Any], base: Path) -> None:
+    root = expand(layout.get("start_directory", "."), base)
+    windows = layout.get("windows")
+    if not windows:
+        raise LayoutError("no windows")
+    cwds = [expand(w.get("start_directory", "."), root) for w in windows]
+
+    created = herdr(
+        session, "workspace", "create",
+        "--label", session, "--cwd", str(cwds[0]), "--focus",
+    )  # fmt: skip
+    workspace = created["result"]["workspace"]["workspace_id"]
+    tabs = []
+    for index, (window, cwd) in enumerate(zip(windows, cwds)):
+        if index:
+            result = herdr(
+                session, "tab", "create", "--label", window["window_name"],
+                "--no-focus", "--workspace", workspace, "--cwd", str(cwd),
+            )  # fmt: skip
+            tab = result["result"]["tab"]
+        else:
+            listing = herdr(session, "tab", "list", "--workspace", workspace)
+            tab = listing["result"]["tabs"][0]
+            herdr(session, "tab", "rename", tab["tab_id"], window["window_name"])
+        tabs.append(tab)
+        populate(session, workspace, tab, window, cwd)
+    focus = max((i for i, w in enumerate(windows) if w.get("focus") is True), default=0)
+    herdr(session, "tab", "focus", tabs[focus]["tab_id"])
+
+
+def build_plain(session: str, cwd: Path) -> None:
+    herdr(
+        session, "workspace", "create", "--label", session, "--cwd", str(cwd), "--focus"
+    )
+
+
+def main() -> None:
+    if not 2 <= len(sys.argv) <= 3:
+        sys.exit(__doc__.split("Usage: ")[-1].strip())
+    session = sys.argv[1]
+    cwd = Path(sys.argv[2] if len(sys.argv) == 3 else "").expanduser().absolute()
+    mcf = Path(os.environ.get("MCF", "~/.mcf")).expanduser()
+    layout_file = mcf / "tmux" / "sessions" / f"{session}.yaml"
+
+    try:
+        ensure_server(session)
+        labels = [
+            w.get("label")
+            for w in herdr(session, "workspace", "list")["result"]["workspaces"]
+        ]
+        if session not in labels:
+            if layout_file.is_file():
+                layout = yaml.safe_load(layout_file.read_text())
+                build_from_layout(session, layout, base=mcf)
+            else:
+                build_plain(session, cwd)
+    except (RuntimeError, LayoutError) as e:
+        print(f"herdr-session: {e}", file=sys.stderr)
+        input("Press Enter to continue to herdr anyway...")
+    os.execvp("herdr", ["herdr", "session", "attach", session])
+
+
+if __name__ == "__main__":
+    main()
