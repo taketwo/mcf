@@ -5,6 +5,23 @@ settings.json
 statusline.sh
 // Machine-specific files
 .credentials.json
+/daemon
+/daemon.lock
+/daemon.log
+/daemon.status.json
+/sessions
+/jobs
+/session-env
+/shell-snapshots
+/state
+/backups
+/.last-cleanup
+/.last-update-result.json
+/mcp-needs-auth-cache.json
+// Re-fetchable caches
+/cache
+/skills/synced
+/stats-cache.json
 // Ephemeral files
 (?d)debug/
 (?d)statsig/
