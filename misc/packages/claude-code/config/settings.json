@@ -34,7 +34,9 @@
       "effortLevel": "medium"
     }
   },
+  "tui": "fullscreen",
   "theme": "dark-daltonized",
   "autoCompactEnabled": false,
+  "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true
 }
