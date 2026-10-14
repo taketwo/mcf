@@ -530,6 +530,7 @@ manageWindows = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "mendeley" | x <- myMendeleyShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift "sim" | x <- mySimShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift "uvc" | x <- myUvcShifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift "remmina" | x <- myRemminaShifts]
     ]
     where
     doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
@@ -545,6 +546,7 @@ manageWindows = composeAll . concat $
     myMendeleyShifts = ["Mendeley Desktop"]
     mySimShifts = ["RViz", "rviz", "Gazebo", "aeolus_rviz_launcher"]
     myUvcShifts = ["UVC Coverage GUI"]
+    myRemminaShifts = ["org.remmina.Remmina", "Org.remmina.Remmina", "Remmina"]
     isFloating = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_ABOVE"
     isOSD      = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY"
     isTooltip  = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_TOOLTIP"
