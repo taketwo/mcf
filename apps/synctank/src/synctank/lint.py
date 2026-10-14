@@ -175,9 +175,11 @@ def check_no_line_wrapping(note: Note) -> list[LintViolation]:
 
 
 def check_heading_case(note: Note) -> list[LintViolation]:
-    """Check that all headings use sentence case (only first word capitalised).
+    """Check that headings use sentence case.
 
-    Skips the first H1, which is tool-generated and follows its own convention.
+    A later word may be capitalised when it is an all-caps acronym or has an
+    internal capital, as in OpenSSH or JavaScript. The first H1 is skipped;
+    it is tool-generated and follows its own convention.
     """
     lines = note.body.splitlines()
     in_code_block = False
@@ -209,12 +211,12 @@ def check_heading_case(note: Note) -> list[LintViolation]:
         for part in parts:
             stripped = re.sub(r"^[\d.]+[.)]\s+|^\d+\.\d[\d.]*\s+", "", part)
             words = stripped.split()
-            # Heuristic: skip all-caps words (acronyms) and words with non-alpha chars.
-            # Expect false positives on proper nouns (React, Docker, Kubernetes, etc.).
+            # Plain proper nouns (Remmina, Docker) have the same shape as
+            # ordinary title-case words, so they still false-positive.
             bad_words += [
                 w
                 for w in words[1:]
-                if w[0].isupper() and w.isalpha() and not w.isupper()
+                if w.isalpha() and w[0].isupper() and w[1:].islower()
             ]
         if bad_words:
             violations.append(

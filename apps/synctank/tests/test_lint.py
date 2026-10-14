@@ -324,6 +324,12 @@ class TestCheckHeadingCase:
         note = make_note(tmp_path, body="## Results for LED tracking\n\nBody.")
         assert check_heading_case(note) == []
 
+    def test_passes_internal_capital(self, tmp_path: Path) -> None:
+        note = make_note(
+            tmp_path, body="## Configuring OpenSSH and JavaScript\n\nBody."
+        )
+        assert check_heading_case(note) == []
+
     def test_passes_em_dash_separated_heading(self, tmp_path: Path) -> None:
         note = make_note(
             tmp_path, body="### Commit 1 — Consolidate observation type\n\nBody."
