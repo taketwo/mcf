@@ -14,6 +14,7 @@ import XMonad.Config.Gnome
 import XMonad.Config.Desktop
 
 import XMonad.Core
+import Data.Monoid (All(..))
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -434,7 +435,7 @@ main = do
     , workspaces         = myTopicNames
     , manageHook         = manageHook myDesktopConfig <+> myManageHook
     , handleEventHook    = handleEventHook myDesktopConfig
-                             <+> onTitleChange manageZoomHook
+                             <+> onZoomTitleChange manageZoomHook
     , logHook            = do
         -- Skip pointer warping onto Zoom windows (feeds the focus flicker).
         onZoom <- focusedHasClass "zoom"
@@ -556,6 +557,13 @@ myActivateHook = composeOne
   [ className =? "zoom" -?> idHook
   , pure True           -?> doFocus
   ]
+
+-- 'onTitleChange' for Zoom windows only.
+onZoomTitleChange :: ManageHook -> Event -> X All
+onZoomTitleChange mh e@PropertyEvent{ ev_window = w } = do
+  isZoom <- runQuery (className =? "zoom") w
+  if isZoom then onTitleChange mh e else return (All True)
+onZoomTitleChange _ _ = return (All True)
 
 -- Float Zoom's popups, keep the meeting window tiled. Run via onTitleChange
 -- since Zoom renames its windows after mapping.
