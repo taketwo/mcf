@@ -102,3 +102,23 @@ jq -r --arg branch "$branch" '
   ]
   | join(" · " | dim)
 ' <<<"$input"
+
+# Surface the prompt cache in the herdr sidebar as the $cache token: a gauge glyph for the fraction of the TTL left.
+# The herdr TTL clears it at expiry even if the status line stops refreshing.
+if [[ -n $HERDR_PANE_ID ]]; then
+  read -r cache_ttl_ms cache_gauge < <(jq -r '
+    .prompt_cache // {}
+    | ({"5m": 300, "1h": 3600}[.ttl // ""] // 3600) as $ttl
+    | (if .caching_observed then (.expires_at // 0) - now else 0 end) as $remaining
+    | select($remaining > 0)
+    | ([($remaining / $ttl * 8 | floor), 7] | min) as $level
+    | "\($remaining * 1000 | floor) \("▁▂▃▄▅▆▇█"[$level:$level + 1])"
+  ' <<<"$input")
+  if [[ -n $cache_gauge ]]; then
+    herdr pane report-metadata "$HERDR_PANE_ID" --source user:statusline \
+      --token "cache=$cache_gauge" --ttl-ms "$cache_ttl_ms" &>/dev/null &
+  else
+    herdr pane report-metadata "$HERDR_PANE_ID" --source user:statusline \
+      --clear-token cache &>/dev/null &
+  fi
+fi

@@ -22,6 +22,12 @@ tab_bar_right = [
 ]
 tab_bar_right_separator = " · "
 
+[ui.sidebar.agents.rows_by_agent]
+claude = [
+  ["state_icon", "machine", "workspace", "tab"],
+  ["agent", "$cache"],
+]
+
 [ui.toast]
 # In-terminal toast in bottom-right corner
 delivery = "herdr"
