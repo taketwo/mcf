@@ -96,6 +96,14 @@ focus_pane_down = ""
 focus_pane_up = ""
 focus_pane_right = ""
 
+# ------ #
+# Agents #
+# ------ #
+
+focus_agent = "alt+1..9"
+previous_agent = "alt+f"
+next_agent = "alt+l"
+
 # Instead, we shell out to a custom script
 [[keys.command]]
 key = "alt+h"
