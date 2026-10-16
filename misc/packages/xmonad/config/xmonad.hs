@@ -182,11 +182,11 @@ spawnTmuxSession (session, dir) = do
 spawnHerdr :: X ()
 spawnHerdr = currentTopicDirName myTopicConfig >>= spawnHerdrSession
 
--- Spawn herdr session in a given working directory.
--- herdr-session loads the matching $MCF/tmux/sessions/ file, if any.
+-- Spawn herdr workspace in a given working directory.
+-- herdr-workspace loads the matching $MCF/tmux/sessions/ file, if any.
 spawnHerdrSession :: (String, String) -> X ()
 spawnHerdrSession (session, dir) =
-  spawn $ appTerminal ++ " --working-directory=" ++ dir ++ " -e herdr-session " ++ session ++ " '" ++ dir ++ "'"
+  spawn $ appTerminal ++ " --working-directory=" ++ dir ++ " -e herdr-workspace " ++ session ++ " '" ++ dir ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig

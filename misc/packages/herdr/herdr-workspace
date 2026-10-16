@@ -6,18 +6,18 @@
 # ]
 # ///
 
-"""Attach to a named Herdr session, building its workspace from a tmuxp file.
+"""Attach to a workspace on the default Herdr server, building it from a tmuxp file.
 
-Counterpart of `tmuxp load $MCF/tmux/sessions/<name>.yaml`. The Herdr session
-is named <name>. Its server is started if needed. If the session has no
-workspace labelled <name>, one is created from the tmuxp file (or as a plain
-shell in <dir> when there is no file). Then the terminal attaches.
+Counterpart of `tmuxp load $MCF/tmux/sessions/<name>.yaml`. The server is
+started if needed. If it has no workspace labelled <name>, one is created from
+the tmuxp file (or as a plain shell in <dir> when there is no file); otherwise
+the existing one is focused. Then the terminal attaches.
 
 Supported tmuxp subset: session_name, start_directory, windows with
 window_name, start_directory, focus, layout (even-horizontal, main-vertical)
 and panes whose shell_command is a string or a list of strings.
 
-Usage: herdr-session <name> [<dir>]
+Usage: herdr-workspace <name> [<dir>]
 """
 
 import json
@@ -38,9 +38,9 @@ class LayoutError(Exception):
     pass
 
 
-def herdr(session: str, *args: str) -> dict[str, Any]:
+def herdr(*args: str) -> dict[str, Any]:
     proc = subprocess.run(
-        ["herdr", "--session", session, *args],
+        ["herdr", *args],
         capture_output=True,
         text=True,
         check=False,
@@ -63,10 +63,10 @@ def shell_environment() -> dict[str, str]:
     return env
 
 
-def ensure_server(session: str) -> None:
+def ensure_server() -> None:
     def running() -> bool:
         try:
-            herdr(session, "workspace", "list")
+            herdr("workspace", "list")
         except RuntimeError:
             return False
         return True
@@ -74,7 +74,7 @@ def ensure_server(session: str) -> None:
     if running():
         return
     subprocess.Popen(
-        ["herdr", "--session", session, "server"],
+        ["herdr", "server"],
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -85,7 +85,7 @@ def ensure_server(session: str) -> None:
     deadline = time.monotonic() + SERVER_TIMEOUT_SEC
     while not running():
         if time.monotonic() > deadline:
-            raise RuntimeError(f"herdr server for {session!r} did not start")
+            raise RuntimeError("herdr server did not start")
         time.sleep(0.1)
 
 
@@ -112,26 +112,26 @@ def split_direction(window: dict[str, Any], where: str) -> str:
     return LAYOUT_SPLITS[layout]
 
 
-def populate(session: str, workspace: str, tab: dict, window: dict, cwd: Path) -> None:
+def populate(workspace: str, tab: dict, window: dict, cwd: Path) -> None:
     where = f"window {window['window_name']!r}"
     panes = window.get("panes") or [None]
     direction = split_direction(window, where) if len(panes) > 1 else "right"
-    listing = herdr(session, "pane", "list", "--workspace", workspace)
+    listing = herdr("pane", "list", "--workspace", workspace)
     pane_id = next(
         p["pane_id"] for p in listing["result"]["panes"] if p["tab_id"] == tab["tab_id"]
     )
     for index, pane in enumerate(panes):
         if index:
             result = herdr(
-                session, "pane", "split", pane_id,
+                "pane", "split", pane_id,
                 "--direction", direction, "--no-focus", "--cwd", str(cwd),
             )  # fmt: skip
             pane_id = result["result"]["pane"]["pane_id"]
         for command in commands(pane, where):
-            herdr(session, "pane", "run", pane_id, command)
+            herdr("pane", "run", pane_id, command)
 
 
-def build_from_layout(session: str, layout: dict[str, Any], base: Path) -> None:
+def build_from_layout(name: str, layout: dict[str, Any], base: Path) -> None:
     root = expand(layout.get("start_directory", "."), base)
     windows = layout.get("windows")
     if not windows:
@@ -139,58 +139,57 @@ def build_from_layout(session: str, layout: dict[str, Any], base: Path) -> None:
     cwds = [expand(w.get("start_directory", "."), root) for w in windows]
 
     created = herdr(
-        session, "workspace", "create",
-        "--label", session, "--cwd", str(cwds[0]), "--focus",
+        "workspace", "create",
+        "--label", name, "--cwd", str(cwds[0]), "--focus",
     )  # fmt: skip
     workspace = created["result"]["workspace"]["workspace_id"]
     tabs = []
     for index, (window, cwd) in enumerate(zip(windows, cwds)):
         if index:
             result = herdr(
-                session, "tab", "create", "--label", window["window_name"],
+                "tab", "create", "--label", window["window_name"],
                 "--no-focus", "--workspace", workspace, "--cwd", str(cwd),
             )  # fmt: skip
             tab = result["result"]["tab"]
         else:
-            listing = herdr(session, "tab", "list", "--workspace", workspace)
+            listing = herdr("tab", "list", "--workspace", workspace)
             tab = listing["result"]["tabs"][0]
-            herdr(session, "tab", "rename", tab["tab_id"], window["window_name"])
+            herdr("tab", "rename", tab["tab_id"], window["window_name"])
         tabs.append(tab)
-        populate(session, workspace, tab, window, cwd)
+        populate(workspace, tab, window, cwd)
     focus = max((i for i, w in enumerate(windows) if w.get("focus") is True), default=0)
-    herdr(session, "tab", "focus", tabs[focus]["tab_id"])
+    herdr("tab", "focus", tabs[focus]["tab_id"])
 
 
-def build_plain(session: str, cwd: Path) -> None:
-    herdr(
-        session, "workspace", "create", "--label", session, "--cwd", str(cwd), "--focus"
-    )
+def build_plain(name: str, cwd: Path) -> None:
+    herdr("workspace", "create", "--label", name, "--cwd", str(cwd), "--focus")
 
 
 def main() -> None:
     if not 2 <= len(sys.argv) <= 3:
         sys.exit(__doc__.split("Usage: ")[-1].strip())
-    session = sys.argv[1]
+    name = sys.argv[1]
     cwd = Path(sys.argv[2] if len(sys.argv) == 3 else "").expanduser().absolute()
     mcf = Path(os.environ.get("MCF", "~/.mcf")).expanduser()
-    layout_file = mcf / "tmux" / "sessions" / f"{session}.yaml"
+    layout_file = mcf / "tmux" / "sessions" / f"{name}.yaml"
 
     try:
-        ensure_server(session)
-        labels = [
-            w.get("label")
-            for w in herdr(session, "workspace", "list")["result"]["workspaces"]
-        ]
-        if session not in labels:
-            if layout_file.is_file():
-                layout = yaml.safe_load(layout_file.read_text())
-                build_from_layout(session, layout, base=mcf)
-            else:
-                build_plain(session, cwd)
+        ensure_server()
+        existing = {
+            w.get("label"): w["workspace_id"]
+            for w in herdr("workspace", "list")["result"]["workspaces"]
+        }
+        if name in existing:
+            herdr("workspace", "focus", existing[name])
+        elif layout_file.is_file():
+            layout = yaml.safe_load(layout_file.read_text())
+            build_from_layout(name, layout, base=mcf)
+        else:
+            build_plain(name, cwd)
     except (RuntimeError, LayoutError) as e:
-        print(f"herdr-session: {e}", file=sys.stderr)
+        print(f"herdr-workspace: {e}", file=sys.stderr)
         input("Press Enter to continue to herdr anyway...")
-    os.execvp("herdr", ["herdr", "session", "attach", session])
+    os.execvp("herdr", ["herdr"])
 
 
 if __name__ == "__main__":
