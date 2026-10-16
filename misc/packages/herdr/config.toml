@@ -25,7 +25,20 @@ tab_bar_right_separator = " · "
 [ui.sidebar.agents.rows_by_agent]
 claude = [
   ["state_icon", "machine", "workspace", "tab"],
-  ["agent", "$cache"],
+  ["agent", { token = "$cache", rules = [
+    # Gradient from the default gray (fresh cache, empty circle) to blue (about to expire, full circle), interpolated in
+    # OKLab with an ease-in curve
+    { equals = "󰝦", fg = "#737a87" },
+    { equals = "󰪞", fg = "#737b88" },
+    { equals = "󰪟", fg = "#727d8d" },
+    { equals = "󰪠", fg = "#718094" },
+    { equals = "󰪡", fg = "#6f859e" },
+    { equals = "󰪢", fg = "#6c8bab" },
+    { equals = "󰪣", fg = "#6793bb" },
+    { equals = "󰪤", fg = "#619bcf" },
+    { equals = "󰪥", fg = "#57a5e5" },
+    { equals = "󰜗", fg = "#57a5e5", bold = true },
+  ] }],
 ]
 
 [ui.toast]

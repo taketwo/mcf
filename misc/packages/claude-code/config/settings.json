@@ -24,7 +24,7 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
-    "refreshInterval": 60
+    "refreshInterval": 20
   },
   "enabledPlugins": {
     "elements-of-style@superpowers-marketplace": true

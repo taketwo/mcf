@@ -103,22 +103,26 @@ jq -r --arg branch "$branch" '
   | join(" · " | dim)
 ' <<<"$input"
 
-# Surface the prompt cache in the herdr sidebar as the $cache token: a gauge glyph for the fraction of the TTL left.
-# The herdr TTL clears it at expiry even if the status line stops refreshing.
+# Surface the prompt cache in the herdr sidebar as the $cache token: a circle filling up as the TTL elapses, replaced by
+# a snowflake once the cache is cold. refreshInterval in settings.json re-runs this while idle and so bounds how late a
+# step or the snowflake shows. The gauge expires with the cache in case the status line stops running.
 if [[ -n $HERDR_PANE_ID ]]; then
-  read -r cache_ttl_ms cache_gauge < <(jq -r '
+  mapfile -t cache_report < <(jq -r '
     .prompt_cache // {}
-    | ({"5m": 300, "1h": 3600}[.ttl // ""] // 3600) as $ttl
-    | (if .caching_observed then (.expires_at // 0) - now else 0 end) as $remaining
-    | select($remaining > 0)
-    | ([($remaining / $ttl * 8 | floor), 7] | min) as $level
-    | "\($remaining * 1000 | floor) \("▁▂▃▄▅▆▇█"[$level:$level + 1])"
+    | if .caching_observed and .expires_at then
+        (.expires_at - now) as $remaining
+        | ({"5m": 300, "1h": 3600}[.ttl // ""] // 3600) as $ttl
+        | if $remaining <= 0 then
+            "--token", "cache=󰜗" # nf-md-snowflake, stays until replaced
+          else
+            ([($remaining / $ttl * 9 | floor), 8] | min) as $level
+            # nf-md-circle_outline, nf-md-circle_slice_1..8
+            | "--token", "cache=\(["󰝦", "󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"][8 - $level])",
+              "--ttl-ms", "\([($remaining * 1000 | ceil), 86400000] | min)"
+          end
+      else
+        "--clear-token", "cache"
+      end
   ' <<<"$input")
-  if [[ -n $cache_gauge ]]; then
-    herdr pane report-metadata "$HERDR_PANE_ID" --source user:statusline \
-      --token "cache=$cache_gauge" --ttl-ms "$cache_ttl_ms" &>/dev/null &
-  else
-    herdr pane report-metadata "$HERDR_PANE_ID" --source user:statusline \
-      --clear-token cache &>/dev/null &
-  fi
+  herdr pane report-metadata "$HERDR_PANE_ID" --source user:statusline "${cache_report[@]}" &>/dev/null &
 fi
