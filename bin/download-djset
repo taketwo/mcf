@@ -3,8 +3,8 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "click>=8.4.1",
-#     "llm>=0.31",
-#     "llm-ollama>=0.16.1",
+#     "llm>=0.32",
+#     "llm-ollama>=0.18.0",
 #     "mutagen>=1.47.0",
 #     "pillow>=12.2.0",
 #     "rich>=15.0.0",
@@ -34,7 +34,7 @@ from rich.table import Table
 
 MUSIC_ROOT = Path.home() / "Music"
 SETS_SUBDIR = "DJ Sets"
-DEFAULT_MODEL = "gemma4:31b-cloud"
+DEFAULT_MODEL = "ollama/gemma4:31b-cloud"
 
 EXTRACT_SCHEMA = {
     "type": "object",
