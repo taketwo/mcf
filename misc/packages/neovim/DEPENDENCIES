@@ -1,8 +1,8 @@
-nvim-manager           # For Neovim version management
-fnm                    # For node.js provider and copilot plugin
-xsel                   # For clipboard provider
-nix: cargo             # Mason needs cargo to install tools (e.g. pbls)
-uvx: pynvim            # For Python provider
+nvim-manager               # For Neovim version management
+fnm                        # For node.js provider and copilot plugin
+xsel                       # For clipboard provider
+nix: cargo                 # Mason needs cargo to install tools (e.g. pbls)
+uvx: pynvim --python=3.14  # For Python provider; Mason uses this venv's Python, and newer ones lack wheels
 
 # tree-sitter-cli is necessary for installing tree-sitter parsers
 # Mason can handle installation of this tool, however it tends to download
