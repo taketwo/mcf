@@ -7,11 +7,8 @@ logger = get_logger(__name__)
 
 @click.group()
 @click.option("--debug", is_flag=True, default=False, help="Enable debug logging.")
-@click.pass_context
-def cli(ctx: click.Context, *, debug: bool) -> None:
+def cli(*, debug: bool) -> None:
     """{{ cookiecutter.project_name }} CLI."""
-    ctx.ensure_object(dict)
-    ctx.obj["debug"] = debug
     configure_logging(debug=debug)
 
 
