@@ -29,8 +29,6 @@ lint.ignore = [
   "CPY001", # no need to put copyright notice in every file
   "D100",   # missing docstring in public module is okay
   "D104",   # missing docstring in public package is okay
-  "D203",   # conflicts with D211
-  "D213",   # conflicts with D212
   "E501",
   "EM",     # noisy warnings about need to store exception messages in variables
   "ERA001", # has false positives
@@ -57,6 +55,7 @@ lint.per-file-ignores."**/conftest.py" = [
   "ANN",    # type annotations are not required in conftest
   "INP001", # tests/ is an implicit namespace package
 ]
+lint.pydocstyle.convention = "numpy"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
