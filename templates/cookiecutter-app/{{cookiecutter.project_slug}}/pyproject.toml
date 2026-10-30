@@ -34,7 +34,7 @@ lint.ignore = [
   "ERA001", # has false positives
   "FA102",  # no need to import from __future__ to support fancy annotations
   "FIX002", # not every TODO comment needs to be fixed
-  "S603",   # calling subprocess with shell=True is okay
+  "S603",   # calling subprocess without shell=True is okay
   "TD002",  # no need to mention author in TODO comments (use git blame instead)
   "TD003",  # no need to create ticket for every TODO comment
   "TRY003", # it is okay to specify long descriptive messages in exceptions
