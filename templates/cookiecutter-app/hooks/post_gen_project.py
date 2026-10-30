@@ -13,17 +13,14 @@ try:
 
     print("  Installing dev dependencies")
     subprocess.run(
-        [
-            "uv",
-            "add",
-            "--dev",
-            "pytest",
-            "pytest-mock",
-            "ruff",
-            "tombi",
-            "ty",
-            "pytest-cov",
-        ],
+        ["uv", "add", "--dev", "pytest", "pytest-mock", "pytest-cov"],
+        check=True,
+        capture_output=True,
+    )
+
+    print("  Installing pinned checkers")
+    subprocess.run(
+        ["uv", "add", "--dev", "--bounds", "exact", "ruff", "tombi", "ty"],
         check=True,
         capture_output=True,
     )

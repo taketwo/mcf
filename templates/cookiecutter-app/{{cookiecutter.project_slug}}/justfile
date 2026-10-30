@@ -6,6 +6,11 @@ default:
 setup:
     uv sync
 
+# Pin ruff, tombi and ty to their latest releases
+upgrade-checkers: && setup fix-format
+    uv remove --dev --no-sync ruff tombi ty
+    uv add --dev --bounds exact --no-sync ruff tombi ty
+
 # Run all checks
 check: check-format check-lint check-type
 
