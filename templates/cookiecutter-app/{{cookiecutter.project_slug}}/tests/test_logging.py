@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import pytest
 
@@ -9,6 +10,33 @@ from {{ cookiecutter.package_name }}.logging import (
     get_logger,
 )
 
+APP_LOGGER = "{{ cookiecutter.package_name }}"
+
+
+class TestConfigureLoggingLevels:
+    """configure_logging() sets levels on the application's logger only."""
+
+    def test_default_level_is_info(self) -> None:
+        configure_logging()
+        assert logging.getLogger(APP_LOGGER).level == logging.INFO
+
+    def test_debug_level_is_debug(self) -> None:
+        configure_logging(debug=True)
+        assert logging.getLogger(APP_LOGGER).level == logging.DEBUG
+
+    @pytest.mark.parametrize("debug", [False, True])
+    def test_root_stays_at_warning(self, *, debug: bool) -> None:
+        configure_logging(debug=debug)
+        assert logging.getLogger().level == logging.WARNING
+
+    def test_third_party_debug_is_filtered(self) -> None:
+        configure_logging(debug=True)
+        assert not logging.getLogger("thirdparty").isEnabledFor(logging.DEBUG)
+
+    def test_app_module_debug_is_enabled(self) -> None:
+        configure_logging(debug=True)
+        assert get_logger("mymodule").isEnabledFor(logging.DEBUG)
+
 
 class TestConfigureLoggingNonInteractive:
     """configure_logging() in non-interactive (non-tty) mode."""
@@ -18,13 +46,8 @@ class TestConfigureLoggingNonInteractive:
         root = logging.getLogger()
         assert any(isinstance(h, NonInteractiveLogHandler) for h in root.handlers)
 
-    def test_default_level_is_info(self) -> None:
-        configure_logging()
-        assert logging.getLogger().level == logging.INFO
-
-    def test_debug_level_is_debug(self) -> None:
-        configure_logging(debug=True)
-        assert logging.getLogger().level == logging.DEBUG
+    def test_handler_writes_to_stderr(self) -> None:
+        assert NonInteractiveLogHandler().stream is sys.stderr
 
     def test_replaces_existing_handlers(self) -> None:
         logging.getLogger().addHandler(logging.NullHandler())
@@ -60,9 +83,11 @@ class TestConfigureLoggingInteractive:
         )
         assert handler._concise is False
 
-    def test_debug_level_is_debug(self, tty) -> None:
-        configure_logging(debug=True)
-        assert logging.getLogger().level == logging.DEBUG
+    def test_stdout_does_not_decide_the_handler(self, tty, mocker) -> None:
+        mocker.patch("sys.stdout.isatty", return_value=False)
+        configure_logging()
+        root = logging.getLogger()
+        assert any(isinstance(h, InteractiveLogHandler) for h in root.handlers)
 
 
 class TestInteractiveLogHandlerFormat:

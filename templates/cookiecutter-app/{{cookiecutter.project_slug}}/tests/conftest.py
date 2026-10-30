@@ -12,24 +12,26 @@ if TYPE_CHECKING:
 
 @pytest.fixture(autouse=True)
 def restore_root_logger() -> Generator[None]:
-    """Restore root logger state after each test.
+    """Restore logger state after each test.
 
     Prevents logging configuration from leaking between tests.
     """
     root_logger = logging.getLogger()
-    original_level = root_logger.level
+    app_logger = logging.getLogger("{{ cookiecutter.package_name }}")
+    original_root_level = root_logger.level
+    original_app_level = app_logger.level
     original_handlers = root_logger.handlers[:]
 
     yield
 
-    root_logger.setLevel(original_level)
+    root_logger.setLevel(original_root_level)
+    app_logger.setLevel(original_app_level)
     root_logger.handlers[:] = original_handlers
 
 
 @pytest.fixture
 def tty(mocker) -> None:
-    """Simulate an interactive terminal (tty) environment."""
-    mocker.patch("{{ cookiecutter.package_name }}.logging.sys.stdout.isatty", return_value=True)
+    """Simulate stderr attached to an interactive terminal (tty)."""
     mocker.patch("{{ cookiecutter.package_name }}.logging.sys.stderr.isatty", return_value=True)
 
 

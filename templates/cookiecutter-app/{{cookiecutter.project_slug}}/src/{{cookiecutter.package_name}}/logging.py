@@ -64,7 +64,7 @@ class NonInteractiveLogHandler(logging.StreamHandler[Any]):
 
     def __init__(self) -> None:
         """Initialize the handler with a basic formatter."""
-        super().__init__(sys.stdout)
+        super().__init__(sys.stderr)
         self.setFormatter(
             logging.Formatter(
                 "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -76,13 +76,17 @@ class NonInteractiveLogHandler(logging.StreamHandler[Any]):
 def configure_logging(*, debug: bool = False) -> None:
     """Configure application-wide logging behavior.
 
-    Interactive mode (terminal/tty):
-    - debug=False: INFO+ to console with concise rich formatting
-    - debug=True: DEBUG+ to console with detailed rich formatting
+    Logs always go to stderr, so they never mix with results printed to stdout. The
+    level applies to the application's logger only. The root logger stays at WARNING,
+    so third-party libraries stay quiet even with debug=True.
+
+    Interactive mode (stderr is a terminal):
+    - debug=False: INFO+ with concise rich formatting
+    - debug=True: DEBUG+ with detailed rich formatting
 
     Non-interactive mode:
-    - debug=False: INFO+ to stdout with plain formatting
-    - debug=True: DEBUG+ to stdout with plain formatting
+    - debug=False: INFO+ with plain formatting
+    - debug=True: DEBUG+ with plain formatting
 
     Parameters
     ----------
@@ -94,14 +98,14 @@ def configure_logging(*, debug: bool = False) -> None:
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
 
-    root_logger.setLevel(DEBUG if debug else INFO)
+    root_logger.setLevel(WARNING)
+    logging.getLogger("{{ cookiecutter.package_name }}").setLevel(DEBUG if debug else INFO)
 
-    if sys.stdout.isatty() and sys.stderr.isatty():
+    if sys.stderr.isatty():
         handler: logging.Handler = InteractiveLogHandler(concise=not debug)
     else:
         handler = NonInteractiveLogHandler()
 
-    handler.setLevel(DEBUG if debug else INFO)
     root_logger.addHandler(handler)
 
 
