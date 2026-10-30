@@ -13,6 +13,7 @@
 
 All important operations are wrapped in `just` recipes and pre-approved — always prefer them over raw commands.
 
+- `just setup` — set up the development environment
 - `just check` — run all checks (format, lint, type)
 - `just fix` — auto-format and auto-fix linting issues
 - `just test` — run tests with coverage
