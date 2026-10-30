@@ -1,7 +1,7 @@
 {
   "project_name": "My app",
   "description": "A short description of my app",
-  "python_version": "3.14",
+  "python_version": "3.15",
   "_author_name": "Sergey Alexandrov",
   "_author_email": "alexandrov88@gmail.com",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
