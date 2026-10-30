@@ -9,9 +9,16 @@ setup:
 # Run all checks
 check: check-format check-lint check-type
 
-# Verify code formatting
-check-format:
+# Verify formatting
+check-format: check-format-ruff check-format-tombi
+
+# Verify Python formatting
+check-format-ruff:
     .venv/bin/ruff format --check .
+
+# Verify pyproject.toml formatting
+check-format-tombi:
+    .venv/bin/tombi format --check pyproject.toml
 
 # Run linting checks
 check-lint:
@@ -25,8 +32,15 @@ check-type:
 fix: fix-format fix-lint
 
 # Auto-format code
-fix-format:
+fix-format: fix-format-ruff fix-format-tombi
+
+# Auto-format Python code
+fix-format-ruff:
     .venv/bin/ruff format .
+
+# Auto-format pyproject.toml
+fix-format-tombi:
+    .venv/bin/tombi format pyproject.toml
 
 # Auto-fix linting issues
 fix-lint:

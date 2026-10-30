@@ -13,7 +13,24 @@ try:
 
     print("  Installing dev dependencies")
     subprocess.run(
-        ["uv", "add", "--dev", "pytest", "pytest-mock", "ruff", "ty", "pytest-cov"],
+        [
+            "uv",
+            "add",
+            "--dev",
+            "pytest",
+            "pytest-mock",
+            "ruff",
+            "tombi",
+            "ty",
+            "pytest-cov",
+        ],
+        check=True,
+        capture_output=True,
+    )
+
+    print("  Formatting pyproject.toml")
+    subprocess.run(
+        [".venv/bin/tombi", "format", "pyproject.toml"],
         check=True,
         capture_output=True,
     )
