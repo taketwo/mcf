@@ -111,6 +111,11 @@ return {
         function() require('sidekick.cli').toggle({ name = 'cursor', focus = true }) end,
         desc = 'Toggle Cursor Sidekick',
       },
+      {
+        '<Space>3',
+        function() require('sidekick.cli').toggle({ name = 'pi', focus = true }) end,
+        desc = 'Toggle Pi Sidekick',
+      },
     },
   },
 }
