@@ -19,6 +19,7 @@ pudb
 lnav                                   # log viewer
 claude-code
 cursor-cli
+pi
 nix: just
 
 # Terminal

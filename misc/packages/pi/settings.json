@@ -1,0 +1,12 @@
+{
+  "$schema": "https://pi.dev/schemas/settings.schema.json",
+  "packages": [
+    "npm:pi-cursor-sdk"
+  ],
+  "compaction": {
+    "enabled": false
+  },
+  "defaultProvider": "cursor",
+  "defaultModel": "grok-4.7@256k:slow",
+  "hideThinkingBlock": true
+}

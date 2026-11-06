@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+reference="$(dirname "$0")/settings.json"
+agent="$HOME/.pi/agent"
+target="$agent/settings.json"
+
+if [ ! -f "$reference" ]; then
+  echo "No settings.json reference found, skipping"
+  exit 0
+fi
+
+mkdir -p "$agent"
+if [ ! -f "$target" ]; then
+  echo "Creating $target"
+  cp "$reference" "$target"
+else
+  echo "Aligning $target with $reference"
+  merged=$(jq -s '.[0] * .[1] | . as $m | (if $m | has("$schema") then {"$schema": $m["$schema"]} else {} end) + ($m | del(."$schema"))' "$target" "$reference")
+  echo "$merged" >"$target"
+fi
+
+skills="$agent/skills"
+if [ ! -e "$skills" ] && [ ! -L "$skills" ]; then
+  echo "Linking $skills to $HOME/.claude/skills"
+  ln -s "$HOME/.claude/skills" "$skills"
+fi

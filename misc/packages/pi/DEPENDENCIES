@@ -1,0 +1,2 @@
+nix: pi-coding-agent
+jq                                   # merge settings.json
