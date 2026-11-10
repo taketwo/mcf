@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+
+# Scroll to the previous shell prompt.
+#
+# Bound from config.toml:
+#   [[keys.command]]
+#   key = "prefix+c"
+#   command = "herdr-scroll"
+#
+# The marker is Starship's ❯ followed by a non-breaking space, the same
+# string tmux copy-mode searches for. Each press takes the nearest marker
+# strictly above the viewport and puts that row on top, so repeating the
+# key walks upward.
+#
+# pane.read recent returns at most the last 1000 rows and always ends at
+# the live bottom, so a prompt further up than that is invisible here.
+# Text mode drops a trailing non-breaking space; ANSI keeps it.
+
+import json
+import os
+import re
+import socket
+import sys
+
+MARKER = "❯\u00a0"
+ANSI = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+READ_ROWS = 1000
+
+
+def socket_path():
+    path = os.environ.get("HERDR_SOCKET_PATH")
+    if path:
+        return path
+    session = os.environ.get("HERDR_SESSION")
+    base = os.path.expanduser("~/.config/herdr")
+    if session and session != "default":
+        return os.path.join(base, "sessions", session, "herdr.sock")
+    return os.path.join(base, "herdr.sock")
+
+
+def rpc(path, method, params):
+    conn = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    conn.settimeout(5)
+    try:
+        conn.connect(path)
+        payload = json.dumps({"id": "1", "method": method, "params": params})
+        conn.sendall(payload.encode() + b"\n")
+        buf = b""
+        while b"\n" not in buf:
+            chunk = conn.recv(1 << 20)
+            if not chunk:
+                break
+            buf += chunk
+    finally:
+        conn.close()
+    if not buf:
+        raise RuntimeError(f"{method}: empty response")
+    message = json.loads(buf.split(b"\n", 1)[0])
+    if "error" in message:
+        error = message["error"]
+        raise RuntimeError(f"{method}: {error.get('message', error)}")
+    return message["result"]
+
+
+def pane_id(path):
+    active = os.environ.get("HERDR_ACTIVE_PANE_ID")
+    if active:
+        return active
+    return rpc(path, "pane.current", {})["pane"]["pane_id"]
+
+
+def previous_prompt(lines, top_rows_from_bottom):
+    """Return rows-from-bottom of the nearest marker above the viewport top."""
+    last = len(lines) - 1
+    found = None
+    for index, line in enumerate(lines):
+        rows_from_bottom = last - index
+        if rows_from_bottom <= top_rows_from_bottom:
+            break
+        if MARKER in ANSI.sub("", line):
+            found = rows_from_bottom
+    return found
+
+
+def main():
+    path = socket_path()
+    pane = pane_id(path)
+    scroll = rpc(path, "pane.get", {"pane_id": pane})["pane"].get("scroll")
+    if not scroll or scroll["viewport_rows"] < 1:
+        return
+    offset = scroll["offset_from_bottom"]
+    viewport = scroll["viewport_rows"]
+    read = rpc(
+        path,
+        "pane.read",
+        {
+            "pane_id": pane,
+            "source": "recent",
+            "lines": READ_ROWS,
+            "format": "ansi",
+            "strip_ansi": False,
+        },
+    )["read"]
+    lines = read["text"].splitlines()
+    if not lines:
+        return
+    top = offset + viewport - 1
+    rows_from_bottom = previous_prompt(lines, top)
+    if rows_from_bottom is None:
+        return
+    target = rows_from_bottom - viewport + 1
+    target = min(target, scroll["max_offset_from_bottom"])
+    if target == offset:
+        return
+    rpc(path, "pane.scroll", {"pane_id": pane, "offset_from_bottom": target})
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (OSError, RuntimeError, json.JSONDecodeError, KeyError) as exc:
+        print(f"herdr-scroll: {exc}", file=sys.stderr)
+        sys.exit(1)

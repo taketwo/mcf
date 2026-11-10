@@ -130,6 +130,12 @@ command = "herdr-navigate right alt+n"
 description = "focus pane right"
 
 [[keys.command]]
+key = "prefix+c"
+type = "shell"
+command = "herdr-scroll"
+description = "scroll to the previous prompt"
+
+[[keys.command]]
 key = "prefix+y"
 type = "shell"
 command = "herdr-copy line"
