@@ -18,13 +18,25 @@ return {
       -- through to herdr's pane focus in that case, so the same keys above
       -- work under either multiplexer. Leave tmux (and the plain-Neovim
       -- fallback when neither is active) untouched.
+      -- A zoomed herdr pane does not hand off, matching
+      -- tmux_navigator_disable_when_zoomed. Movement between Neovim windows
+      -- still happens; only the edge stays put until the pane is unzoomed.
       if vim.env.TMUX or not vim.env.HERDR_ENV then
         return
+      end
+      local function herdr_pane_zoomed()
+        local output = vim.fn.system({ 'herdr', 'pane', 'layout', '--current' })
+        if vim.v.shell_error ~= 0 then
+          return false
+        end
+        local ok, decoded = pcall(vim.json.decode, vim.trim(output))
+        local layout = ok and decoded.result and decoded.result.layout
+        return layout and layout.zoomed == true
       end
       local function navigate(wincmd_dir, herdr_dir)
         local winnr_before = vim.fn.winnr()
         vim.cmd('wincmd ' .. wincmd_dir)
-        if vim.fn.winnr() == winnr_before then
+        if vim.fn.winnr() == winnr_before and not herdr_pane_zoomed() then
           vim.fn.system({ 'herdr', 'pane', 'focus', '--direction', herdr_dir })
         end
       end
