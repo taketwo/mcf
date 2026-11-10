@@ -134,11 +134,11 @@ myTopics =
   [ TI "web"      ""                                         (spawn appBrowser)
   , TI "music"    ""                                         (spawnInTerminal "ncmpcpp")
   , TI "mcf"      "~/.mcf"                                   (spawnHerdr)
-  , TI "ael"      ""                                         (spawnInTerminal "ael session load ael --multiplexer herdr")
   , TI "alpaca"   ""                                         (spawnInTerminal "mosh alpaca")
+  , TI "ael"      ""                                         (spawnInTerminal "ael session load ael")
   , TI "remmina"  ""                                         (spawn "remmina")
-  , TI "robots"   ""                                         (spawnInTerminal "ael session load robots --multiplexer herdr")
-  , TI "docker"   ""                                         (spawnInTerminal "ael container attach --multiplexer herdr")
+  , TI "robots"   ""                                         (spawnInTerminal "ael session load robots")
+  , TI "docker"   ""                                         (spawnInTerminal "ael container attach")
   , TI "msg"      ""                                         (spawn "slack" >> spawn "telegram-desktop")
   , ti "gimp"     ""
   , ti "zoom"     ""
