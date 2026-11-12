@@ -1,6 +1,7 @@
 """Tools management operations for Mason-installed tools."""
 
 import json
+import re
 import shlex
 import subprocess
 from importlib import resources
@@ -13,6 +14,108 @@ from .logging import get_logger
 from .utils import compare_lock_data, run_command
 
 logger = get_logger(__name__)
+
+_ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+_INSTALLER_SUMMARY_LIMIT = 160
+# Pip's own wrappers ("subprocess-exited-with-error", "failed-wheel-build")
+# are not the cause. These clauses are.
+_FAILURE_CAUSE_PATTERNS = (
+    re.compile(r"(?i)(?:can(?:no|')t|could not) find(?:\s+\S+){1,2}"),
+    re.compile(r"(?i)no matching distribution found for \S+"),
+    re.compile(r"(?i)failed building wheel for \S+"),
+)
+
+
+# The installer log stays off the message. Including it would print the
+# pip transcript again in the traceback.
+class _MasonFunctionError(RuntimeError):
+    """A Mason Lua function failed.
+
+    Attributes
+    ----------
+    output : str
+        Captured stdout and stderr. Empty when the process produced none.
+
+    """
+
+    def __init__(self, function_name: str, output: str) -> None:
+        """Keep the installer log off the message."""
+        super().__init__(f"{function_name} failed")
+        self.output = output
+
+
+def _extract_failure_cause(detail: str) -> str:
+    """Return a short cause from one tool's installer log.
+
+    Parameters
+    ----------
+    detail : str
+        Plain installer text for a single tool, without the ``name: `` prefix.
+
+    Returns
+    -------
+    str
+        A matching cause clause, or the start of ``detail`` when none matches.
+        Text within the summary limit is returned unchanged when nothing matches.
+
+    """
+    for pattern in _FAILURE_CAUSE_PATTERNS:
+        match = pattern.search(detail)
+        if match:
+            return match.group(0)
+    if len(detail) <= _INSTALLER_SUMMARY_LIMIT:
+        return detail
+    clipped = detail[:_INSTALLER_SUMMARY_LIMIT].rsplit(" ", 1)[0]
+    return f"{clipped}..."
+
+
+def _summarize_installer_output(output: str) -> str:
+    """Reduce Mason output to one short line per tool.
+
+    Parameters
+    ----------
+    output : str
+        Captured stdout and stderr. Each line is ``name: message``.
+
+    Returns
+    -------
+    str
+        One line per tool. Lines within the summary limit are kept whole.
+
+    """
+    summaries = []
+    for raw_line in output.splitlines():
+        plain = " ".join(_ANSI_ESCAPE.sub("", raw_line).split())
+        if not plain:
+            continue
+        if len(plain) <= _INSTALLER_SUMMARY_LIMIT:
+            summaries.append(plain)
+            continue
+        tool, separator, detail = plain.partition(": ")
+        cause = _extract_failure_cause(detail if separator else plain)
+        summaries.append(f"{tool}: {cause}" if separator else cause)
+    return "\n".join(summaries)
+
+
+def _format_restore_failure(exc: Exception) -> str:
+    """Describe a tools restore failure.
+
+    Parameters
+    ----------
+    exc : Exception
+        Failure raised while restoring tools.
+
+    Returns
+    -------
+    str
+        Failure text. A long installer log contributes only a short cause.
+
+    """
+    message = f"Tool restoration failed: {exc}"
+    output = exc.output if isinstance(exc, _MasonFunctionError) else ""
+    if output:
+        message = f"{message}: {_summarize_installer_output(output)}"
+    return message
 
 
 class ToolsManager:
@@ -198,9 +301,12 @@ class ToolsManager:
             logger.exception(msg)
             raise RuntimeError(msg) from e
         except Exception as e:
-            msg = f"Tool restoration failed: {e}"
-            logger.debug("Tool restoration error details: %s", e)
-            raise RuntimeError(msg) from e
+            output = e.output if isinstance(e, _MasonFunctionError) else ""
+            if output:
+                logger.debug("Mason installer output:\n%s", output)
+            else:
+                logger.debug("Tool restoration error details: %s", e)
+            raise RuntimeError(_format_restore_failure(e)) from e
 
     def commit(self) -> None:
         """Save currently installed tools to lock file.
@@ -364,8 +470,9 @@ class ToolsManager:
 
         Raises
         ------
-        RuntimeError
-            If the function fails. Error details are logged per line.
+        _MasonFunctionError
+            If the function fails. Captured stdout and stderr are on
+            ``output``; the message is only the command name.
 
         """
         try:
@@ -383,13 +490,14 @@ class ToolsManager:
                 capture_output=True,
             )
         except Exception as e:
-            # Script outputs one error per line to stderr on failure
-            if isinstance(e, subprocess.CalledProcessError) and e.stderr:
-                for line in e.stderr.strip().split("\n"):
-                    if line.strip():
-                        logger.error(  # noqa: TRY400
-                            "Error running %s: %s",
-                            function_name,
-                            line.strip(),
-                        )
-            raise RuntimeError(f"{function_name} failed") from e
+            # vim.print in the Lua script writes stdout, so stderr alone drops
+            # the tool name and the installer error.
+            output = ""
+            if isinstance(e, subprocess.CalledProcessError):
+                parts = [
+                    part.strip()
+                    for part in (e.stdout, e.stderr)
+                    if isinstance(part, str) and part.strip()
+                ]
+                output = "\n".join(parts)
+            raise _MasonFunctionError(function_name, output) from e

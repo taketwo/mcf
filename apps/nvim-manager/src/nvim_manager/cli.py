@@ -5,6 +5,7 @@ from typing import Any
 
 import click
 from rich.console import Console
+from rich.markup import escape
 from rich.panel import Panel
 from rich.pretty import Pretty
 from rich.syntax import Syntax
@@ -379,7 +380,7 @@ def restore(
             ctx["tools_manager"].restore()
     except Exception as e:
         logger.exception("Failed to restore")
-        console.print(f"[red]Error:[/red] {e}")
+        console.print(f"[red]Error:[/red] {escape(str(e))}")
         raise click.Abort from e
 
 
