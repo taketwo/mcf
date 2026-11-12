@@ -15,9 +15,8 @@ jq -r --arg branch "$branch" '
   def dim: "\u001b[2m" + . + reset;
 
   # Thresholds differ in brightness and weight, not only in hue
-  def colored($used_percentage):
-    (if $used_percentage >= 80 then "\u001b[1;31m" elif $used_percentage >= 60 then "\u001b[33m" else "" end)
-    + . + reset;
+  def threshold_color:
+    .used_percentage | if . >= 80 then "\u001b[1;31m" elif . >= 60 then "\u001b[33m" else "" end;
 
   def tokens:
     (. / 1000 | round) as $k
@@ -27,6 +26,7 @@ jq -r --arg branch "$branch" '
   def green: [0.7289, -0.0678, 0.0733]; # 8fb573
   def yellow: [0.7939, 0.0133, 0.0964]; # dbb671
   def red: [0.6444, 0.1538, 0.0491]; # de5d68
+  def gray: [0.7621, -0.0025, -0.0200]; # abb2bf
 
   def mix($from; $to; $t): [range(3) | $from[.] + ($to[.] - $from[.]) * $t];
 
@@ -49,14 +49,16 @@ jq -r --arg branch "$branch" '
         | [. * 255 | round, 255] | min
       );
 
+  def oklab_to_ansi:
+    oklab_to_srgb | "\u001b[38;2;\(.[0]);\(.[1]);\(.[2])m";
+
   # Green up to 200k tokens, yellow at 300k, red from 400k
   def context_color:
     if . <= 200000 then green
     elif . < 300000 then mix(green; yellow; (. - 200000) / 100000)
     elif . < 400000 then mix(yellow; red; (. - 300000) / 100000)
     else red end
-    | oklab_to_srgb
-    | "\u001b[38;2;\(.[0]);\(.[1]);\(.[2])m";
+    | oklab_to_ansi;
 
   def countdown:
     ([. - now, 0] | max | floor) as $s
@@ -78,10 +80,27 @@ jq -r --arg branch "$branch" '
     | (if $remaining <= 300 then "\u001b[33m" else blue end)
       + snowflake + " in " + (.expires_at | countdown) + reset;
 
-  def limit(resets_at_format):
+  # Weekly allotment is 20% per working day (Mon-Fri), counted from the window start. The last day of the window, the
+  # one holding the reset, is excluded: work ends before the reset hour. Weekends belong to the last working day.
+  # Position within the current working day is gray up to 10%, then fades to red at 20% and beyond.
+  def weekly_color:
+    .used_percentage as $used_percentage
+    | .resets_at as $resets_at
+    | now as $now
+    | [range(7)
+       | ($resets_at - (7 - .) * 86400) as $t
+       | ($t | localtime) as [$y, $mo, $d, $h, $mi, $s, $weekday]
+       | select($weekday >= 1 and $weekday <= 5 and $t - ($h * 3600 + $mi * 60 + $s) <= $now)
+      ] | length as $days
+    | ($used_percentage - 20 * ([$days, 1] | max - 1)) as $position
+    | if $position <= 10 then ""
+      elif $position >= 20 then "\u001b[1;31m"
+      else mix(gray; red; ($position - 10) / 10) | oklab_to_ansi end;
+
+  def limit(resets_at_format; color):
     select(.used_percentage != null)
     | .used_percentage as $used_percentage
-    | ("\($used_percentage | floor)%" | colored($used_percentage))
+    | color + "\($used_percentage | floor)%" + reset
       + (if .resets_at then " ↻" + (.resets_at | resets_at_format) | dim else "" end);
 
   cache_remaining as $cache_remaining
@@ -95,8 +114,8 @@ jq -r --arg branch "$branch" '
        then "\u001b[1m" + blue + snowflake + " " + . else ($used | context_color) + . end
      | . + reset),
     (select($cache_remaining != null) | .prompt_cache | cache_countdown($cache_remaining)),
-    (.rate_limits.five_hour // empty | limit(countdown)),
-    (.rate_limits.seven_day // empty | limit(strflocaltime("%a %H:%M"))),
+    (.rate_limits.five_hour // empty | limit(countdown; threshold_color)),
+    (.rate_limits.seven_day // empty | limit(strflocaltime("%a %H:%M"); weekly_color)),
     (select($branch != "") | "\ue0a0 " + $branch),
     (.session_name // empty)
   ]
