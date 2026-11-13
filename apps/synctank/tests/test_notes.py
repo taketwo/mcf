@@ -156,6 +156,16 @@ class TestLoadNote:
         note = load_note(path)
         assert note.meta.related == ["001-bar-spec.md"]
 
+    def test_loads_tickets_field(self, tmp_path: Path) -> None:
+        path = tmp_path / "002-foo-design.md"
+        path.write_text(
+            "---\nname: Foo\nkind: design\nstatus: draft\ndate: 2026-04-22\ntickets:\n  - PCR-6438\n  - BUG-15022\n---\n\n# Foo — Design\n",
+            encoding="utf-8",
+        )
+        note = load_note(path)
+        assert note.meta.tickets == ["PCR-6438", "BUG-15022"]
+        assert "tickets" not in note.meta.extra
+
     def test_preserves_extra_fields(self, tmp_path: Path) -> None:
         path = tmp_path / "001-test-spec.md"
         path.write_text(
@@ -232,6 +242,16 @@ class TestLoadNote:
             encoding="utf-8",
         )
         with pytest.raises(ParseError, match="related"):
+            load_note(path)
+
+    @pytest.mark.parametrize("tickets_yaml", ["tickets: PCR-1", "tickets:\n  - 42"])
+    def test_raises_on_bad_tickets(self, tmp_path: Path, tickets_yaml: str) -> None:
+        path = tmp_path / "001-test-spec.md"
+        path.write_text(
+            f"---\nname: Test\nkind: spec\nstatus: draft\ndate: 2026-04-22\n{tickets_yaml}\n---\n\n# Test\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(ParseError, match="tickets"):
             load_note(path)
 
     def test_raises_on_corrupt_file(self, tmp_path: Path) -> None:
@@ -319,6 +339,7 @@ def make_params(
     kind: Kind = Kind.SPEC,
     status: Status = Status.DRAFT,
     related: list[str] | None = None,
+    tickets: list[str] | None = None,
 ) -> Frontmatter:
     """Build a Frontmatter for testing."""
     return Frontmatter(
@@ -327,6 +348,7 @@ def make_params(
         status=status,
         date=TODAY,
         related=related or [],
+        tickets=tickets or [],
     )
 
 
@@ -384,6 +406,15 @@ class TestWriteNote:
         assert "related:" in content
         assert "- 001-foo-brief.md" in content
 
+    def test_tickets_round_trip(self, tmp_path: Path) -> None:
+        note = write_note(tmp_path, make_params(tickets=["PCR-6438"]))
+        assert load_note(note.path).meta.tickets == ["PCR-6438"]
+
+    def test_empty_tickets_omitted(self, tmp_path: Path) -> None:
+        note = write_note(tmp_path, make_params())
+        content = note.path.read_text(encoding="utf-8")
+        assert "tickets:" not in content
+
     def test_written_note_is_loadable(self, tmp_path: Path) -> None:
         note = write_note(
             tmp_path, make_params("Round Trip", Kind.DESIGN), "## Body\n\nContent."
@@ -400,6 +431,7 @@ class TestWriteNote:
         assert d["kind"] == "spec"
         assert d["status"] == "draft"
         assert d["date"] == "2026-04-22"
+        assert d["tickets"] == []
 
     def test_to_dict_serializes_date_in_extra(self, tmp_path: Path) -> None:
         fm = make_params()
@@ -512,9 +544,40 @@ class TestUpdateNote:
         assert updated.meta.related == []
         assert load_note(updated.path).meta.related == []
 
+    def test_updates_tickets(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params())
+        updated = update_note(
+            original.path,
+            name=None,
+            kind=None,
+            status=None,
+            related=None,
+            tickets=["PCR-6438", "BUG-15022"],
+        )
+        assert updated.meta.tickets == ["PCR-6438", "BUG-15022"]
+        assert load_note(updated.path).meta.tickets == ["PCR-6438", "BUG-15022"]
+
+    def test_clears_tickets_when_empty_list_provided(self, tmp_path: Path) -> None:
+        original = write_note(tmp_path, make_params(tickets=["PCR-6438"]))
+        updated = update_note(
+            original.path,
+            name=None,
+            kind=None,
+            status=None,
+            related=None,
+            tickets=[],
+        )
+        assert updated.meta.tickets == []
+        content = updated.path.read_text(encoding="utf-8")
+        assert "tickets:" not in content
+
     def test_preserves_unmodified_fields(self, tmp_path: Path) -> None:
         fm = make_params(
-            "My Note", Kind.SPEC, Status.DRAFT, related=["001-foo-brief.md"]
+            "My Note",
+            Kind.SPEC,
+            Status.DRAFT,
+            related=["001-foo-brief.md"],
+            tickets=["PCR-6438"],
         )
         original = write_note(tmp_path, fm)
         updated = update_note(
@@ -523,6 +586,7 @@ class TestUpdateNote:
         assert updated.meta.name == "My Note"
         assert updated.meta.kind == Kind.SPEC
         assert updated.meta.related == ["001-foo-brief.md"]
+        assert updated.meta.tickets == ["PCR-6438"]
         assert updated.meta.date == TODAY
 
     def test_preserves_extra_fields(self, tmp_path: Path) -> None:

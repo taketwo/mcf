@@ -42,6 +42,7 @@ class Frontmatter:
     status: Status
     date: date
     related: list[str] = field(default_factory=list)
+    tickets: list[str] = field(default_factory=list)
     extra: dict[str, Any] = field(default_factory=dict)
 
 
@@ -72,6 +73,7 @@ class Note:
             "name": self.meta.name,
             "date": self.meta.date.isoformat(),
             "related": self.meta.related,
+            "tickets": self.meta.tickets,
             **extra,
         }
         if include_body:
@@ -107,11 +109,12 @@ def load_note(path: Path) -> Note:
     kind = _require_enum(raw, "kind", Kind, path)
     status = _require_enum(raw, "status", Status, path)
     note_date = _require_date(raw, "date", path)
-    related = _parse_related(raw.get("related", []), path)
+    related = _parse_string_list(raw.get("related", []), "related", path)
+    tickets = _parse_string_list(raw.get("tickets", []), "tickets", path)
     extra = {
         k: v
         for k, v in raw.items()
-        if k not in {"name", "kind", "status", "date", "related"}
+        if k not in {"name", "kind", "status", "date", "related", "tickets"}
     }
     index, slug = _parse_filename(path)
 
@@ -125,6 +128,7 @@ def load_note(path: Path) -> Note:
             status=status,
             date=note_date,
             related=related,
+            tickets=tickets,
             extra=extra,
         ),
         body=body,
@@ -242,18 +246,20 @@ def write_note(target_dir: Path, meta: Frontmatter, body: str = "") -> Note:
     return Note(path=path, index=index, slug=slug, meta=meta, body=body.strip())
 
 
-def update_note(
+def update_note(  # noqa: PLR0913
     path: Path,
     *,
     name: str | None,
     kind: Kind | None,
     status: Status | None,
     related: list[str] | None,
+    tickets: list[str] | None = None,
 ) -> Note:
     """Update frontmatter fields of an existing note. Returns the updated Note.
 
     Renames the file if name or kind changes affect the filename.
     Only fields explicitly provided (non-None) are changed; others are preserved.
+    An empty list clears related or tickets.
     """
     note = load_note(path)
 
@@ -265,6 +271,7 @@ def update_note(
     )
     new_status = status if status is not None else note.meta.status
     new_related = related if related is not None else note.meta.related
+    new_tickets = tickets if tickets is not None else note.meta.tickets
 
     new_meta = Frontmatter(
         name=new_name,
@@ -272,6 +279,7 @@ def update_note(
         status=new_status,
         date=note.meta.date,
         related=new_related,
+        tickets=new_tickets,
         extra=note.meta.extra,
     )
 
@@ -309,6 +317,8 @@ def _build_frontmatter(meta: Frontmatter) -> str:
     }
     if meta.related:
         fields["related"] = list(meta.related)
+    if meta.tickets:
+        fields["tickets"] = list(meta.tickets)
     fields.update(meta.extra)
     yaml_text = yaml.safe_dump(
         fields, sort_keys=False, default_flow_style=False, allow_unicode=True
@@ -390,8 +400,12 @@ def _require_date(meta: dict[str, Any], key: str, path: Path) -> date:
     )
 
 
-def _parse_related(value: object, path: Path) -> list[str]:
-    """Parse the optional related field into a list of strings."""
+def _parse_string_list(value: object, key: str, path: Path) -> list[str]:
+    """Parse an optional frontmatter field into a list of strings.
+
+    A missing or empty value is an empty list. A non-list value, or a list
+    entry that is not a string, raises ParseError.
+    """
     if not value:
         return []
     if isinstance(value, list):
@@ -400,10 +414,10 @@ def _parse_related(value: object, path: Path) -> list[str]:
             if not isinstance(item, str):
                 raise ParseError(
                     path=path,
-                    message=f"'related' entries must be strings, got: {item!r}",
+                    message=f"'{key}' entries must be strings, got: {item!r}",
                 )
             result.append(item)
         return result
     raise ParseError(
-        path=path, message=f"'related' must be a list, got: {type(value).__name__}"
+        path=path, message=f"'{key}' must be a list, got: {type(value).__name__}"
     )
