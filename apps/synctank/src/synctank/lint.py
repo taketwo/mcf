@@ -30,6 +30,22 @@ class LintViolation:
         return f"{self.path}: [{self.rule}] {self.message}"
 
 
+_TICKET_KEY_RE = re.compile(r"^[A-Z][A-Z0-9]+-\d+$")
+
+
+def check_tickets(note: Note) -> list[LintViolation]:
+    """Check that each ticket key is KEY-123."""
+    return [
+        LintViolation(
+            path=note.path,
+            rule="tickets",
+            message=f"invalid ticket key: {ticket!r}",
+        )
+        for ticket in note.meta.tickets
+        if not _TICKET_KEY_RE.fullmatch(ticket)
+    ]
+
+
 def check_filename_kind(note: Note) -> list[LintViolation]:
     """Check that the kind suffix in the filename matches the frontmatter kind."""
     name = note.path.name
@@ -260,6 +276,7 @@ def check_heading_blank_line(note: Note) -> list[LintViolation]:
 
 
 RULES: list[Callable[[Note], list[LintViolation]]] = [
+    check_tickets,
     check_filename_kind,
     check_filename_slug,
     check_no_line_wrapping,

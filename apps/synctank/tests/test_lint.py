@@ -12,6 +12,7 @@ from synctank.lint import (
     check_heading_blank_line,
     check_heading_case,
     check_no_line_wrapping,
+    check_tickets,
     lint_note,
     lint_path,
 )
@@ -44,6 +45,35 @@ def make_note(
         meta=Frontmatter(name=name, kind=kind, status=status, date=TODAY),
         body=body,
     )
+
+
+class TestCheckTickets:
+    @pytest.mark.parametrize("tickets", [[], ["PCR-6438", "BUG-15022", "A1-2"]])
+    def test_accepts(self, tmp_path: Path, tickets: list[str]) -> None:
+        note = make_note(tmp_path)
+        note.meta.tickets = tickets
+        assert check_tickets(note) == []
+
+    @pytest.mark.parametrize("key", ["pcr-1", "PCR", "1-PCR"])
+    def test_rejects(self, tmp_path: Path, key: str) -> None:
+        note = make_note(tmp_path)
+        note.meta.tickets = [key]
+        violations = check_tickets(note)
+        assert len(violations) == 1
+        assert violations[0].rule == "tickets"
+        assert key in violations[0].message
+
+    def test_lint_note_reports_invalid_ticket(self, tmp_path: Path) -> None:
+        note = write_note(
+            tmp_path,
+            Frontmatter(
+                "Test", Kind.SPEC, Status.DRAFT, TODAY, tickets=["not-a-ticket"]
+            ),
+        )
+        violations = lint_note(note.path)
+        assert len(violations) == 1
+        assert violations[0].rule == "tickets"
+        assert "not-a-ticket" in violations[0].message
 
 
 class TestCheckFilenameKind:
