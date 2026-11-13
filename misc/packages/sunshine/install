@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-NAME_DEB="sunshine-ubuntu-24.04-amd64.deb"
-TEMP_DEB=$(mktemp /tmp/$NAME_DEB.XXXXXX)
+# shellcheck source=/dev/null
+. /etc/os-release
+PATTERN="sunshine_*+ubuntu${VERSION_ID}_amd64.deb"
+TEMP_DEB=$(mktemp --suffix=.deb /tmp/sunshine.XXXXXX)
 
-gh release download --repo LizardByte/Sunshine --pattern "$NAME_DEB" -O "$TEMP_DEB" --clobber
-if [ $? -ne 0 ]; then
+if ! gh release download --repo LizardByte/Sunshine --pattern "$PATTERN" -O "$TEMP_DEB" --clobber; then
   echo "Failed to download the latest release of Sunshine"
   exit 1
 fi
