@@ -210,6 +210,31 @@ class TestCreateCommand:
         assert "ends with kind 'design'" in result.output
         assert "spec" in result.output
 
+    def test_sets_tickets(
+        self, runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        notes_root, env = _make_store(tmp_path)
+        monkeypatch.chdir(notes_root)
+        result = runner.invoke(
+            cli,
+            [
+                "create",
+                "Decoder refactor",
+                "--kind",
+                "design",
+                "--status",
+                "draft",
+                "--tickets",
+                "PCR-6438",
+                "--tickets",
+                "BUG-15022",
+            ],
+            env=env,
+        )
+        assert result.exit_code == 0
+        note = load_note(Path(result.output.strip()))
+        assert note.meta.tickets == ["PCR-6438", "BUG-15022"]
+
 
 class TestUpdateCommand:
     def test_updates_status(self, runner: CliRunner, tmp_path: Path) -> None:
@@ -272,6 +297,25 @@ class TestUpdateCommand:
         result = runner.invoke(cli, ["update", str(note.path), "--status", "complete"])
         assert result.exit_code == 0
         assert load_note(note.path).meta.related == ["002-other-spec.md"]
+
+    def test_updates_tickets(self, runner: CliRunner, tmp_path: Path) -> None:
+        note = write_note(tmp_path, make_params())
+        result = runner.invoke(
+            cli,
+            ["update", str(note.path), "--tickets", "PCR-6438", "--tickets", "BUG-1"],
+        )
+        assert result.exit_code == 0
+        assert load_note(note.path).meta.tickets == ["PCR-6438", "BUG-1"]
+
+    def test_tickets_not_provided_preserves_existing(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
+        fm = make_params()
+        fm.tickets = ["PCR-6438"]
+        note = write_note(tmp_path, fm)
+        result = runner.invoke(cli, ["update", str(note.path), "--status", "complete"])
+        assert result.exit_code == 0
+        assert load_note(note.path).meta.tickets == ["PCR-6438"]
 
     def test_fails_with_no_options(self, runner: CliRunner, tmp_path: Path) -> None:
         note = write_note(tmp_path, make_params())

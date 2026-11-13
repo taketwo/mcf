@@ -187,6 +187,11 @@ def setup(link_name: str, project: str | None) -> None:
     ),
 )
 @click.option(
+    "--tickets",
+    multiple=True,
+    help="Jira ticket key, e.g. PCR-6438. Repeatable.",
+)
+@click.option(
     "--json",
     "as_json",
     is_flag=True,
@@ -199,6 +204,7 @@ def create(  # noqa: PLR0913
     status: str,
     subdir: str | None,
     related: tuple[str, ...],
+    tickets: tuple[str, ...],
     *,
     as_json: bool,
 ) -> None:
@@ -249,6 +255,7 @@ def create(  # noqa: PLR0913
             status=Status(status),
             date=date.today(),
             related=list(related),
+            tickets=list(tickets),
         )
         note = write_note(notes_root / subdir if subdir else notes_root, fm, body)
     except ValueError as e:
@@ -289,6 +296,12 @@ def create(  # noqa: PLR0913
     ),
 )
 @click.option(
+    "--tickets",
+    multiple=True,
+    default=None,
+    help="Replace ticket list with these Jira keys, e.g. PCR-6438. Repeatable.",
+)
+@click.option(
     "--json",
     "as_json",
     is_flag=True,
@@ -303,6 +316,7 @@ def update(  # noqa: PLR0913
     kind: str | None,
     status: str | None,
     related: tuple[str, ...],
+    tickets: tuple[str, ...],
     *,
     as_json: bool,
 ) -> None:
@@ -334,8 +348,17 @@ def update(  # noqa: PLR0913
     related_provided = (
         ctx.get_parameter_source("related") != click.core.ParameterSource.DEFAULT
     )
+    tickets_provided = (
+        ctx.get_parameter_source("tickets") != click.core.ParameterSource.DEFAULT
+    )
 
-    if name is None and kind is None and status is None and not related_provided:
+    if (
+        name is None
+        and kind is None
+        and status is None
+        and not related_provided
+        and not tickets_provided
+    ):
         raise click.UsageError("Nothing to update. Provide at least one option.")
 
     try:
@@ -345,6 +368,7 @@ def update(  # noqa: PLR0913
             kind=Kind(kind) if kind else None,
             status=Status(status) if status else None,
             related=list(related) if related_provided else None,
+            tickets=list(tickets) if tickets_provided else None,
         )
     except ValueError as e:
         raise click.ClickException(str(e)) from e
