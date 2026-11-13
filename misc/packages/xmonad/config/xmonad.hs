@@ -45,7 +45,7 @@ import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.FlexibleResize as FR
 import qualified XMonad.StackSet as W
 
-import Control.Monad (liftM2, when)
+import Control.Monad (filterM, liftM2, when)
 import Data.Ratio ((%))
 import System.Directory
 import System.Environment (lookupEnv)
@@ -514,6 +514,21 @@ logHookPolybar dbus = def
 myManageHook :: ManageHook
 myManageHook = manageWindows <+> namedScratchpadManageHook myScratchPads <+> fullscreenManageHook
 
+-- | Plasma creates new desktop and panel windows when the screen setup changes,
+-- and new windows start on top of the stack, covering ours. Lower the panels
+-- first and then the desktops, so the desktop ends up at the bottom with the
+-- panels above it.
+doLowerPlasma :: ManageHook
+doLowerPlasma = liftX lowerPlasma >> idHook
+  where
+    lowerPlasma = withDisplay $ \dpy -> do
+      (_, _, wins) <- io . queryTree dpy =<< asks theRoot
+      plasma   <- filterM (runQuery (className =? "plasmashell")) wins
+      panels   <- filterM (runQuery (isWindowType "_NET_WM_WINDOW_TYPE_DOCK")) plasma
+      desktops <- filterM (runQuery (isWindowType "_NET_WM_WINDOW_TYPE_DESKTOP")) plasma
+      io $ mapM_ (lowerWindow dpy) (panels ++ desktops)
+    isWindowType = isInProperty "_NET_WM_WINDOW_TYPE"
+
 manageWindows = composeAll . concat $
     [ [isDialog --> doCenterFloat]
     , [isFloating --> doCenterFloat]
@@ -524,6 +539,7 @@ manageWindows = composeAll . concat $
     , [title     =? t --> doFloat   | t <- myTFloats]
     , [resource  =? r --> doFloat   | r <- myRFloats]
     , [resource  =? i --> doIgnore  | i <- myIgnores]
+    , [className =? "plasmashell" --> doLowerPlasma]
     , [className =? c --> doF W.focusDown <+> doIgnore  | c <- myCUnFocus]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "gimp" | x <- myGimpShifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "zoom" | x <- myZoomShifts]
