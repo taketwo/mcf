@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+DIR=$(dirname "$(readlink -f "$0")")
+
+# Copy, not symlink: AppArmor confines wg-quick to /etc/wireguard
+echo "Installing WireGuard configuration..."
+chmod 600 "$DIR/wg0.conf"
+sudo install -d -m 700 /etc/wireguard
+sudo rm -f /etc/wireguard/wg0.conf
+sudo install -m 600 -o root -g root "$DIR/wg0.conf" /etc/wireguard/wg0.conf
