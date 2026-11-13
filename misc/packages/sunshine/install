@@ -13,5 +13,5 @@ fi
 sudo dpkg -i "$TEMP_DEB"
 sudo apt --fix-broken install -y
 
-systemctl --user enable sunshine
-systemctl --user start sunshine
+systemctl --user daemon-reload
+systemctl --user enable --now app-dev.lizardbyte.app.Sunshine.service
