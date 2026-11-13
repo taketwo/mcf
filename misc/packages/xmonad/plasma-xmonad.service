@@ -8,4 +8,4 @@ Slice=session.slice
 Restart=on-failure
 
 [Install]
-WantedBy=plasma-workspace.target
+WantedBy=plasma-workspace-x11.target

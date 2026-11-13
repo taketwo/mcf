@@ -21,6 +21,7 @@ ubuntu: libxrandr-dev
 ubuntu: libxss-dev
 ubuntu: libxft-dev
 ubuntu: libxinerama-dev
+ubuntu: plasma-session-x11
 
 # Arch
 arch: ttf-liberation

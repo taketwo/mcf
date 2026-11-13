@@ -8,7 +8,7 @@ systemctl --user mask plasma-kwin_x11.service
 
 echo "Enabling startup service for Plasma with XMonad service..."
 systemctl --user daemon-reload
-systemctl --user enable plasma-xmonad.service
+systemctl --user reenable plasma-xmonad.service
 
 # Servicee file expects xmonad binary to be in $HOME/.local/bin
 # However, on Lemur host the binary ends up in $HOME/.cabal/bin for some reason
