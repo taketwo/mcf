@@ -1,0 +1,7 @@
+# Ubuntu's own slack profile only matches /usr/lib/slack/slack, not the nix build
+abi <abi/5.0>,
+include <tunables/global>
+
+profile nix-slack /nix/store/*-slack-*/lib/slack/slack flags=(unconfined) {
+  userns,
+}

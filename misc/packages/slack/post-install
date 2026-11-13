@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+DIR=$(dirname "$(readlink -f "$0")")
+
+# Copy, not symlink: AppArmor policy must not be user-writable
+echo "Installing AppArmor profile for Slack..."
+sudo install -m 644 -o root -g root "$DIR/apparmor-nix-slack" /etc/apparmor.d/nix-slack
+sudo apparmor_parser -r /etc/apparmor.d/nix-slack
