@@ -1,2 +1,0 @@
-compton.conf:.config/compton.conf:Compton config
-compton.service:.local/share/systemd/user/compton.service:Compton systemd unit

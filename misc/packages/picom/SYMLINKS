@@ -1,0 +1,3 @@
+picom.conf:.config/picom/picom.conf:Picom config
+picom.service:.local/share/systemd/user/picom.service:Picom systemd unit
+picom-autostart.desktop:.config/autostart/picom.desktop:Hide picom XDG autostart entry, picom.service starts it instead

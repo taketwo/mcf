@@ -5,6 +5,6 @@ from subprocess import call
 
 
 if __name__ == "__main__":
-    print("Enabling Compton service...")
+    print("Enabling Picom service...")
     call(["systemctl", "--user", "daemon-reload"])
-    call(["systemctl", "--user", "enable", "compton.service"])
+    call(["systemctl", "--user", "enable", "picom.service"])

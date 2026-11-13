@@ -1,0 +1,13 @@
+[Unit]
+Description=Picom X compositor
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/picom
+Restart=on-failure
+RestartSec=2
+
+[Install]
+# X11 session only: KWin composites in the Wayland session
+WantedBy=plasma-workspace-x11.target

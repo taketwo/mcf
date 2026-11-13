@@ -29,6 +29,6 @@ arch: alsa-utils
 
 rofi
 polybar
-compton
+picom
 xdotool                                # clickable workspace names
 mailcount                              # unread mail segment in Polybar
