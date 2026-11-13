@@ -34,6 +34,15 @@ index=$(((${#monitors[@]} - 1) / 2))
 export MONITOR=${monitors[$index]}
 log "Selected monitor: $MONITOR (index $index of ${#monitors[@]} monitors)"
 
+# xmonad reruns its startup hook on every restart, so stop the polybar of the previous run
+if pkill -u "$UID" -x polybar; then
+  log "Stopping running polybar"
+  for _ in {1..50}; do
+    pgrep -u "$UID" -x polybar >/dev/null || break
+    sleep 0.1
+  done
+fi
+
 log "Starting polybar on monitor $MONITOR"
 polybar -c "$HOME/.xmonad/polybarrc" -r primary --log=info 2>/tmp/polybar.log &
 POLYBAR_PID=$!

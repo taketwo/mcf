@@ -335,8 +335,8 @@ table =
     -- Misc
     toggleStruts            = Unbound "Toggle struts"                                      (sendMessage ToggleStruts)
     scratchTerminal         = Unbound "Open scratch terminal"                              (namedScratchpadAction myScratchPads "terminal")
-    restartPolybar          = Unbound "Restart polybar"                                    (spawn "killall polybar" <+> spawn pathPolybar)
-    restartXMonad           = Unbound "Restart XMonad"                                     (spawn "killall polybar" <+> restart "xmonad" True)
+    restartPolybar          = Unbound "Restart polybar"                                    (spawn pathPolybar)
+    restartXMonad           = Unbound "Restart XMonad"                                     (restart "xmonad" True)
     jumpToNextScreen        = Unbound "Jump to next physical screen"                       (onNextNeighbour def W.view)
     jumpToPrevScreen        = Unbound "Jump to previous physical screen"                   (onPrevNeighbour def W.view)
     closeWindow             = Unbound "Close the focused window"                           (kill)
