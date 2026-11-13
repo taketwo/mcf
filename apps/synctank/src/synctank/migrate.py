@@ -10,7 +10,9 @@ import yaml
 
 from .notes import (
     Frontmatter,
+    ParseError,
     _assemble_content,
+    _parse_string_list,
     _strip_leading_h1,
     build_filename,
     slugify,
@@ -47,7 +49,17 @@ _KIND_KEYWORDS: list[tuple[list[str], Kind]] = [
 ]
 
 _CONSUMED_KEYS = frozenset(
-    {"name", "title", "kind", "status", "date", "related", "parent", "based-on"}
+    {
+        "name",
+        "title",
+        "kind",
+        "status",
+        "date",
+        "related",
+        "parent",
+        "based-on",
+        "tickets",
+    }
 )
 
 
@@ -186,6 +198,11 @@ def plan_directory(directory: Path) -> MigratePlan:
             _raw_date if isinstance(_raw_date, date) else _mtime_date(path)
         )
         related = _merge_related(meta)
+        try:
+            tickets = _parse_string_list(meta.get("tickets", []), "tickets", path)
+        except ParseError as e:
+            plan.errors.append(MigrateError(path=path, message=e.message))
+            continue
         extra = {k: v for k, v in meta.items() if k not in _CONSUMED_KEYS}
 
         slug = slugify(name)
@@ -196,6 +213,7 @@ def plan_directory(directory: Path) -> MigratePlan:
             status=Status.DRAFT,
             date=note_date,
             related=related,
+            tickets=tickets,
             extra=extra,
         )
         new_content = _assemble_content(params, body)

@@ -327,6 +327,26 @@ class TestPlanDirectory:
         content = plan.actions[0].new_content
         assert content.count("# My Note") == 1
 
+    def test_tickets_consumed(self, tmp_path: Path) -> None:
+        self._write(
+            tmp_path / "note.md",
+            "---\ntitle: Note\ntickets:\n  - PCR-6438\n---\n\nBody.",
+        )
+        plan = plan_directory(tmp_path)
+        content = plan.actions[0].new_content
+        assert "tickets:" in content
+        assert "- PCR-6438" in content
+        assert content.count("PCR-6438") == 1
+
+    def test_bad_tickets_produce_error(self, tmp_path: Path) -> None:
+        self._write(
+            tmp_path / "note.md",
+            "---\ntitle: Note\ntickets: PCR-1\n---\n\nBody.",
+        )
+        plan = plan_directory(tmp_path)
+        assert len(plan.errors) == 1
+        assert "tickets" in plan.errors[0].message
+
     def test_extra_fields_preserved(self, tmp_path: Path) -> None:
         self._write(
             tmp_path / "note.md", "---\ntitle: Note\ncustom: value\n---\n\nBody."
