@@ -223,7 +223,8 @@ class PulseAudioController:
         ]
 
         if mac_address:
-            sinks = [sink for sink in sinks if self._normalize_mac(mac_address) in sink]
+            mac_forms = (self._normalize_mac(mac_address), mac_address)
+            sinks = [sink for sink in sinks if any(form in sink for form in mac_forms)]
 
         logger.debug("Found sinks: %s", ", ".join(sinks))
         return sinks
