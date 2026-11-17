@@ -149,3 +149,11 @@ key = "prefix+shift+y"
 type = "shell"
 command = "herdr-copy cwd"
 description = "copy current directory"
+
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit"
+description = "lazygit"
+width = "90%"
+height = "85%"
