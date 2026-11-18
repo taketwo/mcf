@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Herdr
+Comment=Herdr server
+Exec=/home/sergey/.nix-profile/bin/herdr server
+Terminal=false
+Type=Application
+StartupNotify=false
+NoDisplay=true
